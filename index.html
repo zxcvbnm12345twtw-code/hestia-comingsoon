@@ -6,12 +6,11 @@
 <title>HESTIA — Coming Soon</title>
 <style>
   :root{
-    /* 更深黑 + 更深火光 */
     --black-0:#000000;
     --black-1:#050505;
-    --rose-deep:#231216;   /* 比先前更暗 */
-    --rose-mid:#4b2230;    /* 中層火光更深 */
-    --rose-hot:#a14b61;    /* 熱點加深一階 */
+    --rose-deep:#231216;
+    --rose-mid:#4b2230;
+    --rose-hot:#a14b61;
     --accent:#ea8aa5;
     --accent-d:#d7708d;
   }
@@ -21,8 +20,6 @@
     margin:0; color:#fff;
     font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Noto Sans TC","PingFang TC","Microsoft JhengHei", Arial, sans-serif;
     display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden;
-
-    /* 上黑覆蓋更大；下方火光更深、界線更明顯；動畫幅度更大更快 */
     background:
       linear-gradient(180deg,
         var(--black-0) 0%,
@@ -45,13 +42,11 @@
     animation: drift 8.5s ease-in-out infinite alternate;
   }
 
-  /* 更強的燃燒感：上下位移幅度加大、亮度輕微脈動 */
   @keyframes drift{
     0%   { background-position: 50% 0%, 50% 102%, 50% 110%; filter: brightness(1.00); }
     100% { background-position: 50% 20%, 50% 92%,  50% 102%; filter: brightness(1.06); }
   }
 
-  /* 火光微閃動層（加深、加速一點） */
   .glow{
     position: fixed; inset:0; pointer-events:none; mix-blend-mode: screen; opacity:.22;
     background:
@@ -77,30 +72,50 @@
     text-shadow: 0 2px 12px rgba(0,0,0,.45);
   }
 
-  form{ display:flex; gap:12px; width:min(720px,92vw); justify-content:center; align-items:center; margin-top: clamp(6px,1.8vw,12px); }
+  form{
+    display:flex; gap:12px;
+    width:min(720px,92vw);
+    justify-content:center; align-items:center;
+    margin-top: clamp(6px,1.8vw,12px);
+  }
   input[type="email"]{
-    flex:1; min-width:200px; height:48px; border-radius:12px; border:none; outline:none;
-    padding:0 16px; font-size:16px; color:#222; background:#fff;
+    flex:3;
+    min-width:260px;
+    height:54px;
+    border-radius:14px;
+    border:none; outline:none;
+    padding:0 20px;
+    font-size:18px;
+    color:#222;
+    background:#fff;
     box-shadow: 0 10px 28px rgba(0,0,0,.28);
   }
   input::placeholder{ color:#8c8c8c }
   button{
-    height:48px; padding:0 22px; border:none; border-radius:12px;
-    font-weight:800; font-size:16px; letter-spacing:.02em; cursor:pointer;
-    background: var(--accent); color:#fff;
-    box-shadow: 0 10px 28px rgba(0,0,0,.28);
+    flex:1;
+    height:48px;
+    padding:0 16px;
+    border:none;
+    border-radius:12px;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    background: var(--accent);
+    color:#fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,.25);
     transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
   }
-  button:hover{ background:var(--accent-d); transform: translateY(-1px); box-shadow: 0 14px 32px rgba(0,0,0,.34); }
+  button:hover{ background:var(--accent-d); transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,0,0,.3); }
   button:focus-visible{ outline: 0; box-shadow: 0 0 0 3px rgba(234,138,165,.35); }
 
-  .links{ display:flex; gap:18px; margin-top:10px; opacity:.92 }
+  .links{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:14px; }
   .links a{ color:#fff; text-decoration:none; font-size:14px }
   .links a:hover{ text-decoration:underline }
 
   @media (max-width:520px){
-    form{ flex-direction:column }
-    button{ width:100% }
+    form{ flex-direction:column; gap:10px; }
+    input[type="email"]{ flex:none; width:100%; height:52px; font-size:17px; }
+    button{ width:100%; height:46px; font-size:15px; }
   }
   @media (prefers-reduced-motion: reduce){
     body{ animation:none }
@@ -115,7 +130,6 @@
     <img class="logo" src="logo.png" alt="HESTIA flame mark" />
     <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
 
-    <!-- 修正為 Coming -->
     <h2>Coming Soon</h2>
 
     <form id="notify">
@@ -125,9 +139,11 @@
     </form>
 
     <div class="links">
-      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
-      <span>·</span>
-      <a href="https://line.me/" target="_blank" rel="noopener">LINE OA</a>
+      <a href="https://www.instagram.com/hestia.active/" target="_blank" rel="noopener">Instagram</a>
+      <!-- LINE@ 按鈕 -->
+      <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">
+        <img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0">
+      </a>
     </div>
   </main>
 

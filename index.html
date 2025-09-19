@@ -140,20 +140,20 @@
 
     <div class="subscribe" id="subscribe">
       <div class="form-shell">
-        <form id="notify">
+        <form id="notify" autocomplete="off">
           <input id="email" type="email" placeholder="訂閱以獲得最新消息" aria-label="Email" required />
           <button type="submit">立即訂閱</button>
         </form>
       </div>
       <div class="links">
-        <a href="https://www.instagram.com/hestia.active/" target="_blank" aria-label="Instagram">
-          <svg class="ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <a href="https://www.instagram.com/hestia.active/" target="_blank" aria-label="Instagram" rel="noopener">
+          <svg class="ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z" stroke="white" stroke-width="1.5"/>
             <circle cx="12" cy="12" r="3.8" stroke="white" stroke-width="1.5"/>
             <circle cx="17.5" cy="6.5" r="1.2" fill="white"/>
           </svg>
         </a>
-        <a href="https://lin.ee/kjso8Ba" target="_blank" aria-label="加入 LINE 好友">
+        <a href="https://lin.ee/kjso8Ba" target="_blank" aria-label="加入 LINE 好友" rel="noopener">
           <img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" />
         </a>
       </div>
@@ -165,7 +165,7 @@
   const subscribe = document.getElementById('subscribe');
   const arrow = document.getElementById('arrow');
 
-  /* ✅ 使用你的 Apps Script Web App /exec URL */
+  /* ✅ 用你的 Apps Script Web App /exec URL */
   const API_URL = 'https://script.google.com/macros/s/AKfycbwYENtcDcWKk_IPL5TGCh1carXGapEbcL8f7sf1LYw0xrXHOl3fF4q1pvKNCJMSnGs-Ow/exec';
 
   window.addEventListener('scroll', ()=>{
@@ -180,7 +180,7 @@
     }
   });
 
-  // 攔截 submit 並送到 Apps Script
+  // 攔截 submit 並送到 Apps Script（避免 CORS 預檢）
   document.getElementById('notify').addEventListener('submit', async (e)=>{
     e.preventDefault();
     const input = document.getElementById('email');
@@ -191,17 +191,25 @@
     if(!ok){ alert('請輸入有效的 Email'); return; }
 
     try {
+      const body = new URLSearchParams({
+        email,
+        source: 'comingsoon',
+        userAgent: navigator.userAgent
+      });
+
       const res = await fetch(API_URL, {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ email, source:'comingsoon', userAgent: navigator.userAgent })
+        // 不要手動設定 Content-Type，瀏覽器會自帶 x-www-form-urlencoded，避免預檢
+        body
       });
+
+      // 期望後端回傳 JSON：{ ok: true/false, ... }
       const data = await res.json();
       if(data.ok){
         input.value = '';
         alert('訂閱成功！我們將在第一時間通知你最新消息。');
       }else{
-        alert('送出失敗，請稍後再試。');
+        alert(data.error || '送出失敗，請稍後再試。');
       }
     } catch (err) {
       alert('連線異常，請稍後再試');

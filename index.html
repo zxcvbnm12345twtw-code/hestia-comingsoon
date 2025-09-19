@@ -11,8 +11,8 @@
     --rose-deep:#1d1013;
     --rose-mid:#441d2a;
     --rose-hot:#8f3e56;
-    --accent:#ea8aa5;
-    --accent-d:#d7708d;
+    --accent:#E67690;   /* ✅ 你的粉色 */
+    --accent-d:#cf5b79; /* ✅ 深一階 */
   }
 
   html,body{
@@ -54,11 +54,9 @@
 
   /* 主視覺容器 */
   .center{
-    position:fixed;
-    top:50%; left:50%;
+    position:fixed; top:50%; left:50%;
     transform:translate(-50%,-50%);
-    text-align:center;
-    transition:transform .6s ease;
+    text-align:center; transition:transform .6s ease;
   }
   .logo{width:clamp(120px,26vw,220px);margin-bottom:-14px;filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
   .wordmark{width:clamp(260px,60vw,560px);margin-bottom:-10px;filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
@@ -68,16 +66,21 @@
 
   /* ↓ 下滑箭頭：呼吸光暈 + 滑動後自動淡出（不占版面） */
   .arrow{
-    position:fixed; left:50%; bottom:10vh; transform:translateX(-50%);
-    font-size:24px; line-height:1;
-    text-shadow: 0 0 6px rgba(234,138,165,.35), 0 0 18px rgba(234,138,165,.25);
+    position:fixed; left:50%;
+    bottom:calc(8vh + env(safe-area-inset-bottom)); /* ✅ iOS 底部安全區 */
+    transform:translateX(-50%);
+    font-size:26px; line-height:1; z-index:5; /* ✅ 確保在最上層 */
+    color:#fff;
+    text-shadow:0 0 6px rgba(230,118,144,.45), 0 0 18px rgba(230,118,144,.30);
     animation: arrowBreath 2.6s ease-in-out infinite;
     pointer-events:none; user-select:none;
     transition: opacity .4s ease, filter .4s ease, visibility .4s ease;
   }
   @keyframes arrowBreath{
-    0%,100%{ opacity:.55; transform:translateX(-50%) translateY(0); text-shadow:0 0 6px rgba(234,138,165,.35),0 0 12px rgba(234,138,165,.25); }
-    50%    { opacity:1;   transform:translateX(-50%) translateY(8px); text-shadow:0 0 14px rgba(234,138,165,.8),0 0 24px rgba(234,138,165,.5); }
+    0%,100%{ opacity:.55; transform:translateX(-50%) translateY(0);
+      text-shadow:0 0 6px rgba(230,118,144,.35),0 0 12px rgba(230,118,144,.25); }
+    50%{ opacity:1; transform:translateX(-50%) translateY(8px);
+      text-shadow:0 0 16px rgba(230,118,144,.85),0 0 28px rgba(230,118,144,.55); }
   }
   .arrow.hide{ opacity:0; visibility:hidden; filter:blur(2px); }
 
@@ -94,26 +97,31 @@
     box-shadow:0 10px 28px rgba(0,0,0,.28);}
   input::placeholder{color:#8c8c8c;}
 
-  /* 桌機按鈕高度 */
+  /* 桌機按鈕 */
   button{
-    flex:1;height:56px;
-    padding:0 16px;
-    border:none;border-radius:12px;
-    font-weight:700;font-size:15px;cursor:pointer;
-    background:var(--accent);color:#fff;
+    flex:1; height:56px; min-height:56px;
+    padding:0 18px;
+    border:none; border-radius:12px;
+    font-weight:700; font-size:16px; letter-spacing:.01em;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--accent); color:#fff;
     animation:btnGlow 3.6s ease-in-out infinite alternate;
   }
-  @keyframes btnGlow{0%{box-shadow:0 0 10px rgba(234,138,165,.3);}50%{box-shadow:0 0 22px rgba(234,138,165,.6);}100%{box-shadow:0 0 10px rgba(234,138,165,.3);}}
+  @keyframes btnGlow{0%{box-shadow:0 0 10px rgba(230,118,144,.30);}50%{box-shadow:0 0 24px rgba(230,118,144,.60);}100%{box-shadow:0 0 10px rgba(230,118,144,.30);}}
   button:hover{background:var(--accent-d);}
 
   .links{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:20px;}
   .ig-icon{width:28px;height:28px;}
 
-  /* 手機：按鈕高度拉到 60px（更好點擊） */
-  @media(max-width:520px){
+  /* ✅ 手機：按鈕再加大到 64px，高度一致更好點擊 */
+  @media (max-width:520px){
     form{flex-direction:column;gap:10px;}
     input[type="email"]{width:50%;min-width:220px;height:52px;font-size:17px;align-self:center;}
-    button{width:50%;height:60px;font-size:16px;align-self:center;}
+    button{
+      width:50%;
+      height:64px; min-height:64px; /* ✅ 關鍵 */
+      font-size:16px; align-self:center;
+    }
   }
 </style>
 </head>
@@ -160,7 +168,7 @@
     // 主視覺：輕推上移
     center.style.transform = `translate(-50%, calc(-50% - ${scrolled*0.2}px))`;
 
-    // 顯示訂閱框，並讓箭頭在滑過 15% 視窗高度後淡出
+    // 顯示訂閱框，讓箭頭在滑過 15% 視窗高度後淡出
     if(scrolled > window.innerHeight*0.15){
       subscribe.classList.add('in');
       arrow.classList.add('hide');

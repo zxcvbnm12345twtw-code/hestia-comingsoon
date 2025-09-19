@@ -15,8 +15,10 @@
     --accent-d:#d7708d;
   }
 
-  html,body{margin:0;height:100%;overflow-x:hidden;color:#fff;
-    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",Arial,sans-serif;}
+  html,body{
+    margin:0;height:100%;overflow-x:hidden;color:#fff;
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",Arial,sans-serif;
+  }
 
   /* 背景呼吸 */
   body{
@@ -47,18 +49,18 @@
     animation:flicker 2.5s ease-in-out infinite alternate;}
   @keyframes flicker{0%{opacity:.12;filter:blur(.6px);}100%{opacity:.24;filter:blur(1.6px);}}
 
-  .container{min-height:200svh;display:flex;flex-direction:column;align-items:center;position:relative;}
+  .page{min-height:200svh;display:flex;flex-direction:column;align-items:center;position:relative;}
 
   /* 首屏 */
-  .hero{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .hero{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:transform 0.8s ease;}
   .logo{width:clamp(120px,26vw,220px);margin-bottom:-14px;filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
   .wordmark{width:clamp(260px,60vw,560px);margin-bottom:-10px;filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
   .sub{margin:0;font-weight:300;letter-spacing:.22em;font-size:clamp(18px,2.4vw,26px);
     text-shadow:0 2px 12px rgba(0,0,0,.45);animation:breathe 5s ease-in-out infinite;}
   @keyframes breathe{0%,100%{opacity:.65;text-shadow:0 0 6px rgba(234,138,165,.5);}50%{opacity:1;text-shadow:0 0 20px rgba(234,138,165,.9);}}
 
-  /* 訂閱框：初始隱藏，滑動出現 */
-  .subscribe{opacity:0;transform:translateY(60px);transition:opacity 1s ease,transform 1s ease;}
+  /* 訂閱框：初始隱藏 */
+  .subscribe{opacity:0;transform:translateY(80px);transition:opacity 1s ease,transform 1s ease;}
   .subscribe.in{opacity:1;transform:translateY(0);}
 
   .form-shell{width:100%;display:flex;justify-content:center;margin-top:20px;}
@@ -87,15 +89,15 @@
 <body>
   <div class="glow"></div>
 
-  <div class="container">
+  <div class="page">
     <!-- 首屏 -->
-    <div class="hero">
+    <div class="hero" id="hero">
       <img class="logo" src="logo.png" alt="HESTIA flame mark" />
       <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
       <h2 class="sub">即將到來</h2>
     </div>
 
-    <!-- 訂閱框：滑動後浮現 -->
+    <!-- 訂閱框 -->
     <div class="subscribe" id="subscribe">
       <div class="form-shell">
         <form id="notify">
@@ -119,15 +121,20 @@
   </div>
 
 <script>
-  // 當頁面滑動超過視窗高度 30% 時，顯示訂閱框
+  const hero = document.getElementById('hero');
   const subscribe = document.getElementById('subscribe');
+
   window.addEventListener('scroll', ()=>{
-    if(window.scrollY > window.innerHeight*0.3){
-      subscribe.classList.add('in');
+    let trigger = window.innerHeight * 0.3; // 滑過 30% 高度開始觸發
+    if(window.scrollY > trigger){
+      hero.style.transform = 'translateY(-40px)'; // 整體往上移一點
+      subscribe.classList.add('in'); // 訂閱框浮現
+    }else{
+      hero.style.transform = 'translateY(0)'; 
+      subscribe.classList.remove('in');
     }
   });
 
-  // 訂閱表單暫時用 mailto
   document.getElementById('notify').addEventListener('submit', function(e){
     e.preventDefault();
     const v=document.getElementById('email').value.trim();

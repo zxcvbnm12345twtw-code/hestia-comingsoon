@@ -17,7 +17,7 @@
 
   html,body{
     margin:0;
-    height:135svh; /* ✅ 控制整體長度，保留滑動空間 */
+    height:130svh;
     overflow-x:hidden;
     color:#fff;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",Arial,sans-serif;
@@ -66,6 +66,18 @@
     text-shadow:0 2px 12px rgba(0,0,0,.45);animation:breathe 5s ease-in-out infinite;}
   @keyframes breathe{0%,100%{opacity:.65;text-shadow:0 0 6px rgba(234,138,165,.5);}50%{opacity:1;text-shadow:0 0 20px rgba(234,138,165,.9);}}
 
+  /* 下滑箭頭 */
+  .arrow{
+    font-size:24px;
+    margin-top:20px;
+    opacity:.7;
+    animation:arrowFloat 2.6s ease-in-out infinite;
+  }
+  @keyframes arrowFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(8px);}
+  }
+
   /* 訂閱框：初始隱藏 */
   .subscribe{opacity:0;transform:translateY(80px);transition:opacity 1s ease,transform 1s ease;margin-top:40px;}
   .subscribe.in{opacity:1;transform:translateY(0);}
@@ -78,8 +90,14 @@
     padding:0 20px;font-size:18px;color:#222;background:#fff;
     box-shadow:0 10px 28px rgba(0,0,0,.28);}
   input::placeholder{color:#8c8c8c;}
-  button{flex:1;height:48px;padding:0 16px;border:none;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;background:var(--accent);color:#000;
-    animation:btnGlow 3.6s ease-in-out infinite alternate;}
+  button{
+    flex:1;height:56px; /* ✅ 垂直高度加大 */
+    padding:0 16px;
+    border:none;border-radius:12px;
+    font-weight:700;font-size:15px;cursor:pointer;
+    background:var(--accent);color:#fff; /* ✅ 改成白字 */
+    animation:btnGlow 3.6s ease-in-out infinite alternate;
+  }
   @keyframes btnGlow{0%{box-shadow:0 0 10px rgba(234,138,165,.3);}50%{box-shadow:0 0 22px rgba(234,138,165,.6);}100%{box-shadow:0 0 10px rgba(234,138,165,.3);}}
   button:hover{background:var(--accent-d);}
 
@@ -89,7 +107,7 @@
   @media(max-width:520px){
     form{flex-direction:column;gap:10px;}
     input[type="email"]{width:50%;min-width:220px;height:52px;font-size:17px;align-self:center;}
-    button{width:50%;height:52px;font-size:15px;align-self:center;}
+    button{width:50%;height:54px;font-size:15px;align-self:center;}
   }
 </style>
 </head>
@@ -100,6 +118,7 @@
     <img class="logo" src="logo.png" alt="HESTIA flame mark" />
     <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
     <h2 class="sub">即將到來</h2>
+    <div class="arrow">↓</div> <!-- ✅ 下滑箭頭 -->
 
     <div class="subscribe" id="subscribe">
       <div class="form-shell">

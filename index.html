@@ -11,8 +11,8 @@
     --rose-deep:#1d1013;
     --rose-mid:#441d2a;
     --rose-hot:#8f3e56;
-    --accent:#E67690;   /* ✅ 粉色 */
-    --accent-d:#cf5b79; /* ✅ 深色 */
+    --accent:#E67690;   /* 粉色 */
+    --accent-d:#cf5b79; /* 深色 */
   }
 
   html,body{
@@ -60,9 +60,24 @@
   }
   .logo{width:clamp(120px,26vw,220px);margin-bottom:-14px;filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
   .wordmark{width:clamp(260px,60vw,560px);margin-bottom:-10px;filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
-  .sub{margin:0;font-weight:300;letter-spacing:.22em;font-size:clamp(18px,2.4vw,26px);
-    text-shadow:0 2px 12px rgba(0,0,0,.45);animation:breathe 5s ease-in-out infinite;}
-  @keyframes breathe{0%,100%{opacity:.65;text-shadow:0 0 6px rgba(234,138,165,.5);}50%{opacity:1;text-shadow:0 0 20px rgba(234,138,165,.9);}}
+  .sub{
+    margin:0;
+    font-weight:300;
+    letter-spacing:.22em;
+    font-size:clamp(18px,2.4vw,26px);
+    text-shadow:0 2px 12px rgba(0,0,0,.45);
+    animation:breathe 6s ease-in-out infinite; /* 拉長週期 */
+  }
+  @keyframes breathe{
+    0%,100%{
+      opacity:.4;
+      text-shadow:0 0 8px rgba(230,118,144,.4);
+    }
+    50%{
+      opacity:1;
+      text-shadow:0 0 36px rgba(230,118,144,1); /* 更亮更強烈 */
+    }
+  }
 
   /* 下滑箭頭 */
   .arrow{
@@ -112,7 +127,7 @@
     input[type="email"]{width:50%;min-width:220px;height:52px;font-size:17px;align-self:center;}
     button{
       width:50%;
-      height:40px;min-height:40px; /* ✅ 手機版調整為 40px */
+      height:40px;min-height:40px; /* 手機版調整為 40px */
       font-size:15px;align-self:center;
     }
   }

@@ -17,7 +17,7 @@
 
   html,body{
     margin:0;
-    height:130svh;
+    height:130svh; /* 控制整體長度，保留滑動空間 */
     overflow-x:hidden;
     color:#fff;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",Arial,sans-serif;
@@ -52,7 +52,7 @@
     animation:flicker 2.5s ease-in-out infinite alternate;}
   @keyframes flicker{0%{opacity:.12;filter:blur(.6px);}100%{opacity:.24;filter:blur(1.6px);}}
 
-  /* 主視覺容器 */
+  /* 主視覺容器（置中，滑動時上推） */
   .center{
     position:fixed;
     top:50%; left:50%;
@@ -66,19 +66,22 @@
     text-shadow:0 2px 12px rgba(0,0,0,.45);animation:breathe 5s ease-in-out infinite;}
   @keyframes breathe{0%,100%{opacity:.65;text-shadow:0 0 6px rgba(234,138,165,.5);}50%{opacity:1;text-shadow:0 0 20px rgba(234,138,165,.9);}}
 
-  /* 下滑箭頭 */
+  /* ↓ 下滑箭頭：呼吸光暈 + 滑動後自動淡出，不占版面 */
   .arrow{
-    font-size:24px;
-    margin-top:20px;
-    opacity:.7;
-    animation:arrowFloat 2.6s ease-in-out infinite;
+    position:fixed; left:50%; bottom:10vh; transform:translateX(-50%);
+    font-size:24px; line-height:1; opacity:.85;
+    text-shadow: 0 0 8px rgba(234,138,165,.45), 0 0 18px rgba(234,138,165,.35);
+    animation: arrowBreath 2.6s ease-in-out infinite;
+    pointer-events:none; user-select:none;
+    transition: opacity .4s ease, filter .4s ease, visibility .4s ease;
   }
-  @keyframes arrowFloat{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(8px);}
+  @keyframes arrowBreath{
+    0%,100%{ opacity:.55; text-shadow:0 0 6px rgba(234,138,165,.35), 0 0 12px rgba(234,138,165,.25); transform:translateX(-50%) translateY(0); }
+    50%    { opacity:1;   text-shadow:0 0 14px rgba(234,138,165,.8),  0 0 24px rgba(234,138,165,.5);  transform:translateX(-50%) translateY(8px); }
   }
+  .arrow.hide{ opacity:0; visibility:hidden; filter:blur(2px); }
 
-  /* 訂閱框：初始隱藏 */
+  /* 訂閱框：初始隱藏，淡入浮現 */
   .subscribe{opacity:0;transform:translateY(80px);transition:opacity 1s ease,transform 1s ease;margin-top:40px;}
   .subscribe.in{opacity:1;transform:translateY(0);}
 
@@ -90,35 +93,40 @@
     padding:0 20px;font-size:18px;color:#222;background:#fff;
     box-shadow:0 10px 28px rgba(0,0,0,.28);}
   input::placeholder{color:#8c8c8c;}
+  /* ✅ 按鈕高度加大，與 LINE 按鈕一致（60px） */
   button{
-    flex:1;height:56px; /* ✅ 垂直高度加大 */
-    padding:0 16px;
+    flex:1;height:60px;
+    padding:0 18px;
     border:none;border-radius:12px;
-    font-weight:700;font-size:15px;cursor:pointer;
-    background:var(--accent);color:#fff; /* ✅ 改成白字 */
+    font-weight:700;font-size:16px;letter-spacing:.01em;cursor:pointer;
+    background:var(--accent);color:#fff;
     animation:btnGlow 3.6s ease-in-out infinite alternate;
   }
-  @keyframes btnGlow{0%{box-shadow:0 0 10px rgba(234,138,165,.3);}50%{box-shadow:0 0 22px rgba(234,138,165,.6);}100%{box-shadow:0 0 10px rgba(234,138,165,.3);}}
+  @keyframes btnGlow{0%{box-shadow:0 0 10px rgba(234,138,165,.3);}50%{box-shadow:0 0 24px rgba(234,138,165,.6);}100%{box-shadow:0 0 10px rgba(234,138,165,.3);}}
   button:hover{background:var(--accent-d);}
 
   .links{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:20px;}
   .ig-icon{width:28px;height:28px;}
+  /* ✅ 讓 LINE 加入好友按鈕也用 60px 高，視覺一致 */
+  .line-btn{ height:60px; }
 
   @media(max-width:520px){
     form{flex-direction:column;gap:10px;}
     input[type="email"]{width:50%;min-width:220px;height:52px;font-size:17px;align-self:center;}
-    button{width:50%;height:54px;font-size:15px;align-self:center;}
+    button{width:50%;height:60px;font-size:16px;align-self:center;} /* 手機也維持 60px */
   }
 </style>
 </head>
 <body>
   <div class="glow"></div>
 
+  <!-- 下滑箭頭（不影響排版，滑動後自動消失） -->
+  <div class="arrow" id="arrow">↓</div>
+
   <div class="center" id="center">
     <img class="logo" src="logo.png" alt="HESTIA flame mark" />
     <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
     <h2 class="sub">即將到來</h2>
-    <div class="arrow">↓</div> <!-- ✅ 下滑箭頭 -->
 
     <div class="subscribe" id="subscribe">
       <div class="form-shell">
@@ -136,7 +144,7 @@
           </svg>
         </a>
         <a href="https://lin.ee/kjso8Ba" target="_blank" aria-label="加入 LINE 好友">
-          <img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" />
+          <img class="line-btn" src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" />
         </a>
       </div>
     </div>
@@ -145,20 +153,24 @@
 <script>
   const center = document.getElementById('center');
   const subscribe = document.getElementById('subscribe');
+  const arrow = document.getElementById('arrow');
 
   window.addEventListener('scroll', ()=>{
-    let scrolled = window.scrollY;
-    // LOGO 整體往上輕推
+    const scrolled = window.scrollY;
+    // LOGO 區塊：輕推上移
     center.style.transform = `translate(-50%, calc(-50% - ${scrolled*0.2}px))`;
-    // 當滑超過 15% 視窗高度 → 訂閱框浮現
+
+    // 顯示訂閱框
     if(scrolled > window.innerHeight*0.15){
       subscribe.classList.add('in');
+      arrow.classList.add('hide');   // ✅ 滑動後箭頭淡出
     }else{
       subscribe.classList.remove('in');
+      arrow.classList.remove('hide'); // 回到頂部又顯示
     }
   });
 
-  // 表單暫時用 mailto
+  // 表單暫時使用 mailto
   document.getElementById('notify').addEventListener('submit', function(e){
     e.preventDefault();
     const v=document.getElementById('email').value.trim();

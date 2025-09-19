@@ -16,11 +16,11 @@
   }
 
   html,body{
-    margin:0;height:100%;overflow-x:hidden;color:#fff;
+    margin:0;height:200svh; /* 讓有可滑動空間 */
+    overflow-x:hidden;color:#fff;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",Arial,sans-serif;
   }
 
-  /* 背景呼吸 */
   body{
     background:
       linear-gradient(180deg,
@@ -49,18 +49,21 @@
     animation:flicker 2.5s ease-in-out infinite alternate;}
   @keyframes flicker{0%{opacity:.12;filter:blur(.6px);}100%{opacity:.24;filter:blur(1.6px);}}
 
-  .page{min-height:200svh;display:flex;flex-direction:column;align-items:center;position:relative;}
-
-  /* 首屏 */
-  .hero{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:transform 0.8s ease;}
+  .center{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    text-align:center;transition:transform .6s ease;
+  }
   .logo{width:clamp(120px,26vw,220px);margin-bottom:-14px;filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
   .wordmark{width:clamp(260px,60vw,560px);margin-bottom:-10px;filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
   .sub{margin:0;font-weight:300;letter-spacing:.22em;font-size:clamp(18px,2.4vw,26px);
     text-shadow:0 2px 12px rgba(0,0,0,.45);animation:breathe 5s ease-in-out infinite;}
   @keyframes breathe{0%,100%{opacity:.65;text-shadow:0 0 6px rgba(234,138,165,.5);}50%{opacity:1;text-shadow:0 0 20px rgba(234,138,165,.9);}}
 
-  /* 訂閱框：初始隱藏 */
-  .subscribe{opacity:0;transform:translateY(80px);transition:opacity 1s ease,transform 1s ease;}
+  .subscribe{
+    opacity:0;transform:translateY(80px);
+    transition:opacity 1s ease,transform 1s ease;
+    margin-top:40px;
+  }
   .subscribe.in{opacity:1;transform:translateY(0);}
 
   .form-shell{width:100%;display:flex;justify-content:center;margin-top:20px;}
@@ -89,15 +92,11 @@
 <body>
   <div class="glow"></div>
 
-  <div class="page">
-    <!-- 首屏 -->
-    <div class="hero" id="hero">
-      <img class="logo" src="logo.png" alt="HESTIA flame mark" />
-      <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
-      <h2 class="sub">即將到來</h2>
-    </div>
+  <div class="center" id="center">
+    <img class="logo" src="logo.png" alt="HESTIA flame mark" />
+    <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
+    <h2 class="sub">即將到來</h2>
 
-    <!-- 訂閱框 -->
     <div class="subscribe" id="subscribe">
       <div class="form-shell">
         <form id="notify">
@@ -121,16 +120,17 @@
   </div>
 
 <script>
-  const hero = document.getElementById('hero');
+  const center = document.getElementById('center');
   const subscribe = document.getElementById('subscribe');
 
   window.addEventListener('scroll', ()=>{
-    let trigger = window.innerHeight * 0.3; // 滑過 30% 高度開始觸發
-    if(window.scrollY > trigger){
-      hero.style.transform = 'translateY(-40px)'; // 整體往上移一點
-      subscribe.classList.add('in'); // 訂閱框浮現
+    let scrolled = window.scrollY;
+    // LOGO 整體往上輕推
+    center.style.transform = `translate(-50%, calc(-50% - ${scrolled*0.2}px))`;
+    // 當滑超過 20% 視窗高度 → 訂閱框浮現
+    if(scrolled > window.innerHeight*0.2){
+      subscribe.classList.add('in');
     }else{
-      hero.style.transform = 'translateY(0)'; 
       subscribe.classList.remove('in');
     }
   });

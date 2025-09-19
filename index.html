@@ -55,7 +55,7 @@
   /* 主視覺容器 */
   .center{
     position:fixed; top:50%; left:50%;
-    transform:translate(-50%,-50%);
+    transform:translate(-50%, -50%);
     text-align:center; transition:transform .6s ease;
   }
   .logo{width:clamp(120px,26vw,220px);margin-bottom:-14px;filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
@@ -66,17 +66,11 @@
     letter-spacing:.22em;
     font-size:clamp(18px,2.4vw,26px);
     text-shadow:0 2px 12px rgba(0,0,0,.45);
-    animation:breathe 6s ease-in-out infinite; /* 拉長週期 */
+    animation:breathe 6s ease-in-out infinite;
   }
   @keyframes breathe{
-    0%,100%{
-      opacity:.4;
-      text-shadow:0 0 8px rgba(230,118,144,.4);
-    }
-    50%{
-      opacity:1;
-      text-shadow:0 0 36px rgba(230,118,144,1); /* 更亮更強烈 */
-    }
+    0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}
+    50%{opacity:1;text-shadow:0 0 36px rgba(230,118,144,1);}
   }
 
   /* 下滑箭頭 */
@@ -127,7 +121,7 @@
     input[type="email"]{width:50%;min-width:220px;height:52px;font-size:17px;align-self:center;}
     button{
       width:50%;
-      height:40px;min-height:40px; /* 手機版調整為 40px */
+      height:40px;min-height:40px;
       font-size:15px;align-self:center;
     }
   }
@@ -169,23 +163,47 @@
   const subscribe = document.getElementById('subscribe');
   const arrow = document.getElementById('arrow');
 
+  // ✅ 使用你剛拿到的 Web App URL
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxSzzDMf7EyHZse_C_yOmtoxaMXkBP5fH_XYyPIPJVTQnkyS6MJZQ850ZXLIX_ujy1e/exec';
+
   window.addEventListener('scroll', ()=>{
     const scrolled = window.scrollY;
     center.style.transform = `translate(-50%, calc(-50% - ${scrolled*0.2}px))`;
     if(scrolled > window.innerHeight*0.15){
       subscribe.classList.add('in');
-      arrow.classList.add('hide');
+      arrow?.classList.add('hide');
     }else{
       subscribe.classList.remove('in');
-      arrow.classList.remove('hide');
+      arrow?.classList.remove('hide');
     }
   });
 
-  document.getElementById('notify').addEventListener('submit', function(e){
+  // 攔截 submit，送到 Apps Script
+  document.getElementById('notify').addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const v=document.getElementById('email').value.trim();
-    if(!v) return;
-    window.location.href=`mailto:hello@hestiatw.com?subject=Subscribe to HESTIA&body=${encodeURIComponent('Please notify me: '+v)}`;
+    const input = document.getElementById('email');
+    const email = input.value.trim();
+    if(!email) return;
+
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if(!ok){ alert('請輸入有效的 Email'); return; }
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ email, source:'comingsoon', userAgent: navigator.userAgent })
+      });
+      const data = await res.json();
+      if(data.ok){
+        input.value = '';
+        alert('訂閱成功！我們將在第一時間通知你最新消息。');
+      }else{
+        alert('送出失敗，請稍後再試。');
+      }
+    } catch (err) {
+      alert('連線異常，請稍後再試');
+    }
   });
 </script>
 </body>

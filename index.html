@@ -103,17 +103,17 @@
 
     <div class="subscribe" id="subscribe">
       <div class="form-shell">
-        <!-- ✅ 用 Google 表單：改 action & input 的 name=ENTRY_EMAIL -->
-        <!-- 請把 FORM_ID 與 ENTRY_EMAIL 換成你的值 -->
+        <!-- ✅ 用 Google 表單 -->
         <form id="notify"
-          action="https://docs.google.com/forms/d/e/FORM_ID/formResponse"
+          action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
           method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
-          <input id="email" type="email" name="ENTRY_EMAIL" placeholder="訂閱以獲得最新消息" aria-label="Email" required />
-          <!-- 蜜罐（防機器） -->
+          
+          <input id="email" type="email" name="entry.345729382"
+                 placeholder="訂閱以獲得最新消息" aria-label="Email" required />
+          
           <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;">
           <button type="submit">立即訂閱</button>
         </form>
-        <!-- 隱藏 iframe 接住 Google 表單的跳轉 -->
         <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
       </div>
 
@@ -139,7 +139,7 @@
   const subscribe = document.getElementById('subscribe');
   const arrow = document.getElementById('arrow');
   const toast = document.getElementById('toast');
-  let submittedAt = 0; // 用來分辨 iframe 的初始載入 vs. 提交回來
+  let submittedAt = 0;
 
   window.addEventListener('scroll', ()=>{
     const scrolled = window.scrollY;
@@ -153,7 +153,6 @@
     }
   });
 
-  // 表單送出前做基本驗證
   function submitGForm(e){
     const input = document.getElementById('email');
     const email = (input.value || '').trim();
@@ -163,15 +162,11 @@
       return false;
     }
     submittedAt = Date.now();
-    return true; // 繼續由瀏覽器把表單送到 Google
+    return true;
   }
 
-  // 透過隱藏 iframe 的 onload 當作成功回來的訊號
   document.getElementById('hidden_iframe').addEventListener('load', ()=>{
-    // 略過初始載入（未送出就會觸發一次）
     if(Date.now() - submittedAt < 300) return;
-
-    // 清空欄位 + 顯示成功提示
     const input = document.getElementById('email');
     input.value = '';
     toast.classList.add('show');

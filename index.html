@@ -41,7 +41,6 @@
     background-size: 100% 120%, 120% 120%, 120% 120%;
     animation: drift 8.5s ease-in-out infinite alternate;
   }
-
   @keyframes drift{
     0%   { background-position: 50% 0%, 50% 102%, 50% 110%; filter: brightness(1.00); }
     100% { background-position: 50% 20%, 50% 92%,  50% 102%; filter: brightness(1.06); }
@@ -72,12 +71,14 @@
     text-shadow: 0 2px 12px rgba(0,0,0,.45);
   }
 
+  /* 表單：桌機比例 */
   form{
     display:flex; gap:12px;
     width:min(720px,92vw);
     justify-content:center; align-items:center;
     margin-top: clamp(6px,1.8vw,12px);
   }
+  /* Email 輸入格：大、沈 */
   input[type="email"]{
     flex:3;
     min-width:260px;
@@ -91,6 +92,8 @@
     box-shadow: 0 10px 28px rgba(0,0,0,.28);
   }
   input::placeholder{ color:#8c8c8c }
+
+  /* 按鈕：精緻小一號（桌機） */
   button{
     flex:1;
     height:48px;
@@ -99,24 +102,54 @@
     border-radius:12px;
     font-weight:700;
     font-size:15px;
+    letter-spacing:.01em;
     cursor:pointer;
     background: var(--accent);
-    color:#fff;
+    color:#000;             /* 文字改黑色 */
     box-shadow: 0 8px 20px rgba(0,0,0,.25);
     transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
   }
   button:hover{ background:var(--accent-d); transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,0,0,.3); }
   button:focus-visible{ outline: 0; box-shadow: 0 0 0 3px rgba(234,138,165,.35); }
 
+  /* 連結區 */
   .links{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:14px; }
-  .links a{ color:#fff; text-decoration:none; font-size:14px }
-  .links a:hover{ text-decoration:underline }
+  .links a.text{ color:#fff; text-decoration:none; font-size:14px }
+  .links a.text:hover{ text-decoration:underline }
 
+  /* Instagram icon（SVG 大小） */
+  .ig-icon{ width:28px; height:28px; display:inline-block; }
+
+  /* ===== 手機優化（<=520px） ===== */
   @media (max-width:520px){
-    form{ flex-direction:column; gap:10px; }
-    input[type="email"]{ flex:none; width:100%; height:52px; font-size:17px; }
-    button{ width:100%; height:46px; font-size:15px; }
+    /* 隱藏 Email 標籤文字；維持無障礙以 aria-label 補足 */
+    .email-label{ display:none; }
+
+    /* 兩側 24px 邊距：用容器控制 */
+    .form-shell{
+      width:100%;
+      padding: 0 24px;       /* 左右 24px */
+      box-sizing: border-box;
+    }
+
+    /* 垂直堆疊，但維持質感比例 */
+    form{ flex-direction:column; gap:10px; width:100%; }
+
+    /* 輸入框佔滿，兩側 24px 已由外層保護 */
+    input[type="email"]{
+      flex:none; width:100%;
+      height:52px; font-size:17px;
+    }
+
+    /* 粉色按鈕：寬度減半、加高一些，置中 */
+    button{
+      width:50%;             /* 橫向減半 */
+      height:52px;           /* 垂直 +0.5(約增加4px) → 讓存在感更好 */
+      font-size:15px;
+      align-self:center;
+    }
   }
+
   @media (prefers-reduced-motion: reduce){
     body{ animation:none }
     .glow{ animation:none; opacity:.12 }
@@ -132,22 +165,34 @@
 
     <h2>Coming Soon</h2>
 
-    <form id="notify">
-      <label class="sr-only" for="email">Email</label>
-      <input id="email" type="email" name="email" placeholder="Enter your email" required />
-      <button type="submit">Get Notified</button>
-    </form>
+    <!-- 外層包一層，專門負責手機 24px 邊距 -->
+    <div class="form-shell">
+      <form id="notify">
+        <label class="email-label" for="email">Email</label>
+        <input id="email" type="email" name="email" placeholder="Enter your email" aria-label="Email" required />
+        <button type="submit" aria-label="Get Notified">Get Notified</button>
+      </form>
+    </div>
 
     <div class="links">
-      <a href="https://www.instagram.com/hestia.active/" target="_blank" rel="noopener">Instagram</a>
-      <!-- LINE@ 按鈕 -->
-      <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">
+      <!-- Instagram：改用 icon -->
+      <a class="ig" href="https://www.instagram.com/hestia.active/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg class="ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+          <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z" stroke="white" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="3.8" stroke="white" stroke-width="1.5"/>
+          <circle cx="17.5" cy="6.5" r="1.2" fill="white"/>
+        </svg>
+      </a>
+
+      <!-- LINE@ 官方按鈕 -->
+      <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener" aria-label="加入 LINE 好友">
         <img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0">
       </a>
     </div>
   </main>
 
   <script>
+    // 暫時用 mailto；未來可改成後端/表單服務
     document.getElementById('notify').addEventListener('submit', function(e){
       e.preventDefault();
       const v = document.getElementById('email').value.trim();

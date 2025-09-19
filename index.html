@@ -1,102 +1,133 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HESTIA — Coming Soon</title>
-  <style>
-    :root{
-      --bg1:#000000;           /* 黑 */
-      --bg2:#2b191c;           /* 深玫瑰棕 */
-      --bg3:#6c3c46;           /* 中玫瑰棕 */
-      --accent:#ea8aa5;        /* 粉玫瑰（按鈕色）*/
-      --accent-d:#d7708d;      /* hover 加深 */
-      --ring: 0 0 0 3px rgba(234,138,165,.35);
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HESTIA — Coming Soon</title>
+<style>
+  :root{
+    /* 調色：更深的黑 + 玫瑰粉火光 */
+    --black-0:#000000;
+    --black-1:#070707;
+    --rose-deep:#2b191c;   /* 深玫瑰棕（過渡層）*/
+    --rose-mid:#5a313c;    /* 中層火光 */
+    --rose-hot:#b4677a;    /* 熱點（只在底部淡淡出現）*/
+    --accent:#ea8aa5;      /* 按鈕色 */
+    --accent-d:#d7708d;
+  }
 
-    /* 版面與背景 */
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:#fff;
-      font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", system-ui, Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
-      display:flex; align-items:center; justify-content:center;
-      text-align:center; overflow:hidden;
-      /* 動態漸層：兩層混合並位移 */
-      background:
-        radial-gradient(60% 50% at 50% 85%, color-mix(in oklab, var(--bg3) 55%, transparent), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2) 55%, var(--bg3) 100%);
-      background-size: 120% 120%, 200% 200%;
-      animation: drift 14s ease-in-out infinite alternate;
-    }
-    @keyframes drift{
-      0%   { background-position: 50% 0%, 0% 0%;}
-      100% { background-position: 50% 20%, 100% 100%;}
-    }
+  /* 版面 */
+  html,body{height:100%}
+  body{
+    margin:0; color:#fff;
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Noto Sans TC","PingFang TC","Microsoft JhengHei", Arial, sans-serif;
+    display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden;
+    /* 3層背景：①超深黑到深灰 ②底部玫瑰粉徑向火光 ③條帶式玫瑰粉霧 */
+    background:
+      linear-gradient(180deg,
+        var(--black-0) 0%,
+        var(--black-0) 22%,
+        var(--black-1) 48%,
+        var(--rose-deep) 74%,
+        var(--rose-mid) 90%,
+        color-mix(in oklab, var(--rose-hot) 80%, transparent) 100%
+      ),
+      radial-gradient(80% 55% at 50% 110%,
+        color-mix(in oklab, var(--rose-hot) 75%, transparent) 0%,
+        color-mix(in oklab, var(--rose-mid) 40%, transparent) 45%,
+        transparent 70%
+      ),
+      radial-gradient(120% 60% at 50% 120%,
+        color-mix(in oklab, var(--rose-mid) 22%, transparent) 0%,
+        transparent 60%
+      );
+    background-size: 100% 120%, 120% 120%, 120% 120%;
+    animation: drift 12s ease-in-out infinite alternate;
+  }
 
-    /* 置中容器 */
-    .wrap{
-      width:min(900px,92vw);
-      display:flex; flex-direction:column; align-items:center; gap:20px;
-      padding: clamp(16px, 4vw, 40px);
-    }
+  /* 背景上下位移 + 熱度輕微波動 */
+  @keyframes drift{
+    0%   { background-position: 50% 0%, 50% 100%, 50% 110%; filter: brightness(1); }
+    100% { background-position: 50% 12%, 50% 95%, 50% 105%; filter: brightness(1.02); }
+  }
 
-    /* 圖像：上方 LOGO（火焰）與字樣 */
-    .logo{width:min(180px, 40vw); filter: drop-shadow(0 8px 24px rgba(0,0,0,.35));}
-    .wordmark{width:min(520px, 85vw); margin-top:12px; filter: drop-shadow(0 6px 18px rgba(0,0,0,.35));}
+  /* 微閃動：只在底部火光層上加顆粒與透明度變化（超輕微） */
+  .glow{
+    position: fixed; inset:0; pointer-events:none; mix-blend-mode: screen; opacity:.14;
+    background:
+      radial-gradient(100% 70% at 50% 115%,
+        rgba(255,180,200,.5) 0%, rgba(255,180,200,0) 70%);
+    animation: flicker 1.8s ease-in-out infinite alternate;
+  }
+  @keyframes flicker{
+    0%{ opacity:.08; filter: blur(0.5px) }
+    100%{ opacity:.16; filter: blur(1.2px) }
+  }
 
-    /* 文字 */
-    h2{
-      margin:10px 0 12px;
-      font-weight:700; letter-spacing:.12em;
-      text-transform:uppercase;
-      font-size: clamp(18px, 2.2vw, 24px);
-      text-shadow: 0 2px 12px rgba(0,0,0,.35);
-    }
+  /* 置中內容 */
+  .wrap{ width:min(920px,92vw); padding:clamp(16px,4vw,40px);
+    display:flex; flex-direction:column; align-items:center; gap:clamp(10px,2.2vw,20px); }
 
-    /* 訂閱表單 */
-    form{display:flex; gap:12px; width:min(720px,92vw); justify-content:center; align-items:center; margin-top:8px;}
-    input[type="email"]{
-      flex:1; min-width: 200px;
-      height:48px; border-radius:12px; border:none; outline:none;
-      padding:0 16px; font-size:16px; color:#222; background:#fff;
-      box-shadow: 0 8px 24px rgba(0,0,0,.22);
-    }
-    input[type="email"]::placeholder{color:#8c8c8c}
-    button{
-      height:48px; padding:0 22px;
-      border:none; border-radius:12px; font-weight:700; font-size:16px;
-      background: var(--accent); color:#fff; cursor:pointer;
-      box-shadow: 0 8px 24px rgba(0,0,0,.22);
-      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
-    }
-    button:hover{ background:var(--accent-d); transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,0,0,.28);}
-    button:focus-visible{ outline:none; box-shadow: var(--ring); }
+  /* 圖像：RWD 用 clamp 控制 */
+  .logo{ width:clamp(120px, 26vw, 220px); filter: drop-shadow(0 10px 28px rgba(0,0,0,.45)); }
+  .wordmark{ width:clamp(260px, 60vw, 560px); filter: drop-shadow(0 8px 22px rgba(0,0,0,.42)); }
 
-    /* 社群連結（可選） */
-    .links{display:flex; gap:18px; margin-top:12px; opacity:.9}
-    .links a{color:#fff; text-decoration:none; font-size:14px}
-    .links a:hover{ text-decoration:underline }
+  h2{
+    margin: clamp(6px,1.8vw,12px) 0 0;
+    font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+    font-size: clamp(18px, 2.4vw, 26px);
+    text-shadow: 0 2px 12px rgba(0,0,0,.4);
+  }
 
-    /* 手機優化 */
-    @media (max-width:460px){
-      form{flex-direction:column}
-      button{width:100%}
-    }
-  </style>
+  /* 表單（可換成你的服務端）*/
+  form{ display:flex; gap:12px; width:min(720px,92vw); justify-content:center; align-items:center; margin-top: clamp(6px,1.8vw,12px); }
+  input[type="email"]{
+    flex:1; min-width:200px; height:48px; border-radius:12px; border:none; outline:none;
+    padding:0 16px; font-size:16px; color:#222; background:#fff;
+    box-shadow: 0 10px 28px rgba(0,0,0,.28);
+  }
+  input::placeholder{ color:#8c8c8c }
+  button{
+    height:48px; padding:0 22px; border:none; border-radius:12px;
+    font-weight:800; font-size:16px; letter-spacing:.02em; cursor:pointer;
+    background: var(--accent); color:#fff;
+    box-shadow: 0 10px 28px rgba(0,0,0,.28);
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  button:hover{ background:var(--accent-d); transform: translateY(-1px); box-shadow: 0 14px 32px rgba(0,0,0,.34); }
+  button:focus-visible{ outline: 0; box-shadow: 0 0 0 3px rgba(234,138,165,.35); }
+
+  /* 社群（可留可拿掉） */
+  .links{ display:flex; gap:18px; margin-top:10px; opacity:.92 }
+  .links a{ color:#fff; text-decoration:none; font-size:14px }
+  .links a:hover{ text-decoration:underline }
+
+  /* 手機排版 */
+  @media (max-width:520px){
+    form{ flex-direction:column }
+    button{ width:100% }
+  }
+
+  /* 低動態喜好（系統偏好） */
+  @media (prefers-reduced-motion: reduce){
+    body{ animation:none }
+    .glow{ animation:none; opacity:.1 }
+  }
+</style>
 </head>
 <body>
-  <main class="wrap" role="main" aria-label="HESTIA Coming Soon">
-    <!-- 上方 LOGO（火焰符號）：請上傳 logo.png 到 repo 根目錄 -->
-    <img class="logo" src="logo.png" alt="HESTIA flame mark" />
+  <!-- 背景火光微脈動層 -->
+  <div class="glow" aria-hidden="true"></div>
 
-    <!-- HESTIA 字樣：請上傳 wordmark.png 到 repo 根目錄 -->
+  <main class="wrap" role="main" aria-label="HESTIA Coming Soon">
+    <!-- 上方 LOGO：上傳 logo.png 到根目錄 -->
+    <img class="logo" src="logo.png" alt="HESTIA flame mark" />
+    <!-- HESTIA 字樣：上傳 wordmark.png 到根目錄 -->
     <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
 
-    <!-- Coming Soon 文案（要保留你原本的拼法就把文字改成 Comming Soon） -->
     <h2>Coming Soon</h2>
 
-    <!-- Email 訂閱（預設用 mailto；之後可改成 Mailchimp / Formspree） -->
+    <!-- 訂閱：先用 mailto，占位。之後可換 Mailchimp / Formspree / 自家 API -->
     <form id="notify">
       <label class="sr-only" for="email">Email</label>
       <input id="email" type="email" name="email" placeholder="Enter your email" required />
@@ -104,7 +135,6 @@
     </form>
 
     <div class="links">
-      <!-- 把連結換成你的官方帳號 -->
       <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
       <span>·</span>
       <a href="https://line.me/" target="_blank" rel="noopener">LINE OA</a>
@@ -112,13 +142,12 @@
   </main>
 
   <script>
-    // 簡易寄信：之後你可以改成把 email 送到表單服務（例如 Formspree / Mailchimp）
+    // 極簡暫時方案：用 mailto 收集（正式版建議串 Mailchimp/ConvertKit 等）
     document.getElementById('notify').addEventListener('submit', function(e){
       e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      if(!email) return;
-      // TODO：把 hello@hestiatw.com 改成你的品牌信箱
-      window.location.href = `mailto:hello@hestiatw.com?subject=Subscribe to HESTIA&body=${encodeURIComponent('Please notify me: ' + email)}`;
+      const v = document.getElementById('email').value.trim();
+      if(!v) return;
+      window.location.href = `mailto:hello@hestiatw.com?subject=Subscribe to HESTIA&body=${encodeURIComponent('Please notify me: ' + v)}`;
     });
   </script>
 </body>

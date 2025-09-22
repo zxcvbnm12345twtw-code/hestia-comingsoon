@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>HESTIA — 即將到來</title>
+<title>HESTIA — Own Your Flame</title>
 <style>
   :root{
     --black-0:#000000;
@@ -14,8 +14,10 @@
     --accent:#E67690;
     --accent-d:#cf5b79;
   }
-  html,body{margin:0;height:130svh;overflow-x:hidden;color:#fff;
+  html,body{margin:0;height:100%;color:#fff;background:#000;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",Arial,sans-serif;}
+
+  /* 背景呼吸（沿用你的風格） */
   body{
     background:
       linear-gradient(180deg,
@@ -41,134 +43,264 @@
     animation:flicker 2.5s ease-in-out infinite alternate;}
   @keyframes flicker{0%{opacity:.12;filter:blur(.6px);}100%{opacity:.24;filter:blur(1.6px);}}
 
-  .center{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-    text-align:center;transition:transform .6s ease;}
-  .logo{width:clamp(120px,26vw,220px);margin-bottom:-14px;filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
-  .wordmark{width:clamp(260px,60vw,560px);margin-bottom:-10px;filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
+  /* 全域排版 */
+  :root{ --gap: clamp(16px, 3vw, 48px); }
+  .wrap{ position:relative; }
 
-  .sub{margin:0;font-weight:300;letter-spacing:.22em;font-size:clamp(18px,2.4vw,26px);
-    text-shadow:0 2px 12px rgba(0,0,0,.45);animation:breathe 6s ease-in-out infinite;}
+  /* 英雄區 */
+  .hero{
+    min-height:100svh; display:grid; place-items:center; text-align:center;
+    padding:12vh var(--gap) 10vh;
+  }
+  .logo{width:clamp(120px,26vw,220px); filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
+  .wordmark{width:clamp(260px,64vw,680px); margin-top:12px; filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
+  .tagline{
+    margin:24px 0 0; font-weight:300; letter-spacing:.22em; 
+    font-size:clamp(18px,2.4vw,26px);
+    text-shadow:0 2px 12px rgba(0,0,0,.45);
+    animation:breathe 6s ease-in-out infinite;
+  }
   @keyframes breathe{
     0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}
     50%{opacity:1;text-shadow:0 0 36px rgba(230,118,144,1);}
   }
+  .scroll-hint{margin-top:20px; opacity:.7; animation:arrowFloat 2.6s ease-in-out infinite;}
+  @keyframes arrowFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 
-  .arrow{font-size:24px;margin-top:20px;opacity:.7;animation:arrowFloat 2.6s ease-in-out infinite;
-    transition:opacity .4s ease,visibility .4s ease;}
-  @keyframes arrowFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
-  .arrow.hide{opacity:0;visibility:hidden;}
+  /* 分鏡區塊（2~6 幕） */
+  .panel{
+    position:relative; display:grid; gap:var(--gap);
+    grid-template-columns: 1.1fr 0.9fr;
+    min-height:180svh; padding-inline: clamp(16px,4vw,72px);
+  }
+  .panel .sticky-visual{
+    position:sticky; top:10svh; height:80svh; display:grid; place-items:center;
+  }
+  .panel .sticky-visual img{
+    max-width:100%; max-height:100%; object-fit:cover;
+    filter:drop-shadow(0 20px 60px rgba(0,0,0,.5));
+    will-change: transform;
+  }
+  .story{ align-self:center; font-size:clamp(15px,1.4vw,18px); line-height:1.85; }
+  .title{ font-size:clamp(28px,6vw,56px); letter-spacing:.02em; margin:0 0 .6em; }
+  .lead{ font-weight:600; letter-spacing:.02em; margin:.2em 0 1em; color:var(--accent);
+    text-shadow:0 0 24px rgba(230,118,144,.35); }
+  .bullets{ margin:1em 0; padding:0; list-style:none; }
+  .bullets li{ margin:.5em 0; position:relative; padding-left:1.1em; }
+  .bullets li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
 
-  .subscribe{opacity:0;transform:translateY(80px);transition:opacity 1s ease,transform 1s ease;margin-top:40px;}
-  .subscribe.in{opacity:1;transform:translateY(0);}
-  .form-shell{width:100%;display:flex;justify-content:center;margin-top:20px;}
-  form{width:100%;max-width:720px;display:flex;gap:12px;justify-content:center;align-items:center;}
+  /* Reveal 動畫 */
+  .reveal{ opacity:0; transform:translateY(14px); transition:opacity .8s ease, transform .8s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ⑦ CTA 區 */
+  .cta{
+    min-height:100svh; display:grid; place-items:center; text-align:center;
+    padding:12vh var(--gap) 14vh;
+  }
+  .cta h2{ font-size:clamp(28px,6vw,56px); margin:.2em 0 .4em; }
+  .cta p{ font-size:clamp(16px,1.6vw,18px); opacity:.9; }
+  .form-shell{ width:100%; display:flex; justify-content:center; margin-top:24px; }
+  form#notify{ width:100%; max-width:720px; display:flex; gap:12px; justify-content:center; align-items:center; }
   input[type="email"]{
-    flex:none;width:50%;min-width:260px;height:54px;border-radius:14px;border:none;outline:none;
-    padding:0 20px;font-size:18px;color:#222;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.28);}
-  input::placeholder{color:#8c8c8c;}
+    flex:none; width:min(560px, 64%); min-width:240px; height:54px;
+    border-radius:14px; border:none; outline:none; padding:0 20px;
+    font-size:18px; color:#222; background:#fff; box-shadow:0 10px 28px rgba(0,0,0,.28);
+  }
+  input::placeholder{ color:#8c8c8c; }
   button{
-    flex:1;height:56px;min-height:56px;padding:0 18px;border:none;border-radius:12px;font-weight:700;font-size:16px;color:#fff;
-    background:var(--accent);display:inline-flex;align-items:center;justify-content:center;
-    animation:btnGlow 3.6s ease-in-out infinite alternate;}
+    flex:1; height:56px; min-height:56px; padding:0 18px; border:none; border-radius:12px;
+    font-weight:700; font-size:16px; color:#fff; background:var(--accent);
+    display:inline-flex; align-items:center; justify-content:center;
+    animation:btnGlow 3.6s ease-in-out infinite alternate; cursor:pointer;
+  }
   @keyframes btnGlow{
     0%{box-shadow:0 0 10px rgba(230,118,144,.30);}
     50%{box-shadow:0 0 24px rgba(230,118,144,.60);}
     100%{box-shadow:0 0 10px rgba(230,118,144,.30);}
   }
-  button:hover{background:var(--accent-d);}
-  .links{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:20px;}
-  .ig-icon{width:28px;height:28px;}
+  button:hover{ background:var(--accent-d); }
 
-  @media (max-width:520px){
-    form{flex-direction:column;gap:10px;}
-    input[type="email"]{width:50%;min-width:220px;height:52px;font-size:17px;align-self:center;}
-    button{width:50%;height:40px;min-height:40px;font-size:15px;align-self:center;}
+  .links{ display:flex; justify-content:center; gap:18px; margin-top:16px; opacity:.9; }
+  .links a{ color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.24); padding-bottom:2px; }
+
+  /* 浮動 CTA */
+  .float-cta{
+    position:fixed; right:16px; bottom:16px; z-index:50;
+  }
+  .float-cta button{
+    height:44px; min-height:44px; padding:0 16px; border-radius:999px; font-size:14px;
   }
 
-  /* 訊息條 */
-  .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);
-    background:rgba(0,0,0,.7);backdrop-filter:saturate(160%) blur(8px);
-    padding:12px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .3s;}
+  /* Toast */
+  .toast{position:fixed; left:50%; bottom:32px; transform:translateX(-50%);
+    background:rgba(0,0,0,.72); backdrop-filter:saturate(160%) blur(8px);
+    padding:12px 18px; border-radius:12px; font-size:14px; opacity:0; pointer-events:none; transition:opacity .3s;}
   .toast.show{opacity:1;}
+
+  /* RWD */
+  @media (max-width:980px){
+    .panel{ grid-template-columns:1fr; min-height:160svh; }
+    .panel .sticky-visual{ order:-1; top:8svh; height:56svh; }
+  }
+  @media (max-width:520px){
+    form#notify{ flex-direction:column; gap:10px; }
+    input[type="email"]{ width:92%; min-width:220px; height:52px; font-size:17px; }
+    button{ width:92%; height:48px; min-height:48px; font-size:15px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .reveal, .title, .lead, .tagline{ transition:none; animation:none; }
+  }
 </style>
 </head>
 <body>
-  <div class="glow"></div>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap">
 
-  <div class="center" id="center">
-    <img class="logo" src="logo.png" alt="HESTIA flame mark" />
-    <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
-    <h2 class="sub">即將到來</h2>
-    <div class="arrow" id="arrow">↓</div>
-
-    <div class="subscribe" id="subscribe">
-      <div class="form-shell">
-        <!-- ✅ Google 表單接收 -->
-        <form id="notify"
-          action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
-          method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
-          
-          <input id="email" type="email" name="entry.345729382"
-                 placeholder="訂閱以獲得最新消息" aria-label="Email" required />
-          
-          <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;">
-          <button type="submit">立即訂閱</button>
-        </form>
-        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+    <!-- ① Ignite -->
+    <section class="hero" id="hero">
+      <div>
+        <img class="logo" src="logo.png" alt="HESTIA flame mark" />
+        <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
+        <h2 class="tagline">Own Your Flame</h2>
+        <div class="scroll-hint">↓</div>
       </div>
+    </section>
 
-      <div class="links">
-        <a href="https://www.instagram.com/hestia.active/" target="_blank" aria-label="Instagram" rel="noopener">
-          <svg class="ig-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Z" stroke="white" stroke-width="1.5"/>
-            <circle cx="12" cy="12" r="3.8" stroke="white" stroke-width="1.5"/>
-            <circle cx="17.5" cy="6.5" r="1.2" fill="white"/>
-          </svg>
-        </a>
-        <a href="https://lin.ee/kjso8Ba" target="_blank" aria-label="加入 LINE 好友" rel="noopener">
-          <img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" />
-        </a>
+    <!-- ② Manifesto -->
+    <section class="panel" id="manifesto">
+      <div class="sticky-visual">
+        <img src="images/manifesto.jpg" alt="Manifesto — 力量 時尚 自我認同">
       </div>
+      <div class="story">
+        <h2 class="title">健身不是標籤，是一種存在</h2>
+        <p class="lead reveal">我們相信每一次呼吸，都是往更好的自己再近一步。</p>
+        <ul class="bullets">
+          <li class="reveal">力量不是對抗，而是與身體和解。</li>
+          <li class="reveal">時尚不是裝飾，而是你的日常盔甲。</li>
+          <li class="reveal">自我不是他人定義，而是你給自己的名字。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ③ Material -->
+    <section class="panel" id="material">
+      <div class="sticky-visual">
+        <img src="images/material.jpg" alt="肌膚的語言 — 布料細節">
+      </div>
+      <div class="story">
+        <h2 class="title">布料，能說話</h2>
+        <p class="lead reveal">讓身體自在呼吸的觸感，陪你走過每一個訓練日。</p>
+        <ul class="bullets">
+          <li class="reveal">親膚觸感，長時間穿著也舒服。</li>
+          <li class="reveal">高彈性支撐，動作延展無拘束。</li>
+          <li class="reveal">輕盈穩定，兼顧日常與運動。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ④ Movement -->
+    <section class="panel" id="movement">
+      <div class="sticky-visual">
+        <img src="images/movement.jpg" alt="Movement — Move with Intention">
+      </div>
+      <div class="story">
+        <h2 class="title">Move with Intention</h2>
+        <p class="lead reveal">從專注到爆發，從靜心到釋放。</p>
+        <p class="reveal">力量訓練｜跑步｜瑜伽｜通勤 — 一套切換你的狀態。</p>
+      </div>
+    </section>
+
+    <!-- ⑤ Belonging -->
+    <section class="panel" id="belonging">
+      <div class="sticky-visual">
+        <img src="images/belonging.jpg" alt="Belonging — 歸屬與安全">
+      </div>
+      <div class="story">
+        <h2 class="title">因為力量，才有歸屬</h2>
+        <p class="lead reveal">LGBTQ 友善、Size-Inclusive、零羞辱語言。</p>
+        <p class="reveal">健身場域應該是安全且被尊重的。HESTIA 為所有人，點燃共同的火種。</p>
+      </div>
+    </section>
+
+    <!-- ⑥ Design & Precision（台灣設計） -->
+    <section class="panel" id="design">
+      <div class="sticky-visual">
+        <img src="images/design.jpg" alt="Design & Precision — 台灣設計">
+      </div>
+      <div class="story">
+        <h2 class="title">設計，是我們的語言</h2>
+        <p class="lead reveal">貼合亞洲身形，讓服裝像第二層肌膚。</p>
+        <ul class="bullets">
+          <li class="reveal"><strong>台灣設計：</strong>東方線條 × 現代幾何，力量與優雅並存。</li>
+          <li class="reveal"><strong>專注版型：</strong>依比例剪裁，強調貼合與流暢動作。</li>
+          <li class="reveal"><strong>細節哲學：</strong>縫線、拼接、Logo 位置皆為動作與視覺設計。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ⑦ Join｜Google 表單 CTA -->
+    <section class="cta" id="join">
+      <div>
+        <h2>第一波火種</h2>
+        <p>搶先收到上市日、首發色與限定優惠。</p>
+
+        <div class="form-shell">
+          <!-- Google 表單（你的 Form/Entry） -->
+          <form id="notify"
+            action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
+            method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
+            <input id="email" type="email" name="entry.345729382"
+                   placeholder="輸入 Email，點燃第一封來信" aria-label="Email" required />
+            <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;">
+            <button type="submit">加入火種名單</button>
+          </form>
+          <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+        </div>
+
+        <div class="links">
+          <a href="https://www.instagram.com/hestia.active/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">加入 LINE</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 浮動 CTA -->
+    <div class="float-cta">
+      <button onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">成為火種</button>
     </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
   </div>
 
-  <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
-
 <script>
-  const center = document.getElementById('center');
-  const subscribe = document.getElementById('subscribe');
-  const arrow = document.getElementById('arrow');
-  const toast = document.getElementById('toast');
-  let submittedAt = 0;
+  // 文字 reveal
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in') })
+  }, {threshold:.2});
+  document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
 
+  // 輕量視差（可移除）
+  const visuals = document.querySelectorAll('.sticky-visual img');
   window.addEventListener('scroll', ()=>{
-    const scrolled = window.scrollY;
-    center.style.transform = `translate(-50%, calc(-50% - ${scrolled*0.2}px))`;
-    if(scrolled > window.innerHeight*0.15){
-      subscribe.classList.add('in');
-      arrow?.classList.add('hide');
-    }else{
-      subscribe.classList.remove('in');
-      arrow?.classList.remove('hide');
-    }
+    const y = window.scrollY || 0;
+    visuals.forEach(img => { img.style.transform = `translateY(${y*0.03}px)`; });
   });
 
+  // Google 表單提交（隱藏 iframe 監聽）
+  const toast = document.getElementById('toast');
+  let submittedAt = 0;
   function submitGForm(e){
     const input = document.getElementById('email');
     const email = (input.value || '').trim();
     const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if(!ok){
-      alert('請輸入有效的 Email');
-      return false;
-    }
-    submittedAt = Date.now();
-    return true;
+    if(!ok){ alert('請輸入有效的 Email'); return false; }
+    submittedAt = Date.now(); return true;
   }
-
   document.getElementById('hidden_iframe').addEventListener('load', ()=>{
-    if(Date.now() - submittedAt < 300) return;
-    const input = document.getElementById('email');
-    input.value = '';
+    if(Date.now() - submittedAt < 300) return; // 略過初始載入
+    const input = document.getElementById('email'); input.value = '';
     toast.classList.add('show');
     setTimeout(()=>toast.classList.remove('show'), 2600);
   });

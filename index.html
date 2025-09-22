@@ -13,7 +13,10 @@
     --rose-hot:#8f3e56;
     --accent:#E67690;
     --accent-d:#cf5b79;
+    /* 色溫過場（由 JS 切換 body 的 data-tone） */
+    --tone: rgba(230,118,144,.18); /* 預設粉玫色 */
   }
+
   html,body{margin:0;height:100%;color:#fff;background:#000;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",Arial,sans-serif;}
 
@@ -38,6 +41,17 @@
     0%{background-position:50% 0%,50% 105%;filter:brightness(1.0);}
     100%{background-position:50% 24%,50% 92%;filter:brightness(1.06);}
   }
+
+  /* 柔和色溫過場覆蓋層：用 currentColor + transition 讓漸變更順 */
+  .tint{
+    position:fixed; inset:0; pointer-events:none; mix-blend-mode:overlay;
+    color: var(--tone);                   /* 由 JS 更新 --tone */
+    transition: color 1200ms ease;        /* 平滑變色 */
+    background:
+      radial-gradient(60% 60% at 50% 110%, color-mix(in oklab, currentColor 90%, transparent) 0%, transparent 70%),
+      linear-gradient(180deg, transparent 0%, color-mix(in oklab, currentColor 38%, transparent) 120%);
+  }
+
   .glow{position:fixed;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.2;
     background:radial-gradient(120% 80% at 50% 122%,rgba(255,170,190,.55) 0%,rgba(255,170,190,0) 70%);
     animation:flicker 2.5s ease-in-out infinite alternate;}
@@ -47,7 +61,7 @@
   :root{ --gap: clamp(16px, 3vw, 48px); }
   .wrap{ position:relative; }
 
-  /* 英雄區 */
+  /* 英雄區（首屏） */
   .hero{
     min-height:100svh; display:grid; place-items:center; text-align:center;
     padding:12vh var(--gap) 10vh;
@@ -58,7 +72,7 @@
     margin:24px 0 0; font-weight:300; letter-spacing:.22em; 
     font-size:clamp(18px,2.4vw,26px);
     text-shadow:0 2px 12px rgba(0,0,0,.45);
-    animation:breathe 6s ease-in-out infinite;
+    animation:breathe 6s ease-in-out infinite; /* 呼吸特效保留 */
   }
   @keyframes breathe{
     0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}
@@ -89,11 +103,11 @@
   .bullets li{ margin:.5em 0; position:relative; padding-left:1.1em; }
   .bullets li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
 
-  /* Reveal 動畫 */
+  /* Reveal 動畫（標題也納入） */
   .reveal{ opacity:0; transform:translateY(14px); transition:opacity .8s ease, transform .8s ease; }
   .reveal.in{ opacity:1; transform:none; }
 
-  /* ⑦ CTA 區 */
+  /* ⑦ CTA 區（Google 表單） */
   .cta{
     min-height:100svh; display:grid; place-items:center; text-align:center;
     padding:12vh var(--gap) 14vh;
@@ -124,20 +138,6 @@
   .links{ display:flex; justify-content:center; gap:18px; margin-top:16px; opacity:.9; }
   .links a{ color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.24); padding-bottom:2px; }
 
-  /* 浮動 CTA */
-  .float-cta{
-    position:fixed; right:16px; bottom:16px; z-index:50;
-  }
-  .float-cta button{
-    height:44px; min-height:44px; padding:0 16px; border-radius:999px; font-size:14px;
-  }
-
-  /* Toast */
-  .toast{position:fixed; left:50%; bottom:32px; transform:translateX(-50%);
-    background:rgba(0,0,0,.72); backdrop-filter:saturate(160%) blur(8px);
-    padding:12px 18px; border-radius:12px; font-size:14px; opacity:0; pointer-events:none; transition:opacity .3s;}
-  .toast.show{opacity:1;}
-
   /* RWD */
   @media (max-width:980px){
     .panel{ grid-template-columns:1fr; min-height:160svh; }
@@ -154,26 +154,29 @@
 </style>
 </head>
 <body>
+  <!-- 柔和色溫過場層（JS 依每幕改變 --tone，會有順滑的顏色過場） -->
+  <div class="tint" aria-hidden="true"></div>
   <div class="glow" aria-hidden="true"></div>
+
   <div class="wrap">
 
     <!-- ① Ignite -->
-    <section class="hero" id="hero">
+    <section class="hero" id="hero" data-tone="0">
       <div>
         <img class="logo" src="logo.png" alt="HESTIA flame mark" />
         <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
-        <h2 class="tagline">Own Your Flame</h2>
+        <h2 class="tagline">即將到來</h2> <!-- 改回即將到來 + 呼吸特效 -->
         <div class="scroll-hint">↓</div>
       </div>
     </section>
 
     <!-- ② Manifesto -->
-    <section class="panel" id="manifesto">
+    <section class="panel" id="manifesto" data-tone="1">
       <div class="sticky-visual">
         <img src="images/manifesto.jpg" alt="Manifesto — 力量 時尚 自我認同">
       </div>
       <div class="story">
-        <h2 class="title">健身不是標籤，是一種存在</h2>
+        <h2 class="title reveal">健身不是標籤，是一種存在</h2>
         <p class="lead reveal">我們相信每一次呼吸，都是往更好的自己再近一步。</p>
         <ul class="bullets">
           <li class="reveal">力量不是對抗，而是與身體和解。</li>
@@ -184,12 +187,12 @@
     </section>
 
     <!-- ③ Material -->
-    <section class="panel" id="material">
+    <section class="panel" id="material" data-tone="2">
       <div class="sticky-visual">
         <img src="images/material.jpg" alt="肌膚的語言 — 布料細節">
       </div>
       <div class="story">
-        <h2 class="title">布料，能說話</h2>
+        <h2 class="title reveal">布料，能說話</h2>
         <p class="lead reveal">讓身體自在呼吸的觸感，陪你走過每一個訓練日。</p>
         <ul class="bullets">
           <li class="reveal">親膚觸感，長時間穿著也舒服。</li>
@@ -200,36 +203,36 @@
     </section>
 
     <!-- ④ Movement -->
-    <section class="panel" id="movement">
+    <section class="panel" id="movement" data-tone="3">
       <div class="sticky-visual">
         <img src="images/movement.jpg" alt="Movement — Move with Intention">
       </div>
       <div class="story">
-        <h2 class="title">Move with Intention</h2>
+        <h2 class="title reveal">Move with Intention</h2>
         <p class="lead reveal">從專注到爆發，從靜心到釋放。</p>
         <p class="reveal">力量訓練｜跑步｜瑜伽｜通勤 — 一套切換你的狀態。</p>
       </div>
     </section>
 
     <!-- ⑤ Belonging -->
-    <section class="panel" id="belonging">
+    <section class="panel" id="belonging" data-tone="4">
       <div class="sticky-visual">
         <img src="images/belonging.jpg" alt="Belonging — 歸屬與安全">
       </div>
       <div class="story">
-        <h2 class="title">因為力量，才有歸屬</h2>
+        <h2 class="title reveal">因為力量，才有歸屬</h2>
         <p class="lead reveal">LGBTQ 友善、Size-Inclusive、零羞辱語言。</p>
         <p class="reveal">健身場域應該是安全且被尊重的。HESTIA 為所有人，點燃共同的火種。</p>
       </div>
     </section>
 
     <!-- ⑥ Design & Precision（台灣設計） -->
-    <section class="panel" id="design">
+    <section class="panel" id="design" data-tone="5">
       <div class="sticky-visual">
         <img src="images/design.jpg" alt="Design & Precision — 台灣設計">
       </div>
       <div class="story">
-        <h2 class="title">設計，是我們的語言</h2>
+        <h2 class="title reveal">設計，是我們的語言</h2>
         <p class="lead reveal">貼合亞洲身形，讓服裝像第二層肌膚。</p>
         <ul class="bullets">
           <li class="reveal"><strong>台灣設計：</strong>東方線條 × 現代幾何，力量與優雅並存。</li>
@@ -240,10 +243,10 @@
     </section>
 
     <!-- ⑦ Join｜Google 表單 CTA -->
-    <section class="cta" id="join">
+    <section class="cta" id="join" data-tone="6">
       <div>
-        <h2>第一波火種</h2>
-        <p>搶先收到上市日、首發色與限定優惠。</p>
+        <h2 class="reveal">頭號火種</h2>
+        <p class="reveal">搶先收到最新消息與限定優惠。</p>
 
         <div class="form-shell">
           <!-- Google 表單（你的 Form/Entry） -->
@@ -253,43 +256,57 @@
             <input id="email" type="email" name="entry.345729382"
                    placeholder="輸入 Email，點燃第一封來信" aria-label="Email" required />
             <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;">
-            <button type="submit">加入火種名單</button>
+            <button type="submit">Join Us</button>
           </form>
           <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
         </div>
 
         <div class="links">
           <a href="https://www.instagram.com/hestia.active/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">加入 LINE</a>
+          <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">加入LINE官方帳號</a>
         </div>
       </div>
     </section>
-
-    <!-- 浮動 CTA -->
-    <div class="float-cta">
-      <button onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">成為火種</button>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
   </div>
 
 <script>
-  // 文字 reveal
+  /* 文字入場：淡入上浮 */
   const io = new IntersectionObserver(es=>{
     es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in') })
   }, {threshold:.2});
   document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+  document.querySelectorAll('.title').forEach(el=> { el.classList.add('reveal'); io.observe(el); });
 
-  // 輕量視差（可移除）
+  /* 輕量視差（可移除） */
   const visuals = document.querySelectorAll('.sticky-visual img');
   window.addEventListener('scroll', ()=>{
     const y = window.scrollY || 0;
     visuals.forEach(img => { img.style.transform = `translateY(${y*0.03}px)`; });
   });
 
-  // Google 表單提交（隱藏 iframe 監聽）
-  const toast = document.getElementById('toast');
+  /* 柔和色溫過場：每幕切換 --tone（.tint 以 currentColor 轉場） */
+  const tones = [
+    'rgba(230,118,144,.18)', // 0 hero 粉玫
+    'rgba(206,114,180,.18)', // 1 manifesto 紫玫
+    'rgba(255,153,102,.18)', // 2 material 橘暖
+    'rgba(120,170,255,.18)', // 3 movement 冷靜藍
+    'rgba(255,120,160,.18)', // 4 belonging 甜粉
+    'rgba(210,160,255,.18)', // 5 design 紫霧
+    'rgba(255,180,120,.18)'  // 6 join 橘金
+  ];
+  const root = document.documentElement;
+  const sections = document.querySelectorAll('section[data-tone]');
+  const toneObserver = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const idx = Number(entry.target.getAttribute('data-tone')) || 0;
+        root.style.setProperty('--tone', tones[idx] || tones[0]);
+      }
+    });
+  }, {rootMargin:'-40% 0px -50% 0px', threshold:0}); // 中段進場才切色，避免閃爍
+  sections.forEach(sec=> toneObserver.observe(sec));
+
+  /* Google 表單提交（隱藏 iframe 監聽） */
   let submittedAt = 0;
   function submitGForm(e){
     const input = document.getElementById('email');
@@ -301,8 +318,7 @@
   document.getElementById('hidden_iframe').addEventListener('load', ()=>{
     if(Date.now() - submittedAt < 300) return; // 略過初始載入
     const input = document.getElementById('email'); input.value = '';
-    toast.classList.add('show');
-    setTimeout(()=>toast.classList.remove('show'), 2600);
+    alert('訂閱成功！我們將在第一時間通知你最新消息。');
   });
 </script>
 </body>

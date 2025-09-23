@@ -24,7 +24,7 @@
   .we-accent{color:#E67690;text-shadow:0 0 24px rgba(230,118,144,.36);}
   p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.7;margin:0 auto;}
 
-  /* 背景分幕：黑色延長至第二頁 */
+  /* 背景分幕 */
   .s1{background:linear-gradient(180deg,#000,#000);}
   .s2{background:linear-gradient(180deg,#000,#1d1013);}
   .s3{background:linear-gradient(180deg,#1d1013,#441d2a);}
@@ -49,8 +49,13 @@
   .arrow{font-size:24px;margin-top:14px;animation:breathe 6s ease-in-out infinite, floatY 3s ease-in-out infinite;opacity:.8;}
   @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
 
-  /* 火種 logo */
-  .logo-mark{width:clamp(90px,18vw,160px);margin:-6px 0 12px;filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
+  /* 共用 logo mark 尺寸（中間值） */
+  .logo-mark,
+  .flame-img{
+    width:clamp(140px,28vw,280px);
+    margin:-6px 0 20px;
+    filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));
+  }
 
   /* 表單 */
   form{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;z-index:1;}
@@ -98,7 +103,7 @@
 
 <!-- THE FLAME MARK -->
 <section class="s4">
-  <img class="reveal" src="Flamemark.png" alt="The Flame Mark" style="width:clamp(200px,50vw,480px);margin-bottom:20px;">
+  <img class="flame-img reveal" src="Flamemark.png" alt="The Flame Mark">
   <h2 class="late" data-late>THE FLAME MARK</h2>
   <p class="late" data-late>這不只是口號，而是一種信念。<br>無論性別、身形、背景，火焰屬於你自己。<br>HESTIA 讓每個人能穿上力量，活出自我。</p>
 </section>

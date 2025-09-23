@@ -6,28 +6,23 @@
 <title>HESTIA — Coming Soon</title>
 <style>
   :root{
-    /* 主色票（沿用你原設） */
-    --black-0:#000000;
-    --black-1:#070707;
-    --rose-deep:#1d1013;
-    --rose-mid:#3b1824;
-    --rose-hot:#8f3e56;
-    --accent:#E67690;
-    --accent-d:#cf5b79;
-
-    /* 色溫覆層（由 JS 切） */
-    --tone: rgba(230,118,144,.14); /* 更淡、更柔 */
+    --black-0:#000000; --black-1:#070707;
+    --rose-deep:#1d1013; --rose-mid:#3b1824; --rose-hot:#8f3e56;
+    --accent:#E67690; --accent-d:#cf5b79;
+    /* 柔和色溫覆層（由 JS 依各頁切換） */
+    --tone: rgba(230,118,144,.14);
   }
 
-  /* 全域 reset & 防首滑白線 */
+  /* 全域：單一背景（更黑、更慢） */
   html,body{
-    margin:0; padding:0; height:100%;
+    margin:0; height:100%;
     background:#000; color:#fff;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
     -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     overscroll-behavior: none;
+    /* 一頁一幕的沉浸感 */
+    scroll-snap-type: y mandatory;
   }
-  /* 單一全域背景（更慢、更黑） */
   body{
     background:
       linear-gradient(180deg,
@@ -42,25 +37,24 @@
         color-mix(in oklab, var(--rose-mid) 26%, transparent) 0%,
         transparent 70%);
     background-size:100% 120%, 120% 120%;
-    animation: drift 28s ease-in-out infinite alternate; /* 由 16s → 28s 更慢 */
+    animation: drift 28s ease-in-out infinite alternate; /* 慢速漂移 */
   }
   @keyframes drift{
     0%{background-position:50% 0%,50% 105%; filter:brightness(1.0);}
     100%{background-position:50% 20%,50% 92%; filter:brightness(1.05);}
   }
 
-  /* 柔和色溫過場：單一覆層，避免分段背景造成縫隙 */
+  /* 柔和色溫過場：單一覆層（避免切換縫隙） */
   .tint{
     position:fixed; inset:0; pointer-events:none; mix-blend-mode:overlay;
-    color: var(--tone);
-    transition: color 1200ms ease;
+    color: var(--tone); transition: color 1200ms ease;
     background:
       radial-gradient(60% 60% at 50% 110%, color-mix(in oklab, currentColor 90%, transparent) 0%, transparent 72%),
       linear-gradient(180deg, transparent 0%, color-mix(in oklab, currentColor 30%, transparent) 120%);
     will-change: color; backface-visibility:hidden; contain:paint;
   }
 
-  /* 螢光柔光層（你原來的氛圍） */
+  /* 柔光層（氛圍） */
   .glow{
     position:fixed; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.2;
     background:radial-gradient(120% 80% at 50% 122%,rgba(255,170,190,.55) 0%,rgba(255,170,190,0) 70%);
@@ -68,46 +62,47 @@
   }
   @keyframes flicker{0%{opacity:.12;filter:blur(.6px);}100%{opacity:.22;filter:blur(1.2px);}}
 
-  /* 版面 */
   .wrap{position:relative;}
 
-  section{
+  /* 每一幕都是「一頁」 */
+  section.page{
     min-height:100svh; display:grid; place-items:center;
     padding:64px 20px; text-align:center;
+    scroll-snap-align: start;
   }
-  .container{
-    max-width:860px; margin:auto; padding:0 16px;
-  }
+  .container{max-width:920px; margin:auto; padding:0 16px;}
 
   /* 英雄區：logo + wordmark + 即將到來（呼吸） */
   .logo{width:clamp(120px,26vw,220px); margin-bottom:-14px;
     filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
   .wordmark{width:clamp(260px,60vw,560px); margin:-6px 0 8px;
     filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
-
   .tagline{
     margin:8px 0 0; font-weight:300; letter-spacing:.22em;
     font-size:clamp(18px,2.4vw,26px);
     text-shadow:0 2px 12px rgba(0,0,0,.45);
     animation:breathe 6s ease-in-out infinite;
-    will-change:opacity, text-shadow; backface-visibility:hidden;
   }
   @keyframes breathe{
     0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.35);}
     50%{opacity:1;text-shadow:0 0 30px rgba(230,118,144,1);}
   }
 
-  /* 標題/內文（只做淡入，不做位移 → 避免首滑白線） */
+  /* 文字層級 */
   h1,h2{margin:0 0 14px;}
   h1{font-size:clamp(32px,5.2vw,54px); letter-spacing:.02em;}
   h2{font-size:clamp(24px,4.4vw,40px); letter-spacing:.02em;}
   p{font-size:clamp(16px,2vw,20px); line-height:1.75; opacity:.92; margin:0 auto;}
   .lead{color:var(--accent); text-shadow:0 0 20px rgba(230,118,144,.32);}
 
-  .reveal{opacity:0; transition:opacity 820ms ease;}
-  .reveal.in{opacity:1;}
+  /* 捲動進場：淡入＋微上浮（只套在元素，不動整個 section，避免白線） */
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity 820ms ease, transform 820ms ease;
+    will-change:opacity, transform; backface-visibility:hidden; transform-origin:50% 60%;}
+  .reveal.in{opacity:1; transform:none;}
+  /* 「更晚才出現」的元素（例如 WHO WE ARE 的內文） */
+  .reveal.late{opacity:0; transform:translateY(18px);}
 
-  /* CTA 表單（Google 表單版，可換成你的 action/entry） */
+  /* CTA 表單（Google 表單） */
   form{margin-top:22px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
   input[type="email"]{
     padding:12px 20px; border-radius:12px; border:none; min-width:240px;
@@ -125,10 +120,10 @@
     50%{box-shadow:0 0 24px rgba(230,118,144,.60);}
     100%{box-shadow:0 0 10px rgba(230,118,144,.30);}
   }
-
   .links{display:flex; gap:18px; justify-content:center; margin-top:14px;}
   .links a{color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.24); padding-bottom:2px;}
 
+  /* RWD */
   @media (max-width:520px){
     form{flex-direction:column;}
     button{width:100%;}
@@ -136,35 +131,37 @@
   @media (prefers-reduced-motion: reduce){
     .tint,.glow,.tagline{animation:none}
     .reveal{transition:none}
+    html,body{scroll-snap-type:none;}
   }
 </style>
 </head>
 <body>
-  <!-- 柔和色溫過場層（單一覆蓋，避免切幕縫隙/白線） -->
+  <!-- 柔和色溫覆層（由 JS 改變 --tone） -->
   <div class="tint" aria-hidden="true"></div>
   <div class="glow" aria-hidden="true"></div>
 
   <div class="wrap">
-    <!-- ① Hero -->
-    <section id="hero" data-tone="0">
+    <!-- Page 1：Hero -->
+    <section class="page" id="hero" data-tone="0">
       <div class="container">
-        <img class="logo" src="logo.png" alt="HESTIA flame mark" />
-        <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
+        <img class="logo reveal in" src="logo.png" alt="HESTIA flame mark" />
+        <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
         <div class="tagline">即將到來</div>
       </div>
     </section>
 
-    <!-- ② WHO WE ARE? -->
-    <section id="who" data-tone="1">
+    <!-- Page 2：WHO WE ARE（先看到標題；再捲動才出現段落） -->
+    <section class="page" id="who" data-tone="1">
       <div class="container">
-        <h2 class="reveal">WHO WE ARE?</h2>
-        <p class="reveal lead">HESTIA 的名字來自希臘神話中守護火爐的女神，象徵歸屬與內在的火。</p>
-        <p class="reveal">我們相信，每個人心中都有一簇火焰，等待被看見、被擁抱、被點燃。</p>
+        <h2 class="reveal in">WHO WE ARE?</h2>
+        <!-- 內文設置為 .late：需要「再往下捲」才淡入 -->
+        <p class="reveal late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，象徵歸屬與內在的火。</p>
+        <p class="reveal late" data-late>我們相信，每個人心中都有一簇火焰，等待被看見、被擁抱、被點燃。</p>
       </div>
     </section>
 
-    <!-- ③ The Flame Mark -->
-    <section id="mark" data-tone="2">
+    <!-- Page 3：THE FLAME MARK -->
+    <section class="page" id="mark" data-tone="2">
       <div class="container">
         <h2 class="reveal">THE FLAME MARK</h2>
         <p class="reveal lead">對稱、內外交錯的線條構成火焰，平衡力量與柔韌，也連結身體與心靈。</p>
@@ -172,8 +169,8 @@
       </div>
     </section>
 
-    <!-- ④ Own Your Flame + CTA -->
-    <section id="cta" data-tone="3">
+    <!-- Page 4：OWN YOUR FLAME + CTA -->
+    <section class="page" id="cta" data-tone="3">
       <div class="container">
         <h2 class="reveal">OWN YOUR FLAME</h2>
         <p class="reveal">無論性別、身形、背景，火焰屬於你自己。穿上力量，活出自我。</p>
@@ -198,27 +195,32 @@
   </div>
 
 <script>
-  /* 文字淡入（不做 transform，避免首滑白線） */
+  /* 一般淡入（標題/段落） */
   const io = new IntersectionObserver(es=>{
     es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in') })
-  }, {threshold:.18});
+  }, {threshold:.22});
   document.querySelectorAll('.reveal').forEach(el=> {
-    // 初次渲染就觀察
-    el.style.willChange = 'opacity';
-    el.style.backfaceVisibility = 'hidden';
-    el.style.transform = 'translateZ(0)'; // 防止子像素縫
-    io.observe(el);
+    // hero 的 logo/wordmark 起始就 in；其餘交給 observer
+    if(!el.classList.contains('in')) io.observe(el);
   });
 
-  /* 色溫過場：單一覆層 .tint 以 --tone 漸變（柔和銜接） */
+  /* WHO WE ARE：段落要「再往下捲」才出現 */
+  const lateIO = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); lateIO.unobserve(e.target); }
+    });
+  }, {rootMargin:'-10% 0px -35% 0px', threshold:0}); // 需要更深入捲動才觸發
+  document.querySelectorAll('[data-late]').forEach(el=> lateIO.observe(el));
+
+  /* 柔和色溫過場：依各頁 data-tone 切換 --tone */
   const tones = [
-    'rgba(230,118,144,.14)', // hero
-    'rgba(206,114,180,.14)', // who
-    'rgba(120,160,255,.12)', // mark（微冷，凸顯線條）
-    'rgba(255,180,120,.14)'  // cta（暖邀請）
+    'rgba(230,118,144,.14)', // hero：粉玫
+    'rgba(206,114,180,.14)', // who：紫玫
+    'rgba(120,160,255,.12)', // mark：微冷藍，凸顯線條
+    'rgba(255,180,120,.14)'  // cta：暖橘，邀請
   ];
   const root = document.documentElement;
-  const secs = document.querySelectorAll('section[data-tone]');
+  const pages = document.querySelectorAll('section.page[data-tone]');
   const toneObserver = new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting){
@@ -227,7 +229,7 @@
       }
     });
   }, {rootMargin:'-45% 0px -45% 0px', threshold:0});
-  secs.forEach(s => toneObserver.observe(s));
+  pages.forEach(p => toneObserver.observe(p));
 
   /* Google 表單提交回饋 */
   let submittedAt = 0;

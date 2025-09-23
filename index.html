@@ -3,321 +3,110 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>HESTIA — Own Your Flame</title>
+<title>HESTIA — 即將到來</title>
 <style>
-  :root{
-    --black-0:#000000;
-    --black-1:#040404;
-    --rose-deep:#1d1013;
-    --rose-mid:#441d2a;
-    --rose-hot:#8f3e56;
-    --accent:#E67690;
-    --accent-d:#cf5b79;
-    /* 色溫過場（由 JS 切換 body 的 data-tone） */
-    --tone: rgba(230,118,144,.18); /* 預設粉玫色 */
+  body,html{
+    margin:0;padding:0;
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
+    color:#fff;overflow-x:hidden;
   }
 
-  html,body{margin:0;height:100%;color:#fff;background:#000;
-    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",Arial,sans-serif;}
-
-  /* 背景呼吸（沿用你的風格） */
-  body{
-    background:
-      linear-gradient(180deg,
-        var(--black-0) 0%,
-        var(--black-0) 36%,
-        var(--black-1) 62%,
-        var(--rose-deep) 80%,
-        var(--rose-mid) 94%,
-        color-mix(in oklab, var(--rose-hot) 88%, transparent) 100%),
-      radial-gradient(92% 66% at 50% 118%,
-        color-mix(in oklab, var(--rose-hot) 85%, transparent) 0%,
-        color-mix(in oklab, var(--rose-mid) 50%, transparent) 44%,
-        transparent 72%);
-    background-size:100% 120%,120% 120%;
-    animation: drift 16s ease-in-out infinite alternate;
+  section{
+    min-height:100vh;
+    display:flex;flex-direction:column;
+    justify-content:center;align-items:center;
+    padding:60px 20px;text-align:center;
+    opacity:0;transform:translateY(40px);
+    transition:opacity 1s ease,transform 1s ease;
   }
-  @keyframes drift{
-    0%{background-position:50% 0%,50% 105%;filter:brightness(1.0);}
-    100%{background-position:50% 24%,50% 92%;filter:brightness(1.06);}
-  }
+  section.in{opacity:1;transform:translateY(0);}
 
-  /* 柔和色溫過場覆蓋層：用 currentColor + transition 讓漸變更順 */
-  .tint{
-    position:fixed; inset:0; pointer-events:none; mix-blend-mode:overlay;
-    color: var(--tone);                   /* 由 JS 更新 --tone */
-    transition: color 1200ms ease;        /* 平滑變色 */
-    background:
-      radial-gradient(60% 60% at 50% 110%, color-mix(in oklab, currentColor 90%, transparent) 0%, transparent 70%),
-      linear-gradient(180deg, transparent 0%, color-mix(in oklab, currentColor 38%, transparent) 120%);
-  }
+  h1,h2{margin:0 0 20px;}
+  h1{font-size:clamp(32px,5vw,52px);}
+  h2{font-size:clamp(24px,4vw,36px);}
+  p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.6;}
 
-  .glow{position:fixed;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.2;
-    background:radial-gradient(120% 80% at 50% 122%,rgba(255,170,190,.55) 0%,rgba(255,170,190,0) 70%);
-    animation:flicker 2.5s ease-in-out infinite alternate;}
-  @keyframes flicker{0%{opacity:.12;filter:blur(.6px);}100%{opacity:.24;filter:blur(1.6px);}}
+  /* 幕背景色溫 */
+  .s1{background:linear-gradient(180deg,#000,#1d1013);}
+  .s2{background:linear-gradient(180deg,#1d1013,#441d2a);}
+  .s3{background:linear-gradient(180deg,#441d2a,#8f3e56);}
+  .s4{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
 
-  /* 全域排版 */
-  :root{ --gap: clamp(16px, 3vw, 48px); }
-  .wrap{ position:relative; }
-
-  /* 英雄區（首屏） */
-  .hero{
-    min-height:100svh; display:grid; place-items:center; text-align:center;
-    padding:12vh var(--gap) 10vh;
-  }
-  .logo{width:clamp(120px,26vw,220px); filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
-  .wordmark{width:clamp(260px,64vw,680px); margin-top:12px; filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
-  .tagline{
-    margin:24px 0 0; font-weight:300; letter-spacing:.22em; 
-    font-size:clamp(18px,2.4vw,26px);
-    text-shadow:0 2px 12px rgba(0,0,0,.45);
-    animation:breathe 6s ease-in-out infinite; /* 呼吸特效保留 */
+  /* 初始主視覺：即將到來 呼吸 */
+  .hero h1{
+    font-weight:300;letter-spacing:.22em;
+    animation:breathe 6s ease-in-out infinite;
+    text-shadow:0 0 12px rgba(230,118,144,.6);
   }
   @keyframes breathe{
     0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}
-    50%{opacity:1;text-shadow:0 0 36px rgba(230,118,144,1);}
+    50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}
   }
-  .scroll-hint{margin-top:20px; opacity:.7; animation:arrowFloat 2.6s ease-in-out infinite;}
-  @keyframes arrowFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 
-  /* 分鏡區塊（2~6 幕） */
-  .panel{
-    position:relative; display:grid; gap:var(--gap);
-    grid-template-columns: 1.1fr 0.9fr;
-    min-height:180svh; padding-inline: clamp(16px,4vw,72px);
-  }
-  .panel .sticky-visual{
-    position:sticky; top:10svh; height:80svh; display:grid; place-items:center;
-  }
-  .panel .sticky-visual img{
-    max-width:100%; max-height:100%; object-fit:cover;
-    filter:drop-shadow(0 20px 60px rgba(0,0,0,.5));
-    will-change: transform;
-  }
-  .story{ align-self:center; font-size:clamp(15px,1.4vw,18px); line-height:1.85; }
-  .title{ font-size:clamp(28px,6vw,56px); letter-spacing:.02em; margin:0 0 .6em; }
-  .lead{ font-weight:600; letter-spacing:.02em; margin:.2em 0 1em; color:var(--accent);
-    text-shadow:0 0 24px rgba(230,118,144,.35); }
-  .bullets{ margin:1em 0; padding:0; list-style:none; }
-  .bullets li{ margin:.5em 0; position:relative; padding-left:1.1em; }
-  .bullets li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
-
-  /* Reveal 動畫（標題也納入） */
-  .reveal{ opacity:0; transform:translateY(14px); transition:opacity .8s ease, transform .8s ease; }
-  .reveal.in{ opacity:1; transform:none; }
-
-  /* ⑦ CTA 區（Google 表單） */
-  .cta{
-    min-height:100svh; display:grid; place-items:center; text-align:center;
-    padding:12vh var(--gap) 14vh;
-  }
-  .cta h2{ font-size:clamp(28px,6vw,56px); margin:.2em 0 .4em; }
-  .cta p{ font-size:clamp(16px,1.6vw,18px); opacity:.9; }
-  .form-shell{ width:100%; display:flex; justify-content:center; margin-top:24px; }
-  form#notify{ width:100%; max-width:720px; display:flex; gap:12px; justify-content:center; align-items:center; }
+  /* CTA 表單 */
+  form{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
   input[type="email"]{
-    flex:none; width:min(560px, 64%); min-width:240px; height:54px;
-    border-radius:14px; border:none; outline:none; padding:0 20px;
-    font-size:18px; color:#222; background:#fff; box-shadow:0 10px 28px rgba(0,0,0,.28);
+    padding:12px 20px;border-radius:10px;border:none;
+    min-width:240px;font-size:16px;color:#222;
   }
-  input::placeholder{ color:#8c8c8c; }
   button{
-    flex:1; height:56px; min-height:56px; padding:0 18px; border:none; border-radius:12px;
-    font-weight:700; font-size:16px; color:#fff; background:var(--accent);
-    display:inline-flex; align-items:center; justify-content:center;
-    animation:btnGlow 3.6s ease-in-out infinite alternate; cursor:pointer;
+    padding:12px 22px;border:none;border-radius:10px;
+    font-weight:700;font-size:16px;color:#fff;
+    background:#E67690;cursor:pointer;
+    transition:background .3s;
   }
-  @keyframes btnGlow{
-    0%{box-shadow:0 0 10px rgba(230,118,144,.30);}
-    50%{box-shadow:0 0 24px rgba(230,118,144,.60);}
-    100%{box-shadow:0 0 10px rgba(230,118,144,.30);}
-  }
-  button:hover{ background:var(--accent-d); }
+  button:hover{background:#cf5b79;}
 
-  .links{ display:flex; justify-content:center; gap:18px; margin-top:16px; opacity:.9; }
-  .links a{ color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.24); padding-bottom:2px; }
-
-  /* RWD */
-  @media (max-width:980px){
-    .panel{ grid-template-columns:1fr; min-height:160svh; }
-    .panel .sticky-visual{ order:-1; top:8svh; height:56svh; }
-  }
-  @media (max-width:520px){
-    form#notify{ flex-direction:column; gap:10px; }
-    input[type="email"]{ width:92%; min-width:220px; height:52px; font-size:17px; }
-    button{ width:92%; height:48px; min-height:48px; font-size:15px; }
-  }
-  @media (prefers-reduced-motion: reduce){
-    .reveal, .title, .lead, .tagline{ transition:none; animation:none; }
-  }
 </style>
 </head>
 <body>
-  <!-- 柔和色溫過場層（JS 依每幕改變 --tone，會有順滑的顏色過場） -->
-  <div class="tint" aria-hidden="true"></div>
-  <div class="glow" aria-hidden="true"></div>
 
-  <div class="wrap">
+<!-- ① 名稱由來 -->
+<section class="s1 hero">
+  <h1>即將到來</h1>
+  <h2>HESTIA 是誰？</h2>
+  <p>在希臘神話裡，Hestia 是守護火爐的女神，象徵歸屬、溫暖與內在之火。<br>
+  我們相信，每個人心中都有一簇火焰，等待被點燃。</p>
+</section>
 
-    <!-- ① Ignite -->
-    <section class="hero" id="hero" data-tone="0">
-      <div>
-        <img class="logo" src="logo.png" alt="HESTIA flame mark" />
-        <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
-        <h2 class="tagline">即將到來</h2> <!-- 改回即將到來 + 呼吸特效 -->
-        <div class="scroll-hint">↓</div>
-      </div>
-    </section>
+<!-- ② 火焰象徵 -->
+<section class="s2">
+  <h2>火種的符號</h2>
+  <p>品牌 Logo 的火焰，來自「對稱、內外交錯的線條」。<br>
+  它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
+</section>
 
-    <!-- ② Manifesto -->
-    <section class="panel" id="manifesto" data-tone="1">
-      <div class="sticky-visual">
-        <img src="images/manifesto.jpg" alt="Manifesto — 力量 時尚 自我認同">
-      </div>
-      <div class="story">
-        <h2 class="title reveal">運動不是意識，而是生活</h2>
-        <p class="lead reveal">我們相信每一次呼吸，都是往更好的自己再近一步。</p>
-        <ul class="bullets">
-          <li class="reveal">力量不是對抗，而是與身體和解。</li>
-          <li class="reveal">好看不是裝飾，而是日常。</li>
-          <li class="reveal">自我不是他人定義，而是給自己的名字。</li>
-        </ul>
-      </div>
-    </section>
+<!-- ③ 標語 -->
+<section class="s3">
+  <h2>Own Your Flame</h2>
+  <p>這不只是口號，而是一種信念。<br>
+  無論性別、身形、背景，火焰屬於你自己。<br>
+  HESTIA 讓每個人能穿上力量，活出自我。</p>
+</section>
 
-    <!-- ③ Material -->
-    <section class="panel" id="material" data-tone="2">
-      <div class="sticky-visual">
-        <img src="images/material.jpg" alt="肌膚的語言 — 布料細節">
-      </div>
-      <div class="story">
-        <h2 class="title reveal">布料，能說話</h2>
-        <p class="lead reveal">讓身體自在呼吸的觸感，陪你走過每一刻。</p>
-        <ul class="bullets">
-          <li class="reveal">親膚觸感，長時間穿著也舒服。</li>
-          <li class="reveal">休閒耐看，兼顧日常與運動。</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ④ Movement -->
-    <section class="panel" id="movement" data-tone="3">
-      <div class="sticky-visual">
-        <img src="images/movement.jpg" alt="Movement — Move with Intention">
-      </div>
-      <div class="story">
-        <h2 class="title reveal">Move with Intention</h2>
-        <p class="lead reveal">從專注到爆發，從靜心到釋放。</p>
-        <p class="reveal">力量訓練｜跑步｜瑜伽｜通勤 — 一套完全適應。</p>
-      </div>
-    </section>
-
-    <!-- ⑤ Belonging -->
-    <section class="panel" id="belonging" data-tone="4">
-      <div class="sticky-visual">
-        <img src="images/belonging.jpg" alt="Belonging — 歸屬與安全">
-      </div>
-      <div class="story">
-        <h2 class="title reveal">因為力量，才有歸屬</h2>
-        <p class="lead reveal">標籤不是既有！而是個人特色。</p>
-        <p class="reveal">HESTIA 為所有人，點燃自信的火種。</p>
-      </div>
-    </section>
-
-    <!-- ⑥ Design & Precision（台灣設計） -->
-    <section class="panel" id="design" data-tone="5">
-      <div class="sticky-visual">
-        <img src="images/design.jpg" alt="Design & Precision — 台灣設計">
-      </div>
-      <div class="story">
-        <h2 class="title reveal">設計，是我們的語言</h2>
-        <p class="lead reveal">貼合亞洲身形，讓服裝像第二層肌膚。</p>
-        <ul class="bullets">
-          <li class="reveal"><strong>台灣設計：</strong>東方線條 × 現代幾何，力量與優雅並存。</li>
-          <li class="reveal"><strong>細節哲學：</strong>縫線、拼接、Logo 位置皆為動作與視覺設計。</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ⑦ Join｜Google 表單 CTA -->
-    <section class="cta" id="join" data-tone="6">
-      <div>
-        <h2 class="reveal">頭號火種</h2>
-        <p class="reveal">搶先收到最新消息與限定優惠。</p>
-
-        <div class="form-shell">
-          <!-- Google 表單（你的 Form/Entry） -->
-          <form id="notify"
-            action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
-            method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
-            <input id="email" type="email" name="entry.345729382"
-                   placeholder="輸入 Email，點燃第一封來信" aria-label="Email" required />
-            <input type="text" name="hp_field" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;">
-            <button type="submit">Join Us</button>
-          </form>
-          <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-        </div>
-
-        <div class="links">
-          <a href="https://www.instagram.com/hestia.active/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">加入LINE官方帳號</a>
-        </div>
-      </div>
-    </section>
-  </div>
+<!-- ④ 行動呼籲 -->
+<section class="s4">
+  <h2>第一波火種名單</h2>
+  <p>搶先加入，收到品牌上市日、首發系列與限定優惠。</p>
+  <form>
+    <input type="email" placeholder="輸入 Email 訂閱" required />
+    <button type="submit">立即訂閱</button>
+  </form>
+</section>
 
 <script>
-  /* 文字入場：淡入上浮 */
-  const io = new IntersectionObserver(es=>{
-    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in') })
-  }, {threshold:.2});
-  document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
-  document.querySelectorAll('.title').forEach(el=> { el.classList.add('reveal'); io.observe(el); });
-
-  /* 輕量視差（可移除） */
-  const visuals = document.querySelectorAll('.sticky-visual img');
-  window.addEventListener('scroll', ()=>{
-    const y = window.scrollY || 0;
-    visuals.forEach(img => { img.style.transform = `translateY(${y*0.03}px)`; });
-  });
-
-  /* 柔和色溫過場：每幕切換 --tone（.tint 以 currentColor 轉場） */
-  const tones = [
-    'rgba(230,118,144,.18)', // 0 hero 粉玫
-    'rgba(206,114,180,.18)', // 1 manifesto 紫玫
-    'rgba(255,153,102,.18)', // 2 material 橘暖
-    'rgba(120,170,255,.18)', // 3 movement 冷靜藍
-    'rgba(255,120,160,.18)', // 4 belonging 甜粉
-    'rgba(210,160,255,.18)', // 5 design 紫霧
-    'rgba(255,180,120,.18)'  // 6 join 橘金
-  ];
-  const root = document.documentElement;
-  const sections = document.querySelectorAll('section[data-tone]');
-  const toneObserver = new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        const idx = Number(entry.target.getAttribute('data-tone')) || 0;
-        root.style.setProperty('--tone', tones[idx] || tones[0]);
-      }
+  // scroll reveal
+  const sections=document.querySelectorAll("section");
+  const reveal=()=>{
+    const trigger=window.innerHeight*0.8;
+    sections.forEach(sec=>{
+      const top=sec.getBoundingClientRect().top;
+      if(top<trigger) sec.classList.add("in");
     });
-  }, {rootMargin:'-40% 0px -50% 0px', threshold:0}); // 中段進場才切色，避免閃爍
-  sections.forEach(sec=> toneObserver.observe(sec));
-
-  /* Google 表單提交（隱藏 iframe 監聽） */
-  let submittedAt = 0;
-  function submitGForm(e){
-    const input = document.getElementById('email');
-    const email = (input.value || '').trim();
-    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if(!ok){ alert('請輸入有效的 Email'); return false; }
-    submittedAt = Date.now(); return true;
-  }
-  document.getElementById('hidden_iframe').addEventListener('load', ()=>{
-    if(Date.now() - submittedAt < 300) return; // 略過初始載入
-    const input = document.getElementById('email'); input.value = '';
-    alert('訂閱成功！我們將在第一時間通知你最新消息。');
-  });
+  };
+  window.addEventListener("scroll",reveal);
+  window.addEventListener("load",reveal);
 </script>
+
 </body>
 </html>

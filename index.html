@@ -16,22 +16,27 @@
     min-height:100vh;
     display:flex; flex-direction:column; justify-content:center; align-items:center;
     padding:60px 20px; text-align:center;
-    opacity:0; transform:translateY(40px);
-    transition:opacity 1s ease, transform 1s ease;
   }
-  section.in{opacity:1; transform:translateY(0);}
+
+  /* 文字淡入（更明顯） */
+  .reveal{opacity:0; transform:translateY(60px); transition:opacity .9s cubic-bezier(.22,.61,.36,1), transform .9s cubic-bezier(.22,.61,.36,1);}
+  .reveal.in{opacity:1; transform:none;}
+  /* 需要更晚才出現的元素（獨立另一個觀察器觸發） */
+  .late{opacity:0; transform:translateY(70px); transition:opacity 1s cubic-bezier(.22,.61,.36,1), transform 1s cubic-bezier(.22,.61,.36,1);}
+  .late.in{opacity:1; transform:none;}
 
   /* 文字層級 */
   h1,h2{margin:0 0 20px;}
   h1{font-size:clamp(32px,5vw,52px);}
-  h2{font-size:clamp(24px,4vw,36px);}
-  p{max-width:760px; font-size:clamp(16px,2vw,20px); line-height:1.6; margin:0 auto;}
+  h2{font-size:clamp(24px,4vw,40px);}
+  p{max-width:760px; font-size:clamp(16px,2vw,20px); line-height:1.7; margin:0 auto;}
 
-  /* 幕背景色溫（黑色停留更久） */
-  .s1{background:linear-gradient(180deg,#000 0%, #000 72%, #121013 100%);}
-  .s2{background:linear-gradient(180deg,#0a0a0a 0%, #1d1013 85%, #441d2a 100%);}
-  .s3{background:linear-gradient(180deg,#1d1013 0%, #2e1520 72%, #8f3e56 100%);}
-  .s4{background:linear-gradient(180deg,#2e1520 0%, #5c2a3b 72%, #cf5b79 100%);}
+  /* 幕背景色溫（維持你最初的捲動感） */
+  .s1{background:linear-gradient(180deg,#000,#1d1013);}
+  .s2{background:linear-gradient(180deg,#1d1013,#441d2a);}
+  .s3{background:linear-gradient(180deg,#441d2a,#8f3e56);}
+  .s4{background:linear-gradient(180deg,#441d2a,#8f3e56);} /* THE FLAME MARK 獨立頁 */
+  .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}  /* JOIN US 訂閱頁 */
 
   /* 英雄區：brand 群組 */
   .brand{
@@ -43,7 +48,7 @@
   /* 初始主視覺：即將到來（小字＋呼吸） */
   .tagline{
     margin-top:8px; font-weight:300; letter-spacing:.22em;
-    font-size:clamp(14px,1.8vw,18px); /* 較小 */
+    font-size:clamp(14px,1.8vw,18px);
     text-shadow:0 0 12px rgba(230,118,144,.6);
     animation:breathe 6s ease-in-out infinite;
   }
@@ -52,18 +57,18 @@
     50%{opacity:1; text-shadow:0 0 28px rgba(230,118,144,1);}
   }
 
-  /* 火種的符號：LOGO 上置並淡入 */
+  /* WHO WE ARE 標題中的 WE 指定粉色 */
+  .we-accent{color:#E67690; text-shadow:0 0 24px rgba(230,118,144,.36);}
+
+  /* 火種的符號：LOGO 在文字上方，淡入要「更晚」 */
   .logo-mark{
     width:clamp(90px,18vw,160px);
     margin:-6px 0 12px;
     filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));
-    opacity:0; transform:translateY(20px);
-    transition:opacity 1s ease, transform 1s ease;
   }
-  .in .logo-mark{opacity:1; transform:translateY(0);}
 
   /* 表單（Google 表單串接） */
-  form{margin-top:30px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
+  form{margin-top:28px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
   input[type="email"]{
     padding:12px 20px; border-radius:10px; border:none;
     min-width:240px; font-size:16px; color:#222; background:#fff;
@@ -77,6 +82,10 @@
   }
   button:hover{background:#cf5b79;}
 
+  /* 社群連結 */
+  .links{display:flex; gap:18px; justify-content:center; margin-top:14px;}
+  .links a{color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.24); padding-bottom:2px;}
+
   /* Toast 成功訊息 */
   .toast{
     position:fixed; left:50%; bottom:28px; transform:translateX(-50%);
@@ -89,36 +98,42 @@
 </head>
 <body>
 
-<!-- ① 英雄區：logo + wordmark + 即將到來（小字，呼吸） -->
-<section class="s1 hero">
+<!-- ① 英雄區：logo + wordmark + 即將到來 -->
+<section class="s1">
   <div class="brand">
-    <img class="logo" src="logo.png" alt="HESTIA flame mark" />
-    <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
+    <img class="logo reveal in" src="logo.png" alt="HESTIA flame mark" />
+    <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
   </div>
   <div class="tagline">即將到來</div>
 </section>
 
-<!-- ② WHO WE ARE?（獨立一個區塊） -->
-<section class="s2">
-  <h2>WHO WE ARE?</h2>
-  <p>HESTIA 的名字來自希臘神話中守護火爐的女神，象徵歸屬、溫暖與內在之火。<br>
-  我們相信，每個人心中都有一簇火焰，等待被點燃。</p>
+<!-- ② WHO WE ARE?（先滿版只出標題；再捲動才出現段落） -->
+<section class="s2" id="who">
+  <h2 class="reveal in">WHO <span class="we-accent">WE</span> ARE?</h2>
+  <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，象徵歸屬、溫暖與內在之火。</p>
+  <p class="late" data-late>我們相信，每個人心中都有一簇火焰，等待被看見、被擁抱、被點燃。</p>
 </section>
 
-<!-- ③ 火種的符號（上方加 LOGO 並隨捲動淡入） -->
-<section class="s3">
-  <img class="logo-mark" src="logo.png" alt="HESTIA flame mark" />
-  <h2>火種的符號</h2>
-  <p>品牌 Logo 的火焰，來自「對稱、內外交錯的線條」。<br>
+<!-- ③ 火種的符號（LOGO 更晚才淡入 → 使用 .late） -->
+<section class="s3" id="symbol">
+  <img class="logo-mark late" data-late src="logo.png" alt="HESTIA flame mark" />
+  <h2 class="reveal">火種的符號</h2>
+  <p class="reveal">品牌 Logo 的火焰，來自「對稱、內外交錯的線條」。<br>
   它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
-<!-- ④ THE FLAME MARK（原第3幕改名） + CTA（無跳轉送出） -->
-<section class="s4">
-  <h2>THE FLAME MARK</h2>
-  <p>這不只是口號，而是一種信念。<br>
+<!-- ④ THE FLAME MARK（獨立頁面） -->
+<section class="s4" id="flamemark">
+  <h2 class="reveal">THE FLAME MARK</h2>
+  <p class="reveal">這不只是口號，而是一種信念。<br>
   無論性別、身形、背景，火焰屬於你自己。<br>
   HESTIA 讓每個人能穿上力量，活出自我。</p>
+</section>
+
+<!-- ⑤ JOIN US（訂閱） -->
+<section class="s5" id="join">
+  <h2 class="reveal">JOIN US</h2>
+  <p class="reveal">加入火種名單，搶先收到上市日、首發系列與限定優惠。</p>
 
   <!-- Google 表單：無跳轉送出（hidden iframe） -->
   <form id="notify"
@@ -128,25 +143,34 @@
     <button type="submit">立即訂閱</button>
   </form>
   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+  <div class="links reveal">
+    <a href="https://www.instagram.com/hestia.active/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">LINE 官方帳號</a>
+  </div>
 </section>
 
 <!-- 成功訊息 -->
 <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
 <script>
-  // 1) Scroll reveal（過場不增加多餘動畫，只做淡入/微上浮）
-  const sections = document.querySelectorAll("section");
-  function reveal(){
-    const trigger = window.innerHeight * 0.8;
-    sections.forEach(sec=>{
-      const top = sec.getBoundingClientRect().top;
-      if(top < trigger) sec.classList.add("in");
-    });
-  }
-  window.addEventListener("scroll", reveal);
-  window.addEventListener("load", reveal);
+  /* 1) 一般淡入（更明顯）：標題/段落等 */
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+  }, {threshold:.22});
+  document.querySelectorAll('.reveal').forEach(el=>{
+    if(!el.classList.contains('in')) observer.observe(el);
+  });
 
-  // 2) 無跳轉送出 Google 表單（hidden iframe 技術）
+  /* 2) 更晚才出現的元素：WHO 段落、符號頁 LOGO（須捲得更深） */
+  const lateObserver = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); lateObserver.unobserve(e.target); }
+    });
+  }, {rootMargin:'-5% 0px -55% 0px', threshold:0}); // 更晚才觸發
+  document.querySelectorAll('.late[data-late]').forEach(el=> lateObserver.observe(el));
+
+  /* 3) 無跳轉送出 Google 表單（hidden iframe 技術） */
   const toast = document.getElementById('toast');
   const iframe = document.getElementById('hidden_iframe');
   let submittedAt = 0;
@@ -165,8 +189,7 @@
 
   // 當 iframe 載入完成（表單回應返回），顯示成功訊息而不跳轉
   iframe.addEventListener('load', ()=>{
-    // 避免初次載入也觸發
-    if(Date.now() - submittedAt < 300) return;
+    if(Date.now() - submittedAt < 300) return; // 避免初始載入誤觸
     const input = document.getElementById('email');
     input.value = '';
     toast.classList.add('show');

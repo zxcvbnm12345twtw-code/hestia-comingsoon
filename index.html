@@ -5,107 +5,173 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>HESTIA — 即將到來</title>
 <style>
-  body,html{
-    margin:0;padding:0;
+  /* 全域 */
+  html,body{
+    margin:0; padding:0; color:#fff; overflow-x:hidden; background:#000;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
-    color:#fff;overflow-x:hidden;
   }
 
+  /* 每幕區塊 */
   section{
     min-height:100vh;
-    display:flex;flex-direction:column;
-    justify-content:center;align-items:center;
-    padding:60px 20px;text-align:center;
-    opacity:0;transform:translateY(40px);
-    transition:opacity 1s ease,transform 1s ease;
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    padding:60px 20px; text-align:center;
+    opacity:0; transform:translateY(40px);
+    transition:opacity 1s ease, transform 1s ease;
   }
-  section.in{opacity:1;transform:translateY(0);}
+  section.in{opacity:1; transform:translateY(0);}
 
+  /* 文字層級 */
   h1,h2{margin:0 0 20px;}
   h1{font-size:clamp(32px,5vw,52px);}
   h2{font-size:clamp(24px,4vw,36px);}
-  p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.6;}
+  p{max-width:760px; font-size:clamp(16px,2vw,20px); line-height:1.6; margin:0 auto;}
 
-  /* 幕背景色溫 */
-  .s1{background:linear-gradient(180deg,#000,#1d1013);}
-  .s2{background:linear-gradient(180deg,#1d1013,#441d2a);}
-  .s3{background:linear-gradient(180deg,#441d2a,#8f3e56);}
-  .s4{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
+  /* 幕背景色溫（黑色停留更久） */
+  .s1{background:linear-gradient(180deg,#000 0%, #000 72%, #121013 100%);}
+  .s2{background:linear-gradient(180deg,#0a0a0a 0%, #1d1013 85%, #441d2a 100%);}
+  .s3{background:linear-gradient(180deg,#1d1013 0%, #2e1520 72%, #8f3e56 100%);}
+  .s4{background:linear-gradient(180deg,#2e1520 0%, #5c2a3b 72%, #cf5b79 100%);}
 
-  /* 初始主視覺：即將到來 呼吸 */
-  .hero h1{
-    font-weight:300;letter-spacing:.22em;
-    animation:breathe 6s ease-in-out infinite;
+  /* 英雄區：brand 群組 */
+  .brand{
+    display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:10px;
+  }
+  .logo{width:clamp(120px,26vw,220px); filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
+  .wordmark{width:clamp(260px,60vw,560px); filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
+
+  /* 初始主視覺：即將到來（小字＋呼吸） */
+  .tagline{
+    margin-top:8px; font-weight:300; letter-spacing:.22em;
+    font-size:clamp(14px,1.8vw,18px); /* 較小 */
     text-shadow:0 0 12px rgba(230,118,144,.6);
+    animation:breathe 6s ease-in-out infinite;
   }
   @keyframes breathe{
-    0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}
-    50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}
+    0%,100%{opacity:.4; text-shadow:0 0 8px rgba(230,118,144,.4);}
+    50%{opacity:1; text-shadow:0 0 28px rgba(230,118,144,1);}
   }
 
-  /* CTA 表單 */
-  form{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
-  input[type="email"]{
-    padding:12px 20px;border-radius:10px;border:none;
-    min-width:240px;font-size:16px;color:#222;
+  /* 火種的符號：LOGO 上置並淡入 */
+  .logo-mark{
+    width:clamp(90px,18vw,160px);
+    margin:-6px 0 12px;
+    filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));
+    opacity:0; transform:translateY(20px);
+    transition:opacity 1s ease, transform 1s ease;
   }
+  .in .logo-mark{opacity:1; transform:translateY(0);}
+
+  /* 表單（Google 表單串接） */
+  form{margin-top:30px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
+  input[type="email"]{
+    padding:12px 20px; border-radius:10px; border:none;
+    min-width:240px; font-size:16px; color:#222; background:#fff;
+    box-shadow:0 10px 28px rgba(0,0,0,.28);
+  }
+  input::placeholder{color:#8c8c8c;}
   button{
-    padding:12px 22px;border:none;border-radius:10px;
-    font-weight:700;font-size:16px;color:#fff;
-    background:#E67690;cursor:pointer;
+    padding:12px 22px; border:none; border-radius:10px;
+    font-weight:700; font-size:16px; color:#fff; background:#E67690; cursor:pointer;
     transition:background .3s;
   }
   button:hover{background:#cf5b79;}
 
+  /* Toast 成功訊息 */
+  .toast{
+    position:fixed; left:50%; bottom:28px; transform:translateX(-50%);
+    background:rgba(0,0,0,.72); padding:12px 18px; border-radius:12px;
+    font-size:14px; box-shadow:0 6px 24px rgba(0,0,0,.35);
+    opacity:0; pointer-events:none; transition:opacity .28s ease;
+  }
+  .toast.show{opacity:1;}
 </style>
 </head>
 <body>
 
-<!-- ① 名稱由來 -->
+<!-- ① 英雄區：logo + wordmark + 即將到來（小字，呼吸） -->
 <section class="s1 hero">
-  <h1>即將到來</h1>
-  <h2>HESTIA 是誰？</h2>
-  <p>在希臘神話裡，Hestia 是守護火爐的女神，象徵歸屬、溫暖與內在之火。<br>
+  <div class="brand">
+    <img class="logo" src="logo.png" alt="HESTIA flame mark" />
+    <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
+  </div>
+  <div class="tagline">即將到來</div>
+</section>
+
+<!-- ② WHO WE ARE?（獨立一個區塊） -->
+<section class="s2">
+  <h2>WHO WE ARE?</h2>
+  <p>HESTIA 的名字來自希臘神話中守護火爐的女神，象徵歸屬、溫暖與內在之火。<br>
   我們相信，每個人心中都有一簇火焰，等待被點燃。</p>
 </section>
 
-<!-- ② 火焰象徵 -->
-<section class="s2">
+<!-- ③ 火種的符號（上方加 LOGO 並隨捲動淡入） -->
+<section class="s3">
+  <img class="logo-mark" src="logo.png" alt="HESTIA flame mark" />
   <h2>火種的符號</h2>
   <p>品牌 Logo 的火焰，來自「對稱、內外交錯的線條」。<br>
   它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
-<!-- ③ 標語 -->
-<section class="s3">
-  <h2>Own Your Flame</h2>
+<!-- ④ THE FLAME MARK（原第3幕改名） + CTA（無跳轉送出） -->
+<section class="s4">
+  <h2>THE FLAME MARK</h2>
   <p>這不只是口號，而是一種信念。<br>
   無論性別、身形、背景，火焰屬於你自己。<br>
   HESTIA 讓每個人能穿上力量，活出自我。</p>
-</section>
 
-<!-- ④ 行動呼籲 -->
-<section class="s4">
-  <h2>第一波火種名單</h2>
-  <p>搶先加入，收到品牌上市日、首發系列與限定優惠。</p>
-  <form>
-    <input type="email" placeholder="輸入 Email 訂閱" required />
+  <!-- Google 表單：無跳轉送出（hidden iframe） -->
+  <form id="notify"
+        action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
+        method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
+    <input id="email" type="email" name="entry.345729382" placeholder="輸入 Email 訂閱" required />
     <button type="submit">立即訂閱</button>
   </form>
+  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 </section>
 
+<!-- 成功訊息 -->
+<div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
+
 <script>
-  // scroll reveal
-  const sections=document.querySelectorAll("section");
-  const reveal=()=>{
-    const trigger=window.innerHeight*0.8;
+  // 1) Scroll reveal（過場不增加多餘動畫，只做淡入/微上浮）
+  const sections = document.querySelectorAll("section");
+  function reveal(){
+    const trigger = window.innerHeight * 0.8;
     sections.forEach(sec=>{
-      const top=sec.getBoundingClientRect().top;
-      if(top<trigger) sec.classList.add("in");
+      const top = sec.getBoundingClientRect().top;
+      if(top < trigger) sec.classList.add("in");
     });
-  };
-  window.addEventListener("scroll",reveal);
-  window.addEventListener("load",reveal);
+  }
+  window.addEventListener("scroll", reveal);
+  window.addEventListener("load", reveal);
+
+  // 2) 無跳轉送出 Google 表單（hidden iframe 技術）
+  const toast = document.getElementById('toast');
+  const iframe = document.getElementById('hidden_iframe');
+  let submittedAt = 0;
+
+  function submitGForm(e){
+    const input = document.getElementById('email');
+    const email = (input.value || '').trim();
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if(!ok){
+      alert('請輸入有效的 Email');
+      return false;
+    }
+    submittedAt = Date.now();
+    return true; // 讓表單提交到 iframe
+  }
+
+  // 當 iframe 載入完成（表單回應返回），顯示成功訊息而不跳轉
+  iframe.addEventListener('load', ()=>{
+    // 避免初次載入也觸發
+    if(Date.now() - submittedAt < 300) return;
+    const input = document.getElementById('email');
+    input.value = '';
+    toast.classList.add('show');
+    setTimeout(()=> toast.classList.remove('show'), 2600);
+  });
 </script>
 
 </body>

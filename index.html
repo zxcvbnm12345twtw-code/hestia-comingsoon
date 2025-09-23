@@ -7,7 +7,6 @@
 <style>
   html,body{margin:0;padding:0;color:#fff;overflow-x:hidden;background:#000;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;}
-
   section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
     padding:60px 20px;text-align:center;}
 
@@ -24,14 +23,12 @@
   .we-accent{color:#E67690;text-shadow:0 0 24px rgba(230,118,144,.36);}
   p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.7;margin:0 auto;}
 
-  /* 背景分幕 */
+  /* 背景 */
   .s1{background:linear-gradient(180deg,#000,#000);}
   .s2{background:linear-gradient(180deg,#000,#1d1013);}
   .s3{background:linear-gradient(180deg,#1d1013,#441d2a);}
   .s4{background:linear-gradient(180deg,#441d2a,#8f3e56);}
   .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
-
-  /* 呼吸覆層 */
   .breath{position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.16;
     background:radial-gradient(120% 120% at 50% 115%,rgba(230,118,144,.30) 0%,rgba(230,118,144,0) 70%),
                radial-gradient(140% 100% at 50% -10%,rgba(120,80,120,.18) 0%,rgba(120,80,120,0) 72%);
@@ -49,13 +46,15 @@
   .arrow{font-size:24px;margin-top:14px;animation:breathe 6s ease-in-out infinite, floatY 3s ease-in-out infinite;opacity:.8;}
   @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
 
-  /* 共用 logo mark 尺寸（中間值） */
-  .logo-mark,
-  .flame-img{
+  /* Flame mark 圖片共用大小與動畫 */
+  .logo-mark,.flame-img{
     width:clamp(140px,28vw,280px);
     margin:-6px 0 20px;
     filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));
+    opacity:0;transform:scale(.92);transition:opacity 1s ease,transform 1s ease,filter 1.2s ease;
   }
+  .logo-mark.in,.flame-img.in{opacity:1;transform:scale(1);filter:drop-shadow(0 0 28px rgba(230,118,144,.45));animation:glowBreath 6s ease-in-out infinite alternate;}
+  @keyframes glowBreath{0%{filter:drop-shadow(0 0 18px rgba(230,118,144,.28));}100%{filter:drop-shadow(0 0 36px rgba(230,118,144,.55));}}
 
   /* 表單 */
   form{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;z-index:1;}
@@ -96,14 +95,14 @@
 
 <!-- 火種的符號 -->
 <section class="s3">
-  <img class="logo-mark late" data-late src="logo.png" alt="HESTIA flame mark" />
+  <img class="logo-mark" src="logo.png" alt="HESTIA flame mark" />
   <h2 class="reveal">火種的符號</h2>
   <p class="reveal">品牌 Logo 的火焰，來自「對稱、內外交錯的線條」。<br>它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
 <!-- THE FLAME MARK -->
 <section class="s4">
-  <img class="flame-img reveal" src="Flamemark.png" alt="The Flame Mark">
+  <img class="flame-img" src="Flamemark.png" alt="The Flame Mark">
   <h2 class="late" data-late>THE FLAME MARK</h2>
   <p class="late" data-late>這不只是口號，而是一種信念。<br>無論性別、身形、背景，火焰屬於你自己。<br>HESTIA 讓每個人能穿上力量，活出自我。</p>
 </section>
@@ -131,7 +130,9 @@
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
   },{threshold:.22});
-  document.querySelectorAll('.reveal').forEach(el=>{if(!el.classList.contains('in'))observer.observe(el);});
+  document.querySelectorAll('.reveal,.logo-mark,.flame-img').forEach(el=>{
+    if(!el.classList.contains('in'))observer.observe(el);
+  });
 
   const lateObserver=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');lateObserver.unobserve(e.target);}});

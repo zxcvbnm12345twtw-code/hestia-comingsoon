@@ -28,17 +28,41 @@
   h1,h2{margin:0 0 20px;}
   h1{font-size:clamp(32px,5vw,52px);}
   h2{font-size:clamp(24px,4vw,40px);}
+  /* ▶ WHO WE ARE 標題放大 2.5x：24→60，40→100，4vw→10vw */
+  .who-title{font-size:clamp(60px,10vw,100px); line-height:1.06; letter-spacing:.02em;}
+
   p{max-width:760px; font-size:clamp(16px,2vw,20px); line-height:1.7; margin:0 auto;}
 
-  /* 背景漸層順暢銜接（1–5） */
+  /* 背景漸層順暢銜接（1–5，維持你的分段感） */
   .s1{background:linear-gradient(180deg,#000000,#1d1013);}
   .s2{background:linear-gradient(180deg,#1d1013,#441d2a);}
   .s3{background:linear-gradient(180deg,#441d2a,#8f3e56);}
   .s4{background:linear-gradient(180deg,#8f3e56,#b94c6c);}
   .s5{background:linear-gradient(180deg,#b94c6c,#cf5b79);}
 
+  /* ▶ 新增：全頁「背景呼吸」柔光覆層（不改你原本分幕背景） */
+  .breath{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    mix-blend-mode:screen; opacity:.16;
+    background:
+      radial-gradient(120% 120% at 50% 115%, rgba(230,118,144,.30) 0%, rgba(230,118,144,0) 70%),
+      radial-gradient(140% 100% at 50% -10%, rgba(120,80,120,.18) 0%, rgba(120,80,120,0) 72%);
+    background-repeat:no-repeat;
+    animation:breathPulse 8s ease-in-out infinite alternate, breathDrift 26s ease-in-out infinite alternate;
+    will-change:opacity, transform, background-position;
+  }
+  @keyframes breathPulse{
+    0%{opacity:.12; transform:scale(1);}
+    50%{opacity:.20; transform:scale(1.02);}
+    100%{opacity:.12; transform:scale(1);}
+  }
+  @keyframes breathDrift{
+    0%{background-position:50% 115%, 50% -10%;}
+    100%{background-position:48% 105%, 52% 0%;}
+  }
+
   /* 英雄區 */
-  .brand{display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:10px;}
+  .brand{display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:10px; position:relative; z-index:1;}
   .logo{width:clamp(120px,26vw,220px); filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
   .wordmark{width:clamp(260px,60vw,560px); filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
 
@@ -48,16 +72,17 @@
     font-size:clamp(14px,1.8vw,18px);
     text-shadow:0 0 12px rgba(230,118,144,.6);
     animation:breathe 6s ease-in-out infinite;
+    position:relative; z-index:1;
   }
   @keyframes breathe{
     0%,100%{opacity:.4; text-shadow:0 0 8px rgba(230,118,144,.4);}
     50%{opacity:1; text-shadow:0 0 28px rgba(230,118,144,1);}
   }
 
-  /* WHO WE ARE 標題 */
+  /* WHO WE ARE 標題中的 WE 指定粉色 */
   .we-accent{color:#E67690; text-shadow:0 0 24px rgba(230,118,144,.36);}
 
-  /* 火種 LOGO */
+  /* 火種 LOGO（置於文字上方；延後淡入用 .late） */
   .logo-mark{
     width:clamp(90px,18vw,160px);
     margin:-6px 0 12px;
@@ -65,7 +90,7 @@
   }
 
   /* 表單 */
-  form{margin-top:28px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
+  form{margin-top:28px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center; position:relative; z-index:1;}
   input[type="email"]{
     padding:12px 20px; border-radius:10px; border:none;
     min-width:240px; font-size:16px; color:#222; background:#fff;
@@ -80,7 +105,7 @@
   button:hover{background:#cf5b79;}
 
   /* 社群 */
-  .links{display:flex; gap:18px; justify-content:center; margin-top:14px;}
+  .links{display:flex; gap:18px; justify-content:center; margin-top:14px; position:relative; z-index:1;}
   .links a{color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.24); padding-bottom:2px;}
 
   /* Toast */
@@ -95,6 +120,9 @@
 </head>
 <body>
 
+<!-- 全頁背景呼吸覆層（放在最前，內容會在其上方） -->
+<div class="breath" aria-hidden="true"></div>
+
 <!-- ① Hero -->
 <section class="s1">
   <div class="brand">
@@ -104,34 +132,35 @@
   <div class="tagline">即將到來</div>
 </section>
 
-<!-- ② WHO WE ARE -->
-<section class="s2">
-  <h2 class="reveal in">WHO <span class="we-accent">WE</span> ARE?</h2>
+<!-- ② WHO WE ARE（標題 2.5x、WE 為粉色；段落提早出現：-40%） -->
+<section class="s2" id="who">
+  <h2 class="reveal in who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
   <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，象徵歸屬、溫暖與內在之火。</p>
   <p class="late" data-late>我們相信，每個人心中都有一簇火焰，等待被看見、被擁抱、被點燃。</p>
 </section>
 
-<!-- ③ 火種的符號 -->
-<section class="s3">
+<!-- ③ 火種的符號（LOGO 更晚才淡入） -->
+<section class="s3" id="symbol">
   <img class="logo-mark late" data-late src="logo.png" alt="HESTIA flame mark" />
   <h2 class="reveal">火種的符號</h2>
   <p class="reveal">品牌 Logo 的火焰，來自「對稱、內外交錯的線條」。<br>
   它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
-<!-- ④ THE FLAME MARK -->
-<section class="s4">
+<!-- ④ THE FLAME MARK（獨立頁） -->
+<section class="s4" id="flamemark">
   <h2 class="reveal">THE FLAME MARK</h2>
   <p class="reveal">這不只是口號，而是一種信念。<br>
   無論性別、身形、背景，火焰屬於你自己。<br>
   HESTIA 讓每個人能穿上力量，活出自我。</p>
 </section>
 
-<!-- ⑤ JOIN US -->
-<section class="s5">
+<!-- ⑤ JOIN US（訂閱） -->
+<section class="s5" id="join">
   <h2 class="reveal">JOIN US</h2>
   <p class="reveal">加入火種名單，搶先收到上市日、首發系列與限定優惠。</p>
 
+  <!-- Google 表單：無跳轉送出（hidden iframe） -->
   <form id="notify"
         action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
         method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
@@ -150,7 +179,7 @@
 <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
 <script>
-  /* Scroll reveal */
+  /* 1) 一般淡入 */
   const observer = new IntersectionObserver(entries=>{
     entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
   }, {threshold:.22});
@@ -158,15 +187,16 @@
     if(!el.classList.contains('in')) observer.observe(el);
   });
 
-  /* WHO 段落、LOGO 更早/更晚觸發 */
+  /* 2) 更晚才出現的元素：WHO 段落 & 符號頁 LOGO
+        ▶ 將 rootMargin 後緣設為 -40%，比之前更早一點出現 */
   const lateObserver = new IntersectionObserver(entries=>{
     entries.forEach(e=>{
       if(e.isIntersecting){ e.target.classList.add('in'); lateObserver.unobserve(e.target); }
     });
-  }, {rootMargin:'-5% 0px -40% 0px', threshold:0}); // 改成 -40%
+  }, {rootMargin:'-5% 0px -40% 0px', threshold:0});
   document.querySelectorAll('.late[data-late]').forEach(el=> lateObserver.observe(el));
 
-  /* 表單無跳轉 */
+  /* 3) 表單無跳轉 */
   const toast = document.getElementById('toast');
   const iframe = document.getElementById('hidden_iframe');
   let submittedAt = 0;

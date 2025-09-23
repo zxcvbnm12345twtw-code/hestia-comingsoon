@@ -21,7 +21,6 @@
   /* 文字淡入（更明顯） */
   .reveal{opacity:0; transform:translateY(60px); transition:opacity .9s cubic-bezier(.22,.61,.36,1), transform .9s cubic-bezier(.22,.61,.36,1);}
   .reveal.in{opacity:1; transform:none;}
-  /* 需要更晚才出現的元素（獨立另一個觀察器觸發） */
   .late{opacity:0; transform:translateY(70px); transition:opacity 1s cubic-bezier(.22,.61,.36,1), transform 1s cubic-bezier(.22,.61,.36,1);}
   .late.in{opacity:1; transform:none;}
 
@@ -31,21 +30,19 @@
   h2{font-size:clamp(24px,4vw,40px);}
   p{max-width:760px; font-size:clamp(16px,2vw,20px); line-height:1.7; margin:0 auto;}
 
-  /* 幕背景色溫（維持你最初的捲動感） */
-  .s1{background:linear-gradient(180deg,#000,#1d1013);}
+  /* 背景漸層順暢銜接（1–5） */
+  .s1{background:linear-gradient(180deg,#000000,#1d1013);}
   .s2{background:linear-gradient(180deg,#1d1013,#441d2a);}
   .s3{background:linear-gradient(180deg,#441d2a,#8f3e56);}
-  .s4{background:linear-gradient(180deg,#441d2a,#8f3e56);} /* THE FLAME MARK 獨立頁 */
-  .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}  /* JOIN US 訂閱頁 */
+  .s4{background:linear-gradient(180deg,#8f3e56,#b94c6c);}
+  .s5{background:linear-gradient(180deg,#b94c6c,#cf5b79);}
 
-  /* 英雄區：brand 群組 */
-  .brand{
-    display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:10px;
-  }
+  /* 英雄區 */
+  .brand{display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:10px;}
   .logo{width:clamp(120px,26vw,220px); filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
   .wordmark{width:clamp(260px,60vw,560px); filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
 
-  /* 初始主視覺：即將到來（小字＋呼吸） */
+  /* Tagline 呼吸 */
   .tagline{
     margin-top:8px; font-weight:300; letter-spacing:.22em;
     font-size:clamp(14px,1.8vw,18px);
@@ -57,17 +54,17 @@
     50%{opacity:1; text-shadow:0 0 28px rgba(230,118,144,1);}
   }
 
-  /* WHO WE ARE 標題中的 WE 指定粉色 */
+  /* WHO WE ARE 標題 */
   .we-accent{color:#E67690; text-shadow:0 0 24px rgba(230,118,144,.36);}
 
-  /* 火種的符號：LOGO 在文字上方，淡入要「更晚」 */
+  /* 火種 LOGO */
   .logo-mark{
     width:clamp(90px,18vw,160px);
     margin:-6px 0 12px;
     filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));
   }
 
-  /* 表單（Google 表單串接） */
+  /* 表單 */
   form{margin-top:28px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
   input[type="email"]{
     padding:12px 20px; border-radius:10px; border:none;
@@ -82,11 +79,11 @@
   }
   button:hover{background:#cf5b79;}
 
-  /* 社群連結 */
+  /* 社群 */
   .links{display:flex; gap:18px; justify-content:center; margin-top:14px;}
   .links a{color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.24); padding-bottom:2px;}
 
-  /* Toast 成功訊息 */
+  /* Toast */
   .toast{
     position:fixed; left:50%; bottom:28px; transform:translateX(-50%);
     background:rgba(0,0,0,.72); padding:12px 18px; border-radius:12px;
@@ -98,7 +95,7 @@
 </head>
 <body>
 
-<!-- ① 英雄區：logo + wordmark + 即將到來 -->
+<!-- ① Hero -->
 <section class="s1">
   <div class="brand">
     <img class="logo reveal in" src="logo.png" alt="HESTIA flame mark" />
@@ -107,35 +104,34 @@
   <div class="tagline">即將到來</div>
 </section>
 
-<!-- ② WHO WE ARE?（先滿版只出標題；再捲動才出現段落） -->
-<section class="s2" id="who">
+<!-- ② WHO WE ARE -->
+<section class="s2">
   <h2 class="reveal in">WHO <span class="we-accent">WE</span> ARE?</h2>
   <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，象徵歸屬、溫暖與內在之火。</p>
   <p class="late" data-late>我們相信，每個人心中都有一簇火焰，等待被看見、被擁抱、被點燃。</p>
 </section>
 
-<!-- ③ 火種的符號（LOGO 更晚才淡入 → 使用 .late） -->
-<section class="s3" id="symbol">
+<!-- ③ 火種的符號 -->
+<section class="s3">
   <img class="logo-mark late" data-late src="logo.png" alt="HESTIA flame mark" />
   <h2 class="reveal">火種的符號</h2>
   <p class="reveal">品牌 Logo 的火焰，來自「對稱、內外交錯的線條」。<br>
   它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
-<!-- ④ THE FLAME MARK（獨立頁面） -->
-<section class="s4" id="flamemark">
+<!-- ④ THE FLAME MARK -->
+<section class="s4">
   <h2 class="reveal">THE FLAME MARK</h2>
   <p class="reveal">這不只是口號，而是一種信念。<br>
   無論性別、身形、背景，火焰屬於你自己。<br>
   HESTIA 讓每個人能穿上力量，活出自我。</p>
 </section>
 
-<!-- ⑤ JOIN US（訂閱） -->
-<section class="s5" id="join">
+<!-- ⑤ JOIN US -->
+<section class="s5">
   <h2 class="reveal">JOIN US</h2>
   <p class="reveal">加入火種名單，搶先收到上市日、首發系列與限定優惠。</p>
 
-  <!-- Google 表單：無跳轉送出（hidden iframe） -->
   <form id="notify"
         action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
         method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
@@ -150,11 +146,11 @@
   </div>
 </section>
 
-<!-- 成功訊息 -->
+<!-- Toast -->
 <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
 <script>
-  /* 1) 一般淡入（更明顯）：標題/段落等 */
+  /* Scroll reveal */
   const observer = new IntersectionObserver(entries=>{
     entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
   }, {threshold:.22});
@@ -162,36 +158,29 @@
     if(!el.classList.contains('in')) observer.observe(el);
   });
 
-  /* 2) 更晚才出現的元素：WHO 段落、符號頁 LOGO（須捲得更深） */
+  /* WHO 段落、LOGO 更早/更晚觸發 */
   const lateObserver = new IntersectionObserver(entries=>{
     entries.forEach(e=>{
       if(e.isIntersecting){ e.target.classList.add('in'); lateObserver.unobserve(e.target); }
     });
-  }, {rootMargin:'-5% 0px -55% 0px', threshold:0}); // 更晚才觸發
+  }, {rootMargin:'-5% 0px -40% 0px', threshold:0}); // 改成 -40%
   document.querySelectorAll('.late[data-late]').forEach(el=> lateObserver.observe(el));
 
-  /* 3) 無跳轉送出 Google 表單（hidden iframe 技術） */
+  /* 表單無跳轉 */
   const toast = document.getElementById('toast');
   const iframe = document.getElementById('hidden_iframe');
   let submittedAt = 0;
-
   function submitGForm(e){
     const input = document.getElementById('email');
     const email = (input.value || '').trim();
     const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if(!ok){
-      alert('請輸入有效的 Email');
-      return false;
-    }
+    if(!ok){ alert('請輸入有效的 Email'); return false; }
     submittedAt = Date.now();
-    return true; // 讓表單提交到 iframe
+    return true;
   }
-
-  // 當 iframe 載入完成（表單回應返回），顯示成功訊息而不跳轉
   iframe.addEventListener('load', ()=>{
-    if(Date.now() - submittedAt < 300) return; // 避免初始載入誤觸
-    const input = document.getElementById('email');
-    input.value = '';
+    if(Date.now() - submittedAt < 300) return;
+    document.getElementById('email').value = '';
     toast.classList.add('show');
     setTimeout(()=> toast.classList.remove('show'), 2600);
   });

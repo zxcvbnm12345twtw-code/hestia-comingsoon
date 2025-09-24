@@ -26,7 +26,12 @@
   h1,h2{margin:0 0 20px;}
   h1{font-size:clamp(32px,5vw,52px);}
   h2{font-size:clamp(24px,4vw,40px);}
-  .who-title{font-size:clamp(36px,7vw,64px);line-height:1.1;letter-spacing:.02em;}
+
+  /* WHO WE ARE = Our Purpose 同級尺寸（保留原 reveal 動畫） */
+  .who-title{
+    font-size:clamp(42px,14vw,128px);
+    line-height:1.03; letter-spacing:.01em; font-weight:700;
+  }
   .we-accent{color:#E67690;text-shadow:0 0 24px rgba(230,118,144,.36);}
   p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.7;margin:0 auto;}
 
@@ -34,7 +39,7 @@
   .s1{background:linear-gradient(180deg,#000,#000);}
   .s2{background:linear-gradient(180deg,#000,#1d1013);}
   .s3{background:linear-gradient(180deg,#1d1013,#441d2a);}
-  /* 新增：Our Purpose 過渡段（承接 s3→s4 的色溫） */
+  /* Our Purpose 過渡段（承接 s3→s4 的色溫） */
   .s3b{background:linear-gradient(180deg,#441d2a,#6a3045);}
   .s4{background:linear-gradient(180deg,#6a3045,#8f3e56);}
   .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
@@ -84,15 +89,14 @@
   /* ▶ 光流連接：固定在最上層的 SVG（但不擋點擊） */
   .linker{position:fixed; inset:0; z-index:2; pointer-events:none;}
 
-  /* ▶ Our Purpose 電影式標題 */
+  /* ▶ Our Purpose 電影式大標（改為靠近中線才淡入） */
   .purpose-title{
     font-size:clamp(42px,14vw,128px);
     line-height:1.03; letter-spacing:.01em; font-weight:700;
     opacity:0; transform:translateY(18px) scale(.985);
-    transition:opacity 1s ease, transform 1s ease;
+    transition:opacity .8s ease, transform .8s ease;
     text-shadow:0 8px 28px rgba(0,0,0,.45);
   }
-  .purpose-title.in{opacity:1; transform:translateY(0) scale(1);}
   .purpose-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;}
   .purpose-sub p{margin:0.2em 0;}
 </style>
@@ -128,7 +132,7 @@
   <div class="arrow">↓</div>
 </section>
 
-<!-- ② WHO WE ARE -->
+<!-- ② WHO WE ARE（同級尺寸、保留 reveal） -->
 <section class="s2">
   <h2 class="reveal in who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
   <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
@@ -146,7 +150,7 @@
   <p class="reveal">它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
-<!-- ③.5 Our Purpose（電影式滿版標題 → 捲動出敘事小標） -->
+<!-- ③.5 Our Purpose（大標靠近中線才淡入 → 再出小標） -->
 <section class="s3b">
   <div class="purpose-wrap">
     <h2 class="purpose-title" id="purposeTitle">
@@ -154,8 +158,8 @@
     </h2>
     <div class="purpose-sub">
       <p class="late" data-late>每一個特質，都是值得擁抱的亮點。</p>
-      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">（小標題）：我們創立 HESTIA，不只是為了做運動服，</p>
-      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">而是讓服裝成為你自我認同的象徵。</p>
+      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">我們創立 HESTIA，不只是為了做服裝，</p>
+      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">而是讓這些日常成為你自我認同的象徵。</p>
     </div>
   </div>
 </section>
@@ -192,7 +196,8 @@
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
   },{threshold:.22});
-  document.querySelectorAll('.reveal,.logo-mark,.flame-img,.purpose-title').forEach(el=>{
+  // 不把 .purpose-title 交給 observer，改由 handlePurpose 控制
+  document.querySelectorAll('.reveal,.logo-mark,.flame-img').forEach(el=>{
     if(!el.classList.contains('in'))observer.observe(el);
   });
 
@@ -253,6 +258,50 @@
   }
   rafId = requestAnimationFrame(updateBeam);
   window.addEventListener('resize', ()=>{ cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateBeam); });
+
+  /* Our Purpose：靠近畫面中線才淡入，再往下小標才出現 */
+  const purposeSection = document.querySelector('.s3b');
+  const purposeTitleEl = document.getElementById('purposeTitle');
+  const purposeSubEls = purposeSection.querySelectorAll('.purpose-sub .late[data-late]');
+  let purposeTitleShown = false;
+  let purposeSubShown = false;
+
+  function handlePurpose() {
+    if (!purposeSection || !purposeTitleEl) return;
+    const rect = purposeSection.getBoundingClientRect();
+    const vh = window.innerHeight;
+
+    // 章節中心 vs 視窗中線
+    const sectionCenter = rect.top + rect.height / 2;
+    const viewportCenter = vh / 2;
+    const delta = Math.abs(sectionCenter - viewportCenter) / vh; // 0~1
+
+    // 當接近視窗中線（±12%）時，才讓大標淡入
+    if (!purposeTitleShown && delta < 0.12 && rect.top < vh && rect.bottom > 0) {
+      purposeTitleEl.classList.add('in');
+      purposeTitleShown = true;
+    }
+
+    // 再往下滑一段距離（章節中心已經明顯越過中線）
+    if (!purposeSubShown && sectionCenter < viewportCenter - vh * 0.1) {
+      purposeSubEls.forEach(el => el.classList.add('in'));
+      purposeSubShown = true;
+    }
+
+    // 若需要往回滑時重置，打開下列註解
+    // if (sectionCenter >= viewportCenter) {
+    //   purposeSubEls.forEach(el => el.classList.remove('in'));
+    //   purposeSubShown = false;
+    // }
+    // if (delta >= 0.12) {
+    //   purposeTitleEl.classList.remove('in');
+    //   purposeTitleShown = false;
+    // }
+  }
+
+  window.addEventListener('scroll', handlePurpose, { passive: true });
+  window.addEventListener('load', handlePurpose);
+  window.addEventListener('resize', handlePurpose);
 </script>
 
 </body>

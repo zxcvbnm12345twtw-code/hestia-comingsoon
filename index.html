@@ -159,8 +159,8 @@
     </h2>
     <div class="purpose-sub">
       <p class="late" data-late>每一個特質，都是值得擁抱的亮點。</p>
-      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">（小標題）：我們創立 HESTIA，不只是為了做運動服，</p>
-      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">而是讓服裝成為你自我認同的象徵。</p>
+      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">HESTIA 不只是為了做服裝，</p>
+      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">而是讓日常成為你自我認同的象徵。</p>
     </div>
   </div>
 </section>
@@ -201,11 +201,20 @@
     if(!el.classList.contains('in'))observer.observe(el);
   });
 
-  /* 更晚出現（WHO 段落 & Our Purpose 小標 & FLAME MARK 文字） */
-  const lateObserver=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');lateObserver.unobserve(e.target);}});
-  },{rootMargin:'-5% 0px -40% 0px',threshold:0});
-  document.querySelectorAll('.late[data-late]').forEach(el=>lateObserver.observe(el));
+  /* 更晚出現（WHO 段落 & THE FLAME MARK 文字）—排除 Our Purpose 小標，交由 handlePurpose 控制 */
+  const lateObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        lateObserver.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '-5% 0px -40% 0px', threshold: 0 });
+
+  /* 只觀察非 .purpose-sub 內的 .late[data-late]，避免小標提早進場 */
+  document.querySelectorAll('.late[data-late]').forEach(el => {
+    if (!el.closest('.purpose-sub')) lateObserver.observe(el);
+  });
 
   /* 表單無跳轉 */
   const toast=document.getElementById('toast');
@@ -282,8 +291,8 @@
       purposeTitleShown = true;
     }
 
-    // 章節中心越過中線一定距離後才出小標
-    if (!purposeSubShown && sectionCenter < viewportCenter - vh * 0.10) {
+    // 章節中心越過中線一定距離後才出小標，且必須已顯示大標
+    if (!purposeSubShown && purposeTitleShown && sectionCenter < viewportCenter - vh * 0.10) {
       purposeSubEls.forEach(el => el.classList.add('in'));
       purposeSubShown = true;
     }

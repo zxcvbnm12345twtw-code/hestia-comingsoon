@@ -9,165 +9,110 @@
 <meta property="og:url" content="https://www.hestiatw.com/">
 <meta property="og:type" content="website">
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#000000">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-  :root{
-    --pink:#E67690;
-    --bg1:#000; --bg2:#1d1013; --bg3:#441d2a; --bg4:#6a3045; --bg5:#8f3e56; --bg6:#cf5b79;
-  }
-  html,body{
-    margin:0;padding:0;color:#fff;background:#000;overflow-x:hidden;
-    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-  *,*::before,*::after{box-sizing:border-box}
-  body{touch-action:manipulation}
+  html,body{margin:0;padding:0;color:#fff;overflow-x:hidden;background:#000;
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;}
 
-  section{
-    min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;
-    padding:64px 20px;text-align:center;position:relative;isolation:isolate;
-  }
+  section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:60px 20px;text-align:center;}
 
   /* reveal */
-  .reveal{opacity:0;transform:translateY(56px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);will-change:opacity,transform}
-  .reveal.in{opacity:1;transform:none}
-  .late{opacity:0;transform:translateY(64px);transition:opacity 1s cubic-bezier(.22,.61,.36,1),transform 1s cubic-bezier(.22,.61,.36,1);will-change:opacity,transform}
-  .late.in{opacity:1;transform:none}
+  .reveal{opacity:0;transform:translateY(60px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);}
+  .reveal.in{opacity:1;transform:none;}
+  .late{opacity:0;transform:translateY(70px);transition:opacity 1s cubic-bezier(.22,.61,.36,1),transform 1s cubic-bezier(.22,.61,.36,1);}
+  .late.in{opacity:1;transform:none;}
 
-  h1,h2{margin:0 0 18px}
-  h1{font-size:clamp(28px,7vw,48px)}
-  h2{font-size:clamp(22px,6.2vw,40px)}
+  h1,h2{margin:0 0 20px;}
+  h1{font-size:clamp(32px,5vw,52px);}
+  h2{font-size:clamp(24px,4vw,40px);}
 
-  /* WHO WE ARE 與 Our Purpose：一致字級 */
-  .who-title,.purpose-title{
-    font-size:clamp(32px,9.5vw,52px);
-    line-height:1.12;letter-spacing:.02em;font-weight:700
+  /* WHO WE ARE 與 Our Purpose：恢復為先前大小 */
+  .who-title,
+  .purpose-title{
+    font-size:clamp(36px,7vw,64px);
+    line-height:1.1;
+    letter-spacing:.02em;
+    font-weight:700;
   }
 
-  /* Our Purpose：中線揭幕動畫（clip-path） */
+  /* Our Purpose 動畫起始狀態（靠近中線才淡入） */
   .purpose-title{
-    opacity:0; transform:translateY(14px) scale(.985);
+    opacity:0; transform:translateY(18px) scale(.985);
     transition:opacity .8s ease, transform .8s ease;
     text-shadow:0 8px 28px rgba(0,0,0,.45);
   }
   .purpose-title.in{opacity:1; transform:translateY(0) scale(1);}
 
-  .clip-reveal{ --r:0%; display:inline-block; clip-path:circle(var(--r) at 50% 50%); transition:clip-path .9s cubic-bezier(.22,.61,.36,1); will-change:clip-path }
-  .clip-reveal.in{ --r:120% }
+  /* === (僅 Our Purpose 微增強) 大標圓形遮罩揭幕：不需額外 JS，跟著 .in 觸發 === */
+  .clip-reveal{--r:0%; display:inline-block; clip-path:circle(var(--r) at 50% 50%); transition:clip-path .9s cubic-bezier(.22,.61,.36,1);}
+  .clip-reveal.in{--r:120%;}
 
-  .we-accent{color:var(--pink);text-shadow:0 0 24px rgba(230,118,144,.36)}
-  p{max-width:760px;font-size:clamp(15px,4vw,19px);line-height:1.75;margin:0 auto}
+  .we-accent{color:#E67690;text-shadow:0 0 24px rgba(230,118,144,.36);}
+  p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.7;margin:0 auto;}
 
-  /* 背景分幕 */
-  .s1{background:linear-gradient(180deg,var(--bg1),var(--bg1))}
-  .s2{background:linear-gradient(180deg,var(--bg1),var(--bg2))}
-  .s3{background:linear-gradient(180deg,var(--bg2),var(--bg3))}
-  .s3b{background:linear-gradient(180deg,var(--bg3),var(--bg4))}
-  .s4{background:linear-gradient(180deg,var(--bg4),var(--bg5))}
-  .s5{background:linear-gradient(180deg,var(--bg5),var(--bg6))}
+  /* 背景分幕（黑到第二頁才開始變） */
+  .s1{background:linear-gradient(180deg,#000,#000);}
+  .s2{background:linear-gradient(180deg,#000,#1d1013);}
+  .s3{background:linear-gradient(180deg,#1d1013,#441d2a);}
+  /* Our Purpose 過渡段（承接 s3→s4 的色溫） */
+  .s3b{background:linear-gradient(180deg,#441d2a,#6a3045);}
+  .s4{background:linear-gradient(180deg,#6a3045,#8f3e56);}
+  .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
 
-  /* 全頁呼吸柔光覆層（低負載版） */
-  .breath{position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.14;
-    background:
-      radial-gradient(120% 120% at 50% 115%,rgba(230,118,144,.28) 0%,rgba(230,118,144,0) 70%),
-      radial-gradient(140% 100% at 50% -10%,rgba(120,80,120,.16) 0%,rgba(120,80,120,0) 72%);
-    animation:breathPulse 8s ease-in-out infinite alternate;
-  }
-  @keyframes breathPulse{0%{opacity:.10;transform:scale(1)}100%{opacity:.18;transform:scale(1.02)}}
+  /* 全頁呼吸柔光覆層 */
+  .breath{position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.16;
+    background:radial-gradient(120% 120% at 50% 115%,rgba(230,118,144,.30) 0%,rgba(230,118,144,0) 70%),
+               radial-gradient(140% 100% at 50% -10%,rgba(120,80,120,.18) 0%,rgba(120,80,120,0) 72%);
+    animation:breathPulse 8s ease-in-out infinite alternate,breathDrift 26s ease-in-out infinite alternate;}
+  @keyframes breathPulse{0%{opacity:.12;transform:scale(1);}50%{opacity:.20;transform:scale(1.02);}100%{opacity:.12;transform:scale(1);}}
+  @keyframes breathDrift{0%{background-position:50% 115%,50% -10%;}100%{background-position:48% 105%,52% 0%;}}
 
   /* Hero */
-  .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:8px;position:relative;z-index:1}
-  .logo{width:clamp(108px,34vw,200px);filter:drop-shadow(0 10px 28px rgba(0,0,0,.45))}
-  /* stroke→fill：用 CSS 變數控制填滿百分比 */
-  .wordmark{
-    --p:0%;
-    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude;
-    padding:2px;
-    background:linear-gradient(90deg,currentColor 0 0) no-repeat, transparent;
-    background-size:var(--p) 100%, auto;
-    color:#fff; filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));
-    transition:background-size .18s ease-out;
-    width:clamp(220px,72vw,540px);
-  }
-  .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(12px,3.8vw,17px);
-    text-shadow:0 0 10px rgba(230,118,144,.6);opacity:.9}
-  .arrow{font-size:20px;margin-top:12px;opacity:.7}
+  .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px;position:relative;z-index:1;}
+  .logo{width:clamp(120px,26vw,220px);filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
+  .wordmark{width:clamp(260px,60vw,560px);filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
+  .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(14px,1.8vw,18px);
+    text-shadow:0 0 12px rgba(230,118,144,.6);animation:breathe 6s ease-in-out infinite;position:relative;z-index:1;}
+  @keyframes breathe{0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}}
+  .arrow{font-size:24px;margin-top:14px;animation:breathe 6s ease-in-out infinite, floatY 3s ease-in-out infinite;opacity:.8;}
+  @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
 
   /* 兩個符號圖：同尺寸 + 進場微光 */
   .logo-mark,.flame-img{
-    width:clamp(134px,44vw,260px);margin:-4px 0 16px;
+    width:clamp(140px,28vw,280px);
+    margin:-6px 0 20px;
     filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));
-    opacity:0;transform:scale(.94);transition:opacity 1s ease,transform 1s ease,filter 1.2s ease;will-change:opacity,transform,filter
+    opacity:0;transform:scale(.92);transition:opacity 1s ease,transform 1s ease,filter 1.2s ease;
   }
-  .logo-mark.in,.flame-img.in{opacity:1;transform:scale(1);filter:drop-shadow(0 0 26px rgba(230,118,144,.42))}
+  .logo-mark.in,.flame-img.in{opacity:1;transform:scale(1);filter:drop-shadow(0 0 28px rgba(230,118,144,.45));animation:glowBreath 6s ease-in-out infinite alternate;}
+  @keyframes glowBreath{0%{filter:drop-shadow(0 0 18px rgba(230,118,144,.28));}100%{filter:drop-shadow(0 0 36px rgba(230,118,144,.55));}}
 
-  /* Our Purpose 小標：左右錯層 + 模糊復位（行動優先） */
-  .purpose-sub p[data-stagger]{opacity:0;filter:blur(6px);transform:translateY(12px) translateX(var(--x,0));
-    transition:opacity .7s ease,filter .7s ease,transform .7s ease}
-  .purpose-sub p[data-stagger].in{opacity:1;filter:blur(0);transform:none}
-  .purpose-sub p:nth-child(1){--x:-8px;transition-delay:.06s}
-  .purpose-sub p:nth-child(2){--x: 8px;transition-delay:.14s}
-  .purpose-sub p:nth-child(3){--x:-6px;transition-delay:.22s}
+  /* 表單與 CTA（粉底白字） */
+  form{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;z-index:1;}
+  input[type="email"]{padding:12px 20px;border-radius:10px;border:none;min-width:240px;font-size:16px;color:#222;background:#fff;
+    box-shadow:0 10px 28px rgba(0,0,0,.28);}
+  button{padding:12px 22px;border:none;border-radius:10px;font-weight:700;font-size:16px;color:#fff;background:#E67690;cursor:pointer;
+    transition:background .3s;}
+  button:hover{background:#cf5b79;}
+  .links{display:flex;gap:18px;justify-content:center;margin-top:14px;position:relative;z-index:1;}
+  .links a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.24);padding-bottom:2px;}
 
-  /* 表單與 CTA（行動優先大小） */
-  form{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;position:relative;z-index:1}
-  input[type="email"]{padding:12px 14px;border-radius:12px;border:none;min-width:min(78vw,320px);font-size:16px;color:#222;background:#fff;
-    box-shadow:0 10px 24px rgba(0,0,0,.26)}
-  button{
-    padding:12px 18px;border:none;border-radius:12px;font-weight:700;font-size:16px;color:#fff;background:var(--pink);cursor:pointer;
-    transition:background .25s, transform .12s; touch-action:manipulation; position:relative; overflow:hidden; isolation:isolate;
-  }
-  button:active{transform:scale(.98)}
-  button .halo{
-    position:absolute; inset:-60% -40%;
-    background: radial-gradient(40% 35% at var(--mx,50%) var(--my,50%), rgba(255,255,255,.22), transparent 60%);
-    opacity:0; transition:opacity .2s; pointer-events:none; z-index:0;
-  }
-  button.hovering .halo{opacity:.25}
-
-  .links{display:flex;gap:16px;justify-content:center;margin-top:12px;position:relative;z-index:1}
-  .links a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:2px}
-
-  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:rgba(0,0,0,.76);padding:12px 16px;border-radius:12px;
-    font-size:14px;box-shadow:0 6px 22px rgba(0,0,0,.34);opacity:0;pointer-events:none;transition:opacity .28s ease}
-  .toast.show{opacity:1}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(0,0,0,.72);padding:12px 18px;border-radius:12px;
+    font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .28s ease;}
+  .toast.show{opacity:1;}
 
   /* 光流連接：固定覆層（不擋點擊） */
-  .linker{position:fixed; inset:0; z-index:2; pointer-events:none}
+  .linker{position:fixed; inset:0; z-index:2; pointer-events:none;}
 
-  /* 右側進度點（行動尺寸） */
-  .navdots{position:fixed; right:10px; top:50%; transform:translateY(-50%);
-    display:flex; flex-direction:column; gap:10px; z-index:5; pointer-events:auto}
-  .navdots button{width:8px;height:8px;border-radius:50%;border:none;opacity:.45;background:#fff;cursor:pointer}
-  .navdots button.active{opacity:1;box-shadow:0 0 0 6px rgba(255,255,255,.08)}
-
-  /* 粒子（餘燼） */
-  .p{ position: fixed; width:6px; height:6px; border-radius:50%;
-      pointer-events:none; mix-blend-mode:screen; z-index:9999 }
-
-  /* 行動效能：小螢幕降低陰影強度 */
-  @media (max-width:480px){
-    .logo,.wordmark{filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
-  }
-
-  /* 可及性：減少動態 */
-  @media (prefers-reduced-motion:reduce){
-    .breath, .reveal, .late, .clip-reveal, .logo-mark, .flame-img, .wordmark{animation:none;transition:none}
-  }
+  /* === (僅 Our Purpose 微增強) 小標錯層延遲：仍由 handlePurpose 控制進場 === */
+  .purpose-sub .late[data-late]{transition-delay:.0s;}
+  .purpose-sub .late[data-late]:nth-child(1){transition-delay:.08s;}
+  .purpose-sub .late[data-late]:nth-child(2){transition-delay:.18s;}
+  .purpose-sub .late[data-late]:nth-child(3){transition-delay:.28s;}
 </style>
 </head>
 <body>
-
-<!-- 右側進度點（可點擊跳段） -->
-<div class="navdots" aria-hidden="true">
-  <button data-to=".s1" aria-label="Hero"></button>
-  <button data-to=".s2" aria-label="Who"></button>
-  <button data-to=".s3" aria-label="Symbol"></button>
-  <button data-to=".s4" aria-label="Flame"></button>
-  <button data-to=".s5" aria-label="Join"></button>
-</div>
 
 <!-- 全頁呼吸柔光 -->
 <div class="breath" aria-hidden="true"></div>
@@ -198,7 +143,7 @@
   <div class="arrow">↓</div>
 </section>
 
-<!-- ② WHO WE ARE -->
+<!-- ② WHO WE ARE（維持原 reveal、字級回復） -->
 <section class="s2">
   <h2 class="reveal in who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
   <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
@@ -216,16 +161,16 @@
   <p class="reveal">它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
-<!-- ③.5 Our Purpose（大標 clip 揭幕 → 小標錯層） -->
+<!-- ③.5 Our Purpose（靠近中線才淡入 → 再出小標） -->
 <section class="s3b">
   <div class="purpose-wrap">
     <h2 class="purpose-title clip-reveal" id="purposeTitle">
       <span class="we-accent">Our</span> Purpose
     </h2>
     <div class="purpose-sub">
-      <p data-stagger>每一個特質，都是值得擁抱的亮點。</p>
-      <p data-stagger>HESTIA 不只是為了做服裝，</p>
-      <p data-stagger>而是讓日常成為你自我認同的象徵。</p>
+      <p class="late" data-late>每一個特質，都是值得擁抱的亮點。</p>
+      <p class="late" data-late>HESTIA 不只是為了做服裝，</p>
+      <p class="late" data-late>而是讓日常成為你自我認同的象徵。</p>
     </div>
   </div>
 </section>
@@ -245,10 +190,7 @@
         action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
         method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
     <input id="email" type="email" name="entry.345729382" placeholder="輸入 Email 訂閱" required />
-    <button type="submit" id="ctaBtn">
-      立即訂閱
-      <span class="halo" aria-hidden="true"></span>
-    </button>
+    <button type="submit">立即訂閱</button>
   </form>
   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
   <div class="links reveal">
@@ -258,181 +200,133 @@
 </section>
 
 <!-- Toast -->
-<div class="toast" id="toast" role="status" aria-live="polite">訂閱成功！我們將在第一時間通知你最新消息。</div>
+<div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
 <script>
-  /* ===== 基礎進場觀察（含兩個符號圖） ===== */
-  const io1=new IntersectionObserver(es=>{
-    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+  /* 進場淡入（含兩個符號圖） */
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
   },{threshold:.22});
   document.querySelectorAll('.reveal,.logo-mark,.flame-img').forEach(el=>{
-    if(!el.classList.contains('in')) io1.observe(el);
+    if(!el.classList.contains('in'))observer.observe(el);
   });
 
-  /* ===== 更晚出現：排除 Our Purpose 小標（交由 handlePurpose 控制） ===== */
-  const ioLate = new IntersectionObserver(es=>{
-    es.forEach(e=>{
-      if(e.isIntersecting){ e.target.classList.add('in'); ioLate.unobserve(e.target); }
+  /* 更晚出現（WHO 段落 & THE FLAME MARK 文字）—排除 Our Purpose 小標，交由 handlePurpose 控制 */
+  const lateObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        lateObserver.unobserve(e.target);
+      }
     });
-  }, { rootMargin:'-5% 0px -40% 0px', threshold:0 });
-  document.querySelectorAll('.late[data-late]').forEach(el=>{
-    if(!el.closest('.purpose-sub')) ioLate.observe(el);
+  }, { rootMargin: '-5% 0px -40% 0px', threshold: 0 });
+
+  /* 只觀察非 .purpose-sub 內的 .late[data-late]，避免小標提早進場 */
+  document.querySelectorAll('.late[data-late]').forEach(el => {
+    if (!el.closest('.purpose-sub')) lateObserver.observe(el);
   });
 
-  /* ===== 表單無跳轉 + CTA 粒子 ===== */
+  /* 表單無跳轉 */
   const toast=document.getElementById('toast');
   const iframe=document.getElementById('hidden_iframe');
   let submittedAt=0;
-  function submitGForm(){
-    const input=document.getElementById('email'); const email=(input.value||'').trim();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ alert('請輸入有效的 Email'); return false; }
-    submittedAt=Date.now(); return true;
+  function submitGForm(e){
+    const input=document.getElementById('email');const email=(input.value||'').trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('請輸入有效的 Email');return false;}
+    submittedAt=Date.now();return true;
   }
   iframe.addEventListener('load',()=>{
     if(Date.now()-submittedAt<300) return;
     document.getElementById('email').value='';
-    toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2400);
-    // 粒子（餘燼）
-    const btn=document.getElementById('ctaBtn'); if(!btn) return;
-    const r=btn.getBoundingClientRect(); const cx=r.left+r.width/2, cy=r.top+r.height/2;
-    const n = Math.min(10 + Math.floor(Math.random()*4), 12); // 行動裝置：控制數量
-    for(let i=0;i<n;i++) ember(cx,cy);
+    toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2600);
   });
 
-  function ember(x,y){
-    const el=document.createElement('div'); el.className='p';
-    const hue = 345 + Math.random()*20;
-    el.style.background=`radial-gradient(circle, hsla(${hue},70%,60%,.9), rgba(230,118,144,0) 70%)`;
-    el.style.left=x+'px'; el.style.top=y+'px';
-    document.body.appendChild(el);
-    const ang=(Math.random()*Math.PI*2), spd=1.1+Math.random()*1.4, vy=-2.2 - Math.random()*1.8;
-    const life=650+Math.random()*450, start=performance.now();
-    (function anim(t){
-      const dt=t-start, k=Math.min(1,dt/life);
-      const nx=x+Math.cos(ang)*spd*dt*0.06;
-      const ny=y+vy*dt*0.03+(k*k)*28;
-      el.style.transform=`translate(${nx-x}px,${ny-y}px) scale(${1-k*0.4})`;
-      el.style.opacity=(1-k).toFixed(2);
-      if(dt<life) requestAnimationFrame(anim); else el.remove();
-    })(start);
-  }
-
-  /* ===== 光流連接（s3 ↔ s4） ===== */
+  /* 光流連接（s3 ↔ s4） */
   const beamLine = document.getElementById('beamLine');
   const logoMark = document.querySelector('.s3 .logo-mark');
   const flameImg = document.querySelector('.s4 .flame-img');
+
   let rafId;
   function updateBeam(){
-    const a=logoMark.getBoundingClientRect(), b=flameImg.getBoundingClientRect();
-    const aVis=a.bottom>0&&a.top<innerHeight, bVis=b.bottom>0&&b.top<innerHeight;
-    const inRange=(a.bottom>-0.2*innerHeight&&a.top<1.2*innerHeight)||(b.bottom>-0.2*innerHeight&&b.top<1.2*innerHeight);
+    const a = logoMark.getBoundingClientRect();
+    const b = flameImg.getBoundingClientRect();
+    const aVisible = a.bottom > 0 && a.top < window.innerHeight;
+    const bVisible = b.bottom > 0 && b.top < window.innerHeight;
+    const inRange = (a.bottom > -0.2*window.innerHeight && a.top < 1.2*window.innerHeight) ||
+                    (b.bottom > -0.2*window.innerHeight && b.top < 1.2*window.innerHeight);
+
     if(inRange){
-      const x1=((a.left+a.right)/2)/innerWidth*100, y1=((a.top+a.bottom)/2)/innerHeight*100;
-      const x2=((b.left+b.right)/2)/innerWidth*100, y2=((b.top+b.bottom)/2)/innerHeight*100;
-      beamLine.setAttribute('x1',x1.toFixed(2)); beamLine.setAttribute('y1',y1.toFixed(2));
-      beamLine.setAttribute('x2',x2.toFixed(2)); beamLine.setAttribute('y2',y2.toFixed(2));
-      const dy=Math.abs(y2-y1)/100; const base=0.6*(aVis||bVis?1:0.6);
-      const op=Math.max(0,Math.min(1, base*(1-dy))); beamLine.setAttribute('opacity',op.toFixed(2));
-    }else{ beamLine.setAttribute('opacity','0'); }
-    const now=performance.now(); beamLine.setAttribute('stroke-dashoffset', (-(now/36)%12).toFixed(2));
-    rafId=requestAnimationFrame(updateBeam);
-  }
-  rafId=requestAnimationFrame(updateBeam);
-  addEventListener('resize', ()=>{ cancelAnimationFrame(rafId); rafId=requestAnimationFrame(updateBeam); }, {passive:true});
-
-  /* ===== Our Purpose：中線揭幕 → 小標錯層（手機友善） ===== */
-  const purposeSection=document.querySelector('.s3b');
-  const purposeTitleEl=document.getElementById('purposeTitle');
-  const purposeSubStaggers=document.querySelectorAll('.purpose-sub [data-stagger]');
-  let purposeTitleShown=false, purposeSubShown=false;
-
-  function handlePurpose(){
-    if(!purposeSection||!purposeTitleEl) return;
-    const rect=purposeSection.getBoundingClientRect(), vh=innerHeight;
-    const sectionCenter=rect.top+rect.height/2, viewportCenter=vh/2;
-    const delta=Math.abs(sectionCenter-viewportCenter)/vh;
-
-    if(!purposeTitleShown && delta<0.18 && rect.top<vh && rect.bottom>0){
-      purposeTitleEl.classList.add('in'); // 包含 clip-reveal
-      purposeTitleShown=true;
+      const x1 = ((a.left + a.right)/2) / window.innerWidth * 100;
+      const y1 = ((a.top + a.bottom)/2) / window.innerHeight * 100;
+      const x2 = ((b.left + b.right)/2) / window.innerWidth * 100;
+      const y2 = ((b.top + b.bottom)/2) / window.innerHeight * 100;
+      beamLine.setAttribute('x1', x1.toFixed(2));
+      beamLine.setAttribute('y1', y1.toFixed(2));
+      beamLine.setAttribute('x2', x2.toFixed(2));
+      beamLine.setAttribute('y2', y2.toFixed(2));
+      const dy = Math.abs(y2 - y1) / 100;
+      const base = 0.65 * (aVisible || bVisible ? 1 : 0.6);
+      const opacity = Math.max(0, Math.min(1, base * (1 - dy)));
+      beamLine.setAttribute('opacity', opacity.toFixed(2));
+    }else{
+      beamLine.setAttribute('opacity', '0');
     }
-    if(!purposeSubShown && purposeTitleShown && sectionCenter < viewportCenter - vh*0.10){
-      purposeSubStaggers.forEach(el=>el.classList.add('in'));
-      purposeSubShown=true;
+    const now = performance.now();
+    beamLine.setAttribute('stroke-dashoffset', (-(now/30)%12).toFixed(2));
+    rafId = requestAnimationFrame(updateBeam);
+  }
+  rafId = requestAnimationFrame(updateBeam);
+  window.addEventListener('resize', ()=>{ cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateBeam); });
+
+  /* Our Purpose：靠近畫面中線才淡入（並加上保護性的 IO 以兼容手機） */
+  const purposeSection = document.querySelector('.s3b');
+  const purposeTitleEl = document.getElementById('purposeTitle');
+  const purposeSubEls = purposeSection.querySelectorAll('.purpose-sub .late[data-late]');
+  let purposeTitleShown = false;
+  let purposeSubShown = false;
+
+  // 中線邏輯：更寬容一點（行動裝置更容易觸發）
+  function handlePurpose() {
+    if (!purposeSection || !purposeTitleEl) return;
+    const rect = purposeSection.getBoundingClientRect();
+    const vh = window.innerHeight;
+
+    const sectionCenter = rect.top + rect.height / 2;
+    const viewportCenter = vh / 2;
+    const delta = Math.abs(sectionCenter - viewportCenter) / vh; // 0~1
+
+    // 接近中線（±18%）才讓大標淡入（行動裝置加大容忍度）
+    if (!purposeTitleShown && delta < 0.18 && rect.top < vh && rect.bottom > 0) {
+      purposeTitleEl.classList.add('in'); // 同時觸發 clip-reveal
+      purposeTitleShown = true;
+    }
+
+    // 章節中心越過中線一定距離後才出小標，且必須已顯示大標
+    if (!purposeSubShown && purposeTitleShown && sectionCenter < viewportCenter - vh * 0.10) {
+      purposeSubEls.forEach(el => el.classList.add('in'));
+      purposeSubShown = true;
     }
   }
-  addEventListener('scroll', handlePurpose, {passive:true});
-  addEventListener('load', handlePurpose, {passive:true});
-  addEventListener('resize', handlePurpose, {passive:true});
+  window.addEventListener('scroll', handlePurpose, { passive: true });
+  window.addEventListener('load', handlePurpose);
+  window.addEventListener('resize', handlePurpose);
 
-  // 保護性 IO（靠近中線即觸發大標）
-  const purposeIO=new IntersectionObserver(es=>{
-    es.forEach(e=>{
+  // 保護性的 IntersectionObserver（接近中線即觸發大標 in）
+  const purposeIO = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
       if(e.isIntersecting){
-        purposeTitleEl.classList.add('in'); purposeTitleShown=true; purposeIO.unobserve(e.target);
+        purposeTitleEl.classList.add('in');
+        purposeTitleShown = true;
+        purposeIO.unobserve(e.target);
       }
     });
-  },{root:null, rootMargin:'-35% 0px -35% 0px', threshold:0});
+  }, {
+    root: null,
+    // 在中線附近觸發：上下各留 35% 外邊距 → 觀測區域集中在中間 30%
+    rootMargin: '-35% 0px -35% 0px',
+    threshold: 0
+  });
   purposeIO.observe(purposeTitleEl);
-
-  /* ===== Hero wordmark：卷動 stroke→fill ===== */
-  const wm=document.querySelector('.wordmark');
-  function updateWordmarkFill(){
-    if(!wm) return;
-    const s1=document.querySelector('.s1').getBoundingClientRect();
-    const h=innerHeight;
-    // s1 自視窗底緣往上 0 ~ 60vh 期間，填充 0% → 100%
-    const t=Math.min(1, Math.max(0, (h - Math.max(0, s1.bottom)) / (0.6*h)));
-    wm.style.setProperty('--p', (t*100).toFixed(1)+'%');
-  }
-  addEventListener('scroll', updateWordmarkFill, {passive:true});
-  addEventListener('load', updateWordmarkFill, {passive:true});
-
-  /* ===== CTA 磁吸（行動優先：用 pointer 事件，無鼠標時維持靜態） ===== */
-  const btn=document.getElementById('ctaBtn');
-  if(btn){
-    const halo=btn.querySelector('.halo');
-    btn.addEventListener('pointermove', e=>{
-      const r=btn.getBoundingClientRect();
-      const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
-      halo.style.setProperty('--mx', (x*100)+'%'); halo.style.setProperty('--my', (y*100)+'%');
-      btn.classList.add('hovering');
-    }, {passive:true});
-    btn.addEventListener('pointerleave', ()=>btn.classList.remove('hovering'), {passive:true});
-  }
-
-  /* ===== 右側進度點：點擊跳段 ===== */
-  const dots=[...document.querySelectorAll('.navdots button')];
-  const secs=['.s1','.s2','.s3','.s4','.s5'].map(s=>document.querySelector(s));
-  dots.forEach(d=>d.addEventListener('click',()=>{
-    const to=document.querySelector(d.dataset.to); if(to) to.scrollIntoView({behavior:'smooth', block:'center'});
-  }, {passive:true}));
-  const dotsIO=new IntersectionObserver(es=>{
-    es.forEach(e=>{
-      if(e.isIntersecting){
-        const i=secs.indexOf(e.target);
-        dots.forEach(d=>d.classList.remove('active'));
-        dots[i]?.classList.add('active');
-      }
-    });
-  },{threshold:.5});
-  secs.forEach(s=>dotsIO.observe(s));
-
-  /* ===== 輕度 3D tilt（桌機/有指標時；手機維持靜態） ===== */
-  function tilt(el,max=2){
-    if(!el) return;
-    el.addEventListener('pointermove',e=>{
-      // 僅在有精細指標時啟用
-      if(matchMedia('(pointer:fine)').matches){
-        const r=el.getBoundingClientRect();
-        const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
-        el.style.transform=`rotateX(${(-y*max)}deg) rotateY(${(x*max)}deg) scale(1.01)`;
-      }
-    }, {passive:true});
-    el.addEventListener('pointerleave',()=>{ if(matchMedia('(pointer:fine)').matches) el.style.transform='none'; }, {passive:true});
-  }
-  tilt(document.querySelector('.s3 .logo-mark'), 2.0);
-  tilt(document.querySelector('.s4 .flame-img'), 2.0);
 </script>
 
 </body>

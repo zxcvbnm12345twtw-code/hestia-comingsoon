@@ -10,7 +10,6 @@
 <meta property="og:type" content="website">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>HESTIA — 即將到來</title>
 <style>
   html,body{margin:0;padding:0;color:#fff;overflow-x:hidden;background:#000;
     font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;}
@@ -35,7 +34,9 @@
   .s1{background:linear-gradient(180deg,#000,#000);}
   .s2{background:linear-gradient(180deg,#000,#1d1013);}
   .s3{background:linear-gradient(180deg,#1d1013,#441d2a);}
-  .s4{background:linear-gradient(180deg,#441d2a,#8f3e56);}
+  /* 新增：Our Purpose 過渡段（承接 s3→s4 的色溫） */
+  .s3b{background:linear-gradient(180deg,#441d2a,#6a3045);}
+  .s4{background:linear-gradient(180deg,#6a3045,#8f3e56);}
   .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
 
   /* 全頁呼吸柔光覆層 */
@@ -76,15 +77,24 @@
   .links{display:flex;gap:18px;justify-content:center;margin-top:14px;position:relative;z-index:1;}
   .links a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.24);padding-bottom:2px;}
 
-  /* Toast */
   .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(0,0,0,.72);padding:12px 18px;border-radius:12px;
     font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .28s ease;}
   .toast.show{opacity:1;}
 
   /* ▶ 光流連接：固定在最上層的 SVG（但不擋點擊） */
-  .linker{
-    position:fixed; inset:0; z-index:2; pointer-events:none; /* 內容在 z-index:1 之上，但不影響互動 */
+  .linker{position:fixed; inset:0; z-index:2; pointer-events:none;}
+
+  /* ▶ Our Purpose 電影式標題 */
+  .purpose-title{
+    font-size:clamp(42px,14vw,128px);
+    line-height:1.03; letter-spacing:.01em; font-weight:700;
+    opacity:0; transform:translateY(18px) scale(.985);
+    transition:opacity 1s ease, transform 1s ease;
+    text-shadow:0 8px 28px rgba(0,0,0,.45);
   }
+  .purpose-title.in{opacity:1; transform:translateY(0) scale(1);}
+  .purpose-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .purpose-sub p{margin:0.2em 0;}
 </style>
 </head>
 <body>
@@ -95,19 +105,14 @@
 <!-- 光流連接 SVG -->
 <svg class="linker" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
   <defs>
-    <!-- 柔和玫瑰金到透明的線性漸層 -->
     <linearGradient id="beamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="rgba(230,118,144,0)" />
       <stop offset="25%" stop-color="rgba(230,118,144,.55)" />
       <stop offset="75%" stop-color="rgba(230,118,144,.55)" />
       <stop offset="100%" stop-color="rgba(230,118,144,0)" />
     </linearGradient>
-    <!-- 柔光濾鏡 -->
-    <filter id="beamBlur" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
-    </filter>
+    <filter id="beamBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/></filter>
   </defs>
-  <!-- 真正的光束路徑（使用 viewBox 百分比座標，由 JS 實時更新） -->
   <line id="beamLine" x1="50" y1="50" x2="50" y2="50"
         stroke="url(#beamGrad)" stroke-width="1.2" stroke-linecap="round"
         stroke-dasharray="4 8" stroke-dashoffset="0" filter="url(#beamBlur)" opacity="0"/>
@@ -141,6 +146,20 @@
   <p class="reveal">它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
+<!-- ③.5 Our Purpose（電影式滿版標題 → 捲動出敘事小標） -->
+<section class="s3b">
+  <div class="purpose-wrap">
+    <h2 class="purpose-title" id="purposeTitle">
+      <span class="we-accent">Our</span> Purpose
+    </h2>
+    <div class="purpose-sub">
+      <p class="late" data-late>每一個特質，都是值得擁抱的亮點。</p>
+      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">（小標題）：我們創立 HESTIA，不只是為了做運動服，</p>
+      <p class="late" data-late style="opacity:.9;font-size:clamp(14px,3.4vw,20px)">而是讓服裝成為你自我認同的象徵。</p>
+    </div>
+  </div>
+</section>
+
 <!-- ④ THE FLAME MARK（圖先出，文字晚） -->
 <section class="s4">
   <img class="flame-img" src="Flamemark.png" alt="The Flame Mark">
@@ -169,21 +188,21 @@
 <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
 <script>
-  /* ===== 進場淡入（維持原設定） ===== */
+  /* 進場淡入（含兩個符號圖） */
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
   },{threshold:.22});
-  document.querySelectorAll('.reveal,.logo-mark,.flame-img').forEach(el=>{
+  document.querySelectorAll('.reveal,.logo-mark,.flame-img,.purpose-title').forEach(el=>{
     if(!el.classList.contains('in'))observer.observe(el);
   });
 
-  /* 更晚出現（WHO 段落 & THE FLAME MARK 文字） */
+  /* 更晚出現（WHO 段落 & Our Purpose 小標 & FLAME MARK 文字） */
   const lateObserver=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');lateObserver.unobserve(e.target);}});
   },{rootMargin:'-5% 0px -40% 0px',threshold:0});
   document.querySelectorAll('.late[data-late]').forEach(el=>lateObserver.observe(el));
 
-  /* ===== 表單無跳轉 ===== */
+  /* 表單無跳轉 */
   const toast=document.getElementById('toast');
   const iframe=document.getElementById('hidden_iframe');
   let submittedAt=0;
@@ -193,58 +212,45 @@
     submittedAt=Date.now();return true;
   }
   iframe.addEventListener('load',()=>{
-    if(Date.now()-submittedAt<300)return;
+    if(Date.now()-submittedAt<300) return;
     document.getElementById('email').value='';
-    toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600);
+    toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2600);
   });
 
-  /* ===== 光流連接（s3 ↔ s4）===== */
+  /* 光流連接（s3 ↔ s4） */
   const beamLine = document.getElementById('beamLine');
   const logoMark = document.querySelector('.s3 .logo-mark');
   const flameImg = document.querySelector('.s4 .flame-img');
 
   let rafId;
   function updateBeam(){
-    // 取得兩個圖在視窗的中心座標
     const a = logoMark.getBoundingClientRect();
     const b = flameImg.getBoundingClientRect();
-
     const aVisible = a.bottom > 0 && a.top < window.innerHeight;
     const bVisible = b.bottom > 0 && b.top < window.innerHeight;
-
-    // 僅在「交會過程」顯示光束：其中一個接近視窗（或兩者其一可見）
     const inRange = (a.bottom > -0.2*window.innerHeight && a.top < 1.2*window.innerHeight) ||
                     (b.bottom > -0.2*window.innerHeight && b.top < 1.2*window.innerHeight);
 
     if(inRange){
-      // 以視窗百分比座標更新 SVG 線段
       const x1 = ((a.left + a.right)/2) / window.innerWidth * 100;
       const y1 = ((a.top + a.bottom)/2) / window.innerHeight * 100;
       const x2 = ((b.left + b.right)/2) / window.innerWidth * 100;
       const y2 = ((b.top + b.bottom)/2) / window.innerHeight * 100;
-
       beamLine.setAttribute('x1', x1.toFixed(2));
       beamLine.setAttribute('y1', y1.toFixed(2));
       beamLine.setAttribute('x2', x2.toFixed(2));
       beamLine.setAttribute('y2', y2.toFixed(2));
-
-      // 透明度依據兩者的可見性與距離調整（更近更亮）
-      const dy = Math.abs(y2 - y1) / 100; // 0~1
+      const dy = Math.abs(y2 - y1) / 100;
       const base = 0.65 * (aVisible || bVisible ? 1 : 0.6);
       const opacity = Math.max(0, Math.min(1, base * (1 - dy)));
       beamLine.setAttribute('opacity', opacity.toFixed(2));
     }else{
       beamLine.setAttribute('opacity', '0');
     }
-
-    // 流動感：dashoffset 持續驅動
     const now = performance.now();
     beamLine.setAttribute('stroke-dashoffset', (-(now/30)%12).toFixed(2));
-
     rafId = requestAnimationFrame(updateBeam);
   }
-
-  // 啟動
   rafId = requestAnimationFrame(updateBeam);
   window.addEventListener('resize', ()=>{ cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateBeam); });
 </script>

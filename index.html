@@ -110,6 +110,27 @@
   .purpose-sub .late[data-late]:nth-child(1){transition-delay:.08s;}
   .purpose-sub .late[data-late]:nth-child(2){transition-delay:.18s;}
   .purpose-sub .late[data-late]:nth-child(3){transition-delay:.28s;}
+  /* Our Purpose 小標三行：左右錯層 + 模糊復位（不改 JS 選擇器） */
+.s3b .purpose-sub .late[data-late]{
+  /* 原本的下滑位移 + 這裡加左右位移與輕微模糊 */
+  transform: translateY(70px) translateX(var(--x, 0));
+  filter: blur(6px);
+  transition:
+    opacity 0.8s cubic-bezier(.22,.61,.36,1),
+    transform 0.8s cubic-bezier(.22,.61,.36,1),
+    filter 0.8s cubic-bezier(.22,.61,.36,1);
+}
+
+/* 進場後回到原位、清晰 */
+.s3b .purpose-sub .late.in{
+  transform: none;
+  filter: blur(0);
+}
+
+/* 左右錯層位移與階梯延遲（行動裝置優先，位移小一點更沉靜） */
+.s3b .purpose-sub .late[data-late]:nth-child(1){ --x: -10px; transition-delay: .06s; }
+.s3b .purpose-sub .late[data-late]:nth-child(2){ --x:  10px; transition-delay: .14s; }
+.s3b .purpose-sub .late[data-late]:nth-child(3){ --x:  -8px; transition-delay: .22s; }
 </style>
 </head>
 <body>

@@ -109,78 +109,58 @@
     /* 光流連接：固定覆層（不擋點擊） */
     .linker{position:fixed; inset:0; z-index:2; pointer-events:none;}
 
-    /* === Our Purpose 小標左右錯層（沿用你先前設定） === */
+    /* Our Purpose 小標錯層延遲（與左右錯層） */
     .purpose-sub .late[data-late]{transition-delay:.0s;}
     .purpose-sub .late[data-late]:nth-child(1){transition-delay:.08s;}
     .purpose-sub .late[data-late]:nth-child(2){transition-delay:.18s;}
     .purpose-sub .late[data-late]:nth-child(3){transition-delay:.28s;}
-    .s3b .purpose-sub .late[data-late]{transform: translateY(70px) translateX(var(--x, 0));filter: blur(6px);
-      transition: opacity .8s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1), filter .8s cubic-bezier(.22,.61,.36,1);}
+    .s3b .purpose-sub .late[data-late]{
+      transform: translateY(70px) translateX(var(--x, 0));
+      filter: blur(6px);
+      transition: opacity .8s cubic-bezier(.22,.61,.36,1),
+                 transform .8s cubic-bezier(.22,.61,.36,1),
+                 filter .8s cubic-bezier(.22,.61,.36,1);
+    }
     .s3b .purpose-sub .late.in{transform:none;filter:blur(0)}
     .s3b .purpose-sub .late[data-late]:nth-child(1){ --x: -10px; }
     .s3b .purpose-sub .late[data-late]:nth-child(2){ --x:  10px; }
     .s3b .purpose-sub .late[data-late]:nth-child(3){ --x:  -8px; }
 
-   /* ======== ①頁「全黑 → 斜向光掃」：穩定版（動畫 mask-position） ======== */
-.s1 .brand{ position:relative; }
-
-/* 全黑覆層 + 以 mask 製造一條斜向的透明光帶，靠 position 移動 */
-.s1 .brand::after{
-  content:"";
-  position:absolute; inset:-8vh -8vw;
-  z-index:3; pointer-events:none;
-  background:#000;           /* 黑色覆層 */
-  /* 斜向光帶：中間不透明（切開），兩側透明收邊 */
-  -webkit-mask-image: linear-gradient(135deg,
-      rgba(0,0,0,0) 42%,
-      rgba(0,0,0,1) 50%,
-      rgba(0,0,0,0) 58%);
-          mask-image: linear-gradient(135deg,
-      rgba(0,0,0,0) 42%,
-      rgba(0,0,0,1) 50%,
-      rgba(0,0,0,0) 58%);
-  -webkit-mask-size: 220% 220%;
-          mask-size: 220% 220%;
-  -webkit-mask-position: -20% -20%; /* 從左上開始 */
-          mask-position: -20% -20%;
-  opacity:1;
-}
-
-/* 啟動掃光：把 mask-position 往右下推到 120% 120%，最後把覆層淡出 */
-.ready .s1 .brand::after{
-  animation:
-    sweepMask 1.6s cubic-bezier(.22,.61,.36,1) forwards,
-    fadeMask  .28s ease forwards 1.55s; /* 掃到尾端後淡出覆層 */
-}
-
-@keyframes sweepMask{
-  to { -webkit-mask-position: 120% 120%; mask-position: 120% 120%; }
-}
-@keyframes fadeMask{
-  to { opacity:0; }
-}
-
-/* 掃光結束後才出現 tagline / arrow（並保留你的呼吸＆浮動） */
-.ready .s1 .tagline{
-  animation: fadeIn .6s ease forwards, breathe 6s ease-in-out infinite;
-  animation-delay: 1.0s, 1.0s;
-}
-.ready .s1 .arrow{
-  animation: fadeIn .6s ease forwards, floatY 3s ease-in-out infinite;
-  animation-delay: 1.15s, 1.15s;
-}
-
-    /* 啟動掃光：位移變數由 -20% → 110%，最後把覆層淡出 */
+    /* ======== ①頁「全黑 → 斜向光掃」：穩定版（動畫 mask-position） ======== */
+    .s1 .brand{ position:relative; }
+    .s1 .brand::after{
+      content:"";
+      position:absolute; inset:-8vh -8vw;
+      z-index:3; pointer-events:none;
+      background:#000; /* 黑色覆層 */
+      /* 斜向光帶：中間不透明切割，兩側透明過渡 */
+      -webkit-mask-image: linear-gradient(135deg,
+          rgba(0,0,0,0) 42%,
+          rgba(0,0,0,1) 50%,
+          rgba(0,0,0,0) 58%);
+              mask-image: linear-gradient(135deg,
+          rgba(0,0,0,0) 42%,
+          rgba(0,0,0,1) 50%,
+          rgba(0,0,0,0) 58%);
+      -webkit-mask-size: 220% 220%;
+              mask-size: 220% 220%;
+      -webkit-mask-position: -20% -20%; /* 從左上開始 */
+              mask-position: -20% -20%;
+      opacity:1;
+    }
     .ready .s1 .brand::after{
-      animation: sweepLight 1.6s cubic-bezier(.22,.61,.36,1) forwards;
+      animation:
+        sweepMask 1.6s cubic-bezier(.22,.61,.36,1) forwards,
+        fadeMask  .28s ease forwards 1.55s;
     }
-    @keyframes sweepLight{
-      0%   { --pos:-20%; opacity:1; }
-      85%  { --pos:110%; opacity:1; }
-      100% { --pos:110%; opacity:0; }
+    @keyframes sweepMask{
+      to { -webkit-mask-position: 120% 120%; mask-position: 120% 120%; }
+    }
+    @keyframes fadeMask{
+      to { opacity:0; }
     }
 
-    /* 文字出場時序：掃光後才出現 tagline / arrow（並維持原本的呼吸/浮動） */
+    /* 掃光結束後才出現 tagline / arrow（並保留呼吸與浮動） */
     .ready .s1 .tagline{
       animation: fadeIn .6s ease forwards, breathe 6s ease-in-out infinite;
       animation-delay: 1.0s, 1.0s;
@@ -222,7 +202,7 @@
   <div class="arrow">↓</div>
 </section>
 
-<!-- ② WHO WE ARE -->
+<!-- ② WHO WE ARE（維持原 reveal、字級回復） -->
 <section class="s2">
   <h2 class="reveal in who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
   <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
@@ -240,7 +220,7 @@
   <p class="reveal">它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
-<!-- ③.5 Our Purpose -->
+<!-- ③.5 Our Purpose（靠近中線才淡入 → 再出小標） -->
 <section class="s3b">
   <div class="purpose-wrap">
     <h2 class="purpose-title clip-reveal" id="purposeTitle">
@@ -254,7 +234,7 @@
   </div>
 </section>
 
-<!-- ④ THE FLAME MARK -->
+<!-- ④ THE FLAME MARK（圖先出，文字晚） -->
 <section class="s4">
   <img class="flame-img" src="Flamemark.png" alt="The Flame Mark">
   <h2 class="late" data-late>THE FLAME MARK</h2>
@@ -295,7 +275,7 @@
     if(!el.classList.contains('in'))observer.observe(el);
   });
 
-  /* 更晚出現（WHO 段落 & THE FLAME MARK 文字）—排除 Our Purpose 小標 */
+  /* 更晚出現（WHO 段落 & THE FLAME MARK 文字）—排除 Our Purpose 小標，交由 handlePurpose 控制 */
   const lateObserver = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -361,7 +341,7 @@
   rafId = requestAnimationFrame(updateBeam);
   window.addEventListener('resize', ()=>{ cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateBeam); });
 
-  /* Our Purpose：靠近畫面中線才淡入（含保護性 IO） */
+  /* Our Purpose：靠近畫面中線才淡入（並加上保護性的 IO 以兼容手機） */
   const purposeSection = document.querySelector('.s3b');
   const purposeTitleEl = document.getElementById('purposeTitle');
   const purposeSubEls = purposeSection.querySelectorAll('.purpose-sub .late[data-late]');
@@ -372,14 +352,16 @@
     if (!purposeSection || !purposeTitleEl) return;
     const rect = purposeSection.getBoundingClientRect();
     const vh = window.innerHeight;
+
     const sectionCenter = rect.top + rect.height / 2;
     const viewportCenter = vh / 2;
     const delta = Math.abs(sectionCenter - viewportCenter) / vh;
 
     if (!purposeTitleShown && delta < 0.18 && rect.top < vh && rect.bottom > 0) {
-      purposeTitleEl.classList.add('in'); // also triggers clip-reveal
+      purposeTitleEl.classList.add('in'); // 同時觸發 clip-reveal
       purposeTitleShown = true;
     }
+
     if (!purposeSubShown && purposeTitleShown && sectionCenter < viewportCenter - vh * 0.10) {
       purposeSubEls.forEach(el => el.classList.add('in'));
       purposeSubShown = true;
@@ -397,7 +379,11 @@
         purposeIO.unobserve(e.target);
       }
     });
-  }, { root: null, rootMargin: '-35% 0px -35% 0px', threshold: 0 });
+  }, {
+    root: null,
+    rootMargin: '-35% 0px -35% 0px',
+    threshold: 0
+  });
   purposeIO.observe(purposeTitleEl);
 </script>
 

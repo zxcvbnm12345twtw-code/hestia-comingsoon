@@ -4,138 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HESTIA — Intro</title>
-  <!-- Favicon -->
   <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
   <link rel="apple-touch-icon" href="/favicon.png" />
-  <meta name="description" content="HESTIA Intro">
+  <meta name="description" content="HESTIA Intro Video">
   <style>
-    html,body{margin:0;padding:0;background:#000;color:#fff;height:100%;overflow:hidden;font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;}
-
-    /* 全畫面容器 */
-    .stage{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden;}
-
-    /* 背景影片 */
-    .bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0;transition:opacity .6s ease;}
-    .bg-video.ready{opacity:1;}
-
-    /* 上層漸層遮罩，確保字可讀 */
-    .veil{position:absolute;inset:0;z-index:1;pointer-events:none;
-      background:
-        radial-gradient(120% 150% at 50% 120%, rgba(0,0,0,.36) 0%, rgba(0,0,0,0) 60%),
-        linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,.45) 100%);
-    }
-
-    /* 呼吸柔光（沿用你的風格） */
-    .breath{position:fixed;inset:0;pointer-events:none;z-index:2;mix-blend-mode:screen;opacity:.16;
-      background:radial-gradient(120% 120% at 50% 115%,rgba(230,118,144,.30) 0%,rgba(230,118,144,0) 70%),
-                 radial-gradient(140% 100% at 50% -10%,rgba(120,80,120,.18) 0%,rgba(120,80,120,0) 72%);
-      animation:breathPulse 8s ease-in-out infinite alternate,breathDrift 26s ease-in-out infinite alternate;}
-    @keyframes breathPulse{0%{opacity:.12;transform:scale(1);}50%{opacity:.20;transform:scale(1.02);}100%{opacity:.12;transform:scale(1);}}
-    @keyframes breathDrift{0%{background-position:50% 115%,50% -10%;}100%{background-position:48% 105%,52% 0%;}}
-
-    /* 中央品牌 */
-    .brand{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s ease;}
-    .brand.in{opacity:1;transform:none;}
-    .logo{width:clamp(120px,26vw,220px);filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
-    .wordmark{width:clamp(260px,60vw,560px);filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
-    .tagline{margin-top:6px;font-weight:300;letter-spacing:.22em;font-size:clamp(13px,1.8vw,16px);
-      text-shadow:0 0 12px rgba(230,118,144,.6);animation:breathe 6s ease-in-out infinite;}
-    @keyframes breathe{0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}}
-
-    /* 右下角 Skip / 直接進入 */
-    .actions{position:fixed;right:14px;bottom:14px;z-index:4;display:flex;gap:10px;align-items:center;}
-    .btn{appearance:none;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.25);color:#fff;
-      padding:10px 14px;border-radius:999px;font-weight:600;font-size:14px;letter-spacing:.02em;
-      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);cursor:pointer;transition:opacity .25s, transform .25s, background .25s;}
-    .btn:hover{background:rgba(0,0,0,.4);transform:translateY(-1px);}
-    .hint{font-size:12px;opacity:.75}
-
-    /* 進度條（可選）*/
-    .progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.12);z-index:4;overflow:hidden}
-    .bar{height:100%;width:0;background:linear-gradient(90deg,#E67690,#cf5b79);transition:width linear;}
-
-    /* 減少動態偏好：直接導向 */
+    html,body{margin:0;height:100%;background:#000;overflow:hidden}
+    .stage{position:fixed;inset:0}
+    video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease}
+    video.ready{opacity:1}
+    /* 若使用者偏好減少動態，直接跳過影片 */
     @media (prefers-reduced-motion: reduce){
-      .bg-video{display:none !important;}
+      video{display:none}
     }
   </style>
 </head>
 <body>
   <div class="stage">
-    <video class="bg-video" id="introVideo" autoplay muted playsinline preload="auto">
-      <source src="/781088592.837947.mp4" type="video/mp4">
+    <video id="intro" autoplay muted playsinline preload="auto">
+      <!-- 你的影片現在在根目錄；若移到 /assets/ 就改 src="/assets/hero.mp4" -->
+      <source src="/781088592.837947.mp4" type="video/mp4" />
     </video>
-    <div class="veil" aria-hidden="true"></div>
-    <div class="breath" aria-hidden="true"></div>
-
-    <div class="brand" id="brand">
-      <img class="logo" src="/logo.png" alt="HESTIA flame mark">
-      <img class="wordmark" src="/wordmark.png" alt="HESTIA wordmark">
-      <div class="tagline">OWN YOUR FLAME</div>
-    </div>
-
-    <div class="actions">
-      <button class="btn" id="skipBtn">直接進入</button>
-      <span class="hint" id="hint">影片結束將自動進入</span>
-    </div>
-
-    <div class="progress" aria-hidden="true">
-      <div class="bar" id="bar"></div>
-    </div>
   </div>
 
   <script>
-    const NEXT_URL = "/home.html";       // 影片後要前往的頁面
-    const MAX_WAIT_MS = 1200;            // 影片 canplay 最長等待後也顯示品牌
-    const AUTO_FALLBACK_MS = 9000;       // 若抓不到影片時，最長等待後自動前往（可依影片長度調整）
+    const NEXT_URL = "/home.html";
+    const AUTO_FALLBACK_MS = 12000; // 防呆：12 秒後一定進入首頁（可依影片長度調整）
 
-    const vid = document.getElementById('introVideo');
-    const brand = document.getElementById('brand');
-    const skipBtn = document.getElementById('skipBtn');
-    const bar = document.getElementById('bar');
+    const v = document.getElementById('intro');
 
-    let started = false;
-    let progressTimer = null;
+    function goNext(){ location.href = NEXT_URL; }
 
-    function goNext(){
-      if (started) return;
-      started = true;
-      window.location.href = NEXT_URL;
-    }
+    // 影片可播時淡入
+    v.addEventListener('canplay', ()=> v.classList.add('ready'), {once:true});
+    // 播放結束自動進入
+    v.addEventListener('ended', goNext);
 
-    function startProgress(){
-      if (!vid.duration || !isFinite(vid.duration)) return; // 有些瀏覽器一開始拿不到 duration
-      const dur = Math.max(vid.duration, AUTO_FALLBACK_MS/1000);
-      bar.style.transitionDuration = dur + 's';
-      requestAnimationFrame(()=>{ bar.style.width = '100%'; });
-    }
-
-    function readyUI(){
-      brand.classList.add('in');
-      vid.classList.add('ready');
-      // 某些環境 canplay 早於 duration 取得，延遲起動進度
-      setTimeout(startProgress, 120);
-    }
-
-    // 影片可播放時顯示品牌、漸入影片
-    vid.addEventListener('canplay', readyUI, { once:true });
-
-    // 影片結束自動導向（若影片是短片且不 loop）
-    vid.addEventListener('ended', goNext);
-
-    // 保底：就算 canplay 很慢，也在 MAX_WAIT_MS 後顯示品牌
-    setTimeout(()=>{ if(!brand.classList.contains('in')) readyUI(); }, MAX_WAIT_MS);
-
-    // 進一步保底：若影片載入失敗或用戶裝置阻擋，N 秒後仍自動進入
+    // 保底：若抓不到 duration 或行動裝置阻擋，超時自動進入
     setTimeout(goNext, AUTO_FALLBACK_MS);
 
-    // 手動跳過
-    skipBtn.addEventListener('click', goNext);
-
-    // 若用戶偏好減少動態，直接跳過
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      goNext();
-    }
+    // 瀏覽器/使用者偏好減少動態 → 直接進入
+    try{
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        goNext();
+      }
+    }catch(e){}
   </script>
 </body>
 </html>

@@ -1,38 +1,31 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <!-- Favicon -->
-  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
-  <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
-  <link rel="apple-touch-icon" href="/favicon.png" />
-  <title>HESTIA TAIWAN｜健身休閒服飾</title>
-  <meta name="description" content="HESTIA 健身時尚品牌，融合時尚與力量優雅，讓每個人穿出屬於自己的火焰。Own Your Flame.">
-  <meta name="keywords" content="Hestia, 健身, 健身時尚服飾, 運動休閒服飾, 台灣品牌">
-  <meta property="og:title" content="HESTIA TAIWAN｜健身時尚品牌">
-  <meta property="og:description" content="Own Your Flame. 不只是運動，更是自我認同。">
-  <meta property="og:url" content="https://www.hestiatw.com/">
-  <meta property="og:type" content="website">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HESTIA — Intro</title>
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <meta name="description" content="HESTIA Intro">
   <style>
-    html,body{margin:0;padding:0;color:#fff;overflow-x:hidden;background:#000;
-      font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;}
+    html,body{margin:0;padding:0;background:#000;color:#fff;height:100%;overflow:hidden;font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;}
 
-    section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
-      padding:60px 20px;text-align:center;}
+    /* 全畫面容器 */
+    .stage{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden;}
 
-    /* ====== 首屏影片背景 ====== */
-    .hero{position:relative;min-height:100vh;overflow:hidden;}
-    .hero video.bg-video{
-      position:absolute;top:0;left:0;width:100%;height:100%;
-      object-fit:cover;z-index:0;
+    /* 背景影片 */
+    .bg-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:0;transition:opacity .6s ease;}
+    .bg-video.ready{opacity:1;}
+
+    /* 上層漸層遮罩，確保字可讀 */
+    .veil{position:absolute;inset:0;z-index:1;pointer-events:none;
+      background:
+        radial-gradient(120% 150% at 50% 120%, rgba(0,0,0,.36) 0%, rgba(0,0,0,0) 60%),
+        linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,.45) 100%);
     }
-    .hero::after{
-      content:"";position:absolute;inset:0;background:rgba(0,0,0,0.38);z-index:0;
-    }
-    .hero .brand,.hero .tagline,.hero .arrow{position:relative;z-index:1;}
 
-    /* 呼吸柔光覆層 */
+    /* 呼吸柔光（沿用你的風格） */
     .breath{position:fixed;inset:0;pointer-events:none;z-index:2;mix-blend-mode:screen;opacity:.16;
       background:radial-gradient(120% 120% at 50% 115%,rgba(230,118,144,.30) 0%,rgba(230,118,144,0) 70%),
                  radial-gradient(140% 100% at 50% -10%,rgba(120,80,120,.18) 0%,rgba(120,80,120,0) 72%);
@@ -40,195 +33,109 @@
     @keyframes breathPulse{0%{opacity:.12;transform:scale(1);}50%{opacity:.20;transform:scale(1.02);}100%{opacity:.12;transform:scale(1);}}
     @keyframes breathDrift{0%{background-position:50% 115%,50% -10%;}100%{background-position:48% 105%,52% 0%;}}
 
-    /* Hero Brand */
-    .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px;}
+    /* 中央品牌 */
+    .brand{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;opacity:0;transform:translateY(18px);transition:opacity .7s ease, transform .7s ease;}
+    .brand.in{opacity:1;transform:none;}
     .logo{width:clamp(120px,26vw,220px);filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
     .wordmark{width:clamp(260px,60vw,560px);filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
-    .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(14px,1.8vw,18px);
+    .tagline{margin-top:6px;font-weight:300;letter-spacing:.22em;font-size:clamp(13px,1.8vw,16px);
       text-shadow:0 0 12px rgba(230,118,144,.6);animation:breathe 6s ease-in-out infinite;}
     @keyframes breathe{0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}}
-    .arrow{font-size:24px;margin-top:14px;animation:breathe 6s ease-in-out infinite, floatY 3s ease-in-out infinite;opacity:.8;}
-    @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
 
-    /* reveal */
-    .reveal{opacity:0;transform:translateY(60px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);}
-    .reveal.in{opacity:1;transform:none;}
-    .late{opacity:0;transform:translateY(8px);transition:opacity .9s ease, transform .9s ease;}
-    .late.in{opacity:1;transform:none;}
+    /* 右下角 Skip / 直接進入 */
+    .actions{position:fixed;right:14px;bottom:14px;z-index:4;display:flex;gap:10px;align-items:center;}
+    .btn{appearance:none;border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.25);color:#fff;
+      padding:10px 14px;border-radius:999px;font-weight:600;font-size:14px;letter-spacing:.02em;
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);cursor:pointer;transition:opacity .25s, transform .25s, background .25s;}
+    .btn:hover{background:rgba(0,0,0,.4);transform:translateY(-1px);}
+    .hint{font-size:12px;opacity:.75}
 
-    h1,h2{margin:0 0 20px;}
-    h2{font-size:clamp(24px,4vw,40px);}
-    .who-title,.purpose-title{
-      font-size:clamp(36px,7vw,64px);line-height:1.1;letter-spacing:.02em;font-weight:700;
+    /* 進度條（可選）*/
+    .progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.12);z-index:4;overflow:hidden}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,#E67690,#cf5b79);transition:width linear;}
+
+    /* 減少動態偏好：直接導向 */
+    @media (prefers-reduced-motion: reduce){
+      .bg-video{display:none !important;}
     }
-    .purpose-title{opacity:0;transform:translateY(18px) scale(.985);transition:opacity .8s ease,transform .8s ease;
-      text-shadow:0 8px 28px rgba(0,0,0,.45);}
-    .purpose-title.in{opacity:1;transform:translateY(0) scale(1);}
-    .clip-reveal{--r:0%;display:inline-block;clip-path:circle(var(--r) at 50% 50%);transition:clip-path .9s cubic-bezier(.22,.61,.36,1);}
-    .clip-reveal.in{--r:120%;}
-    .we-accent{color:#E67690;text-shadow:0 0 24px rgba(230,118,144,.36);}
-    p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.7;margin:0 auto;}
-
-    /* 背景色段 */
-    .s2{background:#000;}
-    .s3{background:#1d1013;}
-    .s3b{background:#441d2a;}
-    .s4{background:#6a3045;}
-    .s5{background:#8f3e56;}
-
-    /* Our Purpose 小標排版 */
-    .s3b .purpose-sub p{max-width:580px;line-height:1.5;letter-spacing:.04em;font-size:18px;}
-    .s3b .purpose-sub .late[data-late]{transform:translateY(70px) translateX(var(--x,0));filter:blur(6px);}
-    .s3b .purpose-sub .late.in{transform:none;filter:blur(0);}
-    .s3b .purpose-sub .late[data-late]:nth-child(1){--x:-10px;transition-delay:.06s;}
-    .s3b .purpose-sub .late[data-late]:nth-child(2){--x:10px;transition-delay:.14s;}
-    .s3b .purpose-sub .late[data-late]:nth-child(3){--x:-8px;transition-delay:.22s;}
-
-    /* CTA 區塊 */
-    form{margin-top:28px;display:flex;gap:12px;justify-content:center;}
-    input[type="email"]{padding:12px 20px;border-radius:8px;border:1px solid rgba(255,255,255,.18);
-      min-width:240px;font-size:16px;color:#fff;background:transparent;}
-    button{padding:12px 22px;border:none;border-radius:8px;font-weight:700;font-size:16px;
-      color:#fff;background:#E67690;cursor:pointer;transition:background .42s;}
-    button:hover{background:#cf5b79;}
-    .links{display:flex;gap:18px;justify-content:center;margin-top:14px;}
-    .links a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.24);padding-bottom:2px;}
-
-    .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(0,0,0,.72);
-      padding:12px 18px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .28s;}
-    .toast.show{opacity:1;}
   </style>
 </head>
 <body>
+  <div class="stage">
+    <video class="bg-video" id="introVideo" autoplay muted playsinline preload="auto">
+      <source src="/781088592.837947.mp4" type="video/mp4">
+    </video>
+    <div class="veil" aria-hidden="true"></div>
+    <div class="breath" aria-hidden="true"></div>
 
-<div class="breath"></div>
+    <div class="brand" id="brand">
+      <img class="logo" src="/logo.png" alt="HESTIA flame mark">
+      <img class="wordmark" src="/wordmark.png" alt="HESTIA wordmark">
+      <div class="tagline">OWN YOUR FLAME</div>
+    </div>
 
-<!-- ① 首屏 Hero with Video -->
-<section class="s1 hero">
-  <video autoplay muted loop playsinline class="bg-video">
-    <source src="781088592.837947.mp4" type="video/mp4">
-  </video>
-  <div class="brand">
-    <img class="logo" src="logo.png" alt="HESTIA flame mark" />
-    <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
-  </div>
-  <div class="tagline">即將到來</div>
-  <div class="arrow">↓</div>
-</section>
+    <div class="actions">
+      <button class="btn" id="skipBtn">直接進入</button>
+      <span class="hint" id="hint">影片結束將自動進入</span>
+    </div>
 
-<!-- ② WHO WE ARE -->
-<section class="s2">
-  <h2 class="reveal who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
-  <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
-  <p class="late" data-late>象徵歸屬、溫暖與內在之火。</p>
-  <p class="late" data-late>我們相信，每個人心中都有一簇火焰，</p>
-  <p class="late" data-late>等待被看見、被擁抱、被點燃。</p>
-</section>
-
-<!-- ③ 火種的符號 -->
-<section class="s3">
-  <img class="logo-mark reveal" src="logo.png" alt="HESTIA flame mark" />
-  <h2 class="reveal">火種的符號</h2>
-  <p class="reveal">品牌 Logo 的發想來自「火焰燃燒的線條」。</p>
-  <p class="reveal">拱型外型是 HESTIA 爐灶女神的意象。</p>
-  <p class="reveal">它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
-</section>
-
-<!-- ③.5 Our Purpose -->
-<section class="s3b">
-  <div class="purpose-wrap">
-    <h2 class="purpose-title clip-reveal" id="purposeTitle">
-      <span class="we-accent">Our</span> Purpose
-    </h2>
-    <div class="purpose-sub">
-      <p class="late" data-late>每一個特質，都是值得擁抱的亮點。</p>
-      <p class="late" data-late>HESTIA 不只是為了做服裝，</p>
-      <p class="late" data-late>而是讓日常成為你自我認同的象徵。</p>
+    <div class="progress" aria-hidden="true">
+      <div class="bar" id="bar"></div>
     </div>
   </div>
-</section>
 
-<!-- ④ THE FLAME MARK -->
-<section class="s4">
-  <img class="flame-img reveal" src="Flamemark.png" alt="The Flame Mark">
-  <h2 class="late" data-late>THE FLAME MARK</h2>
-  <p class="late" data-late>這不只是口號，而是一種信念。<br>標籤又如何？那是與生俱來的特色！<br>
-    HESTIA 透過品牌標語「Own Your Flame」<br>無論性別、身形、背景，這些火焰屬於你自己。</p>
-</section>
+  <script>
+    const NEXT_URL = "/home.html";       // 影片後要前往的頁面
+    const MAX_WAIT_MS = 1200;            // 影片 canplay 最長等待後也顯示品牌
+    const AUTO_FALLBACK_MS = 9000;       // 若抓不到影片時，最長等待後自動前往（可依影片長度調整）
 
-<!-- ⑤ JOIN US -->
-<section class="s5">
-  <h2 class="reveal">JOIN US</h2>
-  <p class="reveal">加入火種名單，搶先收到最新消息與限定優惠。</p>
-  <form id="notify"
-        action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
-        method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
-    <input id="email" type="email" name="entry.345729382" placeholder="輸入 Email 訂閱" required />
-    <button type="submit">立即訂閱</button>
-  </form>
-  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-  <div class="links reveal">
-    <a href="https://www.instagram.com/hestia.active/" target="_blank">Instagram</a>
-    <a href="https://lin.ee/kjso8Ba" target="_blank">LINE 官方帳號</a>
-  </div>
-</section>
+    const vid = document.getElementById('introVideo');
+    const brand = document.getElementById('brand');
+    const skipBtn = document.getElementById('skipBtn');
+    const bar = document.getElementById('bar');
 
-<div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
+    let started = false;
+    let progressTimer = null;
 
-<script>
-  const observer=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
-  },{threshold:.22});
-  document.querySelectorAll('.reveal,.logo-mark,.flame-img').forEach(el=>{
-    if(!el.classList.contains('in'))observer.observe(el);
-  });
-
-  const lateObserver = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){e.target.classList.add('in');lateObserver.unobserve(e.target);}
-    });
-  },{rootMargin:'-5% 0px -40% 0px',threshold:0});
-  document.querySelectorAll('.late[data-late]').forEach(el=>{
-    if(!el.closest('.purpose-sub')) lateObserver.observe(el);
-  });
-
-  const toast=document.getElementById('toast');
-  const iframe=document.getElementById('hidden_iframe');
-  let submittedAt=0;
-  function submitGForm(e){
-    const input=document.getElementById('email');const email=(input.value||'').trim();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('請輸入有效的 Email');return false;}
-    submittedAt=Date.now();return true;
-  }
-  iframe.addEventListener('load',()=>{
-    if(Date.now()-submittedAt<300)return;
-    document.getElementById('email').value='';
-    toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600);
-  });
-
-  const purposeSection=document.querySelector('.s3b');
-  const purposeTitleEl=document.getElementById('purposeTitle');
-  const purposeSubEls=purposeSection.querySelectorAll('.purpose-sub .late[data-late]');
-  let purposeTitleShown=false,purposeSubShown=false;
-
-  function handlePurpose(){
-    if(!purposeSection||!purposeTitleEl)return;
-    const rect=purposeSection.getBoundingClientRect();
-    const vh=window.innerHeight;
-    const sectionCenter=rect.top+rect.height/2;
-    const viewportCenter=vh/2;
-    const delta=Math.abs(sectionCenter-viewportCenter)/vh;
-    if(!purposeTitleShown&&delta<0.18&&rect.top<vh&&rect.bottom>0){
-      purposeTitleEl.classList.add('in');purposeTitleShown=true;
+    function goNext(){
+      if (started) return;
+      started = true;
+      window.location.href = NEXT_URL;
     }
-    if(!purposeSubShown&&purposeTitleShown&&sectionCenter<viewportCenter-vh*0.10){
-      purposeSubEls.forEach(el=>el.classList.add('in'));purposeSubShown=true;
-    }
-  }
-  window.addEventListener('scroll',handlePurpose,{passive:true});
-  window.addEventListener('load',handlePurpose);
-  window.addEventListener('resize',handlePurpose);
-</script>
 
+    function startProgress(){
+      if (!vid.duration || !isFinite(vid.duration)) return; // 有些瀏覽器一開始拿不到 duration
+      const dur = Math.max(vid.duration, AUTO_FALLBACK_MS/1000);
+      bar.style.transitionDuration = dur + 's';
+      requestAnimationFrame(()=>{ bar.style.width = '100%'; });
+    }
+
+    function readyUI(){
+      brand.classList.add('in');
+      vid.classList.add('ready');
+      // 某些環境 canplay 早於 duration 取得，延遲起動進度
+      setTimeout(startProgress, 120);
+    }
+
+    // 影片可播放時顯示品牌、漸入影片
+    vid.addEventListener('canplay', readyUI, { once:true });
+
+    // 影片結束自動導向（若影片是短片且不 loop）
+    vid.addEventListener('ended', goNext);
+
+    // 保底：就算 canplay 很慢，也在 MAX_WAIT_MS 後顯示品牌
+    setTimeout(()=>{ if(!brand.classList.contains('in')) readyUI(); }, MAX_WAIT_MS);
+
+    // 進一步保底：若影片載入失敗或用戶裝置阻擋，N 秒後仍自動進入
+    setTimeout(goNext, AUTO_FALLBACK_MS);
+
+    // 手動跳過
+    skipBtn.addEventListener('click', goNext);
+
+    // 若用戶偏好減少動態，直接跳過
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      goNext();
+    }
+  </script>
 </body>
 </html>

@@ -20,7 +20,24 @@
     section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
       padding:60px 20px;text-align:center;}
 
-    /* 呼吸層 */
+    /* ===== 首屏 s1：載入後依序淡入 ===== */
+    .s1{background:#000; position:relative;}
+    .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px;position:relative;z-index:1;}
+    .logo,.wordmark,.tagline,.arrow{opacity:0;transform:translateY(12px);filter:none}
+    .logo{width:clamp(120px,26vw,220px);transition:opacity .8s ease, transform .8s ease;}
+    .wordmark{width:clamp(260px,60vw,560px);transition:opacity .9s ease, transform .9s ease;}
+    .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(14px,1.8vw,18px);
+      text-shadow:0 0 12px rgba(230,118,144,.6);transition:opacity 1s ease, transform 1s ease;}
+    .arrow{font-size:24px;margin-top:14px;transition:opacity 1s ease, transform 1s ease;}
+    /* 進場後的狀態（用 .enter 觸發） */
+    .s1.enter .logo{opacity:1;transform:none;transition-delay:.10s}
+    .s1.enter .wordmark{opacity:1;transform:none;transition-delay:.32s}
+    .s1.enter .tagline{opacity:1;transform:none;transition-delay:.90s;animation:breathe 6s ease-in-out infinite}
+    .s1.enter .arrow{opacity:.85;transform:none;transition-delay:1.15s;animation:breathe 6s ease-in-out infinite, floatY 3s ease-in-out infinite}
+    @keyframes breathe{0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}}
+    @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+    /* 呼吸柔光覆層（全站共用） */
     .breath{position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.16;
       background:radial-gradient(120% 120% at 50% 115%,rgba(230,118,144,.30) 0%,rgba(230,118,144,0) 70%),
                  radial-gradient(140% 100% at 50% -10%,rgba(120,80,120,.18) 0%,rgba(120,80,120,0) 72%);
@@ -28,29 +45,11 @@
     @keyframes breathPulse{0%{opacity:.12;transform:scale(1);}50%{opacity:.20;transform:scale(1.02);}100%{opacity:.12;transform:scale(1);}}
     @keyframes breathDrift{0%{background-position:50% 115%,50% -10%;}100%{background-position:48% 105%,52% 0%;}}
 
-    /* 背景分幕 */
-    .s1{background:#000;}
-    .s2{background:linear-gradient(180deg,#000,#1d1013);}
-    .s3{background:linear-gradient(180deg,#1d1013,#441d2a);}
-    .s3b{background:linear-gradient(180deg,#441d2a,#6a3045);}
-    .s4{background:linear-gradient(180deg,#6a3045,#8f3e56);}
-    .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
-
-    /* reveal */
+    /* reveal（其餘章節沿用） */
     .reveal{opacity:0;transform:translateY(60px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);}
     .reveal.in{opacity:1;transform:none;}
     .late{opacity:0;transform:translateY(8px);transition:opacity .9s ease, transform .9s ease;}
     .late.in{opacity:1;transform:none;}
-
-    /* Hero（靜態首屏） */
-    .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px;position:relative;z-index:1;}
-    .logo{width:clamp(120px,26vw,220px);filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
-    .wordmark{width:clamp(260px,60vw,560px);filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
-    .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(14px,1.8vw,18px);
-      text-shadow:0 0 12px rgba(230,118,144,.6);animation:breathe 6s ease-in-out infinite;position:relative;z-index:1;}
-    @keyframes breathe{0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}}
-    .arrow{font-size:24px;margin-top:14px;animation:breathe 6s ease-in-out infinite, floatY 3s ease-in-out infinite;opacity:.8;}
-    @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
 
     h2{margin:0 0 20px;font-size:clamp(24px,4vw,40px);}
     .who-title,.purpose-title{font-size:clamp(36px,7vw,64px);line-height:1.1;letter-spacing:.02em;font-weight:700;}
@@ -60,6 +59,13 @@
     .clip-reveal.in{--r:120%;}
     .we-accent{color:#E67690;text-shadow:0 0 24px rgba(230,118,144,.36);}
     p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.7;margin:0 auto;}
+
+    /* 背景分幕（其餘） */
+    .s2{background:linear-gradient(180deg,#000,#1d1013);}
+    .s3{background:linear-gradient(180deg,#1d1013,#441d2a);}
+    .s3b{background:linear-gradient(180deg,#441d2a,#6a3045);}
+    .s4{background:linear-gradient(180deg,#6a3045,#8f3e56);}
+    .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
 
     /* 圖塊動畫 */
     .logo-mark,.flame-img{
@@ -96,11 +102,11 @@
 
 <div class="breath" aria-hidden="true"></div>
 
-<!-- ① Hero（無影片） -->
-<section class="s1">
+<!-- ① 首屏（載入後依序淡入） -->
+<section class="s1" id="hero">
   <div class="brand">
-    <img class="logo reveal in" src="/logo.png" alt="HESTIA flame mark" />
-    <img class="wordmark reveal in" src="/wordmark.png" alt="HESTIA wordmark" />
+    <img class="logo" src="/logo.png" alt="HESTIA flame mark" />
+    <img class="wordmark" src="/wordmark.png" alt="HESTIA wordmark" />
   </div>
   <div class="tagline">即將到來</div>
   <div class="arrow">↓</div>
@@ -165,7 +171,12 @@
 <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
 <script>
-  /* reveal 觀察 */
+  /* s1：載入後觸發 enter，帶出開始感 */
+  window.addEventListener('load', ()=> {
+    document.getElementById('hero').classList.add('enter');
+  });
+
+  /* reveal 觀察（其餘章節） */
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
   },{threshold:.22});

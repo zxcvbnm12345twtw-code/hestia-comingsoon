@@ -74,8 +74,16 @@
 
     /* Hero */
     .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px;position:relative;z-index:1;}
-    .logo{width:clamp(120px,26vw,220px);filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
-    .wordmark{width:clamp(260px,60vw,560px);filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
+    /* .logo 已移除 */
+    .wordmark{display:block;margin:0 auto;width:clamp(260px,60vw,560px);filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
+    /* 新增：TAIWAN 字樣（不套用呼吸特效） */
+    .submark{
+      margin-top:6px;
+      letter-spacing:.38em;
+      font-size:clamp(12px,1.6vw,14px);
+      font-weight:600;
+      opacity:.9;
+    }
     .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(14px,1.8vw,18px);
       text-shadow:0 0 12px rgba(230,118,144,.6);animation:breathe 6s ease-in-out infinite;position:relative;z-index:1;}
     @keyframes breathe{0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}}
@@ -150,11 +158,12 @@
         stroke-dasharray="4 8" stroke-dashoffset="0" filter="url(#beamBlur)" opacity="0"/>
 </svg>
 
-<!-- ① Hero -->
+<!-- ① Hero（移除 LOGO；wordmark 置中；新增 TAIWAN 字樣） -->
 <section class="s1">
   <div class="brand">
-    <img class="logo reveal in" src="logo.png" alt="HESTIA flame mark" />
+    <!-- <img class="logo reveal in" src="logo.png" alt="HESTIA flame mark" /> 已依需求移除 -->
     <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
+    <div class="submark">TAIWAN</div>
   </div>
   <div class="tagline">即將到來</div>
   <div class="arrow">↓</div>

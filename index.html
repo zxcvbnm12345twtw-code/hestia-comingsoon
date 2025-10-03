@@ -1,52 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <title>HESTIA TAIWAN｜健身休閒服飾</title>
+  <meta name="description" content="HESTIA 健身時尚品牌，融合時尚與力量優雅，讓每個人穿出屬於自己的火焰。Own Your Flame.">
+  <meta name="keywords" content="Hestia, 健身, 健身時尚服飾, 運動休閒服飾, 台灣品牌">
+  <meta property="og:title" content="HESTIA TAIWAN｜健身時尚品牌">
+  <meta property="og:description" content="Own Your Flame. 不只是運動，更是自我認同。">
+  <meta property="og:url" content="https://www.hestiatw.com/">
+  <meta property="og:type" content="website">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HESTIA TAIWAN｜健身休閒服飾</title>
   <style>
-    html,body{margin:0;padding:0;color:#fff;background:#000;font-family:sans-serif;overflow-x:hidden;}
-    section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 20px;}
+    html,body{margin:0;padding:0;color:#fff;overflow-x:hidden;background:#000;
+      font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;}
+    section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+      padding:60px 20px;text-align:center;}
 
-    /* ===== 首屏 ===== */
-    .s1{background:#000;position:relative;}
-    .brand{display:flex;flex-direction:column;align-items:center;gap:8px;}
+    /* ===== 首屏 s1 ===== */
+    .s1{background:#000; position:relative;}
+    .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px;position:relative;z-index:1;}
     .logo,.wordmark,.tagline,.arrow{opacity:0;transform:translateY(12px);}
-    .logo{width:200px;transition:all .8s;}
-    .wordmark{width:400px;transition:all .9s;}
-    .tagline{margin-top:8px;font-size:16px;letter-spacing:.22em;transition:all 1s;}
-    .arrow{font-size:24px;margin-top:14px;transition:all 1s;}
+    .logo{width:clamp(120px,26vw,220px);transition:.8s;}
+    .wordmark{width:clamp(260px,60vw,560px);transition:.9s;}
+    .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(14px,1.8vw,18px);
+      text-shadow:0 0 12px rgba(230,118,144,.6);transition:1s;}
+    .arrow{font-size:24px;margin-top:14px;transition:1s;}
     .s1.enter .logo{opacity:1;transform:none;transition-delay:.1s}
     .s1.enter .wordmark{opacity:1;transform:none;transition-delay:.3s}
-    .s1.enter .tagline{opacity:1;transform:none;transition-delay:.8s}
-    .s1.enter .arrow{opacity:.8;transform:none;transition-delay:1s}
+    .s1.enter .tagline{opacity:1;transform:none;transition-delay:.9s}
+    .s1.enter .arrow{opacity:.85;transform:none;transition-delay:1.1s}
 
-    /* ===== 影片區 ===== */
-    .sv{position:relative;min-height:70vh;overflow:hidden;background:#000;padding:0;}
+    /* ===== 影片區（縮短高度） ===== */
+    .sv{position:relative;min-height:70vh;overflow:hidden;background:#000;padding:20px 0;}
     .sv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s;}
     .sv video.ready{opacity:1;}
-    .sv .tap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:none;
-      background:rgba(0,0,0,.35);padding:10px 16px;border-radius:999px;}
-    .sv.show-tap .tap{display:block;}
+    .sv .tap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      display:none;z-index:2;
+      background:rgba(0,0,0,.35);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;color:#fff;}
+    .sv.show-tap .tap{display:inline-flex;}
 
-    /* 其餘段落 */
-    h2{margin:0 0 20px;font-size:32px;}
-    p{max-width:760px;margin:0 auto 12px;line-height:1.7;font-size:16px;}
-    .reveal{opacity:0;transform:translateY(40px);transition:all .9s;}
+    /* reveal */
+    .reveal{opacity:0;transform:translateY(60px);transition:.9s;}
     .reveal.in{opacity:1;transform:none;}
-    .late{opacity:0;transform:translateY(8px);transition:all .9s;}
+    .late{opacity:0;transform:translateY(8px);transition:.9s;}
     .late.in{opacity:1;transform:none;}
 
+    /* 背景分幕 */
     .s2{background:#111;}
     .s3{background:#1d1013;}
     .s3b{background:#441d2a;}
     .s4{background:#6a3045;}
     .s5{background:#8f3e56;}
+
+    /* Join Us 區塊回復原始樣式 */
+    form{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    input[type="email"]{padding:12px 20px;border-radius:8px;border:1px solid rgba(255,255,255,.3);
+      min-width:260px;font-size:16px;color:#fff;background:transparent;}
+    input::placeholder{color:rgba(255,255,255,.6);}
+    button{padding:12px 24px;border:none;border-radius:8px;font-weight:700;font-size:16px;
+      color:#fff;background:#E67690;cursor:pointer;transition:background .3s;}
+    button:hover{background:#cf5b79;}
+    .links{display:flex;gap:18px;justify-content:center;margin-top:14px;}
+    .links a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.24);padding-bottom:2px;}
   </style>
 </head>
 <body>
 
-<!-- 首屏 -->
+<!-- ① 首屏 -->
 <section class="s1" id="hero">
   <div class="brand">
     <img class="logo" src="/logo.png" alt="HESTIA flame mark" />
@@ -56,15 +80,15 @@
   <div class="arrow">↓</div>
 </section>
 
-<!-- 影片區 -->
+<!-- ② 影片 -->
 <section class="sv" id="svideo">
   <video id="v" muted playsinline preload="auto">
-    <source src="/assets/781088592.837947.mp4" type="video/mp4">
+    <source src="/781088592.837947.mp4" type="video/mp4">
   </video>
   <button class="tap" id="tapPlay">點一下播放</button>
 </section>
 
-<!-- S2 WHO WE ARE -->
+<!-- ③ WHO WE ARE -->
 <section class="s2" id="who">
   <h2 class="reveal">WHO <span style="color:#E67690">WE</span> ARE?</h2>
   <p class="late">HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
@@ -72,31 +96,14 @@
   <p class="late">我們相信，每個人心中都有一簇火焰，等待被看見、被擁抱、被點燃。</p>
 </section>
 
-<!-- S3 火種的符號 -->
-<section class="s3">
-  <img class="logo-mark reveal" src="/logo.png" alt="HESTIA flame mark" />
-  <h2 class="reveal">火種的符號</h2>
-  <p class="reveal">品牌 Logo 的發想來自「火焰燃燒的線條」。</p>
-  <p class="reveal">拱型外型是 HESTIA 爐灶女神的意象。</p>
-  <p class="reveal">它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
-</section>
-
-<!-- S3b Our Purpose -->
-<section class="s3b">
-  <h2 class="reveal">Our Purpose</h2>
-  <p class="late">每一個特質，都是值得擁抱的亮點。</p>
-  <p class="late">HESTIA 不只是為了做服裝，</p>
-  <p class="late">而是讓日常成為你自我認同的象徵。</p>
-</section>
-
-<!-- S4 The Flame Mark -->
+<!-- ④ THE FLAME MARK -->
 <section class="s4">
   <img class="flame-img reveal" src="/Flamemark.png" alt="The Flame Mark">
   <h2 class="late">THE FLAME MARK</h2>
   <p class="late">這不只是口號，而是一種信念。<br>HESTIA 透過「Own Your Flame」讓每個人能穿上自信，活出自我。</p>
 </section>
 
-<!-- S5 Join Us -->
+<!-- ⑤ JOIN US -->
 <section class="s5">
   <h2 class="reveal">JOIN US</h2>
   <p class="reveal">加入火種名單，搶先收到最新消息與限定優惠。</p>
@@ -111,7 +118,7 @@
 </section>
 
 <script>
-  // 首屏進場
+  // 首屏動畫
   window.addEventListener('load',()=>document.getElementById('hero').classList.add('enter'));
 
   // reveal 觀測
@@ -120,7 +127,7 @@
   },{threshold:.2});
   document.querySelectorAll('.reveal,.late').forEach(el=>observer.observe(el));
 
-  // 影片自動播放 / 播完滾動到 S2
+  // 影片控制
   (function(){
     const section=document.getElementById('svideo');
     const video=document.getElementById('v');
@@ -128,12 +135,11 @@
     const next=document.getElementById('who');
 
     video.addEventListener('canplay',()=>video.classList.add('ready'),{once:true});
-    video.addEventListener('ended',()=>{
-      next.scrollIntoView({behavior:"smooth"});
-    });
+    video.addEventListener('ended',()=>next.scrollIntoView({behavior:"smooth"}));
     tap.addEventListener('click',async()=>{
       try{await video.play();section.classList.remove('show-tap');}catch(e){}
     });
+
     const io=new IntersectionObserver(async entries=>{
       if(entries[0].isIntersecting && entries[0].intersectionRatio>.6){
         try{await video.play();}catch{section.classList.add('show-tap');}

@@ -17,68 +17,159 @@
   <style>
     html,body{margin:0;padding:0;color:#fff;overflow-x:hidden;background:#000;
       font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;}
+
     section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
       padding:60px 20px;text-align:center;}
 
-    /* === Hero === */
+    /* reveal */
+    .reveal{opacity:0;transform:translateY(60px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);}
+    .reveal.in{opacity:1;transform:none;}
+    /* WHO 段：僅淡入 + 輕微下移（無 blur），速度 0.9s */
+    .late{opacity:0;transform:translateY(8px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);}
+    .late.in{opacity:1;transform:none;}
+
+    h1,h2{margin:0 0 20px;}
+    h1{font-size:clamp(32px,5vw,52px);}
+    h2{font-size:clamp(24px,4vw,40px);}
+
+    /* WHO WE ARE 與 Our Purpose */
+    .who-title,
+    .purpose-title{
+      font-size:clamp(36px,7vw,64px);
+      line-height:1.1;
+      letter-spacing:.04em; /* 字距微放 */
+      font-weight:700;
+    }
+
+    /* Our Purpose 動畫起始狀態（靠近中線才淡入） */
+    .purpose-title{
+      opacity:0; transform:translateY(18px) scale(.985);
+      transition:opacity .8s ease, transform .8s ease;
+      text-shadow:0 8px 28px rgba(0,0,0,.45);
+    }
+    .purpose-title.in{opacity:1; transform:translateY(0) scale(1);}
+
+    /* Our Purpose 大標圓形遮罩揭幕 */
+    .clip-reveal{--r:0%; display:inline-block; clip-path:circle(var(--r) at 50% 50%); transition:clip-path .9s cubic-bezier(.22,.61,.36,1);}
+    .clip-reveal.in{--r:120%;}
+
+    .we-accent{color:#E67690;text-shadow:0 0 24px rgba(230,118,144,.36);}
+    p{max-width:760px;font-size:clamp(16px,2vw,20px);line-height:1.7;margin:0 auto;}
+
+    /* 背景分幕 */
     .s1{background:linear-gradient(180deg,#000,#000);}
-    .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px;position:relative;z-index:1;}
-    .logo{width:clamp(120px,26vw,220px);}
-    .wordmark{width:clamp(260px,60vw,560px);}
-    .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(14px,1.8vw,18px);
-      text-shadow:0 0 12px rgba(230,118,144,.6);animation:breathe 6s ease-in-out infinite;}
-    .arrow{font-size:24px;margin-top:14px;animation:breathe 6s ease-in-out infinite, floatY 3s ease-in-out infinite;opacity:.8;}
-    @keyframes breathe{0%,100%{opacity:.4;}50%{opacity:1;}}
-    @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);} }
-
-    /* === 影片區 === */
-    .sv{position:relative;min-height:70vh;overflow:hidden;background:#000;padding:20px 0;}
-    .sv video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s;}
-    .sv video.ready{opacity:1;}
-    .sv .tap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-      display:none;z-index:2;background:rgba(0,0,0,.35);padding:10px 16px;border-radius:999px;font-weight:700;font-size:14px;color:#fff;}
-    .sv.show-tap .tap{display:inline-flex;}
-
-    /* === 背景分幕 === */
     .s2{background:linear-gradient(180deg,#000,#1d1013);}
     .s3{background:linear-gradient(180deg,#1d1013,#441d2a);}
     .s3b{background:linear-gradient(180deg,#441d2a,#6a3045);}
-    .s4{background:linear-gradient(180deg,#6a3045,#8f3e56);}
+    .s4{background:linear-gradient(180deg,#6a3045,#8f3e56);} /* 恢復原本漸層背景 */
     .s5{background:linear-gradient(180deg,#8f3e56,#cf5b79);}
 
-    /* === 其餘樣式（照你提供的版本保留） === */
-    /* ... 這裡省略你貼的其他 reveal / purpose / CTA 樣式，完全不變 ... */
+    /* 全頁呼吸柔光覆層 */
+    .breath{position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.16;
+      background:radial-gradient(120% 120% at 50% 115%,rgba(230,118,144,.30) 0%,rgba(230,118,144,0) 70%),
+                 radial-gradient(140% 100% at 50% -10%,rgba(120,80,120,.18) 0%,rgba(120,80,120,0) 72%);
+      animation:breathPulse 8s ease-in-out infinite alternate,breathDrift 26s ease-in-out infinite alternate;}
+    @keyframes breathPulse{0%{opacity:.12;transform:scale(1);}50%{opacity:.20;transform:scale(1.02);}100%{opacity:.12;transform:scale(1);}}
+    @keyframes breathDrift{0%{background-position:50% 115%,50% -10%;}100%{background-position:48% 105%,52% 0%;}}
+
+    /* Hero */
+    .brand{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px;position:relative;z-index:1;}
+    .logo{width:clamp(120px,26vw,220px);filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));}
+    .wordmark{width:clamp(260px,60vw,560px);filter:drop-shadow(0 8px 22px rgba(0,0,0,.42));}
+    .tagline{margin-top:8px;font-weight:300;letter-spacing:.22em;font-size:clamp(14px,1.8vw,18px);
+      text-shadow:0 0 12px rgba(230,118,144,.6);animation:breathe 6s ease-in-out infinite;position:relative;z-index:1;}
+    @keyframes breathe{0%,100%{opacity:.4;text-shadow:0 0 8px rgba(230,118,144,.4);}50%{opacity:1;text-shadow:0 0 28px rgba(230,118,144,1);}}
+    .arrow{font-size:24px;margin-top:14px;animation:breathe 6s ease-in-out infinite, floatY 3s ease-in-out infinite;opacity:.8;}
+    @keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);} }
+
+    /* 兩個符號圖：同尺寸 + 進場微光 */
+    .logo-mark,.flame-img{
+      width:clamp(140px,28vw,280px);
+      margin:-6px 0 20px;
+      filter:drop-shadow(0 10px 28px rgba(0,0,0,.45));
+      opacity:0;transform:scale(.92);transition:opacity 1s ease,transform 1s ease,filter 1.2s ease;
+    }
+    .logo-mark.in,.flame-img.in{opacity:1;transform:scale(1);filter:drop-shadow(0 0 28px rgba(230,118,144,.45));animation:glowBreath 6s ease-in-out infinite alternate;}
+    @keyframes glowBreath{0%{filter:drop-shadow(0 0 18px rgba(230,118,144,.28));}100%{filter:drop-shadow(0 0 36px rgba(230,118,144,.55));}}
+
+    /* 表單與 CTA（髮絲線、慢速 hover） */
+    form{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;z-index:1;}
+    input[type="email"]{
+      padding:12px 20px;border-radius:10px;border:1px solid rgba(255,255,255,.18);
+      min-width:240px;font-size:16px;color:#222;background:#fff;outline:none;
+    }
+    button{
+      padding:12px 22px;border:none;border-radius:10px;font-weight:700;font-size:16px;color:#fff;background:#E67690;cursor:pointer;
+      transition:background .42s;
+    }
+    button:hover{background:#cf5b79;}
+    .links{display:flex;gap:18px;justify-content:center;margin-top:14px;position:relative;z-index:1;}
+    .links a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.24);padding-bottom:2px;}
+
+    .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(0,0,0,.72);padding:12px 18px;border-radius:12px;
+      font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .28s ease;}
+    .toast.show{opacity:1;}
+
+    /* 光流連接：固定覆層（不擋點擊） */
+    .linker{position:fixed; inset:0; z-index:2; pointer-events:none;}
+
+    /* Our Purpose 小標三行：左右錯層 + 模糊復位 */
+    .purpose-sub{max-width:580px; line-height:1.5; margin:20px auto 0;}
+    .purpose-sub p{font-size:clamp(15px,3.8vw,18px);}
+    .s3b .purpose-sub .late[data-late]{
+      transform: translateY(70px) translateX(var(--x, 0));
+      filter: blur(6px);
+      transition: opacity .8s cubic-bezier(.22,.61,.36,1),
+                 transform .8s cubic-bezier(.22,.61,.36,1),
+                 filter .8s cubic-bezier(.22,.61,.36,1);
+    }
+    .s3b .purpose-sub .late.in{transform:none;filter:blur(0)}
+    .s3b .purpose-sub .late[data-late]:nth-child(1){ --x: -10px; transition-delay:.06s; }
+    .s3b .purpose-sub .late[data-late]:nth-child(2){ --x:  10px; transition-delay:.14s; }
+    .s3b .purpose-sub .late[data-late]:nth-child(3){ --x:  -8px; transition-delay:.22s; }
   </style>
 </head>
 <body>
 
-<!-- Hero -->
+<!-- 全頁呼吸柔光 -->
+<div class="breath" aria-hidden="true"></div>
+
+<!-- 光流連接 SVG -->
+<svg class="linker" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="beamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(230,118,144,0)" />
+      <stop offset="25%" stop-color="rgba(230,118,144,.55)" />
+      <stop offset="75%" stop-color="rgba(230,118,144,.55)" />
+      <stop offset="100%" stop-color="rgba(230,118,144,0)" />
+    </linearGradient>
+    <filter id="beamBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/></filter>
+  </defs>
+  <line id="beamLine" x1="50" y1="50" x2="50" y2="50"
+        stroke="url(#beamGrad)" stroke-width="1.2" stroke-linecap="round"
+        stroke-dasharray="4 8" stroke-dashoffset="0" filter="url(#beamBlur)" opacity="0"/>
+</svg>
+
+<!-- ① Hero -->
 <section class="s1">
   <div class="brand">
-    <img class="logo" src="logo.png" alt="HESTIA flame mark" />
-    <img class="wordmark" src="wordmark.png" alt="HESTIA wordmark" />
+    <img class="logo reveal in" src="logo.png" alt="HESTIA flame mark" />
+    <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
   </div>
   <div class="tagline">即將到來</div>
   <div class="arrow">↓</div>
 </section>
 
-<!-- 影片區 -->
-<section class="sv" id="svideo">
-  <video id="v" muted playsinline preload="auto">
-    <source src="/781088592.837947.mp4" type="video/mp4">
-  </video>
-  <button class="tap" id="tapPlay">點一下播放</button>
+<!-- ② WHO WE ARE（單一動作：淡入＋輕微下移） -->
+<section class="s2">
+  <h2 class="reveal in who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
+  <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
+  <p class="late" data-late>象徵歸屬、溫暖與內在之火。</p>
+  <p class="late" data-late>我們相信，每個人心中都有一簇火焰，</p>
+  <p class="late" data-late>等待被看見、被擁抱、被點燃。</p>
 </section>
 
-<!-- WHO WE ARE -->
-<section class="s2" id="who">
-  <h2 class="who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
-  <p>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
-  <p>象徵歸屬、溫暖與內在之火。</p>
-  <p>我們相信，每個人心中都有一簇火焰，等待被看見、被擁抱、被點燃。</p>
-</section>
-
-<!-- 火種的符號 -->
+<!-- ③ 火種的符號 -->
 <section class="s3">
   <img class="logo-mark" src="logo.png" alt="HESTIA flame mark" />
   <h2 class="reveal">火種的符號</h2>
@@ -87,10 +178,12 @@
   <p class="reveal">它代表力量與柔韌的平衡，也象徵身體與心靈的統一。</p>
 </section>
 
-<!-- Our Purpose -->
+<!-- ③.5 Our Purpose（左右錯層 + 字距/行距調整） -->
 <section class="s3b">
   <div class="purpose-wrap">
-    <h2 class="purpose-title clip-reveal" id="purposeTitle"><span class="we-accent">Our</span> Purpose</h2>
+    <h2 class="purpose-title clip-reveal" id="purposeTitle">
+      <span class="we-accent">Our</span> Purpose
+    </h2>
     <div class="purpose-sub">
       <p class="late" data-late>每一個特質，都是值得擁抱的亮點。</p>
       <p class="late" data-late>HESTIA 不只是為了做服裝，</p>
@@ -99,53 +192,153 @@
   </div>
 </section>
 
-<!-- THE FLAME MARK -->
+<!-- ④ THE FLAME MARK（已恢復：圖先出，文字晚） -->
 <section class="s4">
   <img class="flame-img" src="Flamemark.png" alt="The Flame Mark">
   <h2 class="late" data-late>THE FLAME MARK</h2>
-  <p class="late" data-late>這不只是口號，而是一種信念。<br>
-    HESTIA 透過品牌標語「Own Your Flame」<br>
-    無論性別、身形、背景，這些火焰屬於你自己。<br>
-    HESTIA 讓每個人能穿上自信，活出自我。
-  </p>
+  <p class="late" data-late>這不只是口號，而是一種信念。<br>標籤又如何？那是與生俱來的特色！<br>HESTIA 透過品牌標語「Own Your Flame」<br>無論性別、身形、背景，這些火焰屬於你自己。<br>HESTIA 讓每個人能穿上自信，活出自我。</p>
 </section>
 
-<!-- JOIN US -->
+<!-- ⑤ JOIN US（髮絲線輸入框 + 慢速 hover） -->
 <section class="s5" id="join">
   <h2 class="reveal">JOIN US</h2>
   <p class="reveal">加入火種名單，搶先收到最新消息與限定優惠。</p>
-  <form>
-    <input type="email" placeholder="輸入 Email 訂閱" required />
+  <form id="notify"
+        action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
+        method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
+    <input id="email" type="email" name="entry.345729382" placeholder="輸入 Email 訂閱" required />
     <button type="submit">立即訂閱</button>
   </form>
+  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
   <div class="links reveal">
-    <a href="https://www.instagram.com/hestia.active/" target="_blank">Instagram</a>
-    <a href="https://lin.ee/kjso8Ba" target="_blank">LINE 官方帳號</a>
+    <a href="https://www.instagram.com/hestia.active/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">LINE 官方帳號</a>
   </div>
 </section>
 
+<!-- Toast -->
+<div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
+
 <script>
-  // 影片控制
-  (function(){
-    const section=document.getElementById('svideo');
-    const video=document.getElementById('v');
-    const tap=document.getElementById('tapPlay');
-    const next=document.getElementById('who');
+  /* 進場淡入（含兩個符號圖） */
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});
+  },{threshold:.22});
+  document.querySelectorAll('.reveal,.logo-mark,.flame-img').forEach(el=>{
+    if(!el.classList.contains('in'))observer.observe(el);
+  });
 
-    video.addEventListener('canplay',()=>video.classList.add('ready'),{once:true});
-    video.addEventListener('ended',()=>next.scrollIntoView({behavior:"smooth"}));
-
-    tap.addEventListener('click',async()=>{
-      try{await video.play();section.classList.remove('show-tap');}catch(e){}
+  /* 更晚出現（WHO 段落 & THE FLAME MARK 文字）—排除 Our Purpose 小標，交由 handlePurpose 控制 */
+  const lateObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        lateObserver.unobserve(e.target);
+      }
     });
+  }, { rootMargin: '-5% 0px -40% 0px', threshold: 0 });
 
-    const io=new IntersectionObserver(async entries=>{
-      if(entries[0].isIntersecting && entries[0].intersectionRatio>.6){
-        try{await video.play();}catch{section.classList.add('show-tap');}
-      }else if(!entries[0].isIntersecting && !video.paused){video.pause();}
-    },{threshold:[0,.6]});
-    io.observe(section);
-  })();
+  /* 只觀察非 .purpose-sub 內的 .late[data-late]，避免小標提早進場 */
+  document.querySelectorAll('.late[data-late]').forEach(el => {
+    if (!el.closest('.purpose-sub')) lateObserver.observe(el);
+  });
+
+  /* 表單無跳轉 */
+  const toast=document.getElementById('toast');
+  const iframe=document.getElementById('hidden_iframe');
+  let submittedAt=0;
+  function submitGForm(e){
+    const input=document.getElementById('email');const email=(input.value||'').trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('請輸入有效的 Email');return false;}
+    submittedAt=Date.now();return true;
+  }
+  iframe.addEventListener('load',()=>{
+    if(Date.now()-submittedAt<300) return;
+    document.getElementById('email').value='';
+    toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),2600);
+  });
+
+  /* 光流連接（s3 ↔ s4） */
+  const beamLine = document.getElementById('beamLine');
+  const logoMark = document.querySelector('.s3 .logo-mark');
+  const flameImg = document.querySelector('.s4 .flame-img');
+
+  let rafId;
+  function updateBeam(){
+    const a = logoMark.getBoundingClientRect();
+    const b = flameImg.getBoundingClientRect();
+    const aVisible = a.bottom > 0 && a.top < window.innerHeight;
+    const bVisible = b.bottom > 0 && b.top < window.innerHeight;
+    const inRange = (a.bottom > -0.2*window.innerHeight && a.top < 1.2*window.innerHeight) ||
+                    (b.bottom > -0.2*window.innerHeight && b.top < 1.2*window.innerHeight);
+
+    if(inRange){
+      const x1 = ((a.left + a.right)/2) / window.innerWidth * 100;
+      const y1 = ((a.top + a.bottom)/2) / window.innerHeight * 100;
+      const x2 = ((b.left + b.right)/2) / window.innerWidth * 100;
+      const y2 = ((b.top + b.bottom)/2) / window.innerHeight * 100;
+      beamLine.setAttribute('x1', x1.toFixed(2));
+      beamLine.setAttribute('y1', y1.toFixed(2));
+      beamLine.setAttribute('x2', x2.toFixed(2));
+      beamLine.setAttribute('y2', y2.toFixed(2));
+      const dy = Math.abs(y2 - y1) / 100;
+      const base = 0.65 * (aVisible || bVisible ? 1 : 0.6);
+      const opacity = Math.max(0, Math.min(1, base * (1 - dy)));
+      beamLine.setAttribute('opacity', opacity.toFixed(2));
+    }else{
+      beamLine.setAttribute('opacity', '0');
+    }
+    const now = performance.now();
+    beamLine.setAttribute('stroke-dashoffset', (-(now/30)%12).toFixed(2));
+    rafId = requestAnimationFrame(updateBeam);
+  }
+  rafId = requestAnimationFrame(updateBeam);
+  window.addEventListener('resize', ()=>{ cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateBeam); });
+
+  /* Our Purpose：靠近畫面中線才淡入 */
+  const purposeSection = document.querySelector('.s3b');
+  const purposeTitleEl = document.getElementById('purposeTitle');
+  const purposeSubEls = purposeSection.querySelectorAll('.purpose-sub .late[data-late]');
+  let purposeTitleShown = false;
+  let purposeSubShown = false;
+
+  function handlePurpose() {
+    if (!purposeSection || !purposeTitleEl) return;
+    const rect = purposeSection.getBoundingClientRect();
+    const vh = window.innerHeight;
+
+    const sectionCenter = rect.top + rect.height / 2;
+    const viewportCenter = vh / 2;
+    const delta = Math.abs(sectionCenter - viewportCenter) / vh;
+
+    if (!purposeTitleShown && delta < 0.18 && rect.top < vh && rect.bottom > 0) {
+      purposeTitleEl.classList.add('in'); // 同時觸發 clip-reveal
+      purposeTitleShown = true;
+    }
+
+    if (!purposeSubShown && purposeTitleShown && sectionCenter < viewportCenter - vh * 0.10) {
+      purposeSubEls.forEach(el => el.classList.add('in'));
+      purposeSubShown = true;
+    }
+  }
+  window.addEventListener('scroll', handlePurpose, { passive: true });
+  window.addEventListener('load', handlePurpose);
+  window.addEventListener('resize', handlePurpose);
+
+  const purposeIO = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        purposeTitleEl.classList.add('in');
+        purposeTitleShown = true;
+        purposeIO.unobserve(e.target);
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: '-35% 0px -35% 0px',
+    threshold: 0
+  });
+  purposeIO.observe(purposeTitleEl);
 </script>
 
 </body>

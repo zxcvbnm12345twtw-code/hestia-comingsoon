@@ -172,6 +172,25 @@
   .s1 .tagline{ bottom: 28vh; }
   .s1 .arrow{ bottom: calc(28vh - 23px); } /* 箭頭略低一點，保持層次 */
 }
+    /* —— 修正：手機版首屏 tagline/arrow 置中 + 往下 10px —— */
+@media (max-width: 640px){
+  .s1 .tagline{ bottom: calc(28vh - 10px); }
+  .s1 .arrow{ bottom: calc(28vh - 33px - 10px); }
+
+  .s1 .tagline,
+  .s1 .arrow{
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .s1 .arrow{
+    animation: breathe 6s ease-in-out infinite, floatYKeepX 3s ease-in-out infinite;
+  }
+  @keyframes floatYKeepX{
+    0%, 100% { transform: translate(-50%, 0); }
+    50%      { transform: translate(-50%, 8px); }
+  }
   </style>
 </head>
 <body>

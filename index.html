@@ -135,17 +135,6 @@
     .s3b .purpose-sub .late[data-late]:nth-child(1){ --x: -10px; transition-delay:.06s; }
     .s3b .purpose-sub .late[data-late]:nth-child(2){ --x:  10px; transition-delay:.14s; }
     .s3b .purpose-sub .late[data-late]:nth-child(3){ --x:  -8px; transition-delay:.22s; }
-
-    /* === Scratch card for .s4（新增：不影響原特效） === */
-    .s4{ position:relative; } /* 保留你的漸層背景，僅建立定位容器 */
-    #scratchCanvasS4{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      display:block;
-      z-index:1;           /* 光流 .linker 是 z-index:2，確保在其下方 */
-      touch-action:none;   /* 讓手指在畫布上可精準塗抹 */
-      cursor:crosshair;
-    }
   </style>
 </head>
 <body>
@@ -217,9 +206,6 @@
   <img class="flame-img" src="Flamemark.png" alt="The Flame Mark">
   <h2 class="late" data-late>THE FLAME MARK</h2>
   <p class="late" data-late>這不只是口號，而是一種信念。<br>標籤又如何？那是與生俱來的特色！<br>HESTIA 透過品牌標語「Own Your Flame」<br>無論性別、身形、背景，這些火焰屬於你自己。<br>HESTIA 讓每個人能穿上自信，活出自我。</p>
-
-  <!-- 新增：刮刮樂畫布（覆蓋層） -->
-  <canvas id="scratchCanvasS4" aria-label="刮開以揭示 The Flame Mark"></canvas>
 </section>
 
 <!-- ⑤ JOIN US（髮絲線輸入框 + 慢速 hover） -->
@@ -362,114 +348,6 @@
     threshold: 0
   });
   purposeIO.observe(purposeTitleEl);
-</script>
-
-<!-- 新增：刮刮樂互動，不修改既有腳本 -->
-<script>
-(function(){
-  const section = document.querySelector('.s4');
-  const canvas  = document.getElementById('scratchCanvasS4');
-  if(!section || !canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  // 可調參數
-  const BRUSH = 28;               // 畫筆半徑
-  const REVEAL_THRESHOLD = 0.55;  // 刮開比例門檻，超過則全揭
-  const COVER_MODE = 'color';     // 'color' 或 'image'
-  const COVER_COLOR = '#2a2a2a';  // 覆蓋色（COVER_MODE='color' 時）
-  const COVER_IMAGE = 'Flamemark.png'; // 覆蓋圖（COVER_MODE='image' 時鋪滿）
-
-  let dpr = Math.max(1, window.devicePixelRatio || 1);
-  let isDown = false, lastX = 0, lastY = 0;
-
-  function sizeCanvas(){
-    const rect = section.getBoundingClientRect();
-    dpr = Math.max(1, window.devicePixelRatio || 1);
-    canvas.width  = Math.round(rect.width  * dpr);
-    canvas.height = Math.round(rect.height * dpr);
-    canvas.style.width  = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    drawCover(rect.width, rect.height);
-  }
-
-  function drawCover(w, h){
-    if(COVER_MODE === 'image'){
-      const img = new Image();
-      img.onload = () => { ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(img, 0, 0, w, h); };
-      img.src = COVER_IMAGE;
-    }else{
-      const grad = ctx.createLinearGradient(0,0,0,h);
-      grad.addColorStop(0, COVER_COLOR);
-      grad.addColorStop(1, '#1f1f1f');
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = grad;
-      ctx.fillRect(0,0,w,h);
-      // 輕微雜訊點，像可刮層質地
-      const noise = ctx.createImageData(w, h);
-      for(let i=0;i<noise.data.length;i+=4){
-        const n = 12 + Math.random()*28;
-        noise.data[i]=noise.data[i+1]=noise.data[i+2]=n; noise.data[i+3]=28;
-      }
-      ctx.putImageData(noise,0,0);
-    }
-  }
-
-  function getPos(e){
-    const rect = canvas.getBoundingClientRect();
-    if(e.touches && e.touches[0]) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  }
-
-  function scratch(x, y){
-    ctx.save();
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = BRUSH;
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    ctx.restore();
-    lastX = x; lastY = y;
-  }
-
-  function percentCleared(step = 8){
-    const w = canvas.width, h = canvas.height;
-    const data = ctx.getImageData(0,0,w,h).data;
-    let clear = 0, total = 0;
-    for(let y=0;y<h;y+=step){
-      for(let x=0;x<w;x+=step){
-        const a = data[(y*w + x)*4 + 3];
-        total++; if(a < 10) clear++;
-      }
-    }
-    return clear/total;
-  }
-
-  const start = e => { isDown = true; const p=getPos(e); lastX=p.x; lastY=p.y; e.preventDefault(); };
-  const move  = e => { if(!isDown) return; const p=getPos(e); scratch(p.x, p.y); e.preventDefault(); };
-  const end   = () => {
-    if(!isDown) return;
-    isDown = false;
-    if(percentCleared() > REVEAL_THRESHOLD){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      canvas.style.pointerEvents = 'none'; // 全揭後讓下方元素可點擊/選取
-    }
-  };
-
-  canvas.addEventListener('touchstart', start, {passive:false});
-  canvas.addEventListener('touchmove',  move,  {passive:false});
-  canvas.addEventListener('touchend',   end);
-  canvas.addEventListener('mousedown',  start);
-  canvas.addEventListener('mousemove',  move);
-  canvas.addEventListener('mouseup',    end);
-  canvas.addEventListener('mouseleave', end);
-
-  window.addEventListener('load', sizeCanvas);
-  window.addEventListener('resize', sizeCanvas);
-})();
 </script>
 
 </body>

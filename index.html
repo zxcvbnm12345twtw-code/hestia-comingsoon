@@ -135,6 +135,46 @@
     .s3b .purpose-sub .late[data-late]:nth-child(1){ --x: -10px; transition-delay:.06s; }
     .s3b .purpose-sub .late[data-late]:nth-child(2){ --x:  10px; transition-delay:.14s; }
     .s3b .purpose-sub .late[data-late]:nth-child(3){ --x:  -8px; transition-delay:.22s; }
+    /* —— 手機版首屏定位（不影響桌機）—— */
+@media (max-width: 640px){
+  .s1{
+    position: relative;
+    min-height: 100vh;
+    padding: 0 20px; /* 手機首屏不需要上/下內距，避免影響垂直置中 */
+  }
+  .s1 .brand{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* 置中後再往上提一點（-58% 比 -50% 更有“抬頭”的感覺）*/
+    transform: translate(-50%, -58%);
+    margin: 0;
+    width: 100%;
+    z-index: 1;
+  }
+  .s1 .wordmark{
+    width: min(80vw, 440px); /* 手機寬度自適應 */
+  }
+  .s1 .submark{
+    margin-top: 4px;                /* 與 wordmark的距離更精緻 */
+    font-size: clamp(14px, 4vw, 22px);
+    letter-spacing: .38em;
+    font-weight: 500;               /* 如果想更粗，可調到 600 */
+    opacity: .95;
+  }
+
+  /* 將 “即將到來” 與箭頭 固定到離底部 1/3 的高度 */
+  .s1 .tagline,
+  .s1 .arrow{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    margin: 0; /* 清除原本的 margin-top 影響 */
+  }
+  .s1 .tagline{ bottom: 33vh; }
+  .s1 .arrow{ bottom: calc(33vh - 28px); } /* 箭頭略低一點，保持層次 */
+}
   </style>
 </head>
 <body>

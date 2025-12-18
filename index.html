@@ -167,13 +167,11 @@
         left:50%;
         transform:translateX(-50%);
         margin:0;
-        width:max-content;         /* 讓置中真正以內容為核心 */
+        width:max-content;
         text-align:center;
       }
       .s1 .tagline{ bottom: calc(28vh - 10px); }
       .s1 .arrow{ bottom: calc(28vh - 33px - 10px); }
-
-      /* 修正：arrow 的 float 動畫不破壞置中 */
       .s1 .arrow{
         animation: breatheText 7s ease-in-out infinite, floatYKeepCenter 3.6s ease-in-out infinite;
       }
@@ -270,8 +268,9 @@
       z-index:1;
     }
 
+    /* 可點擊：讓展台有 “怦然” 互動 */
     .mark-stage{
-      width:min(210px, 72vw);        /* 原本 ~420px → 縮小 50% */
+      width:min(210px, 72vw);
       aspect-ratio: 1/1;
       display:grid;
       place-items:center;
@@ -286,15 +285,45 @@
       backdrop-filter: blur(6px);
       overflow:hidden;
       clip-path: circle(0% at 50% 48%);
-      transition: clip-path 1.6s cubic-bezier(.22,.61,.36,1); /* 放慢 */
+      transition:
+        clip-path 2.0s cubic-bezier(.22,.61,.36,1),
+        transform .35s ease,
+        box-shadow .45s ease,
+        border-color .45s ease;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transform: translateY(0) scale(1);
     }
-    .mark-stage.in{ clip-path: circle(120% at 50% 48%); }
+    /* LOGO PAGE：動畫再稍晚一點出現 + 放慢 */
+    .mark-stage.in{ clip-path: circle(120% at 50% 48%); transition-delay: .22s; }
+
+    .mark-stage:hover{
+      border-color: rgba(255,255,255,.16);
+      box-shadow:
+        0 18px 64px rgba(0,0,0,.60),
+        0 0 26px rgba(230,118,144,.12),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      transform: translateY(-1px) scale(1.01);
+    }
+    .mark-stage:active{
+      transform: translateY(0) scale(.985);
+    }
+    .mark-stage.pulse{
+      animation: stagePulse .62s cubic-bezier(.22,.61,.36,1) both;
+    }
+    @keyframes stagePulse{
+      0%   { transform: translateY(0) scale(1); }
+      35%  { transform: translateY(-1px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); }
+    }
 
     .logo-mark{
-      width: clamp(110px, 26vw, 210px); /* 更貼合縮小後的展台 */
+      width: clamp(110px, 26vw, 210px);
       opacity:0;
       transform: translateY(10px) scale(.92);
-      transition: opacity 1.4s ease, transform 1.4s ease, filter 1.6s ease; /* 放慢 */
+      transition: opacity 1.6s ease, transform 1.8s ease, filter 2.0s ease;
+      transition-delay: .28s; /* 再晚一點 */
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.66));
       will-change: opacity, transform, filter;
     }
@@ -303,7 +332,17 @@
       transform: translateY(0) scale(.70);
     }
 
-    /* PRIMARY MARK：置中、移除前導線 */
+    /* 點擊怦然：LOGO 微亮一下（沉靜，不霓虹） */
+    .logo-mark.pop{
+      animation: markPop .62s cubic-bezier(.22,.61,.36,1) both;
+    }
+    @keyframes markPop{
+      0%   { filter: drop-shadow(0 14px 28px rgba(0,0,0,.66)); transform: translateY(0) scale(.70); }
+      40%  { filter: drop-shadow(0 0 18px rgba(230,118,144,.18)); transform: translateY(-1px) scale(.73); }
+      100% { filter: drop-shadow(0 14px 28px rgba(0,0,0,.66)); transform: translateY(0) scale(.70); }
+    }
+
+    /* PRIMARY MARK：置中、無前導線 */
     .s3 .label{
       display:inline-flex;
       align-items:center;
@@ -350,7 +389,6 @@
 
     /* ========== 其他頁面：延伸“簡報元素”但不做同版型 ========== */
 
-    /* WHO：在段落區加一張“資訊卡”容器（不改你原本 late 動畫） */
     .info-card{
       width:min(720px, 92vw);
       margin-top:18px;
@@ -368,7 +406,6 @@
     }
     .info-card .mini .kicker{ transform: translateY(-2px); }
 
-    /* FLAME MARK：把文字區變成更精緻的“宣言卡”，不改 late 動畫 */
     .manifest{
       width:min(760px, 92vw);
       margin-top:10px;
@@ -381,7 +418,6 @@
       backdrop-filter: blur(6px);
     }
 
-    /* Flame Mark 圖呼吸（保留） */
     .flame-img{
       width: clamp(120px, 22vw, 220px);
       margin: -6px 0 14px;
@@ -401,7 +437,6 @@
       100% { filter: drop-shadow(0 0 30px rgba(230,118,144,.34)); }
     }
 
-    /* JOIN：加一個細緻的上緣髮絲線，讓 CTA 區更像簡報收尾頁 */
     .join-wrap{
       width:min(760px, 92vw);
       margin-top:16px;
@@ -409,7 +444,6 @@
       border-top:1px solid rgba(255,255,255,.10);
     }
 
-    /* 表單與 CTA */
     form{
       margin-top:18px;
       display:flex;flex-wrap:wrap;gap:12px;
@@ -441,6 +475,59 @@
       color:rgba(255,255,255,.88);
     }
     .toast.show{opacity:1;}
+
+    /* ========== OUR PURPOSE：加設計細節（不動既有動畫邏輯） ========== */
+    .purpose-wrap{
+      position:relative;
+      width:min(760px, 92vw);
+      padding:22px 18px 18px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
+      backdrop-filter: blur(7px);
+      overflow:hidden;
+    }
+    /* 內部髮絲線與微粒點綴：更精緻但沉靜 */
+    .purpose-wrap::before{
+      content:"";
+      position:absolute;inset:0;
+      background:
+        radial-gradient(18px 18px at 16% 22%, rgba(255,255,255,.06), rgba(255,255,255,0) 70%),
+        radial-gradient(22px 22px at 82% 68%, rgba(255,255,255,.05), rgba(255,255,255,0) 72%),
+        linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 72%, rgba(255,255,255,.05));
+      opacity:.55;
+      pointer-events:none;
+    }
+    .purpose-kicker{
+      display:flex;
+      justify-content:center;
+      margin-bottom:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* 小小的“重點節拍” */
+    .purpose-chips{
+      margin-top:14px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      position:relative;
+      z-index:1;
+    }
+    .chip{
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:rgba(255,255,255,.74);
+      font-size:12px;
+      letter-spacing:.14em;
+    }
   </style>
 </head>
 
@@ -467,7 +554,7 @@
     <div class="arrow">↓</div>
   </section>
 
-  <!-- ② WHO WE ARE（加入 info-card，但保留原 late 動畫） -->
+  <!-- ② WHO WE ARE -->
   <section class="s2" id="s2">
     <h2 class="reveal in who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
 
@@ -483,8 +570,8 @@
   <!-- ③ LOGO PAGE -->
   <section class="s3" id="s3">
     <div class="stack">
-      <div class="mark-stage" id="markStage">
-        <img class="logo-mark" src="Hlogo.png" alt="HESTIA mark" />
+      <div class="mark-stage" id="markStage" role="button" aria-label="Interact with brand mark" tabindex="0">
+        <img class="logo-mark" id="logoMark" src="Hlogo.png" alt="HESTIA mark" />
       </div>
 
       <div class="label reveal">BRAND MARK</div>
@@ -503,18 +590,27 @@
   <!-- ③.5 Our Purpose -->
   <section class="s3b" id="s3b">
     <div class="purpose-wrap">
+      <div class="purpose-kicker"><span class="kicker reveal">PURPOSE</span></div>
+
       <h2 class="purpose-title clip-reveal" id="purposeTitle">
         <span class="we-accent">Our</span> Purpose
       </h2>
+
       <div class="purpose-sub">
         <p class="late" data-late>每一個特質，都是值得擁抱的亮點。</p>
         <p class="late" data-late>HESTIA 不只是為了做服裝，</p>
         <p class="late" data-late>而是讓日常成為你自我認同的象徵。</p>
       </div>
+
+      <div class="purpose-chips">
+        <span class="chip">IDENTITY</span>
+        <span class="chip">CONFIDENCE</span>
+        <span class="chip">BELONGING</span>
+      </div>
     </div>
   </section>
 
-  <!-- ④ THE FLAME MARK（加入 manifest 卡片，不改 late 動畫） -->
+  <!-- ④ THE FLAME MARK -->
   <section class="s4" id="s4">
     <img class="flame-img" src="Flamemark.png" alt="The Flame Mark">
 
@@ -534,7 +630,7 @@
     </div>
   </section>
 
-  <!-- ⑤ JOIN US（加入 join-wrap 細節） -->
+  <!-- ⑤ JOIN US -->
   <section class="s5" id="s5">
     <h2 class="reveal">JOIN US</h2>
     <p class="reveal">加入火種名單，搶先收到最新消息與限定優惠。</p>
@@ -584,6 +680,25 @@
       if(!el.closest('.purpose-sub')) lateObserver.observe(el);
     });
 
+    /* LOGO PAGE：點擊怦然互動 */
+    const stage = document.getElementById('markStage');
+    const mark  = document.getElementById('logoMark');
+
+    function popOnce(){
+      stage.classList.remove('pulse');
+      mark.classList.remove('pop');
+      void stage.offsetWidth; // reflow
+      stage.classList.add('pulse');
+      mark.classList.add('pop');
+    }
+    stage.addEventListener('click', popOnce);
+    stage.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        popOnce();
+      }
+    });
+
     /* 表單無跳轉 */
     const toast = document.getElementById('toast');
     const iframe = document.getElementById('hidden_iframe');
@@ -607,7 +722,7 @@
       setTimeout(()=>toast.classList.remove('show'),2600);
     });
 
-    /* Our Purpose：靠近畫面中線才淡入 */
+    /* Our Purpose：靠近畫面中線才淡入（維持原邏輯） */
     const purposeSection = document.querySelector('.s3b');
     const purposeTitleEl = document.getElementById('purposeTitle');
     const purposeSubEls = purposeSection.querySelectorAll('.purpose-sub .late[data-late]');

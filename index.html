@@ -268,7 +268,6 @@
       z-index:1;
     }
 
-    /* 可點擊：讓展台有 “怦然” 互動 */
     .mark-stage{
       width:min(210px, 72vw);
       aspect-ratio: 1/1;
@@ -295,7 +294,6 @@
       -webkit-tap-highlight-color: transparent;
       transform: translateY(0) scale(1);
     }
-    /* LOGO PAGE：動畫再稍晚一點出現 + 放慢 */
     .mark-stage.in{ clip-path: circle(120% at 50% 48%); transition-delay: .22s; }
 
     .mark-stage:hover{
@@ -323,7 +321,7 @@
       opacity:0;
       transform: translateY(10px) scale(.92);
       transition: opacity 1.6s ease, transform 1.8s ease, filter 2.0s ease;
-      transition-delay: .28s; /* 再晚一點 */
+      transition-delay: .28s;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.66));
       will-change: opacity, transform, filter;
     }
@@ -332,7 +330,6 @@
       transform: translateY(0) scale(.70);
     }
 
-    /* 點擊怦然：LOGO 微亮一下（沉靜，不霓虹） */
     .logo-mark.pop{
       animation: markPop .62s cubic-bezier(.22,.61,.36,1) both;
     }
@@ -342,7 +339,6 @@
       100% { filter: drop-shadow(0 14px 28px rgba(0,0,0,.66)); transform: translateY(0) scale(.70); }
     }
 
-    /* PRIMARY MARK：置中、無前導線 */
     .s3 .label{
       display:inline-flex;
       align-items:center;
@@ -386,8 +382,6 @@
       letter-spacing:.10em;
       text-align:left;
     }
-
-    /* ========== 其他頁面：延伸“簡報元素”但不做同版型 ========== */
 
     .info-card{
       width:min(720px, 92vw);
@@ -490,7 +484,6 @@
       backdrop-filter: blur(7px);
       overflow:hidden;
     }
-    /* 內部髮絲線與微粒點綴：更精緻但沉靜 */
     .purpose-wrap::before{
       content:"";
       position:absolute;inset:0;
@@ -509,7 +502,6 @@
       z-index:1;
     }
 
-    /* 小小的“重點節拍” */
     .purpose-chips{
       margin-top:14px;
       display:flex;
@@ -519,7 +511,28 @@
       position:relative;
       z-index:1;
     }
-    .chip{
+
+    /* ======= 中英文切換 chips：翻面動畫（自動輪播 + 可點擊） ======= */
+    .chip-toggle{
+      position:relative;
+      width:112px;               /* 固定寬度避免跳動 */
+      height:34px;
+      perspective: 900px;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chip-toggle .card{
+      position:absolute; inset:0;
+      transform-style:preserve-3d;
+      transition: transform 820ms cubic-bezier(.22,.61,.36,1);
+      will-change: transform;
+    }
+    .chip-toggle.is-zh .card{ transform: rotateY(180deg); }
+
+    .chip-toggle .face{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
       padding:7px 10px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
@@ -527,6 +540,27 @@
       color:rgba(255,255,255,.74);
       font-size:12px;
       letter-spacing:.14em;
+      backface-visibility:hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      transition: transform .25s ease, border-color .35s ease, box-shadow .35s ease, color .35s ease;
+    }
+    .chip-toggle:active .face{ transform: scale(.985); }
+
+    .chip-toggle .zh{
+      transform: rotateY(180deg);
+      letter-spacing:.12em;
+    }
+
+    /* 微亮：保持沉靜，不搶主色 */
+    .chip-toggle:hover .face{
+      border-color: rgba(255,255,255,.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 0 18px rgba(230,118,144,.10);
+      color: rgba(255,255,255,.82);
+    }
+
+    /* 尊重減少動態 */
+    @media (prefers-reduced-motion: reduce){
+      .chip-toggle .card{ transition:none; }
     }
   </style>
 </head>
@@ -602,10 +636,25 @@
         <p class="late" data-late>而是讓日常成為你自我認同的象徵。</p>
       </div>
 
-      <div class="purpose-chips">
-        <span class="chip">IDENTITY</span>
-        <span class="chip">CONFIDENCE</span>
-        <span class="chip">BELONGING</span>
+      <div class="purpose-chips" aria-label="Purpose keywords bilingual toggle">
+        <div class="chip-toggle" data-en="IDENTITY"   data-zh="自我認同" role="button" tabindex="0" aria-label="Toggle Identity">
+          <div class="card">
+            <div class="face en">IDENTITY</div>
+            <div class="face zh">自我認同</div>
+          </div>
+        </div>
+        <div class="chip-toggle" data-en="CONFIDENCE" data-zh="自信建立" role="button" tabindex="0" aria-label="Toggle Confidence">
+          <div class="card">
+            <div class="face en">CONFIDENCE</div>
+            <div class="face zh">自信建立</div>
+          </div>
+        </div>
+        <div class="chip-toggle" data-en="BELONGING"  data-zh="歸屬感" role="button" tabindex="0" aria-label="Toggle Belonging">
+          <div class="card">
+            <div class="face en">BELONGING</div>
+            <div class="face zh">歸屬感</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -687,7 +736,7 @@
     function popOnce(){
       stage.classList.remove('pulse');
       mark.classList.remove('pop');
-      void stage.offsetWidth; // reflow
+      void stage.offsetWidth;
       stage.classList.add('pulse');
       mark.classList.add('pop');
     }
@@ -697,6 +746,60 @@
         e.preventDefault();
         popOnce();
       }
+    });
+
+    /* OUR PURPOSE：chips 中英文切換（自動輪播 + 可點擊） */
+    const chipToggles = Array.from(document.querySelectorAll('.chip-toggle'));
+    chipToggles.forEach((chip, idx)=>{
+      const toggle = ()=>{
+        chip.classList.toggle('is-zh');
+      };
+      chip.addEventListener('click', toggle);
+      chip.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+
+    // 自動輪播：每顆 chip 依序翻面（克制節奏）
+    let chipAutoTimer = null;
+    let chipIdx = 0;
+    function startChipAuto(){
+      if(chipAutoTimer) return;
+      chipAutoTimer = setInterval(()=>{
+        if(!chipToggles.length) return;
+        chipToggles[chipIdx % chipToggles.length].classList.toggle('is-zh');
+        chipIdx++;
+      }, 2200);
+    }
+    function stopChipAuto(){
+      if(!chipAutoTimer) return;
+      clearInterval(chipAutoTimer);
+      chipAutoTimer = null;
+    }
+
+    // 只有在 Purpose 區塊可見時才自動輪播；離開就停止
+    const purposeBlock = document.getElementById('s3b');
+    const chipAutoObserver = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) startChipAuto();
+        else stopChipAuto();
+      });
+    }, {threshold: 0.35});
+    chipAutoObserver.observe(purposeBlock);
+
+    // 觸控互動後：暫停 6 秒，避免「你剛點它又自己翻」的不適感
+    let pauseTimer = null;
+    function pauseAuto(ms=6000){
+      stopChipAuto();
+      if(pauseTimer) clearTimeout(pauseTimer);
+      pauseTimer = setTimeout(()=>startChipAuto(), ms);
+    }
+    chipToggles.forEach(chip=>{
+      chip.addEventListener('click', ()=>pauseAuto(), {passive:true});
+      chip.addEventListener('keydown', ()=>pauseAuto());
     });
 
     /* 表單無跳轉 */

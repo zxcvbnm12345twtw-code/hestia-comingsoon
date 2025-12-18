@@ -22,7 +22,6 @@
       --muted: rgba(255,255,255,.70);
       --hair: rgba(255,255,255,.12);
       --hair2: rgba(255,255,255,.08);
-      --shadow: rgba(0,0,0,.58);
     }
 
     html,body{
@@ -53,7 +52,7 @@
 
     .we-accent{color:var(--accent);text-shadow:0 0 22px rgba(230,118,144,.22);}
 
-    /* 背景分幕（保留你的情緒漸層，但更沉靜） */
+    /* 背景分幕（沉靜版） */
     .s1{background:linear-gradient(180deg,#000,#000);}
     .s2{background:linear-gradient(180deg,#000,#130b0f);}
     .s3{background:linear-gradient(180deg,#130b0f,#2a111a);}
@@ -61,7 +60,7 @@
     .s4{background:linear-gradient(180deg,#3b1824,#4b1e2d);}
     .s5{background:linear-gradient(180deg,#4b1e2d,#6a3045);}
 
-    /* 全頁呼吸柔光（沉靜版：更克制） */
+    /* 全頁呼吸柔光（克制） */
     .breath{
       position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
       background:
@@ -79,20 +78,20 @@
       100%{background-position:48% 105%,52% 0%;}
     }
 
-    /* 進場（沉靜版：位移變小） */
+    /* 進場（把 WHO WE ARE / FLAME MARK 的動畫感還原：位移更明顯） */
     .reveal{
       opacity:0;
-      transform:translateY(26px);
+      transform:translateY(60px);
       transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);
       will-change: opacity, transform;
     }
     .reveal.in{opacity:1;transform:none;}
 
-    /* late（更輕） */
+    /* late（WHO / FLAME MARK 用：淡入 + 輕微下移，無 blur） */
     .late{
       opacity:0;
-      transform:translateY(10px);
-      transition:opacity .85s cubic-bezier(.22,.61,.36,1),transform .85s cubic-bezier(.22,.61,.36,1);
+      transform:translateY(8px);
+      transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);
       will-change: opacity, transform;
     }
     .late.in{opacity:1;transform:none;}
@@ -124,22 +123,16 @@
       animation:breatheText 7s ease-in-out infinite;
       position:relative;z-index:1;
     }
-    @keyframes breatheText{
-      0%,100%{opacity:.55;}
-      50%{opacity:.95;}
-    }
+    @keyframes breatheText{ 0%,100%{opacity:.55;} 50%{opacity:.95;} }
     .arrow{
       font-size:22px;margin-top:14px;opacity:.72;
       animation:floatY 3.6s ease-in-out infinite;
       position:relative;z-index:1;
       color:rgba(255,255,255,.75);
     }
-    @keyframes floatY{
-      0%,100%{transform:translateY(0);}
-      50%{transform:translateY(8px);}
-    }
+    @keyframes floatY{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
 
-    /* WHO WE ARE 與 Purpose 標題 */
+    /* WHO / PURPOSE 標題 */
     .who-title, .purpose-title{
       font-size:clamp(36px,7vw,64px);
       line-height:1.08;
@@ -149,7 +142,7 @@
 
     /* Purpose：靠中線淡入 + 圓形揭幕 */
     .purpose-title{
-      opacity:0;transform:translateY(16px) scale(.99);
+      opacity:0;transform:translateY(18px) scale(.985);
       transition:opacity .8s ease, transform .8s ease;
       text-shadow:0 10px 34px rgba(0,0,0,.46);
     }
@@ -157,11 +150,11 @@
     .clip-reveal{--r:0%;display:inline-block;clip-path:circle(var(--r) at 50% 50%);transition:clip-path .9s cubic-bezier(.22,.61,.36,1);}
     .clip-reveal.in{--r:120%;}
 
-    /* Purpose 逐行淡入（保留你原本左右錯層，但更沉靜） */
+    /* Purpose 逐行（保留你原本左右錯層 + blur 復位） */
     .purpose-sub{max-width:560px;line-height:1.55;margin:18px auto 0;}
     .purpose-sub p{font-size:clamp(15px,3.8vw,18px);color:rgba(255,255,255,.82);}
     .s3b .purpose-sub .late[data-late]{
-      transform: translateY(56px) translateX(var(--x, 0));
+      transform: translateY(70px) translateX(var(--x, 0));
       filter: blur(6px);
       transition: opacity .8s cubic-bezier(.22,.61,.36,1),
                  transform .8s cubic-bezier(.22,.61,.36,1),
@@ -172,22 +165,64 @@
     .s3b .purpose-sub .late[data-late]:nth-child(2){ --x: 10px; transition-delay:.14s;}
     .s3b .purpose-sub .late[data-late]:nth-child(3){ --x:-8px; transition-delay:.22s;}
 
-    /* ===== LOGO 主標頁（s3）：手機最優先的「沉靜展示 + 文字說明」 ===== */
-    .s3{ text-align:left; }
+    /* ========== 章節點（非常小、白色、空心/實心、呼吸發亮） ========== */
+    .dots{
+      position:fixed;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      z-index:30;
+      pointer-events:auto;
+    }
+    .dot{
+      width:5px;height:5px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.62);
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+      outline:none;
+      appearance:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease, opacity .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      opacity:.66;
+    }
+    .dot.active{
+      opacity:1;
+      background:#fff;
+      border-color:#fff;
+      box-shadow: 0 0 10px rgba(255,255,255,.55), 0 0 22px rgba(255,255,255,.28);
+      animation: dotBreath 1.9s ease-in-out infinite;
+    }
+    @keyframes dotBreath{
+      0%,100%{ box-shadow: 0 0 8px rgba(255,255,255,.38), 0 0 16px rgba(255,255,255,.18); transform: scale(1); }
+      50%{     box-shadow: 0 0 12px rgba(255,255,255,.62), 0 0 26px rgba(255,255,255,.26); transform: scale(1.1); }
+    }
+    .dot:active{ transform: scale(1.15); }
 
-    .s3 .s3-grid{
-      width:min(1100px, 92vw);
-      display:grid;
-      grid-template-columns: 1fr 1.12fr;
-      gap: clamp(14px, 4vw, 56px);
+    @media (max-width: 640px){
+      .dots{ right:8px; gap:12px; }
+      .dot{ width:6px;height:6px; }
+    }
+
+    /* ========== LOGO PAGE（設計不變精神：沉靜、真；改回直式一欄：上圖下文） ========== */
+    .s3{ padding-top:70px; padding-bottom:70px; }
+    .s3 .stack{
+      width:min(760px, 92vw);
+      display:flex;
+      flex-direction:column;
       align-items:center;
+      gap:18px;
+      text-align:center;
       position:relative;
       z-index:1;
     }
 
     /* LOGO 展台（真實/沉靜） */
     .mark-stage{
-      width:min(360px, 92%);
+      width:min(420px, 92vw);
       aspect-ratio: 1/1;
       display:grid;
       place-items:center;
@@ -200,30 +235,28 @@
         0 18px 60px rgba(0,0,0,.55),
         inset 0 1px 0 rgba(255,255,255,.06);
       backdrop-filter: blur(6px);
+      overflow:hidden;
+      /* 高級動畫：進場用柔和遮罩揭幕 */
+      clip-path: circle(0% at 50% 48%);
+      transition: clip-path 1.05s cubic-bezier(.22,.61,.36,1);
     }
+    .mark-stage.in{ clip-path: circle(120% at 50% 48%); }
 
-    /* LOGO 圖：縮小 30%（相對你原本 clamp 大小），但以“主標”姿態呈現（不做霓虹光） */
+    /* LOGO 圖：維持你要的縮小 30%（相對原本），且不做霓虹 */
     .logo-mark{
       width: clamp(140px, 28vw, 280px);
       opacity:0;
-      transform: scale(.92);
+      transform: translateY(10px) scale(.92);
       transition: opacity 1s ease, transform 1s ease, filter 1.2s ease;
-      filter: drop-shadow(0 12px 24px rgba(0,0,0,.62));
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.66));
       will-change: opacity, transform, filter;
     }
     .logo-mark.in{
       opacity:1;
-      transform: scale(.70); /* 縮小 30% */
-      filter: drop-shadow(0 14px 28px rgba(0,0,0,.66));
+      transform: translateY(0) scale(.70);
     }
 
-    /* 右欄：博物館標牌式文字層級（沉靜、簡報感） */
-    .s3 .s3-copy h2{
-      margin:0 0 12px;
-      text-align:left;
-      letter-spacing:.08em;
-      font-size:clamp(22px, 3.6vw, 34px);
-    }
+    /* 標牌式文字層級（仍高級） */
     .s3 .label{
       display:inline-flex;
       align-items:center;
@@ -232,19 +265,20 @@
       letter-spacing:.22em;
       text-transform:uppercase;
       color:rgba(255,255,255,.62);
-      margin-bottom:10px;
     }
     .s3 .label::before{
       content:"";
-      width:22px;height:1px;
+      width:26px;height:1px;
       background:rgba(255,255,255,.24);
       display:inline-block;
     }
 
     .s3 .bullets{
-      margin-top:10px;
+      width:min(640px, 92vw);
+      margin-top:2px;
       display:grid;
       gap:10px;
+      text-align:left;
     }
     .s3 .bullet{
       position:relative;
@@ -257,53 +291,30 @@
       content:"";
       position:absolute;left:0;top:.72em;
       width:6px;height:6px;border-radius:50%;
-      background:rgba(230,118,144,.46);
-      box-shadow:0 0 0 3px rgba(230,118,144,.10);
+      background:rgba(255,255,255,.80);
+      box-shadow:0 0 0 3px rgba(255,255,255,.10);
     }
-
     .s3 .sig{
-      margin-top:14px;
+      width:min(640px, 92vw);
+      margin-top:10px;
       padding-top:14px;
       border-top:1px solid rgba(255,255,255,.10);
       color:rgba(255,255,255,.66);
       font-size:13px;
       letter-spacing:.10em;
-      max-width:520px;
+      text-align:left;
     }
 
-    /* ===== 手機（最優先）：兩欄維持 + “眼球移動”與沉靜閱讀 ===== */
     @media (max-width: 640px){
       section{ padding: 44px 14px; }
-
-      .s3 .s3-grid{
-        width: 94vw;
-        grid-template-columns: 42% 58%;
-        gap: 14px;
-        align-items: flex-start;
-      }
-
-      /* 左欄：LOGO 展台做成“視覺錨點” */
-      .s3 .s3-media{
-        position: sticky;
-        top: 30vh;
-        align-self: flex-start;
-      }
-      .mark-stage{
-        width: 100%;
-        border-radius: 18px;
-      }
-      .logo-mark.in{
-        transform: scale(.74); /* 手機略放大一點（比 .70 更好看、更像主標） */
-      }
-
-      /* 右欄：字級更像品牌簡報 */
-      .s3 .label{ font-size:11px; margin-bottom:8px; }
-      .s3 .s3-copy h2{ font-size: 20px; margin-bottom: 10px; }
-      .s3 .bullet{ font-size: 14.3px; opacity:.92; }
-      .s3 .sig{ font-size: 12px; }
+      .s3{ padding-top:60px; padding-bottom:60px; }
+      .mark-stage{ border-radius:18px; }
+      .logo-mark.in{ transform: translateY(0) scale(.74); } /* 手機略放大一點更像主標 */
+      .s3 .bullets, .s3 .sig{ text-align:left; }
+      .s3 .label{ font-size:11px; }
     }
 
-    /* ===== 副標頁（s4）：Flame Mark 溫柔、不搶主標 ===== */
+    /* ========== Flame Mark（副標／宣言載體）：把你原本的段落 late 動畫還給你 ========== */
     .flame-img{
       width: clamp(120px, 22vw, 220px);
       margin: -6px 0 16px;
@@ -323,7 +334,7 @@
       100% { filter: drop-shadow(0 0 30px rgba(230,118,144,.34)); }
     }
 
-    /* 表單與 CTA（維持乾淨） */
+    /* 表單與 CTA */
     form{
       margin-top:26px;
       display:flex;flex-wrap:wrap;gap:12px;
@@ -356,7 +367,7 @@
     }
     .toast.show{opacity:1;}
 
-    /* ===== 手機首屏定位（保留你的原設計邏輯，略沉靜） ===== */
+    /* 手機首屏定位（保留你的設計邏輯） */
     @media (max-width: 640px){
       .s1{ padding: 0 20px; }
       .s1 .brand{
@@ -372,45 +383,13 @@
       .s1 .tagline{ bottom: calc(28vh - 10px); }
       .s1 .arrow{ bottom: calc(28vh - 33px - 10px); }
     }
-
-    /* ===== 章節進度點（沉靜互動：手機優先） ===== */
-    .dots{
-      position:fixed;
-      right:14px;
-      top:50%;
-      transform:translateY(-50%);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      z-index:20;
-      pointer-events:auto;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.22);
-      background:rgba(255,255,255,.06);
-      box-shadow:0 10px 30px rgba(0,0,0,.25);
-      cursor:pointer;
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
-    }
-    .dot.active{
-      background:rgba(230,118,144,.55);
-      border-color:rgba(230,118,144,.55);
-      transform: scale(1.25);
-    }
-    .dot:active{ transform: scale(1.12); }
-
-    @media (max-width: 640px){
-      .dots{ right:10px; gap:12px; }
-      .dot{ width:9px;height:9px; }
-    }
   </style>
 </head>
 
 <body>
   <div class="breath" aria-hidden="true"></div>
 
-  <!-- 章節進度點（手機優先互動） -->
+  <!-- 章節進度點（非常小、白色、空心/實心、呼吸發亮） -->
   <nav class="dots" aria-label="Section navigation">
     <button class="dot" data-target="s1" aria-label="Go to Hero"></button>
     <button class="dot" data-target="s2" aria-label="Go to Who We Are"></button>
@@ -430,7 +409,7 @@
     <div class="arrow">↓</div>
   </section>
 
-  <!-- ② WHO WE ARE -->
+  <!-- ② WHO WE ARE（動畫還原：title + late 段落） -->
   <section class="s2" id="s2">
     <h2 class="reveal in who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
     <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
@@ -439,27 +418,23 @@
     <p class="late" data-late>等待被看見、被擁抱、被點燃。</p>
   </section>
 
-  <!-- ③ 品牌主標：火種符號（手機兩欄 + 沉靜展台 + 文字標牌） -->
+  <!-- ③ LOGO PAGE（改回直式：上圖下文；高級揭幕動畫） -->
   <section class="s3" id="s3">
-    <div class="s3-grid">
-      <div class="s3-media">
-        <div class="mark-stage">
-          <img class="logo-mark" src="Hlogo.png" alt="HESTIA mark" />
-        </div>
+    <div class="stack">
+      <div class="mark-stage" id="markStage">
+        <img class="logo-mark" src="Hlogo.png" alt="HESTIA mark" />
       </div>
 
-      <div class="s3-copy">
-        <div class="label reveal">PRIMARY MARK</div>
-        <h2 class="reveal">火種的符號</h2>
+      <div class="label reveal">PRIMARY MARK</div>
+      <h2 class="reveal">火種的符號</h2>
 
-        <div class="bullets">
-          <div class="bullet reveal">標誌靈感來自「火焰燃燒的線條」，帶出力量與節制的平衡。</div>
-          <div class="bullet reveal">拱型外型呼應爐灶女神的意象，象徵歸屬、溫暖與內在之火。</div>
-          <div class="bullet reveal">它不是裝飾，而是你在日常中最安靜、最堅定的識別。</div>
-        </div>
-
-        <div class="sig reveal">HESTIA 的主標識，將在服裝、吊牌與所有核心視覺中作為第一辨識。</div>
+      <div class="bullets">
+        <div class="bullet reveal">標誌靈感來自「火焰燃燒的線條」，帶出力量與節制的平衡。</div>
+        <div class="bullet reveal">拱型外型呼應爐灶女神的意象，象徵歸屬、溫暖與內在之火。</div>
+        <div class="bullet reveal">它不是裝飾，而是你在日常中最安靜、最堅定的識別。</div>
       </div>
+
+      <div class="sig reveal">HESTIA 的主標識，將在服裝、吊牌與所有核心視覺中作為第一辨識。</div>
     </div>
   </section>
 
@@ -477,7 +452,7 @@
     </div>
   </section>
 
-  <!-- ④ 品牌副標：Flame Mark -->
+  <!-- ④ THE FLAME MARK（動畫還原：late 文字 + 圖呼吸） -->
   <section class="s4" id="s4">
     <img class="flame-img" src="Flamemark.png" alt="The Flame Mark">
     <h2 class="late" data-late>THE FLAME MARK</h2>
@@ -520,11 +495,11 @@
       });
     },{threshold:.22});
 
-    document.querySelectorAll('.reveal,.logo-mark,.flame-img').forEach(el=>{
+    document.querySelectorAll('.reveal,.logo-mark,.flame-img,#markStage').forEach(el=>{
       if(!el.classList.contains('in')) observer.observe(el);
     });
 
-    /* late：排除 Purpose 小標（交由 handlePurpose 控制） */
+    /* late：WHO + FLAME MARK（保留原節奏）；排除 Purpose 小標（交由 handlePurpose 控制） */
     const lateObserver = new IntersectionObserver(entries=>{
       entries.forEach(e=>{
         if(e.isIntersecting){
@@ -602,7 +577,7 @@
     },{root:null,rootMargin:'-35% 0px -35% 0px',threshold:0});
     purposeIO.observe(purposeTitleEl);
 
-    /* 章節進度點：高亮目前章節 + 點擊跳轉（手機優先） */
+    /* 章節點：高亮目前章節 + 點擊跳轉 */
     const sections = ['s1','s2','s3','s3b','s4','s5'].map(id=>document.getElementById(id));
     const dots = Array.from(document.querySelectorAll('.dot'));
 
@@ -610,10 +585,9 @@
       dots.forEach((d,i)=>d.classList.toggle('active', i===idx));
     }
 
-    const sectionObserver = new IntersectionObserver(entries=>{
-      // 找到最接近視窗中心的那個 section
+    const sectionObserver = new IntersectionObserver(()=>{
       const vh = window.innerHeight;
-      let best = {idx:0, score:999};
+      let best = {idx:0, score:999999};
       sections.forEach((sec, idx)=>{
         const r = sec.getBoundingClientRect();
         const center = r.top + r.height/2;

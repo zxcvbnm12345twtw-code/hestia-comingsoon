@@ -350,7 +350,7 @@
       .dot::after{ font-size:10px; padding:6px 8px; right:16px; }
     }
 
-    /* ========== LOGO PAGE：直式上圖下文；展示框縮小 50%；動畫更慢更沉靜 + 展品模式 ========== */
+    /* ========== LOGO PAGE：直式上圖下文；展示框縮小 50%；動畫更慢更沉靜 + “不干擾”提示 ========== */
     .s3{ padding-top:70px; padding-bottom:70px; }
     .s3 .stack{
       width:min(760px, 92vw);
@@ -363,7 +363,6 @@
       z-index:2;
     }
 
-    /* 展台可點擊：怦然 */
     .mark-stage{
       width:min(210px, 72vw);
       aspect-ratio: 1/1;
@@ -392,7 +391,6 @@
       transform: translateY(0) scale(1);
       position:relative;
     }
-    /* LOGO PAGE：更晚出現 + 更慢 */
     .mark-stage.in{ clip-path: circle(120% at 50% 48%); transition-delay: .32s; }
 
     .mark-stage:hover{
@@ -412,8 +410,41 @@
       100% { transform: translateY(0) scale(1); }
     }
 
-    /* 展品模式：細緻「語境」切換（Primary / Fabric / Mono） */
-    .mark-stage[data-mode="primary"]{}
+    /* 以“極淡角落提示”取代文字（不影響 LOGO 呈現） */
+    .corner-hint{
+      position:absolute; inset:10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.06);
+      pointer-events:none;
+      opacity:0;
+      transition: opacity .55s ease;
+      z-index:1;
+    }
+    .corner-hint::before,
+    .corner-hint::after{
+      content:"";
+      position:absolute;
+      width:10px;height:10px;
+      border:1px solid rgba(255,255,255,.18);
+      opacity:.35;
+      border-right:none;border-bottom:none;
+      border-radius:2px;
+    }
+    .corner-hint::before{ left:10px; top:10px; }
+    .corner-hint::after{
+      right:10px; bottom:10px;
+      transform: rotate(180deg);
+    }
+    .mark-stage.in .corner-hint{ opacity:.9; }
+    /* 一次性“提示呼吸” */
+    .mark-stage.hint .corner-hint{ animation: hintGlow 1.35s ease-in-out 1; }
+    @keyframes hintGlow{
+      0%{ opacity:.25; }
+      45%{ opacity:1; }
+      100%{ opacity:.9; }
+    }
+
+    /* 展品模式：Primary / Fabric / Mono（保留） */
     .mark-stage[data-mode="fabric"]{
       background:
         radial-gradient(120% 120% at 50% 30%, rgba(255,255,255,.06), rgba(255,255,255,0) 60%),
@@ -426,50 +457,23 @@
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
     }
 
-    /* 模式提示（非常淡） */
-    .mode-hint{
-      position:absolute;
-      left:50%;
-      bottom:10px;
-      transform:translateX(-50%);
-      font-size:10px;
-      letter-spacing:.22em;
-      color:rgba(255,255,255,.55);
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.22);
-      opacity:0;
-      transition:opacity .4s ease, transform .4s ease;
-      pointer-events:none;
-    }
-    .mark-stage.in .mode-hint{ opacity:.85; transform:translateX(-50%) translateY(0); }
-    .mark-stage:hover .mode-hint{ opacity:1; }
-
     .logo-mark{
       width: clamp(110px, 26vw, 210px);
       opacity:0;
       transform: translateY(10px) scale(.92);
       transition: opacity 1.7s ease, transform 2.0s ease, filter 2.0s ease;
-      transition-delay: .42s; /* 再晚一點 */
+      transition-delay: .42s;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.66));
       will-change: opacity, transform, filter;
+      position:relative;
+      z-index:2;
     }
-    .logo-mark.in{
-      opacity:1;
-      transform: translateY(0) scale(.70);
-    }
+    .logo-mark.in{ opacity:1; transform: translateY(0) scale(.70); }
 
-    /* 模式對 logo 的呈現（克制） */
-    .mark-stage[data-mode="fabric"] .logo-mark{
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.66));
-      opacity: 1;
-    }
     .mark-stage[data-mode="mono"] .logo-mark{
       filter: grayscale(1) contrast(1.1) brightness(1.05) drop-shadow(0 14px 28px rgba(0,0,0,.66));
     }
 
-    /* 點擊怦然：LOGO 微亮一下（沉靜，不霓虹） */
     .logo-mark.pop{ animation: markPop .62s cubic-bezier(.22,.61,.36,1) both; }
     @keyframes markPop{
       0%   { filter: drop-shadow(0 14px 28px rgba(0,0,0,.66)); transform: translateY(0) scale(.70); }
@@ -477,7 +481,6 @@
       100% { filter: drop-shadow(0 14px 28px rgba(0,0,0,.66)); transform: translateY(0) scale(.70); }
     }
 
-    /* PRIMARY MARK：置中、無前導線 */
     .s3 .label{
       display:inline-flex;
       align-items:center;
@@ -542,10 +545,82 @@
     }
     .info-card .mini .kicker{ transform: translateY(-2px); }
 
-    /* ========== FLAME MARK：宣言卡（不改 late 動畫） ========== */
+    /* ========== FLAME MARK：更高級、慢的呈現動畫（不改文字本體） ========== */
+    .flame-stage{
+      position:relative;
+      width:min(760px, 92vw);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      z-index:2;
+    }
+
+    /* 影像“展櫃”：慢慢打光 */
+    .flame-frame{
+      width: min(240px, 58vw);
+      aspect-ratio: 1 / 1;
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 62%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
+      backdrop-filter: blur(7px);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      position:relative;
+      clip-path: circle(0% at 50% 50%);
+      transition: clip-path 2.35s cubic-bezier(.22,.61,.36,1);
+    }
+    .flame-frame.in{ clip-path: circle(120% at 50% 50%); }
+
+    /* “打光掃過” */
+    .flame-frame::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: linear-gradient(90deg, rgba(255,255,255,0) 35%, rgba(255,255,255,.07) 50%, rgba(255,255,255,0) 65%);
+      transform: translateX(-35%) rotate(12deg);
+      opacity:0;
+      pointer-events:none;
+    }
+    .flame-frame.sheen::before{
+      opacity:1;
+      animation: sheenSweep 2.8s cubic-bezier(.22,.61,.36,1) 1 both;
+    }
+    @keyframes sheenSweep{
+      0%{ transform: translateX(-35%) rotate(12deg); }
+      100%{ transform: translateX(35%) rotate(12deg); }
+    }
+
+    /* Flame Mark 圖：更精緻且更慢 */
+    .flame-img{
+      width: clamp(120px, 26vw, 210px);
+      margin:0;
+      opacity:0;
+      transform: translateY(10px) scale(.94);
+      transition: opacity 1.9s ease, transform 2.2s ease, filter 2.4s ease;
+      filter: drop-shadow(0 14px 30px rgba(0,0,0,.62));
+      will-change: opacity, transform, filter;
+      position:relative;
+      z-index:2;
+    }
+    .flame-img.in{
+      opacity:1;
+      transform: translateY(0) scale(1);
+      animation: flameBreath 8.8s ease-in-out infinite alternate;
+    }
+    @keyframes flameBreath{
+      0%   { filter: drop-shadow(0 0 14px rgba(230,118,144,.14)); }
+      100% { filter: drop-shadow(0 0 26px rgba(230,118,144,.22)); }
+    }
+
+    /* 宣言卡（維持） */
     .manifest{
       width:min(760px, 92vw);
-      margin-top:10px;
+      margin-top:0;
       padding:18px 16px;
       border-radius:18px;
       background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,.015) 60%),
@@ -555,27 +630,6 @@
       backdrop-filter: blur(6px);
       position:relative;
       z-index:2;
-    }
-
-    .flame-img{
-      width: clamp(120px, 22vw, 220px);
-      margin: -6px 0 14px;
-      opacity:0;
-      transform: scale(.94);
-      transition: opacity 1s ease, transform 1s ease, filter 1.2s ease;
-      filter: drop-shadow(0 12px 28px rgba(0,0,0,.56));
-      will-change: opacity, transform, filter;
-      position:relative;
-      z-index:2;
-    }
-    .flame-img.in{
-      opacity:1;
-      transform: scale(1);
-      animation: flameBreath 6.8s ease-in-out infinite alternate;
-    }
-    @keyframes flameBreath{
-      0%   { filter: drop-shadow(0 0 16px rgba(230,118,144,.18)); }
-      100% { filter: drop-shadow(0 0 30px rgba(230,118,144,.34)); }
     }
 
     /* JOIN：收尾頁細節 + 微文案 */
@@ -626,7 +680,7 @@
     }
     .toast.show{opacity:1;}
 
-    /* ========== OUR PURPOSE：更像“儀式感的卡片” + chips 可中英切換動畫 ========== */
+    /* ========== OUR PURPOSE：儀式感卡片 + chips 主動展示動畫 ========== */
     .purpose-wrap{
       position:relative;
       width:min(760px, 92vw);
@@ -641,7 +695,6 @@
       overflow:hidden;
       z-index:2;
     }
-    /* 內部髮絲線與微粒點綴 */
     .purpose-wrap::before{
       content:"";
       position:absolute;inset:0;
@@ -652,7 +705,6 @@
       opacity:.55;
       pointer-events:none;
     }
-    /* 細緻內框線（像排版稿） */
     .purpose-wrap::after{
       content:"";
       position:absolute;inset:14px;
@@ -661,7 +713,6 @@
       pointer-events:none;
       opacity:.85;
     }
-
     .purpose-kicker{
       display:flex;
       justify-content:center;
@@ -670,7 +721,6 @@
       z-index:2;
     }
 
-    /* chips：可點擊 + 聚焦 dim + 呼吸亮 */
     .purpose-chips{
       margin-top:14px;
       display:flex;
@@ -701,10 +751,7 @@
     }
     .chip:active{ transform: scale(.985); }
 
-    .chip.dim{
-      opacity:.45;
-      border-color: rgba(255,255,255,.10);
-    }
+    .chip.dim{ opacity:.45; border-color: rgba(255,255,255,.10); }
     .chip.active{
       opacity:1;
       border-color: rgba(255,255,255,.18);
@@ -716,26 +763,22 @@
       50%{ box-shadow: 0 0 18px rgba(230,118,144,.16); }
     }
 
-    /* chip 文字：中英切換動畫（淡入 + 6px 位移） */
     .chip .t{
       display:block;
       transition: opacity .22s ease, transform .22s ease;
       will-change: opacity, transform;
       white-space:nowrap;
     }
-    .chip.swap .t{
-      opacity:0;
-      transform: translateY(6px);
-    }
-    .chip .t.in{
-      opacity:1;
-      transform:none;
-    }
+    .chip.swap .t{ opacity:0; transform: translateY(6px); }
+    .chip .t.in{ opacity:1; transform:none; }
+
+    /* 自動輪播時：更沉靜的節奏 */
+    .chip.auto{ transition-duration: .35s; }
 
     /* 無障礙：偏好減少動態 */
     @media (prefers-reduced-motion: reduce){
       .breath, .grain, .chip.active, .dot.active, .flame-img.in{ animation:none !important; }
-      .reveal, .late, .chip .t{ transition:none !important; }
+      .reveal, .late, .chip .t, .flame-frame{ transition:none !important; }
     }
   </style>
 </head>
@@ -784,8 +827,8 @@
       <div class="secno reveal" style="--d:140ms;">03</div>
 
       <div class="mark-stage" id="markStage" role="button" aria-label="Interact with brand mark" tabindex="0" data-mode="primary">
+        <div class="corner-hint" aria-hidden="true"></div>
         <img class="logo-mark" id="logoMark" src="Hlogo.png" alt="HESTIA mark" />
-        <div class="mode-hint" id="modeHint">PRIMARY • TAP TO SWITCH</div>
       </div>
 
       <div class="label reveal" style="--d:220ms;">PRIMARY MARK</div>
@@ -819,9 +862,9 @@
       </div>
 
       <div class="purpose-chips" id="purposeChips">
-        <span class="chip" role="button" tabindex="0" data-en="IDENTITY" data-zh="自我認同"><span class="t in">IDENTITY</span></span>
-        <span class="chip" role="button" tabindex="0" data-en="CONFIDENCE" data-zh="自信力量"><span class="t in">CONFIDENCE</span></span>
-        <span class="chip" role="button" tabindex="0" data-en="BELONGING" data-zh="歸屬感"><span class="t in">BELONGING</span></span>
+        <span class="chip auto" role="button" tabindex="0" data-en="IDENTITY" data-zh="自我認同"><span class="t in">IDENTITY</span></span>
+        <span class="chip auto" role="button" tabindex="0" data-en="CONFIDENCE" data-zh="自信力量"><span class="t in">CONFIDENCE</span></span>
+        <span class="chip auto" role="button" tabindex="0" data-en="BELONGING" data-zh="歸屬感"><span class="t in">BELONGING</span></span>
       </div>
     </div>
   </section>
@@ -830,33 +873,35 @@
   <section class="s4" id="s4">
     <div class="secno reveal" style="--d:140ms;">05</div>
 
-    <img class="flame-img" src="Flamemark.png" alt="The Flame Mark">
-
-    <div class="manifest">
-      <div style="display:flex;justify-content:center;margin-bottom:10px;">
-        <span class="kicker reveal" style="--d:200ms;">THE FLAME MARK</span>
+    <div class="flame-stage">
+      <div class="flame-frame" id="flameFrame" aria-hidden="true">
+        <img class="flame-img" id="flameImg" src="Flamemark.png" alt="The Flame Mark">
       </div>
 
-      <h2 class="late" data-late style="margin-bottom:12px;">標語的符號</h2>
-      <p class="late" data-late>
-        這不只是口號，而是一種信念。<br>
-        標籤又如何？那是與生俱來的特色。<br>
-        HESTIA 透過「Own Your Flame」<br>
-        無論性別、身形、背景，這些火焰屬於你自己。<br>
-        不用變成誰，你只需要更像你。
-      </p>
+      <div class="manifest">
+        <div style="display:flex;justify-content:center;margin-bottom:10px;">
+          <span class="kicker reveal" style="--d:200ms;">THE FLAME MARK</span>
+        </div>
+
+        <h2 class="late" data-late style="margin-bottom:12px;">標語的符號</h2>
+        <p class="late" data-late>
+          這不只是口號，而是一種信念。<br>
+          標籤又如何？那是與生俱來的特色。<br>
+          HESTIA 透過「Own Your Flame」<br>
+          無論性別、身形、背景，這些火焰屬於你自己。<br>
+          不用變成誰，你只需要更像你。
+        </p>
+      </div>
     </div>
   </section>
 
   <!-- ⑤ JOIN US -->
   <section class="s5" id="s5">
-    <div class="secno reveal" style="--d:140ms;">06</div>
-
     <h2 class="reveal">JOIN US</h2>
-    <p class="reveal">加入火種名單，搶先收到最新消息與限定優惠。</p>
+    <p class="reveal">加入HESTIA TAIWAN，搶先收到最新消息與限定優惠。</p>
 
     <div class="join-wrap">
-      <div class="microcopy reveal" style="--d:220ms;">我們只寄重要更新，不打擾你的日常。</div>
+      <div class="microcopy reveal" style="--d:220ms;">我們將很快開始，立即行動！</div>
 
       <form id="notify"
             action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
@@ -874,7 +919,7 @@
     </div>
   </section>
 
-  <div class="toast" id="toast">已加入火種名單。我們會在第一時間帶你看到最新消息。</div>
+  <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
   <script>
     /* reveal + 圖片 + LOGO 展台揭幕 */
@@ -884,7 +929,7 @@
       });
     },{threshold:.22});
 
-    document.querySelectorAll('.reveal,.logo-mark,.flame-img,#markStage').forEach(el=>{
+    document.querySelectorAll('.reveal,.logo-mark,#markStage').forEach(el=>{
       if(!el.classList.contains('in')) observer.observe(el);
     });
 
@@ -902,33 +947,22 @@
       if(!el.closest('.purpose-sub')) lateObserver.observe(el);
     });
 
-    /* LOGO PAGE：點擊怦然互動 + 展品模式切換 */
+    /* LOGO PAGE：點擊怦然互動 + 展品模式切換 + 一次性角落提示 */
     const stage = document.getElementById('markStage');
     const mark  = document.getElementById('logoMark');
-    const modeHint = document.getElementById('modeHint');
-    const modes = [
-      {key:'primary', label:'PRIMARY • TAP TO SWITCH'},
-      {key:'fabric',  label:'ON FABRIC • TAP TO SWITCH'},
-      {key:'mono',    label:'MONO • TAP TO SWITCH'}
-    ];
+    const modes = ['primary','fabric','mono'];
     let modeIdx = 0;
 
     function popOnce(){
       stage.classList.remove('pulse');
       mark.classList.remove('pop');
-      void stage.offsetWidth; // reflow
+      void stage.offsetWidth;
       stage.classList.add('pulse');
       mark.classList.add('pop');
     }
-
-    function setMode(idx){
-      modeIdx = idx % modes.length;
-      stage.setAttribute('data-mode', modes[modeIdx].key);
-      modeHint.textContent = modes[modeIdx].label;
-    }
-
     function cycleMode(){
-      setMode((modeIdx + 1) % modes.length);
+      modeIdx = (modeIdx + 1) % modes.length;
+      stage.setAttribute('data-mode', modes[modeIdx]);
       popOnce();
     }
 
@@ -939,6 +973,20 @@
         cycleMode();
       }
     });
+
+    /* 角落提示：只在第一次看見 LOGO PAGE 時呼吸一次 */
+    let logoHinted = false;
+    const logoHintObserver = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting && !logoHinted){
+          logoHinted = true;
+          stage.classList.add('hint');
+          setTimeout(()=>stage.classList.remove('hint'), 1450);
+          logoHintObserver.unobserve(stage);
+        }
+      });
+    },{threshold: .35});
+    logoHintObserver.observe(stage);
 
     /* 表單無跳轉 */
     const toast = document.getElementById('toast');
@@ -1004,19 +1052,12 @@
     },{root:null,rootMargin:'-35% 0px -35% 0px',threshold:0});
     purposeIO.observe(purposeTitleEl);
 
-    /* OUR PURPOSE：chips 中英切換動畫 + dim + 自動回穩 */
+    /* OUR PURPOSE：chips 主動展示動畫（自動輪播中英切換） */
     const chipsWrap = document.getElementById('purposeChips');
     const chips = Array.from(chipsWrap.querySelectorAll('.chip'));
-    let resetTimer = null;
-
-    function resetChips(){
-      chips.forEach(c=>{
-        c.classList.remove('dim','active','swap');
-        c.dataset.lang = c.dataset.lang || 'en';
-        const t = c.querySelector('.t');
-        t.classList.add('in');
-      });
-    }
+    let autoTimer = null;
+    let autoIdx = 0;
+    let autoRunning = false;
 
     function swapText(chip){
       const t = chip.querySelector('.t');
@@ -1032,33 +1073,85 @@
         chip.dataset.lang = next;
         requestAnimationFrame(()=>t.classList.add('in'));
         chip.classList.remove('swap');
-      }, 170);
+      }, 190);
     }
 
     function focusChip(chip){
-      if(resetTimer) clearTimeout(resetTimer);
-
       chips.forEach(c=>{
         c.classList.toggle('dim', c !== chip);
         c.classList.toggle('active', c === chip);
       });
-
       swapText(chip);
 
-      resetTimer = setTimeout(()=>{
+      setTimeout(()=>{
         chips.forEach(c=>c.classList.remove('dim','active'));
-      }, 1200);
+      }, 1400);
     }
 
+    function runAuto(){
+      if(autoRunning) return;
+      autoRunning = true;
+      autoTimer = setInterval(()=>{
+        const chip = chips[autoIdx % chips.length];
+        focusChip(chip);
+        autoIdx++;
+      }, 2200); /* 沉靜節奏 */
+    }
+
+    function stopAuto(){
+      autoRunning = false;
+      if(autoTimer) clearInterval(autoTimer);
+      autoTimer = null;
+    }
+
+    /* 進入 Purpose 後才開始主動展示；離開就停止 */
+    const purposeAutoIO = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          runAuto();
+        }else{
+          stopAuto();
+        }
+      });
+    },{threshold:.35});
+    purposeAutoIO.observe(purposeSection);
+
+    /* 仍保留點選可互動（點一下就打斷自動 6 秒） */
+    let manualCooldown = null;
     chips.forEach(chip=>{
-      chip.addEventListener('click', ()=>focusChip(chip));
+      chip.addEventListener('click', ()=>{
+        stopAuto();
+        focusChip(chip);
+        if(manualCooldown) clearTimeout(manualCooldown);
+        manualCooldown = setTimeout(()=>runAuto(), 6000);
+      });
       chip.addEventListener('keydown', (e)=>{
         if(e.key === 'Enter' || e.key === ' '){
           e.preventDefault();
+          stopAuto();
           focusChip(chip);
+          if(manualCooldown) clearTimeout(manualCooldown);
+          manualCooldown = setTimeout(()=>runAuto(), 6000);
         }
       });
     });
+
+    /* FLAME MARK：高級慢呈現（展櫃揭幕 + 打光掃過） */
+    const flameFrame = document.getElementById('flameFrame');
+    const flameImg = document.getElementById('flameImg');
+
+    const flameIO = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          flameFrame.classList.add('in');
+          // 先揭幕，再慢慢亮出圖，再打一束光
+          setTimeout(()=>flameImg.classList.add('in'), 520);
+          setTimeout(()=>flameFrame.classList.add('sheen'), 1200);
+          flameIO.unobserve(e.target);
+        }
+      });
+    },{threshold:.28});
+    flameIO.observe(flameFrame);
 
     /* 章節點：高亮目前章節 + 點擊跳轉 + 「吸氣式」過場 */
     const breath = document.getElementById('breath');
@@ -1082,13 +1175,10 @@
       setActiveDot(best.idx);
 
       if(best.idx !== lastActive){
-        // 吸氣：收縮一下再回穩
         breath.classList.add('transition');
         requestAnimationFrame(()=>{
           breath.classList.add('release');
-          setTimeout(()=>{
-            breath.classList.remove('transition','release');
-          }, 620);
+          setTimeout(()=>breath.classList.remove('transition','release'), 620);
         });
         lastActive = best.idx;
       }

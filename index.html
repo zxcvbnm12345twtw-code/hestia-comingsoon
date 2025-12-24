@@ -106,7 +106,7 @@
     .s1{background:linear-gradient(180deg,#000,#000);}
     .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
     .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
-    .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));} /* Flame Mark */
+    .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
     .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
     .s5{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
     .s6{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
@@ -385,11 +385,6 @@
     }
     .info-card .mini{ margin-bottom:10px; display:flex; justify-content:center; }
 
-    .frame-size{
-      width:min(220px, 72vw);
-      aspect-ratio: 1 / 1;
-    }
-
     /* Primary Mark */
     .s3{ padding-top:70px; padding-bottom:70px; }
     .s3 .stack{
@@ -599,7 +594,7 @@
     }
     .sanctuary-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
 
-    /* FLAME MARK (page) - 回到你說的「標語的符號」版本 + 字級更接近品牌識別頁 */
+    /* FLAME MARK */
     .flame-stage{
       position:relative;
       width:min(var(--wrap), 92vw);
@@ -677,7 +672,6 @@
       max-width:100%;
     }
 
-    /* Rest */
     .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
     .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); max-width:100%; }
 
@@ -809,7 +803,6 @@
     .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); overflow-wrap:anywhere; word-break:break-word; }
     .arch-actions{ margin-top:14px; display:flex; justify-content:center; position:relative; z-index:2; flex-wrap:wrap; gap:10px; }
 
-    /* Hearth single card centered */
     .hearth-wrap{
       width:min(var(--wrap), 92vw);
       margin:0 auto;
@@ -939,7 +932,6 @@
   <div class="breath" id="breath" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- Dots -->
   <nav class="dots" id="dotsNav" aria-label="Section navigation">
     <button class="dot" data-target="s1" data-label="HERO" aria-label="Go to Hero"></button>
     <button class="dot" data-target="s2" data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
@@ -952,7 +944,6 @@
     <button class="dot" data-target="s8" data-label="HEARTH" aria-label="Go to Collective Hearth"></button>
   </nav>
 
-  <!-- ① Hero -->
   <section class="s1" id="s1">
     <div class="brand">
       <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
@@ -962,7 +953,6 @@
     <div class="arrow">↓</div>
   </section>
 
-  <!-- ② WHO WE ARE -->
   <section class="s2" id="s2">
     <div class="secno reveal" style="--d:120ms;">02</div>
     <h2 class="reveal in who-title" style="--d:160ms;">WHO <span class="we-accent">WE</span> ARE?</h2>
@@ -976,7 +966,6 @@
     </div>
   </section>
 
-  <!-- ③ PRIMARY MARK -->
   <section class="s3" id="s3">
     <div class="stack">
       <div class="secno reveal" style="--d:140ms;">03</div>
@@ -999,7 +988,6 @@
     </div>
   </section>
 
-  <!-- ④ FLAME MARK -->
   <section class="s4b" id="s4b">
     <div class="secno reveal" style="--d:140ms;">04</div>
 
@@ -1025,7 +1013,6 @@
     </div>
   </section>
 
-  <!-- ⑤ Digital Sanctuary -->
   <section class="s4" id="s4">
     <div class="secno reveal" style="--d:140ms;">05</div>
 
@@ -1043,7 +1030,6 @@
     </div>
   </section>
 
-  <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
     <div class="secno reveal" style="--d:140ms;">06</div>
 
@@ -1104,7 +1090,6 @@
     </div>
   </section>
 
-  <!-- ⑦ Introspective Reflection -->
   <section class="s6" id="s6">
     <div class="secno reveal" style="--d:140ms;">07</div>
 
@@ -1150,7 +1135,6 @@
     </div>
   </section>
 
-  <!-- ⑧ Archetype Result -->
   <section class="s7" id="s7">
     <div class="secno reveal" style="--d:140ms;">08</div>
 
@@ -1186,7 +1170,6 @@
     </div>
   </section>
 
-  <!-- ⑨ Collective Hearth -->
   <section class="s8" id="s8">
     <div class="secno reveal" style="--d:140ms;">09</div>
 
@@ -1233,528 +1216,549 @@
   <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
   <script>
-    const $ = (s, r=document) => r.querySelector(s);
-    const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+    // 穩定化：所有初始化等 DOMReady，避免某些 host/框架載入順序造成整頁炸掉
+    document.addEventListener('DOMContentLoaded', () => {
+      const $ = (s, r=document) => r.querySelector(s);
+      const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
-    function inView(el, topRatio=0.78, bottomRatio=0.18){
-      if(!el) return false;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight;
-      const topLine = vh * topRatio;
-      const bottomLine = vh * bottomRatio;
-      return (r.top <= topLine) && (r.bottom >= bottomLine);
-    }
-
-    /* Reveal */
-    let ticking = false;
-    function rafCheck(){
-      ticking = false;
-
-      $$('.reveal').forEach(el=>{
-        if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-      });
-      $$('.late[data-late]').forEach(el=>{
-        if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-      });
-
-      if(!logoRevealed && logoFrame && inView(logoFrame, 0.80, 0.15)){
-        logoRevealed = true;
-        logoFrame.classList.add('in');
-        setTimeout(()=>logoMark.classList.add('in'), 520);
-        setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
+      function inView(el, topRatio=0.78, bottomRatio=0.18){
+        if(!el) return false;
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const topLine = vh * topRatio;
+        const bottomLine = vh * bottomRatio;
+        return (r.top <= topLine) && (r.bottom >= bottomLine);
       }
 
-      if(!flameRevealed && flameFrame && inView(flameFrame, 0.80, 0.15)){
-        flameRevealed = true;
-        flameFrame.classList.add('in');
-        setTimeout(()=>flameImg.classList.add('in'), 520);
+      /* Reveal */
+      let ticking = false;
+
+      let logoRevealed = false;
+      let flameRevealed = false;
+
+      const logoFrame = $('#logoFrame');
+      const logoMark  = $('#logoMark');
+
+      const flameFrame = $('#flameFrame');
+      const flameImg   = $('#flameImg');
+
+      function rafCheck(){
+        ticking = false;
+
+        $$('.reveal').forEach(el=>{
+          if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
+        });
+        $$('.late[data-late]').forEach(el=>{
+          if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
+        });
+
+        if(!logoRevealed && logoFrame && logoMark && inView(logoFrame, 0.80, 0.15)){
+          logoRevealed = true;
+          logoFrame.classList.add('in');
+          setTimeout(()=>logoMark.classList.add('in'), 520);
+          setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
+        }
+
+        if(!flameRevealed && flameFrame && flameImg && inView(flameFrame, 0.80, 0.15)){
+          flameRevealed = true;
+          flameFrame.classList.add('in');
+          setTimeout(()=>flameImg.classList.add('in'), 520);
+        }
       }
-    }
-    function requestCheck(){
-      if(ticking) return;
-      ticking = true;
-      requestAnimationFrame(rafCheck);
-    }
-    window.addEventListener('scroll', requestCheck, {passive:true});
-    window.addEventListener('resize', requestCheck);
-    window.addEventListener('load', ()=>{
+
+      function requestCheck(){
+        if(ticking) return;
+        ticking = true;
+        requestAnimationFrame(rafCheck);
+      }
+
+      window.addEventListener('scroll', requestCheck, {passive:true});
+      window.addEventListener('resize', requestCheck);
+
       requestCheck();
       setTimeout(requestCheck, 120);
       setTimeout(requestCheck, 420);
-    });
 
-    /* LOGO click cycle */
-    const logoFrame = $('#logoFrame');
-    const logoMark  = $('#logoMark');
-    const modes = ['primary','fabric','mono'];
-    let modeIdx = 0;
-    function popOnce(){
-      logoFrame.classList.remove('pulse');
-      logoMark.classList.remove('pop');
-      void logoFrame.offsetWidth;
-      logoFrame.classList.add('pulse');
-      logoMark.classList.add('pop');
-    }
-    function cycleMode(){
-      modeIdx = (modeIdx + 1) % modes.length;
-      logoFrame.setAttribute('data-mode', modes[modeIdx]);
-      popOnce();
-    }
-    if(logoFrame){
-      logoFrame.addEventListener('click', cycleMode);
-      logoFrame.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter' || e.key === ' '){
-          e.preventDefault();
-          cycleMode();
+      /* LOGO click cycle */
+      if(logoFrame && logoMark){
+        const modes = ['primary','fabric','mono'];
+        let modeIdx = 0;
+
+        function popOnce(){
+          logoFrame.classList.remove('pulse');
+          logoMark.classList.remove('pop');
+          void logoFrame.offsetWidth;
+          logoFrame.classList.add('pulse');
+          logoMark.classList.add('pop');
         }
-      });
-    }
-
-    let logoRevealed = false;
-    let flameRevealed = false;
-    const flameFrame = $('#flameFrame');
-    const flameImg   = $('#flameImg');
-
-    /* Aesthetic */
-    const moods = $$('#alignGrid .mood');
-    const alignPicked = $('#alignPicked');
-    const alignPicked2 = $('#alignPicked2');
-
-    function setTheme(theme, value){
-      document.body.setAttribute('data-theme', theme);
-      if(alignPicked) alignPicked.textContent = value;
-      if(alignPicked2) alignPicked2.textContent = value;
-
-      localStorage.setItem('hestia_theme', theme);
-      localStorage.setItem('hestia_alignment', value);
-
-      moods.forEach(m=>{
-        const on = (m.dataset.theme === theme);
-        m.classList.toggle('active', on);
-        m.classList.toggle('dim', !on);
-      });
-      setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
-    }
-    function initTheme(){
-      const savedTheme = localStorage.getItem('hestia_theme') || 'embers';
-      const savedAlign = localStorage.getItem('hestia_alignment') || (savedTheme === 'dawn' ? 'DAWN' : savedTheme === 'stone' ? 'STONE' : 'EMBERS');
-      setTheme(savedTheme, savedAlign);
-    }
-    initTheme();
-    moods.forEach(m=>{
-      const act = ()=> setTheme(m.dataset.theme, m.dataset.value);
-      m.addEventListener('click', act);
-      m.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter' || e.key === ' '){
-          e.preventDefault();
-          act();
+        function cycleMode(){
+          modeIdx = (modeIdx + 1) % modes.length;
+          logoFrame.setAttribute('data-mode', modes[modeIdx]);
+          popOnce();
         }
-      });
-    });
 
-    /* Archetype (27 combos, but front-end只顯示一個結果；不談剪裁/工藝) */
-    const unlockBtn = $('#unlockBtn');
-    const archPickedEl = $('#archPicked');
-    const archTitle = $('#archTitle');
-    const archKey   = $('#archKey');
-    const archCore  = $('#archCore');
-    const archRhythm= $('#archRhythm');
-    const archColor = $('#archColor');
-
-    const answers = { q1:null, q2:null, q3:null };
-    const opts = $$('.opt');
-
-    const AXIS = {
-      q1: { A:{k:'QUIET ENTRY', zh:'安靜入場'}, B:{k:'RHYTHM ENTRY', zh:'節奏入場'}, C:{k:'DIRECT ENTRY', zh:'直接入場'} },
-      q2: { A:{k:'SENSING', zh:'感受優先'},   B:{k:'FLOW', zh:'流動優先'},   C:{k:'PRECISION', zh:'精準優先'} },
-      q3: { A:{k:'GROUND', zh:'回到安定'},    B:{k:'RELEASE', zh:'釋放鬆開'}, C:{k:'COMPLETE', zh:'完成收束'} }
-    };
-
-    function animalFromAlignment(align){
-      if(align === 'DAWN'){
-        return {
-          animal:'貓頭鷹',
-          en:'OWL',
-          colorText:'冷霧灰 × 鼠尾草綠。乾淨、節制，留一點神秘的呼吸。',
-          tone:'你擅長在安靜裡整理自己，先把世界降噪，才進入狀態。'
-        };
+        logoFrame.addEventListener('click', cycleMode);
+        logoFrame.addEventListener('keydown', (e)=>{
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            cycleMode();
+          }
+        });
       }
-      if(align === 'EMBERS'){
-        return {
-          animal:'鳳凰',
-          en:'PHOENIX',
-          colorText:'赤陶棕 × 暖橙金。彩度更高，但熱度是往內走的。',
-          tone:'你需要一點溫度才能開始，一旦對了，整個人會被喚醒。'
-        };
+
+      /* Aesthetic */
+      const moods = $$('#alignGrid .mood');
+      const alignPicked = $('#alignPicked');
+      const alignPicked2 = $('#alignPicked2');
+
+      function setTheme(theme, value){
+        document.body.setAttribute('data-theme', theme);
+        if(alignPicked) alignPicked.textContent = value;
+        if(alignPicked2) alignPicked2.textContent = value;
+
+        localStorage.setItem('hestia_theme', theme);
+        localStorage.setItem('hestia_alignment', value);
+
+        moods.forEach(m=>{
+          const on = (m.dataset.theme === theme);
+          m.classList.toggle('active', on);
+          m.classList.toggle('dim', !on);
+        });
+        setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
       }
-      return {
-        animal:'雪豹',
-        en:'SNOW LEOPARD',
-        colorText:'石墨黑 × 午夜藍。安靜、銳利，像凝視一樣收斂。',
-        tone:'你把專注收得很深，一旦進入狀態，雜訊自然退後。'
+
+      function initTheme(){
+        const savedTheme = localStorage.getItem('hestia_theme') || 'embers';
+        const savedAlign = localStorage.getItem('hestia_alignment') || (savedTheme === 'dawn' ? 'DAWN' : savedTheme === 'stone' ? 'STONE' : 'EMBERS');
+        setTheme(savedTheme, savedAlign);
+      }
+
+      if(moods.length){
+        initTheme();
+        moods.forEach(m=>{
+          const act = ()=> setTheme(m.dataset.theme, m.dataset.value);
+          m.addEventListener('click', act);
+          m.addEventListener('keydown', (e)=>{
+            if(e.key === 'Enter' || e.key === ' '){
+              e.preventDefault();
+              act();
+            }
+          });
+        });
+      }
+
+      /* Archetype */
+      const unlockBtn = $('#unlockBtn');
+      const archPickedEl = $('#archPicked');
+      const archTitle = $('#archTitle');
+      const archKey   = $('#archKey');
+      const archCore  = $('#archCore');
+      const archRhythm= $('#archRhythm');
+      const archColor = $('#archColor');
+
+      const answers = { q1:null, q2:null, q3:null };
+      const opts = $$('.opt');
+
+      const AXIS = {
+        q1: { A:{k:'QUIET ENTRY', zh:'安靜入場'}, B:{k:'RHYTHM ENTRY', zh:'節奏入場'}, C:{k:'DIRECT ENTRY', zh:'直接入場'} },
+        q2: { A:{k:'SENSING', zh:'感受優先'},   B:{k:'FLOW', zh:'流動優先'},   C:{k:'PRECISION', zh:'精準優先'} },
+        q3: { A:{k:'GROUND', zh:'回到安定'},    B:{k:'RELEASE', zh:'釋放鬆開'}, C:{k:'COMPLETE', zh:'完成收束'} }
       };
-    }
 
-    function buildArchetype(){
-      const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
-      const a = animalFromAlignment(align);
+      function animalFromAlignment(align){
+        if(align === 'DAWN'){
+          return {
+            animal:'貓頭鷹',
+            en:'OWL',
+            colorText:'冷霧灰 × 鼠尾草綠。乾淨、節制，留一點神秘的呼吸。',
+            tone:'你擅長在安靜裡整理自己，先把世界降噪，才進入狀態。'
+          };
+        }
+        if(align === 'EMBERS'){
+          return {
+            animal:'鳳凰',
+            en:'PHOENIX',
+            colorText:'赤陶棕 × 暖橙金。彩度更高，但熱度是往內走的。',
+            tone:'你需要一點溫度才能開始，一旦對了，整個人會被喚醒。'
+          };
+        }
+        return {
+          animal:'雪豹',
+          en:'SNOW LEOPARD',
+          colorText:'石墨黑 × 午夜藍。安靜、銳利，像凝視一樣收斂。',
+          tone:'你把專注收得很深，一旦進入狀態，雜訊自然退後。'
+        };
+      }
 
-      const a1 = AXIS.q1[answers.q1];
-      const a2 = AXIS.q2[answers.q2];
-      const a3 = AXIS.q3[answers.q3];
+      function buildArchetype(){
+        const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
+        const a = animalFromAlignment(align);
 
-      const key = `${a.en} · ${a1.k} / ${a2.k} / ${a3.k}`;
-      const title = `${a.animal｜${a1.zh}}`;
+        const a1 = AXIS.q1[answers.q1];
+        const a2 = AXIS.q2[answers.q2];
+        const a3 = AXIS.q3[answers.q3];
 
-      // 27 變體：用三軸組合出描述（不露「你被研究」的口吻）
-      const core = [
-        a.tone,
-        `你更像是「${a1.zh}」的人：先把自己放到對的位置，再讓身體接手。`,
-        `過程中你偏向「${a2.zh}」，所以你會在細節裡找到安心感。`,
-        `結束後你希望是「${a3.zh}」，這會影響你對運動的黏著度。`,
-        `這不是分類，也不會被比較；它只是你此刻的傾向。`
-      ].join(' ');
+        const key = `${a.en} · ${a1.k} / ${a2.k} / ${a3.k}`;
+        const title = `${a.animal｜${a1.zh}}`;
 
-      const rhythm = (()=> {
-        const entry = answers.q1, focus = answers.q2, after = answers.q3;
-        const line1 = entry==='A' ? '先慢後穩：給自己 5–8 分鐘安靜熱身，讓節奏自然對上。'
-                    : entry==='B' ? '先帶起來：用有節奏的暖身把身體叫醒，越動越進入狀態。'
-                    : '一開始就進：你適合明確的開始訊號，進場後就把注意力鎖住。';
+        const core = [
+          a.tone,
+          `你更像是「${a1.zh}」的人：先把自己放到對的位置，再讓身體接手。`,
+          `過程中你偏向「${a2.zh}」，所以你會在細節裡找到安心感。`,
+          `結束後你希望是「${a3.zh}」，這會影響你對運動的黏著度。`,
+          `這不是分類，也不會被比較；它只是你此刻的傾向。`
+        ].join(' ');
 
-        const line2 = focus==='A' ? '你在意感受：把注意力放在呼吸、肌肉收縮與節奏一致，會更容易持續。'
-                    : focus==='B' ? '你在意流動：用連貫的段落或循環式安排，會讓你更有「對了」的感覺。'
-                    : '你在意精準：把目標、組數、休息寫清楚，你會練得更穩也更有效率。';
+        const rhythm = (()=> {
+          const entry = answers.q1, focus = answers.q2, after = answers.q3;
+          const line1 = entry==='A' ? '先慢後穩：給自己 5–8 分鐘安靜熱身，讓節奏自然對上。'
+                      : entry==='B' ? '先帶起來：用有節奏的暖身把身體叫醒，越動越進入狀態。'
+                      : '一開始就進：你適合明確的開始訊號，進場後就把注意力鎖住。';
 
-        const line3 = after==='A' ? '收尾要安定：留 2–4 分鐘緩和，讓你帶著安定離開。'
-                    : after==='B' ? '收尾要釋放：用拉伸或慢呼吸把緊繃放掉，你會更願意回來。'
-                    : '收尾要完成：用簡單的結束儀式（記錄、回顧）讓你有明確的完成感。';
+          const line2 = focus==='A' ? '你在意感受：把注意力放在呼吸、肌肉收縮與節奏一致，會更容易持續。'
+                      : focus==='B' ? '你在意流動：用連貫的段落或循環式安排，會讓你更有「對了」的感覺。'
+                      : '你在意精準：把目標、組數、休息寫清楚，你會練得更穩也更有效率。';
 
-        return `${line1} ${line2} ${line3}`;
+          const line3 = after==='A' ? '收尾要安定：留 2–4 分鐘緩和，讓你帶著安定離開。'
+                      : after==='B' ? '收尾要釋放：用拉伸或慢呼吸把緊繃放掉，你會更願意回來。'
+                      : '收尾要完成：用簡單的結束儀式（記錄、回顧）讓你有明確的完成感。';
+
+          return `${line1} ${line2} ${line3}`;
+        })();
+
+        return { key, title, core, rhythm, colorText: a.colorText, archetypeName: `${a.animal｜${a1.zh}}` };
+      }
+
+      function updateUnlock(){
+        if(unlockBtn) unlockBtn.disabled = !Object.values(answers).every(Boolean);
+      }
+
+      function setOptState(q, chosenEl){
+        const group = opts.filter(o=>o.dataset.q === q);
+        group.forEach(o=>{
+          const on = (o === chosenEl);
+          o.classList.toggle('active', on);
+          o.classList.toggle('dim', !on);
+        });
+        setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 1400);
+      }
+
+      opts.forEach(o=>{
+        const act = ()=>{
+          const q = o.dataset.q;
+          const a = o.dataset.a;
+          answers[q] = a;
+          setOptState(q, o);
+          updateUnlock();
+        };
+        o.addEventListener('click', act);
+        o.addEventListener('keydown', (e)=>{
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            act();
+          }
+        });
+      });
+
+      if(unlockBtn){
+        unlockBtn.addEventListener('click', ()=>{
+          const r = buildArchetype();
+
+          if(archTitle) archTitle.textContent = r.title;
+          if(archKey)   archKey.textContent   = r.key;
+          if(archCore)  archCore.textContent  = r.core;
+          if(archRhythm)archRhythm.textContent= r.rhythm;
+          if(archColor) archColor.textContent = r.colorText;
+
+          localStorage.setItem('hestia_archetype', r.archetypeName);
+          localStorage.setItem('hestia_archetype_key', r.key);
+
+          if(archPickedEl) archPickedEl.textContent = r.archetypeName;
+
+          setTimeout(()=>{
+            const s7 = document.getElementById('s7');
+            if(s7) s7.scrollIntoView({behavior:'smooth', block:'start'});
+            setTimeout(requestCheck, 180);
+          }, 420);
+        });
+      }
+
+      const toHearthBtn = $('#toHearthBtn');
+      if(toHearthBtn){
+        toHearthBtn.addEventListener('click', ()=>{
+          const s8 = document.getElementById('s8');
+          if(s8) s8.scrollIntoView({behavior:'smooth', block:'start'});
+          setTimeout(requestCheck, 180);
+        });
+      }
+
+      (function hydrateSaved(){
+        const savedArch = localStorage.getItem('hestia_archetype');
+        const savedKey  = localStorage.getItem('hestia_archetype_key');
+        if(savedArch && archPickedEl) archPickedEl.textContent = savedArch;
+        if(savedArch && savedKey && archTitle && archKey){
+          archTitle.textContent = savedArch;
+          archKey.textContent = savedKey;
+        }
+        const savedAlign = localStorage.getItem('hestia_alignment');
+        if(savedAlign){
+          if(alignPicked) alignPicked.textContent = savedAlign;
+          if(alignPicked2) alignPicked2.textContent = savedAlign;
+        }
       })();
 
-      return { key, title, core, rhythm, colorText: a.colorText, archetypeName: `${a.animal｜${a1.zh}}` };
-    }
+      /* Toast + GForm */
+      const toast = $('#toast');
+      const iframe = $('#hidden_iframe');
+      let submittedAt = 0;
 
-    function updateUnlock(){
-      if(unlockBtn) unlockBtn.disabled = !Object.values(answers).every(Boolean);
-    }
-
-    function setOptState(q, chosenEl){
-      const group = opts.filter(o=>o.dataset.q === q);
-      group.forEach(o=>{
-        const on = (o === chosenEl);
-        o.classList.toggle('active', on);
-        o.classList.toggle('dim', !on);
-      });
-      setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 1400);
-    }
-
-    opts.forEach(o=>{
-      const act = ()=>{
-        const q = o.dataset.q;
-        const a = o.dataset.a;
-        answers[q] = a;
-        setOptState(q, o);
-        updateUnlock();
-      };
-      o.addEventListener('click', act);
-      o.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter' || e.key === ' '){
-          e.preventDefault();
-          act();
+      window.submitGForm = function submitGForm(e){
+        const input = $('#email');
+        const email = (input && input.value ? input.value : '').trim();
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+          alert('請輸入有效的 Email');
+          return false;
         }
-      });
-    });
 
-    if(unlockBtn){
-      unlockBtn.addEventListener('click', ()=>{
-        const r = buildArchetype();
+        const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
+        const theme = localStorage.getItem('hestia_theme') || 'embers';
+        const arch  = localStorage.getItem('hestia_archetype') || '';
 
-        archTitle.textContent = r.title;
-        archKey.textContent   = r.key;
-        archCore.textContent  = r.core;
-        archRhythm.textContent= r.rhythm;
-        archColor.textContent = r.colorText;
+        const fa = $('#f_alignment');
+        const ft = $('#f_theme');
+        const far = $('#f_archetype');
+        if(fa) fa.value = align;
+        if(ft) ft.value = theme;
+        if(far) far.value = arch;
 
-        localStorage.setItem('hestia_archetype', r.archetypeName);
-        localStorage.setItem('hestia_archetype_key', r.key);
+        submittedAt = Date.now();
 
-        if(archPickedEl) archPickedEl.textContent = r.archetypeName;
+        const tendBtn = $('#tendBtn');
+        castSparkFromElement(tendBtn);
+        setCount(getCount()+1);
+        applyLevel();
 
-        setTimeout(()=>{
-          const s7 = document.getElementById('s7');
-          if(s7) s7.scrollIntoView({behavior:'smooth', block:'start'});
-          setTimeout(requestCheck, 180);
-        }, 420);
-      });
-    }
-
-    const toHearthBtn = $('#toHearthBtn');
-    if(toHearthBtn){
-      toHearthBtn.addEventListener('click', ()=>{
-        const s8 = document.getElementById('s8');
-        if(s8) s8.scrollIntoView({behavior:'smooth', block:'start'});
-        setTimeout(requestCheck, 180);
-      });
-    }
-
-    (function hydrateSaved(){
-      const savedArch = localStorage.getItem('hestia_archetype');
-      const savedKey  = localStorage.getItem('hestia_archetype_key');
-      if(savedArch && archPickedEl) archPickedEl.textContent = savedArch;
-      if(savedArch && savedKey){
-        archTitle.textContent = savedArch;
-        archKey.textContent = savedKey;
-      }
-      const savedAlign = localStorage.getItem('hestia_alignment');
-      if(savedAlign){
-        if(alignPicked) alignPicked.textContent = savedAlign;
-        if(alignPicked2) alignPicked2.textContent = savedAlign;
-      }
-    })();
-
-    /* Toast + GForm */
-    const toast = $('#toast');
-    const iframe = $('#hidden_iframe');
-    let submittedAt = 0;
-
-    function submitGForm(e){
-      const input = $('#email');
-      const email = (input.value||'').trim();
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-        alert('請輸入有效的 Email');
-        return false;
+        return true;
       }
 
-      const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
-      const theme = localStorage.getItem('hestia_theme') || 'embers';
-      const arch  = localStorage.getItem('hestia_archetype') || '';
+      if(iframe){
+        iframe.addEventListener('load',()=>{
+          if(Date.now()-submittedAt<350) return;
+          const em = $('#email');
+          if(em) em.value='';
+          if(toast){
+            toast.classList.add('show');
+            setTimeout(()=>toast.classList.remove('show'),2600);
+          }
+        });
+      }
 
-      $('#f_alignment').value = align;
-      $('#f_theme').value = theme;
-      $('#f_archetype').value = arch;
+      /* Dots behavior */
+      const breath = $('#breath');
+      const sections = ['s1','s2','s3','s4b','s4','s5','s6','s7','s8']
+        .map(id=>document.getElementById(id)).filter(Boolean);
+      const dots = $$('.dot');
 
-      submittedAt = Date.now();
+      function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
 
-      castSparkFromElement($('#tendBtn'));
-      setCount(getCount()+1);
+      let lastActive = 0;
+      function updateActiveDot(){
+        const vh = window.innerHeight;
+        let best = {idx:0, score:999999};
+        sections.forEach((sec, idx)=>{
+          const r = sec.getBoundingClientRect();
+          const center = r.top + r.height/2;
+          const score = Math.abs(center - vh/2);
+          if(score < best.score) best = {idx, score};
+        });
+        setActiveDot(best.idx);
+
+        if(best.idx !== lastActive && breath){
+          breath.classList.add('transition');
+          requestAnimationFrame(()=>{
+            breath.classList.add('release');
+            setTimeout(()=>breath.classList.remove('transition','release'), 620);
+          });
+          lastActive = best.idx;
+        }
+      }
+
+      dots.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const id = btn.getAttribute('data-target');
+          const target = document.getElementById(id);
+          if(!target) return;
+          target.scrollIntoView({behavior:'smooth', block:'start'});
+          setTimeout(requestCheck, 120);
+          setTimeout(requestCheck, 520);
+        }, {passive:true});
+      });
+
+      const dotsNav = $('#dotsNav');
+      let hinted = false;
+      function onFirstScroll(){
+        if(hinted) return;
+        hinted = true;
+        if(dotsNav) dotsNav.classList.add('hint');
+        setTimeout(()=>dotsNav && dotsNav.classList.remove('hint'), 1200);
+        window.removeEventListener('scroll', onFirstScroll);
+      }
+      window.addEventListener('scroll', onFirstScroll, {passive:true});
+
+      window.addEventListener('scroll', ()=>{ requestAnimationFrame(updateActiveDot); }, {passive:true});
+      window.addEventListener('resize', ()=>requestAnimationFrame(updateActiveDot));
+      requestAnimationFrame(updateActiveDot);
+      setTimeout(()=>requestAnimationFrame(updateActiveDot), 240);
+
+      setTimeout(requestCheck, 60);
+      setTimeout(()=>{ requestCheck(); requestAnimationFrame(updateActiveDot); }, 260);
+
+      /* =========================
+         Collective Hearth (Canvas 2D)
+      ========================== */
+      const canvas = $('#flameCanvas');
+      if(!canvas) return;
+
+      const ctx = canvas.getContext && canvas.getContext('2d', { alpha:true });
+      if(!ctx) return; // 取不到 context 就跳過動畫，避免整頁掛掉
+
+      let W=0,H=0, dpr=1;
+
+      function resizeCanvas(){
+        const rect = canvas.getBoundingClientRect();
+        dpr = Math.min(2, window.devicePixelRatio || 1);
+        W = Math.max(1, Math.floor(rect.width * dpr));
+        H = Math.max(1, Math.floor(rect.height * dpr));
+        canvas.width = W;
+        canvas.height = H;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      const particles = [];
+      let running = true;
+      let boost = 0;
+      let globalIntensity = 1.0;
+
+      const HEARTH_KEY = 'hestia_hearth_count';
+      const hearthLevelEl = $('#hearthLevel');
+
+      function getCount(){
+        const v = parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
+        return Number.isFinite(v) ? v : 37;
+      }
+      function setCount(n){
+        localStorage.setItem(HEARTH_KEY, String(n));
+      }
+      function levelFromCount(n){
+        if(n < 50) return 'Ember';
+        if(n < 150) return 'Glow';
+        if(n < 350) return 'Warmth';
+        if(n < 700) return 'Hearth';
+        return 'Flame';
+      }
+      function applyLevel(){
+        const n = getCount();
+        if(hearthLevelEl) hearthLevelEl.textContent = levelFromCount(n);
+        const base = (n < 50) ? 0.92 :
+                     (n < 150) ? 0.98 :
+                     (n < 350) ? 1.04 :
+                     (n < 700) ? 1.10 : 1.16;
+        globalIntensity = base;
+      }
       applyLevel();
 
-      return true;
-    }
-
-    if(iframe){
-      iframe.addEventListener('load',()=>{
-        if(Date.now()-submittedAt<350) return;
-        $('#email').value='';
-        toast.classList.add('show');
-        setTimeout(()=>toast.classList.remove('show'),2600);
-      });
-    }
-
-    /* Dots behavior */
-    const breath = $('#breath');
-    const sections = ['s1','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id)).filter(Boolean);
-    const dots = $$('.dot');
-
-    function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
-
-    let lastActive = 0;
-    function updateActiveDot(){
-      const vh = window.innerHeight;
-      let best = {idx:0, score:999999};
-      sections.forEach((sec, idx)=>{
-        const r = sec.getBoundingClientRect();
-        const center = r.top + r.height/2;
-        const score = Math.abs(center - vh/2);
-        if(score < best.score) best = {idx, score};
-      });
-      setActiveDot(best.idx);
-
-      if(best.idx !== lastActive && breath){
-        breath.classList.add('transition');
-        requestAnimationFrame(()=>{
-          breath.classList.add('release');
-          setTimeout(()=>breath.classList.remove('transition','release'), 620);
-        });
-        lastActive = best.idx;
+      function addParticle(x, y, vx, vy, life, size, hue){
+        particles.push({x,y,vx,vy,life,maxLife:life,size,hue});
       }
-    }
 
-    dots.forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const id = btn.getAttribute('data-target');
-        const target = document.getElementById(id);
-        if(!target) return;
-        target.scrollIntoView({behavior:'smooth', block:'start'});
-        setTimeout(requestCheck, 120);
-        setTimeout(requestCheck, 520);
-      }, {passive:true});
-    });
-
-    const dotsNav = $('#dotsNav');
-    let hinted = false;
-    function onFirstScroll(){
-      if(hinted) return;
-      hinted = true;
-      if(dotsNav) dotsNav.classList.add('hint');
-      setTimeout(()=>dotsNav && dotsNav.classList.remove('hint'), 1200);
-      window.removeEventListener('scroll', onFirstScroll, {passive:true});
-    }
-    window.addEventListener('scroll', onFirstScroll, {passive:true});
-
-    function extraTick(){ updateActiveDot(); }
-    window.addEventListener('scroll', ()=>{ requestAnimationFrame(extraTick); }, {passive:true});
-    window.addEventListener('load', ()=>{
-      requestAnimationFrame(extraTick);
-      setTimeout(()=>requestAnimationFrame(extraTick), 240);
-    });
-    window.addEventListener('resize', ()=>requestAnimationFrame(extraTick));
-
-    setTimeout(requestCheck, 60);
-    setTimeout(()=>{ requestCheck(); requestAnimationFrame(extraTick); }, 260);
-
-    /* =========================
-       Collective Hearth (Canvas 2D) - 你指定火焰版本（修正語法，避免整頁掛掉）
-    ========================== */
-    const canvas = $('#flameCanvas');
-    const ctx = canvas.getContext('2d', { alpha:true });
-    let W=0,H=0, dpr=1;
-
-    function resizeCanvas(){
-      const rect = canvas.getBoundingClientRect();
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-      W = Math.floor(rect.width * dpr);
-      H = Math.floor(rect.height * dpr);
-      canvas.width = W;
-      canvas.height = H;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('load', resizeCanvas);
-    resizeCanvas();
-
-    const particles = [];
-    let running = true;
-    let boost = 0;
-    let globalIntensity = 1.0;
-
-    const HEARTH_KEY = 'hestia_hearth_count';
-    const hearthLevelEl = $('#hearthLevel');
-
-    function getCount(){
-      return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
-    }
-    function setCount(n){
-      localStorage.setItem(HEARTH_KEY, String(n));
-    }
-    function levelFromCount(n){
-      if(n < 50) return 'Ember';
-      if(n < 150) return 'Glow';
-      if(n < 350) return 'Warmth';
-      if(n < 700) return 'Hearth';
-      return 'Flame';
-    }
-    function applyLevel(){
-      const n = getCount();
-      if(hearthLevelEl) hearthLevelEl.textContent = levelFromCount(n);
-      const base = (n < 50) ? 0.92 :
-                   (n < 150) ? 0.98 :
-                   (n < 350) ? 1.04 :
-                   (n < 700) ? 1.10 : 1.16;
-      globalIntensity = base;
-    }
-    applyLevel();
-
-    function addParticle(x, y, vx, vy, life, size, hue){
-      particles.push({x,y,vx,vy,life,maxLife:life,size,hue});
-    }
-
-    function spawnBase(){
-      const baseX = W * 0.5;
-      const baseY = H * 0.82;
-      const n = 6;
-      for(let i=0;i<n;i++){
-        const spread = (0.20 + Math.random()*0.18) * W * 0.12;
-        const x = baseX + (Math.random()*2-1) * spread;
-        const y = baseY + (Math.random()*2-1) * (H*0.006);
-        const vx = (Math.random()*2-1) * (W*0.00025);
-        const vy = -(H*0.0012 + Math.random() * H*0.0016);
-        const life = 56 + Math.random()*42;
-        const size = (1.4 + Math.random()*2.4) * dpr;
-        const hue = 18 + Math.random()*28;
-        addParticle(x,y,vx,vy,life,size,hue);
+      function spawnBase(){
+        const baseX = W * 0.5;
+        const baseY = H * 0.82;
+        const n = 6;
+        for(let i=0;i<n;i++){
+          const spread = (0.20 + Math.random()*0.18) * W * 0.12;
+          const x = baseX + (Math.random()*2-1) * spread;
+          const y = baseY + (Math.random()*2-1) * (H*0.006);
+          const vx = (Math.random()*2-1) * (W*0.00025);
+          const vy = -(H*0.0012 + Math.random() * H*0.0016);
+          const life = 56 + Math.random()*42;
+          const size = (1.4 + Math.random()*2.4) * dpr;
+          const hue = 18 + Math.random()*28;
+          addParticle(x,y,vx,vy,life,size,hue);
+        }
       }
-    }
 
-    function draw(){
-      if(!running) return;
+      function draw(){
+        if(!running) return;
 
-      boost *= 0.92;
-      ctx.clearRect(0,0,W,H);
+        boost *= 0.92;
+        ctx.clearRect(0,0,W,H);
 
-      const gx = W*0.5, gy = H*0.86;
-      const g = ctx.createRadialGradient(gx,gy,0,gx,gy,H*0.42);
-      const b = 0.10 + boost*0.06;
-      g.addColorStop(0, `rgba(230,118,144,${0.12*globalIntensity + b})`);
-      g.addColorStop(0.45, `rgba(193,138,74,${0.08*globalIntensity + b*0.6})`);
-      g.addColorStop(1, 'rgba(0,0,0,0)'); /* 修正：引號一致，避免整個 JS 中斷 */
-      ctx.fillStyle = g;
-      ctx.fillRect(0,0,W,H);
+        const gx = W*0.5, gy = H*0.86;
+        const g = ctx.createRadialGradient(gx,gy,0,gx,gy,H*0.42);
+        const b = 0.10 + boost*0.06;
+        g.addColorStop(0, `rgba(230,118,144,${0.12*globalIntensity + b})`);
+        g.addColorStop(0.45, `rgba(193,138,74,${0.08*globalIntensity + b*0.6})`);
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,W,H);
 
-      spawnBase();
+        spawnBase();
 
-      for(let i=particles.length-1;i>=0;i--){
-        const p = particles[i];
-        p.life -= 1;
-        if(p.life <= 0){
-          particles.splice(i,1);
-          continue;
+        for(let i=particles.length-1;i>=0;i--){
+          const p = particles[i];
+          p.life -= 1;
+          if(p.life <= 0){
+            particles.splice(i,1);
+            continue;
+          }
+
+          const t = 1 - p.life/p.maxLife;
+          const cx = W*0.5;
+          p.vx += (cx - p.x) * (W*0.00000010);
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy *= 0.995;
+          p.vx *= 0.996;
+
+          const a = (1 - t) * 0.26 * globalIntensity + boost*0.04;
+          const size = p.size * (1.0 + t*0.55);
+
+          ctx.beginPath();
+          ctx.fillStyle = `hsla(${p.hue}, 82%, ${56 + t*10}%, ${Math.max(0, a)})`;
+          ctx.arc(p.x, p.y, size, 0, Math.PI*2);
+          ctx.fill();
         }
 
-        const t = 1 - p.life/p.maxLife;
-        const cx = W*0.5;
-        p.vx += (cx - p.x) * (W*0.00000010);
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy *= 0.995;
-        p.vx *= 0.996;
+        const cap = 520;
+        if(particles.length > cap) particles.splice(0, particles.length-cap);
 
-        const a = (1 - t) * 0.26 * globalIntensity + boost*0.04;
-        const size = p.size * (1.0 + t*0.55);
-
-        ctx.beginPath();
-        ctx.fillStyle = `hsla(${p.hue}, 82%, ${56 + t*10}%, ${Math.max(0, a)})`;
-        ctx.arc(p.x, p.y, size, 0, Math.PI*2);
-        ctx.fill();
+        requestAnimationFrame(draw);
       }
-
-      const cap = 520;
-      if(particles.length > cap) particles.splice(0, particles.length-cap);
-
       requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
 
-    function castSparkFromElement(el){
-      if(!el) return;
-      const r = el.getBoundingClientRect();
-      const c = canvas.getBoundingClientRect();
-      const startX = (r.left + r.width*0.5 - c.left) * dpr;
-      const startY = (r.top + r.height*0.5 - c.top) * dpr;
+      function castSparkFromElement(el){
+        if(!el) return;
+        const r = el.getBoundingClientRect();
+        const c = canvas.getBoundingClientRect();
+        const startX = (r.left + r.width*0.5 - c.left) * dpr;
+        const startY = (r.top + r.height*0.5 - c.top) * dpr;
 
-      const targetX = W*0.5;
-      const targetY = H*0.80;
+        const targetX = W*0.5;
+        const targetY = H*0.80;
 
-      const sparks = 32;
-      for(let i=0;i<sparks;i++){
-        const dx = (targetX - startX);
-        const dy = (targetY - startY);
-        const vx = dx * (0.008 + Math.random()*0.004) + (Math.random()*2-1)*W*0.0006;
-        const vy = dy * (0.010 + Math.random()*0.004) - Math.random()*H*0.002;
-        addParticle(startX, startY, vx, vy, 34 + Math.random()*18, (1.6+Math.random()*2.2)*dpr, 330 + Math.random()*20);
+        const sparks = 32;
+        for(let i=0;i<sparks;i++){
+          const dx = (targetX - startX);
+          const dy = (targetY - startY);
+          const vx = dx * (0.008 + Math.random()*0.004) + (Math.random()*2-1)*W*0.0006;
+          const vy = dy * (0.010 + Math.random()*0.004) - Math.random()*H*0.002;
+          addParticle(startX, startY, vx, vy, 34 + Math.random()*18, (1.6+Math.random()*2.2)*dpr, 330 + Math.random()*20);
+        }
+        boost = Math.min(1.2, boost + 0.85);
       }
-      boost = Math.min(1.2, boost + 0.85);
-    }
+    });
   </script>
 </body>
 </html>

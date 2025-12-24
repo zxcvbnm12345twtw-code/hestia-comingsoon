@@ -74,6 +74,17 @@
       --breath-b: rgba(120,130,170,.10);
       --accent:#9aa6d6;
     }
+    /* 新增：COIL（沉靜、貼地、低伏的力量） */
+    body[data-theme="coil"]{
+      --sanctuary-1:#151716;
+      --sanctuary-2:#1a1d1b;
+      --sanctuary-3:#202522;
+      --sanctuary-4:#27302b;
+      --sanctuary-5:#2f3a34;
+      --breath-a: rgba(63,79,70,.20);
+      --breath-b: rgba(107,87,76,.12);
+      --accent:#3f4f46;
+    }
 
     section{
       min-height:100vh;
@@ -1072,9 +1083,24 @@
             </div>
           </div>
         </div>
+
+        <!-- 新增：COIL -->
+        <div class="mood reveal" style="--d:500ms;" role="button" tabindex="0" data-theme="coil" data-value="COIL">
+          <div class="row">
+            <div>
+              <div class="title">COIL</div>
+              <p class="desc">煙褐棕 × 深墨綠，低彩、貼地，像蟒蛇低伏的力量。</p>
+            </div>
+            <div class="sw" aria-hidden="true">
+              <span class="dot-swatch" style="background:#6b574c;"></span>
+              <span class="dot-swatch" style="background:#3f4f46;"></span>
+              <span class="dot-swatch" style="background:#151716;"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="microcopy reveal" style="--d:520ms;">
+      <div class="microcopy reveal" style="--d:560ms;">
         已選擇：<span id="alignPicked" class="we-accent">EMBERS</span>
       </div>
     </div>
@@ -1102,20 +1128,20 @@
         </div>
 
         <div class="q reveal" style="--d:380ms;" data-q="q2">
-          <h3>在運動時，你最在意服飾帶給你的感受是？</h3>
+          <h3>過程中，你最在意的是？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">安靜包覆、不打擾思緒，存在感低但可靠。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="B">有能量、有流動感，讓動作看起來更有生命。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="C">結構清楚、支撐到位，讓每個動作都更精準。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">不被干擾，能持續感受自己正在做什麼。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="B">是否有一種流動感，動起來會覺得「對了」。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="C">每個動作是否有效、到位，不浪費力氣。</div>
           </div>
         </div>
 
         <div class="q reveal" style="--d:440ms;" data-q="q3">
-          <h3>完成一段訓練後，你最想留下的是？</h3>
+          <h3>結束之後，你希望留下的是？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">一種安定、沉靜，像每日按部就班的歸屬。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="B">一股被釋放的熱度，感覺自己再次被更新。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="C">清楚、俐落的完成感，知道自己做得很好。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">一種安定感，像事情慢慢回到正軌。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="B">被釋放過的感覺，身體與情緒都輕了一點。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="C">明確的完成感，知道力量還在自己手裡。</div>
           </div>
         </div>
 
@@ -1313,7 +1339,11 @@
     }
     function initTheme(){
       const savedTheme = localStorage.getItem('hestia_theme') || 'embers';
-      const savedAlign = localStorage.getItem('hestia_alignment') || (savedTheme === 'dawn' ? 'DAWN' : savedTheme === 'stone' ? 'STONE' : 'EMBERS');
+      const savedAlign = localStorage.getItem('hestia_alignment') || (
+        savedTheme === 'dawn'  ? 'DAWN'  :
+        savedTheme === 'stone' ? 'STONE' :
+        savedTheme === 'coil'  ? 'COIL'  : 'EMBERS'
+      );
       setTheme(savedTheme, savedAlign);
     }
     initTheme();
@@ -1340,35 +1370,54 @@
     const answers = { q1:null, q2:null, q3:null };
     const opts = $$('.opt');
 
-    function computeArchetype(){
+    function topAnswer(){
       const counts = {A:0,B:0,C:0};
       Object.values(answers).forEach(v=>{ if(v) counts[v]++; });
-      const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+      return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+    }
 
-      if(top === 'A'){
-        return {
-          key:'CALM KEEPER',
-          zh:'安定守序者',
-          core:'你偏好把節奏先放慢，讓身體回到可控的穩定；你的力量來自「長期一致」。',
-          rhythm:'適合循序漸進、節奏均勻的訓練安排：穩定心率、有餘裕的重量感，讓你越練越安定。',
-          style:'輪廓偏簡潔、低噪、耐看；材質重視手感與延展。配色偏冷霧灰、鼠尾草、低飽和中性色，細節用微光或細線條收住質感。'
-        };
-      }
-      if(top === 'B'){
-        return {
-          key:'INNER IGNITER',
-          zh:'內在點燃者',
-          core:'你需要一點推力才進得去，但一旦熱起來，你會非常穩且帶張力；你是「沉靜裡的燃」。',
-          rhythm:'適合有起伏的訓練節奏：前段暖身、後段爆發；你越動越進入狀態，越能把情緒轉成力量。',
-          style:'輪廓俐落、局部有存在感（切線、拼接、比例收束）；配色偏赤陶棕、暖玫瑰金、深酒紅或黑，讓張力藏在細節裡。'
-        };
-      }
+    function computeArchetype(){
+      const theme = localStorage.getItem('hestia_theme') || 'embers';
+      const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
+      const top = topAnswer();
+
+      const themeBase = {
+        dawn:  { key:'VEIL WARDEN',     zh:'霧幕守望者',   tag:`${align} · Quiet Mystery` },
+        embers:{ key:'ROSE EMBER',      zh:'玫燼點燃者',   tag:`${align} · Warm Radiance` },
+        stone: { key:'MIDNIGHT TRACKER',zh:'午夜追跡者',   tag:`${align} · Cold Precision` },
+        coil:  { key:'LOW TIDE KEEPER', zh:'低伏掌控者',   tag:`${align} · Grounded Power` }
+      };
+
+      const base = themeBase[theme] || themeBase.embers;
+
+      const coreByTop = {
+        A: '你偏好先降噪，把節奏放慢；你在「不被打擾」時，最能把身體帶回可控。',
+        B: '你需要一點溫度或節奏作為引火點；一旦進入，你的狀態會越來越穩、越來越有張力。',
+        C: '你依靠清晰的結構與目標推進；越有秩序，你越能把專注推到很深。'
+      };
+
+      const rhythmByTop = {
+        A: '適合穩定一致的訓練節奏：循序加重、固定節拍、維持餘裕。你越「長期一致」，越強。',
+        B: '適合有起伏的節奏設計：前段暖身升溫、後段集中爆發。你越動越進入，越能把情緒轉成力量。',
+        C: '適合目標導向的訓練結構：分區清楚、組數節奏明確、休息可控。你追求的是效率與到位。'
+      };
+
+      const styleByTheme = {
+        dawn:  '配色偏冷霧灰、鼠尾草與深冷綠黑；質感要低噪、乾淨、耐看。細節用微光收邊，像呼吸一樣節制。',
+        embers:'配色偏赤陶棕、暖玫瑰金與深酒紅黑；允許光感存在，但不躁。重點放在比例與局部亮點，讓張力藏在細節裡。',
+        stone: '配色偏石墨黑、午夜藍與冷灰；線條要乾淨、銳利、結構清楚。越簡單越高級，越能把存在感留給本人。',
+        coil:  '配色偏煙褐棕、深墨綠與極深煤黑；低彩、貼地、沉靜。不是沒有力量，而是先保留，再決定要不要被看見。'
+      };
+
+      const style = styleByTheme[theme] || styleByTheme.embers;
+
       return {
-        key:'FOCUS FORGER',
-        zh:'專注鍛造者',
-        core:'你喜歡乾淨、清晰的結構感；當一切變得有秩序，你就能把專注推到很深。',
-        rhythm:'適合明確分區、目標導向的訓練：組數、節奏、休息都清楚，你會因此更穩、更有效率。',
-        style:'剪裁與材質結構要清晰（線條、份量、支撐感）；配色偏石墨黑、午夜藍、冷金屬灰，走「越看越順」的高級耐看路線。'
+        key: base.key,
+        zh: base.zh,
+        sub: base.tag,
+        core: `${coreByTop[top]}（你的底色：${align}）`,
+        rhythm: rhythmByTop[top],
+        style: style
       };
     }
 

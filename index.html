@@ -24,7 +24,7 @@
       --hair: rgba(255,255,255,.12);
       --hair2: rgba(255,255,255,.08);
 
-      /* Sanctuary themes (更明顯的沉靜背景變化) */
+      /* Sanctuary themes */
       --sanctuary-1:#130b0f;
       --sanctuary-2:#2a111a;
       --sanctuary-3:#3b1824;
@@ -40,10 +40,7 @@
       font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
     }
 
-    /* Theme switching (Aesthetic Alignment) */
-    body{
-      transition: background-color 1.2s ease;
-    }
+    body{ transition: background-color 1.2s ease; }
     body[data-theme="dawn"]{
       --sanctuary-1:#0b1012;
       --sanctuary-2:#0f1618;
@@ -99,18 +96,17 @@
 
     .we-accent{color:var(--accent);text-shadow:0 0 22px rgba(230,118,144,.22);}
 
-    /* ====== 背景分幕（Hero 維持原本） ====== */
+    /* 背景分幕 */
     .s1{background:linear-gradient(180deg,#000,#000);}
-
-    /* ====== Digital Sanctuary 分幕（更沉靜 + 可變色） ====== */
     .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
     .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
     .s4{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
     .s5{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
     .s6{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
     .s7{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
+    .s8{background:linear-gradient(180deg,#000,#000);} /* Collective Hearth 獨立 */
 
-    /* ====== 全頁呼吸柔光（克制；跟著主題變） ====== */
+    /* 全頁呼吸柔光 */
     .breath{
       position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
       background:
@@ -130,7 +126,6 @@
       0%{background-position:50% 115%,50% -10%;}
       100%{background-position:48% 105%,52% 0%;}
     }
-    /* 章節切換「吸氣式」收縮：短暫、克制 */
     .breath.transition{
       animation: none;
       opacity: .12;
@@ -138,12 +133,9 @@
       filter: saturate(1.02);
       transition: transform .58s cubic-bezier(.22,.61,.36,1), opacity .58s cubic-bezier(.22,.61,.36,1);
     }
-    .breath.transition.release{
-      opacity: .11;
-      transform: scale(1);
-    }
+    .breath.transition.release{ opacity: .11; transform: scale(1); }
 
-    /* ====== 柔粒覆層（grain） ====== */
+    /* grain */
     .grain{
       position:fixed;inset:0;pointer-events:none;z-index:1;
       opacity:.055;mix-blend-mode:overlay;
@@ -152,7 +144,7 @@
       transform: translateZ(0);
     }
 
-    /* ====== 進場（統一；維持原本節奏） ====== */
+    /* 進場 */
     .reveal{
       opacity:0;
       transform:translateY(60px);
@@ -161,7 +153,6 @@
       transition-delay: var(--d, 0ms);
     }
     .reveal.in{opacity:1;transform:none;}
-
     .late{
       opacity:0;
       transform:translateY(8px);
@@ -171,50 +162,35 @@
     }
     .late.in{opacity:1;transform:none;}
 
-    /* ===== 共用：簡報式小標 ===== */
     .kicker{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:8px 12px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:8px 12px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.04);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-      font-size:11px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
+      font-size:11px;letter-spacing:.22em;text-transform:uppercase;
       color:rgba(255,255,255,.68);
     }
 
-    /* ===== 章節編號（01/02/03...） ===== */
     .secno{
-      font-size:11px;
-      letter-spacing:.42em;
-      text-transform:uppercase;
+      font-size:11px;letter-spacing:.42em;text-transform:uppercase;
       color:rgba(255,255,255,.48);
       margin-bottom:10px;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
+      display:inline-flex;align-items:center;gap:10px;
       user-select:none;
     }
     .secno::before,.secno::after{
-      content:"";
-      width:34px;height:1px;
-      background:rgba(255,255,255,.10);
+      content:"";width:34px;height:1px;background:rgba(255,255,255,.10);
     }
 
-    /* ===== 髮絲線底線強調（關鍵詞） ===== */
     .hair-underline{
-      display:inline-block;
-      padding-bottom:2px;
+      display:inline-block;padding-bottom:2px;
       background-image: linear-gradient(transparent calc(100% - 1px), rgba(255,255,255,.22) 1px);
       background-repeat: no-repeat;
       background-size: 100% 100%;
     }
 
-    /* ===== Hero（維持原本） ===== */
+    /* Hero */
     .brand{
       display:flex;flex-direction:column;align-items:center;gap:8px;
       margin-bottom:10px;position:relative;z-index:2;width:100%;
@@ -224,17 +200,12 @@
       filter:drop-shadow(0 10px 28px rgba(0,0,0,.52));
     }
     .submark{
-      margin-top:-5px;
-      letter-spacing:.36em;
+      margin-top:-5px;letter-spacing:.36em;
       font-size:clamp(16px,2.2vw,30px);
-      font-weight:450;
-      opacity:.9;
-      color:rgba(255,255,255,.86);
+      font-weight:450;opacity:.9;color:rgba(255,255,255,.86);
     }
     .tagline{
-      margin-top:10px;
-      font-weight:300;
-      letter-spacing:.22em;
+      margin-top:10px;font-weight:300;letter-spacing:.22em;
       font-size:clamp(14px,1.8vw,18px);
       color:rgba(255,255,255,.75);
       text-shadow:0 0 10px rgba(230,118,144,.22);
@@ -242,19 +213,14 @@
       position:relative;z-index:2;
     }
     @keyframes breatheText{ 0%,100%{opacity:.55;} 50%{opacity:.95;} }
-
     .arrow{
       font-size:22px;margin-top:14px;opacity:.72;
       animation:floatY 3.6s ease-in-out infinite;
-      position:relative;z-index:2;
-      color:rgba(255,255,255,.75);
-      display:block;
-      width:100%;
-      text-align:center;
+      position:relative;z-index:2;color:rgba(255,255,255,.75);
+      display:block;width:100%;text-align:center;
     }
     @keyframes floatY{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
 
-    /* 手機首屏定位：確保 tagline + arrow 絕對置中 */
     @media (max-width: 640px){
       .s1{ padding: 0 20px; }
       .s1 .brand{
@@ -264,61 +230,39 @@
       }
       .s1 .tagline,
       .s1 .arrow{
-        position:absolute;
-        left:50%;
+        position:absolute;left:50%;
         transform:translateX(-50%);
-        margin:0;
-        width:max-content;
-        text-align:center;
+        margin:0;width:max-content;text-align:center;
       }
       .s1 .tagline{ bottom: calc(28vh - 10px); }
       .s1 .arrow{ bottom: calc(28vh - 33px - 10px); }
-      .s1 .arrow{
-        animation: breatheText 7s ease-in-out infinite, floatYKeepCenter 3.6s ease-in-out infinite;
-      }
+      .s1 .arrow{ animation: breatheText 7s ease-in-out infinite, floatYKeepCenter 3.6s ease-in-out infinite; }
       @keyframes floatYKeepCenter{
         0%,100%{ transform:translateX(-50%) translateY(0); }
         50%    { transform:translateX(-50%) translateY(8px); }
       }
     }
 
-    /* WHO / PURPOSE 標題 */
     .who-title{
       font-size:clamp(36px,7vw,64px);
-      line-height:1.08;
-      letter-spacing:.04em;
-      font-weight:700;
+      line-height:1.08;letter-spacing:.04em;font-weight:700;
     }
 
-    /* ========== 章節點（維持原版本大小與樣式） ========== */
+    /* Dots */
     .dots{
-      position:fixed;
-      right:8px;
-      top:50%;
-      transform:translateY(-50%);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      z-index:40;
-      pointer-events:auto;
+      position:fixed;right:8px;top:50%;transform:translateY(-50%);
+      display:flex;flex-direction:column;gap:12px;z-index:40;pointer-events:auto;
     }
     .dot{
       width:5px;height:5px;border-radius:50%;
       border:1px solid rgba(255,255,255,.62);
-      background:transparent;
-      padding:0;
-      cursor:pointer;
-      outline:none;
-      appearance:none;
-      -webkit-tap-highlight-color: transparent;
+      background:transparent;padding:0;cursor:pointer;outline:none;
+      appearance:none;-webkit-tap-highlight-color: transparent;
       transition: transform .18s ease, opacity .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
-      opacity:.60;
-      position:relative;
+      opacity:.60;position:relative;
     }
     .dot.active{
-      opacity:1;
-      background:#fff;
-      border-color:#fff;
+      opacity:1;background:#fff;border-color:#fff;
       box-shadow: 0 0 10px rgba(255,255,255,.55), 0 0 22px rgba(255,255,255,.28);
       animation: dotBreath 2.2s ease-in-out infinite;
     }
@@ -327,140 +271,81 @@
       50%{     box-shadow: 0 0 12px rgba(255,255,255,.62), 0 0 26px rgba(255,255,255,.26); transform: scale(1.08); }
     }
     .dot:active{ transform: scale(1.15); }
-
-    /* Tooltip */
     .dot::after{
       content: attr(data-label);
-      position:absolute;
-      right: 14px;
-      top:50%;
-      transform: translateY(-50%);
-      padding:6px 8px;
-      border-radius:10px;
+      position:absolute;right: 14px;top:50%;transform: translateY(-50%);
+      padding:6px 8px;border-radius:10px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.55);
       box-shadow: 0 12px 40px rgba(0,0,0,.45);
       color: rgba(255,255,255,.84);
-      font-size:11px;
-      letter-spacing:.12em;
-      white-space:nowrap;
-      opacity:0;
-      pointer-events:none;
+      font-size:11px;letter-spacing:.12em;white-space:nowrap;
+      opacity:0;pointer-events:none;
       transition: opacity .18s ease, transform .18s ease;
-      transform: translateY(-50%);
       transform-origin: 100% 50%;
     }
-    .dot:hover::after,
-    .dot:focus-visible::after,
-    .dot.showtip::after{
-      opacity:1;
-      transform: translateY(-50%) translateX(-2px);
+    .dot:hover::after,.dot:focus-visible::after,.dot.showtip::after{
+      opacity:1;transform: translateY(-50%) translateX(-2px);
     }
-
-    /* 進度點一次性提示（首次滑動） */
-    .dots.hint .dot{
-      box-shadow: 0 0 0 rgba(255,255,255,0);
-      animation: hintPulse 1.2s ease-in-out 1;
-    }
+    .dots.hint .dot{ box-shadow: 0 0 0 rgba(255,255,255,0); animation: hintPulse 1.2s ease-in-out 1; }
     @keyframes hintPulse{
       0%{ opacity:.55; }
       40%{ opacity:1; box-shadow: 0 0 10px rgba(255,255,255,.22); }
       100%{ opacity:.60; box-shadow: 0 0 0 rgba(255,255,255,0); }
     }
-
     @media (max-width: 640px){
       .dot{ width:6px;height:6px; }
       .dot::after{ font-size:10px; padding:6px 8px; right:16px; }
     }
 
-    /* ========== WHO：資訊卡（維持） ========== */
+    /* Cards */
     .info-card{
       width:min(720px, 92vw);
-      margin-top:18px;
-      padding:18px 16px;
-      border-radius:18px;
+      margin-top:18px;padding:18px 16px;border-radius:18px;
       background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
       border:1px solid rgba(255,255,255,.10);
       box-shadow: 0 18px 60px rgba(0,0,0,.45);
       backdrop-filter: blur(6px);
-      position:relative;
-      z-index:2;
+      position:relative;z-index:2;
     }
-    .info-card .mini{
-      margin-bottom:10px;
-      display:flex;
-      justify-content:center;
-    }
+    .info-card .mini{ margin-bottom:10px; display:flex; justify-content:center; }
     .info-card .mini .kicker{ transform: translateY(-2px); }
 
-    /* ========== 展示框：HLOGO / FLAME MARK 統一尺寸 ========== */
-    .frame-size{
-      width:min(220px, 72vw);
-      aspect-ratio: 1 / 1;
-    }
+    .frame-size{ width:min(220px, 72vw); aspect-ratio: 1 / 1; }
 
-    /* ========== LOGO PAGE（回到原兩頁敘事結構；保留原本進場節奏） ========== */
+    /* LOGO page */
     .s3{ padding-top:70px; padding-bottom:70px; }
     .s3 .stack{
       width:min(760px, 92vw);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:16px;
-      text-align:center;
-      position:relative;
-      z-index:2;
+      display:flex;flex-direction:column;align-items:center;gap:16px;
+      text-align:center;position:relative;z-index:2;
     }
-
     .logo-frame{
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;border:1px solid rgba(255,255,255,.10);
       background:
         radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 62%),
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
       box-shadow: 0 22px 72px rgba(0,0,0,.46);
       backdrop-filter: blur(7px);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      position:relative;
+      display:grid;place-items:center;overflow:hidden;position:relative;
       clip-path: circle(0% at 50% 50%);
       transition: clip-path 2.35s cubic-bezier(.22,.61,.36,1),
-                  transform .35s ease,
-                  box-shadow .45s ease,
-                  border-color .45s ease,
-                  background .55s ease;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
+                  transform .35s ease, box-shadow .45s ease, border-color .45s ease, background .55s ease;
+      cursor:pointer;user-select:none;-webkit-tap-highlight-color: transparent;
       transform: translateY(0) scale(1);
     }
     .logo-frame.in{ clip-path: circle(120% at 50% 50%); }
-
     .logo-frame::before{
-      content:"";
-      position:absolute;
-      inset:-40%;
+      content:"";position:absolute;inset:-40%;
       background: linear-gradient(90deg, rgba(255,255,255,0) 35%, rgba(255,255,255,.07) 50%, rgba(255,255,255,0) 65%);
       transform: translateX(-35%) rotate(12deg);
-      opacity:0;
-      pointer-events:none;
+      opacity:0;pointer-events:none;
     }
-    .logo-frame.sheen::before{
-      opacity:1;
-      animation: sheenSweep 2.8s cubic-bezier(.22,.61,.36,1) 1 both;
-    }
-    @keyframes sheenSweep{
-      0%{ transform: translateX(-35%) rotate(12deg); }
-      100%{ transform: translateX(35%) rotate(12deg); }
-    }
-
+    .logo-frame.sheen::before{ opacity:1; animation: sheenSweep 2.8s cubic-bezier(.22,.61,.36,1) 1 both; }
+    @keyframes sheenSweep{ 0%{ transform: translateX(-35%) rotate(12deg); } 100%{ transform: translateX(35%) rotate(12deg); } }
     .logo-frame:hover{
       border-color: rgba(255,255,255,.16);
-      box-shadow:
-        0 24px 82px rgba(0,0,0,.55),
-        0 0 26px rgba(230,118,144,.10),
-        inset 0 1px 0 rgba(255,255,255,.06);
+      box-shadow: 0 24px 82px rgba(0,0,0,.55), 0 0 26px rgba(230,118,144,.10), inset 0 1px 0 rgba(255,255,255,.06);
       transform: translateY(-1px) scale(1.01);
     }
     .logo-frame:active{ transform: translateY(0) scale(.985); }
@@ -478,182 +363,108 @@
     }
 
     .corner-hint{
-      position:absolute; inset:10px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.06);
-      pointer-events:none;
-      opacity:0;
-      transition: opacity .55s ease;
-      z-index:1;
+      position:absolute; inset:10px;border-radius:14px;border:1px solid rgba(255,255,255,.06);
+      pointer-events:none;opacity:0;transition: opacity .55s ease;z-index:1;
     }
-    .corner-hint::before,
-    .corner-hint::after{
-      content:"";
-      position:absolute;
-      width:10px;height:10px;
-      border:1px solid rgba(255,255,255,.18);
-      opacity:.35;
-      border-right:none;border-bottom:none;
-      border-radius:2px;
+    .corner-hint::before,.corner-hint::after{
+      content:"";position:absolute;width:10px;height:10px;border:1px solid rgba(255,255,255,.18);
+      opacity:.35;border-right:none;border-bottom:none;border-radius:2px;
     }
     .corner-hint::before{ left:10px; top:10px; }
     .corner-hint::after{ right:10px; bottom:10px; transform: rotate(180deg); }
     .logo-frame.in .corner-hint{ opacity:.9; }
     .logo-frame.hint .corner-hint{ animation: hintGlow 1.35s ease-in-out 1; }
-    @keyframes hintGlow{
-      0%{ opacity:.25; }
-      45%{ opacity:1; }
-      100%{ opacity:.9; }
-    }
+    @keyframes hintGlow{ 0%{ opacity:.25; } 45%{ opacity:1; } 100%{ opacity:.9; } }
 
-    /* HLOGO 圖：進場一致；大小與 Flame 一致 */
     .logo-mark{
       width: clamp(120px, 26vw, 210px);
-      opacity:0;
-      transform: translateY(10px) scale(.94);
+      opacity:0;transform: translateY(10px) scale(.94);
       transition: opacity 1.9s ease, transform 2.2s ease, filter 2.4s ease;
       transition-delay: .42s;
       filter: drop-shadow(0 14px 30px rgba(0,0,0,.62));
       will-change: opacity, transform, filter;
-      position:relative;
-      z-index:2;
+      position:relative;z-index:2;
     }
     .logo-mark.in{ opacity:1; transform: translateY(0) scale(1); }
-
     .logo-frame[data-mode="mono"] .logo-mark{
       filter: grayscale(1) contrast(1.1) brightness(1.05) drop-shadow(0 14px 30px rgba(0,0,0,.62));
     }
-
-    /* 點擊怦然 */
     .logo-frame.pulse{ animation: stagePulse .62s cubic-bezier(.22,.61,.36,1) both; }
     @keyframes stagePulse{
-      0%   { transform: translateY(0) scale(1); }
-      35%  { transform: translateY(-1px) scale(1.02); }
-      100% { transform: translateY(0) scale(1); }
+      0%{ transform: translateY(0) scale(1); }
+      35%{ transform: translateY(-1px) scale(1.02); }
+      100%{ transform: translateY(0) scale(1); }
     }
     .logo-mark.pop{ animation: markPop .62s cubic-bezier(.22,.61,.36,1) both; }
     @keyframes markPop{
-      0%   { filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
-      40%  { filter: drop-shadow(0 0 18px rgba(230,118,144,.18)); transform: translateY(-1px) scale(1.03); }
-      100% { filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
+      0%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
+      40%{ filter: drop-shadow(0 0 18px rgba(230,118,144,.18)); transform: translateY(-1px) scale(1.03); }
+      100%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
     }
 
     .s3 .label{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      font-size:12px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.62);
-      margin-top:2px;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+      color:rgba(255,255,255,.62);margin-top:2px;
     }
-
     .s3 .bullets{
-      width:min(640px, 92vw);
-      margin-top:2px;
-      display:grid;
-      gap:10px;
-      text-align:left;
+      width:min(640px, 92vw);margin-top:2px;
+      display:grid;gap:10px;text-align:left;
     }
     .s3 .bullet{
-      position:relative;
-      padding-left:14px;
+      position:relative;padding-left:14px;
       color:rgba(255,255,255,.84);
-      line-height:1.7;
-      font-size:clamp(15px, 2.4vw, 18px);
+      line-height:1.7;font-size:clamp(15px, 2.4vw, 18px);
     }
     .s3 .bullet::before{
-      content:"";
-      position:absolute;left:0;top:.72em;
-      width:6px;height:6px;border-radius:50%;
-      background:rgba(255,255,255,.80);
-      box-shadow:0 0 0 3px rgba(255,255,255,.10);
+      content:"";position:absolute;left:0;top:.72em;width:6px;height:6px;border-radius:50%;
+      background:rgba(255,255,255,.80);box-shadow:0 0 0 3px rgba(255,255,255,.10);
     }
     .s3 .sig{
-      width:min(640px, 92vw);
-      margin-top:10px;
-      padding-top:14px;
+      width:min(640px, 92vw);margin-top:10px;padding-top:14px;
       border-top:1px solid rgba(255,255,255,.10);
       color:rgba(255,255,255,.66);
-      font-size:13px;
-      letter-spacing:.10em;
-      text-align:left;
+      font-size:13px;letter-spacing:.10em;text-align:left;
     }
 
-    /* ========== Digital Sanctuary Intro（原本儀式感卡片風格 + 新文案） ========== */
+    /* Sanctuary wrap */
     .sanctuary-wrap{
-      position:relative;
-      width:min(760px, 92vw);
-      padding:22px 18px 18px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.10);
+      position:relative;width:min(760px, 92vw);
+      padding:22px 18px 18px;border-radius:22px;border:1px solid rgba(255,255,255,.10);
       background:
         radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
       box-shadow: 0 22px 72px rgba(0,0,0,.46);
       backdrop-filter: blur(7px);
-      overflow:hidden;
-      z-index:2;
+      overflow:hidden;z-index:2;
     }
     .sanctuary-wrap::before{
-      content:"";
-      position:absolute;inset:0;
+      content:"";position:absolute;inset:0;
       background:
         radial-gradient(18px 18px at 16% 22%, rgba(255,255,255,.06), rgba(255,255,255,0) 70%),
         radial-gradient(22px 22px at 82% 68%, rgba(255,255,255,.05), rgba(255,255,255,0) 72%),
         linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 72%, rgba(255,255,255,.05));
-      opacity:.55;
-      pointer-events:none;
+      opacity:.55;pointer-events:none;
     }
     .sanctuary-wrap::after{
-      content:"";
-      position:absolute;inset:14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.06);
-      pointer-events:none;
-      opacity:.85;
+      content:"";position:absolute;inset:14px;border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);pointer-events:none;opacity:.85;
     }
-    .sanctuary-kicker{
-      display:flex;
-      justify-content:center;
-      margin-bottom:10px;
-      position:relative;
-      z-index:2;
-    }
+    .sanctuary-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
+    .sanctuary-sub{ max-width:620px; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
+    .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); }
 
-    .sanctuary-sub{
-      max-width:620px;
-      line-height:1.62;
-      margin:14px auto 0;
-      position:relative;
-      z-index:2;
-    }
-    .sanctuary-sub p{
-      font-size:clamp(15px,3.8vw,18px);
-      color:rgba(255,255,255,.82);
-    }
-
-    /* ========== Aesthetic Alignment（選擇後：整頁更明顯變色） ========== */
+    /* Alignment */
     .align-grid{
       width:min(820px, 94vw);
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-      margin-top:16px;
-      position:relative;
-      z-index:2;
+      display:grid;grid-template-columns: 1fr;gap:12px;margin-top:16px;
+      position:relative;z-index:2;
     }
     .mood{
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;border:1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       box-shadow: 0 18px 60px rgba(0,0,0,.40);
-      overflow:hidden;
-      text-align:left;
-      position:relative;
-      cursor:pointer;
-      user-select:none;
+      overflow:hidden;text-align:left;position:relative;cursor:pointer;user-select:none;
       -webkit-tap-highlight-color: transparent;
       transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
       padding:14px 14px 12px;
@@ -665,102 +476,56 @@
       box-shadow: 0 18px 80px rgba(0,0,0,.55), 0 0 28px rgba(230,118,144,.10);
       transform: translateY(-1px);
     }
-    .mood .row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .mood .title{
-      font-size:14px;
-      letter-spacing:.20em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.72);
-      margin:0 0 6px;
-    }
-    .mood .desc{
-      margin:0;
-      color:rgba(255,255,255,.82);
-      font-size:clamp(15px, 3.8vw, 17px);
-      line-height:1.55;
-    }
-    .mood .sw{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    .dot-swatch{
-      width:10px;height:10px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 0 0 3px rgba(255,255,255,.04);
-    }
+    .mood .row{ display:flex;align-items:center;justify-content:space-between;gap:10px; }
+    .mood .title{ font-size:14px;letter-spacing:.20em;text-transform:uppercase;color:rgba(255,255,255,.72);margin:0 0 6px; }
+    .mood .desc{ margin:0;color:rgba(255,255,255,.82);font-size:clamp(15px, 3.8vw, 17px);line-height:1.55; }
+    .mood .sw{ display:flex;gap:8px;align-items:center;justify-content:flex-end; }
+    .dot-swatch{ width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.18);box-shadow: 0 0 0 3px rgba(255,255,255,.04); }
 
-    /* ========== Introspective Reflection（按鈕更明顯 + 未選對比） ========== */
+    /* Quiz */
     .quiz{
       width:min(820px, 94vw);
       margin-top:14px;
-      display:grid;
-      gap:14px;
-      position:relative;
-      z-index:2;
-      text-align:left;
+      display:grid;gap:14px;
+      position:relative;z-index:2;text-align:left;
     }
     .q{
-      padding:16px 14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
+      padding:16px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
       box-shadow: 0 18px 60px rgba(0,0,0,.40);
       backdrop-filter: blur(6px);
     }
     .q h3{
       margin:0 0 12px;
-      font-size:14px;
-      letter-spacing:.12em;
-      color:rgba(255,255,255,.80);
+      font-size:14px;letter-spacing:.12em;color:rgba(255,255,255,.80);
       font-weight:650;
     }
-    .opts{
-      display:grid;
-      gap:10px;
-    }
+    .opts{ display:grid; gap:10px; }
     .opt{
-      padding:12px 12px;
-      border-radius:14px;
+      padding:12px 12px;border-radius:14px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.20);
       color: rgba(255,255,255,.86);
       font-size:clamp(15px, 3.8vw, 17px);
       line-height:1.45;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
+      cursor:pointer;user-select:none;-webkit-tap-highlight-color: transparent;
       transition: transform .22s ease, opacity .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
       position:relative;
     }
     .opt:active{ transform: scale(.99); }
     .opt.dim{ opacity:.42; }
     .opt.active{
-      opacity:1;
-      border-color: rgba(255,255,255,.20);
+      opacity:1;border-color: rgba(255,255,255,.20);
       background: rgba(255,255,255,.06);
       box-shadow: 0 0 18px rgba(230,118,144,.12);
     }
-
-    .quiz-actions{
-      display:flex;
-      justify-content:center;
-      margin-top:6px;
-    }
+    .quiz-actions{ display:flex; justify-content:center; margin-top:6px; }
     .ghost-btn{
-      padding:12px 18px;
-      border-radius:12px;
+      padding:12px 18px;border-radius:12px;
       border:1px solid rgba(255,255,255,.16);
       background: rgba(255,255,255,.04);
       color: rgba(255,255,255,.88);
-      font-weight:700;
-      letter-spacing:.10em;
+      font-weight:700;letter-spacing:.10em;
       cursor:pointer;
       transition: transform .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease;
     }
@@ -768,10 +533,7 @@
     .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
     .result{
-      margin-top:10px;
-      padding:14px 14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
+      margin-top:10px;padding:14px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.10);
       background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,.015) 60%),
                   linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
       box-shadow: 0 18px 62px rgba(0,0,0,.46);
@@ -780,117 +542,152 @@
       text-align:left;
       width:min(820px, 94vw);
       display:none;
-      position:relative;
-      z-index:2;
+      position:relative;z-index:2;
     }
     .result.show{ display:block; }
-    .result .rt{
-      margin:0 0 6px;
-      font-size:12px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      color: rgba(255,255,255,.62);
-    }
-    .result .rk{
-      margin:0 0 6px;
-      font-size:22px;
-      font-weight:800;
-      letter-spacing:.06em;
-      color:#fff;
-    }
-    .result .rp{ margin:0; font-size:14px; color: rgba(255,255,255,.78); line-height:1.65; }
+    .result .rt{ margin:0 0 6px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color: rgba(255,255,255,.62); }
+    .result .rk{ margin:0 0 6px;font-size:22px;font-weight:800;letter-spacing:.06em;color:#fff; }
+    .result .rp{ margin:0;font-size:14px;color: rgba(255,255,255,.78);line-height:1.65; }
 
-    /* ========== FLAME MARK（回到原兩頁敘事；尺寸與 HLOGO 一致） ========== */
+    /* Flame Mark（保留成單獨符號敘事） */
     .flame-stage{
-      position:relative;
-      width:min(760px, 92vw);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:14px;
-      z-index:2;
+      position:relative;width:min(760px, 92vw);
+      display:flex;flex-direction:column;align-items:center;gap:14px;z-index:2;
     }
-
     .flame-frame{
       border-radius:18px;
       background:
         radial-gradient(120% 120% at 50% 30%, rgba(255,255,255,.06), rgba(255,255,255,0) 60%),
         linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       border:1px solid rgba(255,255,255,.10);
-      box-shadow:
-        0 16px 54px rgba(0,0,0,.55),
-        inset 0 1px 0 rgba(255,255,255,.06);
+      box-shadow: 0 16px 54px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
       backdrop-filter: blur(6px);
-      overflow:hidden;
-      position:relative;
-      display:grid;
-      place-items:center;
-
+      overflow:hidden;position:relative;display:grid;place-items:center;
       clip-path: circle(0% at 50% 48%);
       transition: clip-path 2.1s cubic-bezier(.22,.61,.36,1);
       will-change: clip-path;
     }
     .flame-frame.in{ clip-path: circle(120% at 50% 48%); }
-
     .flame-frame .corner-hint{ opacity:0; }
     .flame-frame.in .corner-hint{ opacity:.9; }
 
     .flame-img{
       width: clamp(120px, 26vw, 210px);
-      margin:0;
-      opacity:0;
-      transform: translateY(10px) scale(.94);
+      margin:0;opacity:0;transform: translateY(10px) scale(.94);
       transition: opacity 1.9s ease, transform 2.2s ease, filter 2.4s ease;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.66));
       will-change: opacity, transform, filter;
-      position:relative;
-      z-index:2;
+      position:relative;z-index:2;
     }
     .flame-img.in{
-      opacity:1;
-      transform: translateY(0) scale(1);
+      opacity:1;transform: translateY(0) scale(1);
       animation: flameBreath 8.8s ease-in-out infinite alternate;
     }
     @keyframes flameBreath{
-      0%   { filter: drop-shadow(0 0 14px rgba(230,118,144,.14)); }
-      100% { filter: drop-shadow(0 0 26px rgba(230,118,144,.22)); }
+      0%{ filter: drop-shadow(0 0 14px rgba(230,118,144,.14)); }
+      100%{ filter: drop-shadow(0 0 26px rgba(230,118,144,.22)); }
     }
 
     .manifest{
       width:min(760px, 92vw);
-      margin-top:0;
-      padding:18px 16px;
-      border-radius:18px;
+      margin-top:0;padding:18px 16px;border-radius:18px;
       background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,.015) 60%),
                   linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
       border:1px solid rgba(255,255,255,.10);
       box-shadow: 0 18px 62px rgba(0,0,0,.46);
       backdrop-filter: blur(6px);
+      position:relative;z-index:2;
+    }
+    .manifest .quote-zh{ font-size: 0.8em; color: rgba(255,255,255,.82); }
+
+    /* Collective Hearth page */
+    .hearth-wrap{
+      width:min(880px, 94vw);
+      display:grid;
+      gap:14px;
       position:relative;
       z-index:2;
     }
-
-    /* 你不需要更像誰... 中文段落縮小 20% */
-    .manifest .quote-zh{
-      font-size: 0.8em;
-      color: rgba(255,255,255,.82);
+    .hearth-top{
+      width:min(760px, 92vw);
+      margin:0 auto;
+      padding:22px 18px 18px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
+      backdrop-filter: blur(7px);
+      overflow:hidden;
+      position:relative;
+    }
+    .hearth-top::after{
+      content:"";
+      position:absolute;inset:14px;border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      pointer-events:none;opacity:.85;
     }
 
-    /* ========== 最後：Collective Hearth（資料蒐集放最後） ========== */
+    .flame-meter{
+      width:min(760px, 92vw);
+      margin:0 auto;
+      padding:18px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      backdrop-filter: blur(6px);
+      position:relative;
+      overflow:hidden;
+    }
+    .meter-head{
+      display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+      margin-bottom:10px;
+    }
+    .meter-title{
+      margin:0;
+      font-size:12px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color: rgba(255,255,255,.70);
+    }
+    .meter-count{
+      font-size:12px;
+      letter-spacing:.12em;
+      color: rgba(255,255,255,.72);
+      white-space:nowrap;
+    }
+    .meter-count strong{
+      color:#fff;
+      letter-spacing:.06em;
+    }
+    .flame-canvas{
+      width:100%;
+      height:220px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(120% 120% at 50% 105%, rgba(230,118,144,.10), rgba(0,0,0,0) 60%),
+        radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.05), rgba(0,0,0,0) 55%),
+        rgba(0,0,0,.22);
+      display:block;
+    }
+
     .join-wrap{
       width:min(760px, 92vw);
-      margin-top:14px;
-      padding-top:18px;
-      border-top:1px solid rgba(255,255,255,.10);
+      margin:0 auto;
+      padding:18px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,.015) 60%),
+                  linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow: 0 18px 62px rgba(0,0,0,.46);
+      backdrop-filter: blur(6px);
       position:relative;
-      z-index:2;
     }
-    .microcopy{
-      margin-top:10px;
-      font-size:12px;
-      letter-spacing:.10em;
-      color:rgba(255,255,255,.62);
-    }
+
+    .microcopy{ margin-top:10px;font-size:12px;letter-spacing:.10em;color:rgba(255,255,255,.62); }
 
     form{
       margin-top:18px;
@@ -921,12 +718,11 @@
       padding:12px 18px;border-radius:12px;
       font-size:14px;box-shadow:0 10px 40px rgba(0,0,0,.45);
       opacity:0;pointer-events:none;transition:opacity .28s ease;
-      z-index:99;
-      color:rgba(255,255,255,.88);
+      z-index:99;color:rgba(255,255,255,.88);
     }
     .toast.show{opacity:1;}
 
-    /* 無障礙：偏好減少動態 */
+    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       .breath, .grain, .dot.active, .flame-img.in{ animation:none !important; }
       .reveal, .late, .logo-frame, .flame-frame, .mood, .opt{ transition:none !important; }
@@ -938,7 +734,7 @@
   <div class="breath" id="breath" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- 章節進度點（維持原版大小；新增兩個區塊但不改樣式） -->
+  <!-- 章節進度點：新增 s8 -->
   <nav class="dots" id="dotsNav" aria-label="Section navigation">
     <button class="dot" data-target="s1" data-label="HERO" aria-label="Go to Hero"></button>
     <button class="dot" data-target="s2" data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
@@ -946,16 +742,18 @@
     <button class="dot" data-target="s4" data-label="DIGITAL SANCTUARY" aria-label="Go to Digital Sanctuary"></button>
     <button class="dot" data-target="s5" data-label="AESTHETIC ALIGNMENT" aria-label="Go to Aesthetic Alignment"></button>
     <button class="dot" data-target="s6" data-label="REFLECTION" aria-label="Go to Reflection"></button>
-    <button class="dot" data-target="s7" data-label="FLAME + JOIN" aria-label="Go to Flame and Join"></button>
+    <button class="dot" data-target="s7" data-label="FLAME MARK" aria-label="Go to Flame Mark"></button>
+    <button class="dot" data-target="s8" data-label="COLLECTIVE HEARTH" aria-label="Go to Collective Hearth"></button>
   </nav>
 
-  <!-- ① Hero（維持原本） -->
+  <!-- ① Hero -->
   <section class="s1" id="s1">
     <div class="brand">
       <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
       <div class="submark">TAIWAN</div>
     </div>
-    <div class="tagline">即將到來</div>
+    <!-- 1) 文案更新 -->
+    <div class="tagline">即將到來，讓我們一起開始</div>
     <div class="arrow">↓</div>
   </section>
 
@@ -973,7 +771,7 @@
     </div>
   </section>
 
-  <!-- ③ PRIMARY MARK（回到原本兩頁敘事） -->
+  <!-- ③ PRIMARY MARK -->
   <section class="s3" id="s3">
     <div class="stack">
       <div class="secno reveal" style="--d:140ms;">03</div>
@@ -996,34 +794,38 @@
     </div>
   </section>
 
-  <!-- ④ Digital Sanctuary（進場節奏維持原風格；改文案） -->
+  <!-- ④ Digital Sanctuary -->
   <section class="s4" id="s4">
     <div class="secno reveal" style="--d:140ms;">04</div>
 
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">DIGITAL SANCTUARY</span></div>
 
+      <!-- 2) 標題更新：只讓 i 變色 -->
       <h2 class="reveal" style="--d:220ms;">
-        讓你安靜下來，也更懂 <span class="we-accent">HESTIA</span>
+        現在安靜下來，讓我們一起參與 HEST<span class="we-accent">i</span>A
       </h2>
 
+      <!-- 3) 移除「不喧嘩...」那句，保留更乾淨的三行 -->
       <div class="sanctuary-sub">
         <p class="late" data-late>這裡的每一次互動，都是我們的共感。</p>
-        <p class="late" data-late>你的每一次停留與選擇，都會成為 Hestia 的一部分。</p>
-        <p class="late" data-late>我們正在打造一個「健身 × 時尚 × 生活」的品牌：不喧嘩，但有立場；不追逐，但很堅定。</p>
+        <p class="late" data-late>你的每一次停留與選擇，會在細節裡被記住。</p>
+        <p class="late" data-late>我們想用更柔和的方式，慢慢靠近你真正喜歡的樣子。</p>
       </div>
     </div>
   </section>
 
-  <!-- ⑤ Aesthetic Alignment（選擇後：整頁背景/呼吸光變更明顯） -->
+  <!-- ⑤ Aesthetic Alignment -->
   <section class="s5" id="s5">
     <div class="secno reveal" style="--d:140ms;">05</div>
 
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">AESTHETIC ALIGNMENT</span></div>
       <h2 class="reveal" style="--d:220ms;">你偏好的沉靜色調</h2>
+
+      <!-- 4) 文案更新：更「偷偷蒐集」但不明說 -->
       <p class="reveal" style="--d:260ms;max-width:640px;">
-        這會影響我們未來系列的主色方向（更接近服飾配色與質感，而不是投票排名）。
+        我們想更懂你在「顏色與氣質」上的直覺偏好，讓未來的配色選擇更貼近你真正會穿、會喜歡的範圍。
       </p>
 
       <div class="align-grid" id="alignGrid" aria-label="Aesthetic alignment choices">
@@ -1076,13 +878,16 @@
     </div>
   </section>
 
-  <!-- ⑥ Introspective Reflection（移除「分類銷售」那句；按鈕更明顯） -->
+  <!-- ⑥ Introspective Reflection -->
   <section class="s6" id="s6">
     <div class="secno reveal" style="--d:140ms;">06</div>
 
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">INTROSPECTIVE REFLECTION</span></div>
-      <h2 class="reveal" style="--d:220ms;">用 30 秒，找到你的運動節奏</h2>
+
+      <!-- 5) 標題更新 -->
+      <h2 class="reveal" style="--d:220ms;">你喜好或習慣的運動結構</h2>
+
       <p class="reveal" style="--d:260ms;max-width:640px;">
         這不是測驗壓力，也不是標籤；只是把你偏好的狀態，清楚地說出來。
       </p>
@@ -1128,7 +933,7 @@
     </div>
   </section>
 
-  <!-- ⑦ FLAME MARK（回到原本該有的文字說明） + 最後才做資料蒐集 -->
+  <!-- ⑦ FLAME MARK（保留敘事） -->
   <section class="s7" id="s7">
     <div class="secno reveal" style="--d:140ms;">07</div>
 
@@ -1152,32 +957,50 @@
           不用變成誰，你只需要更像你。
         </p>
       </div>
+    </div>
+  </section>
 
-      <div class="join-wrap">
+  <!-- ⑧ Collective Hearth（獨立一頁 + 火苗隨登記變旺） -->
+  <section class="s8" id="s8">
+    <div class="secno reveal" style="--d:140ms;">08</div>
+
+    <div class="hearth-wrap">
+      <div class="hearth-top">
         <div style="display:flex;justify-content:center;margin-bottom:10px;">
-          <span class="kicker reveal" style="--d:260ms;">COLLECTIVE HEARTH</span>
+          <span class="kicker reveal" style="--d:180ms;">COLLECTIVE HEARTH</span>
         </div>
-
-        <h2 class="reveal" style="--d:300ms;margin-bottom:10px;">集體爐火</h2>
-        <p class="reveal" style="--d:340ms;max-width:680px;">
-          把你的光點，投入火焰！不用搶先，只要守護。
+        <h2 class="reveal" style="--d:220ms;margin-bottom:10px;">集體爐火</h2>
+        <p class="reveal" style="--d:260ms;max-width:680px;">
+          把你的光點，投入火焰。你不用搶先，只要加入。
         </p>
-
-        <div class="microcopy reveal" style="--d:380ms;">
+        <div class="microcopy reveal" style="--d:300ms;">
           你已選的色調：<span class="we-accent" id="alignPicked2">EMBERS</span>｜
           你的原型：<span class="we-accent" id="archPicked">—</span>
         </div>
+      </div>
 
+      <div class="flame-meter reveal" style="--d:340ms;">
+        <div class="meter-head">
+          <div class="meter-title">LIVE FLAME</div>
+          <div class="meter-count">已加入：<strong id="joinCount">—</strong></div>
+        </div>
+        <canvas class="flame-canvas" id="flameCanvas" width="1200" height="440" aria-label="Collective flame animation"></canvas>
+        <div class="microcopy" style="margin-top:10px;">
+          火焰會隨加入者累積而更旺；你的登記會成為其中一點熱度。
+        </div>
+      </div>
+
+      <div class="join-wrap reveal" style="--d:380ms;">
         <form id="notify"
-              action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
-              method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
+          action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
+          method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
 
           <input id="email" type="email" name="entry.345729382" placeholder="輸入你的Email" required />
 
-          <!-- 已帶入你測試成功的 entry id -->
-          <input type="hidden" id="f_alignment" name="entry.324440347" value="">
-          <input type="hidden" id="f_archetype"  name="entry.1640422124" value="">
-          <input type="hidden" id="f_theme"      name="entry.1471764886" value="">
+          <!-- 這三個 entry id 請換成你實測正確的 -->
+          <input type="hidden" id="f_alignment" name="entry.111111111" value="">
+          <input type="hidden" id="f_archetype"  name="entry.222222222" value="">
+          <input type="hidden" id="f_theme"      name="entry.333333333" value="">
 
           <button type="submit">加入火焰</button>
         </form>
@@ -1195,6 +1018,18 @@
   <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
   <script>
+    /* =========================
+       0) 表單 / 計數：集中配置
+       ========================= */
+    // 你若有「真實總加入數」的 JSON API（例如 Apps Script），放在這裡：
+    // 回傳格式建議：{ "count": 1234 }
+    const COUNT_ENDPOINT = ""; // e.g. "https://script.google.com/macros/s/xxxx/exec"
+    const COUNT_POLL_MS = 20000;
+
+    // 如果暫時沒有後端，先用本地累加（每次成功提交 +1）
+    const LOCAL_COUNT_KEY = "hestia_join_count_local";
+    const LOCAL_COUNT_FALLBACK_BASE = 128; // 你可改成目前真實基數（視覺上更像真的）
+
     /* ===== 小工具 ===== */
     const $ = (s, r=document) => r.querySelector(s);
     const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
@@ -1208,7 +1043,7 @@
       return (r.top <= topLine) && (r.bottom >= bottomLine);
     }
 
-    /* ===== Reveal / Late：維持原本進場順序風格 ===== */
+    /* ===== Reveal / Late ===== */
     let ticking = false;
     function rafCheck(){
       ticking = false;
@@ -1221,7 +1056,7 @@
         if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
       });
 
-      /* LOGO：框先揭幕，再圖，再 sheen */
+      /* LOGO */
       if(!logoRevealed && inView(logoFrame, 0.80, 0.15)){
         logoRevealed = true;
         logoFrame.classList.add('in');
@@ -1229,11 +1064,17 @@
         setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
       }
 
-      /* FLAME：框揭幕，再圖 */
+      /* FLAME MARK */
       if(!flameRevealed && inView(flameFrame, 0.80, 0.15)){
         flameRevealed = true;
         flameFrame.classList.add('in');
         setTimeout(()=>flameImg.classList.add('in'), 520);
+      }
+
+      /* COLLECTIVE: 進入視窗才啟動火焰動畫 */
+      if(!hearthStarted && inView($('#flameCanvas'), 0.88, 0.05)){
+        hearthStarted = true;
+        startFlame();
       }
     }
 
@@ -1251,7 +1092,7 @@
       setTimeout(requestCheck, 420);
     });
 
-    /* ===== LOGO PAGE：點擊怦然互動 + 展品模式切換 + 一次性角落提示 ===== */
+    /* ===== LOGO PAGE：互動 ===== */
     const logoFrame = $('#logoFrame');
     const logoMark  = $('#logoMark');
     const modes = ['primary','fabric','mono'];
@@ -1286,13 +1127,13 @@
       setTimeout(()=>logoFrame.classList.remove('hint'), 1450);
     }
 
-    /* ===== FLAME MARK：主動展示 ===== */
+    /* ===== FLAME MARK ===== */
     const flameFrame = $('#flameFrame');
     const flameImg = $('#flameImg');
     let flameRevealed = false;
     let logoRevealed = false;
 
-    /* ===== Aesthetic Alignment：選擇後整體主題更明顯變色 ===== */
+    /* ===== Aesthetic Alignment ===== */
     const moods = $$('#alignGrid .mood');
     const alignPicked = $('#alignPicked');
     const alignPicked2 = $('#alignPicked2');
@@ -1311,11 +1152,8 @@
         m.classList.toggle('dim', !on);
       });
 
-      // 1.4 秒後回到自然狀態（但保留主題）
       setTimeout(()=>{
-        moods.forEach(m=>{
-          m.classList.remove('dim');
-        });
+        moods.forEach(m=> m.classList.remove('dim'));
       }, 1400);
     }
 
@@ -1327,9 +1165,7 @@
     initTheme();
 
     moods.forEach(m=>{
-      const act = ()=>{
-        setTheme(m.dataset.theme, m.dataset.value);
-      };
+      const act = ()=> setTheme(m.dataset.theme, m.dataset.value);
       m.addEventListener('click', act);
       m.addEventListener('keydown', (e)=>{
         if(e.key === 'Enter' || e.key === ' '){
@@ -1339,7 +1175,7 @@
       });
     });
 
-    /* ===== Reflection：三題，選項更明顯 + 解鎖我的原型 ===== */
+    /* ===== Reflection ===== */
     const unlockBtn = $('#unlockBtn');
     const resultBox = $('#result');
     const resultTitle = $('#resultTitle');
@@ -1350,31 +1186,17 @@
     const opts = $$('.opt');
 
     function computeArchetype(){
-      // 簡單加權：A/B/C 多數決
       const counts = {A:0,B:0,C:0};
       Object.values(answers).forEach(v=>{ if(v) counts[v]++; });
       const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
 
-      // 對應：更貼近運動時尚本質（節奏/狀態/穿著感）
       if(top === 'A'){
-        return {
-          key: 'CALM KEEPER',
-          zh: '安定守序者',
-          desc: '你偏好「呼吸感」與可持續的節奏。服飾更適合低噪、耐看、細節有質感的機能日常路線。'
-        };
+        return { key:'CALM KEEPER', zh:'安定守序者', desc:'你偏好「呼吸感」與可持續的節奏。服飾更適合低噪、耐看、細節有質感的機能日常路線。' };
       }
       if(top === 'B'){
-        return {
-          key: 'INNER IGNITER',
-          zh: '內在點燃者',
-          desc: '你需要一點推力才進得去，但進入後很穩。服飾更適合線條俐落、局部強調、在沉靜裡帶張力。'
-        };
+        return { key:'INNER IGNITER', zh:'內在點燃者', desc:'你需要一點推力才進得去，但進入後很穩。服飾更適合線條俐落、局部強調、在沉靜裡帶張力。' };
       }
-      return {
-        key: 'FOCUS FORGER',
-        zh: '專注鍛造者',
-        desc: '你喜歡乾淨與清晰的結構感。服飾更適合高辨識的剪裁與材質秩序，越看越順、越穿越對。'
-      };
+      return { key:'FOCUS FORGER', zh:'專注鍛造者', desc:'你喜歡乾淨與清晰的結構感。服飾更適合高辨識的剪裁與材質秩序，越看越順、越穿越對。' };
     }
 
     function updateUnlock(){
@@ -1389,9 +1211,7 @@
         o.classList.toggle('active', on);
         o.classList.toggle('dim', !on);
       });
-      setTimeout(()=>{
-        group.forEach(o=>o.classList.remove('dim'));
-      }, 1400);
+      setTimeout(()=> group.forEach(o=>o.classList.remove('dim')), 1400);
     }
 
     opts.forEach(o=>{
@@ -1423,7 +1243,6 @@
       if(archPicked) archPicked.textContent = r.zh;
     });
 
-    // 初始：若有保存，直接顯示在最後區塊
     (function hydrateSaved(){
       const savedArch = localStorage.getItem('hestia_archetype');
       if(savedArch && archPicked) archPicked.textContent = savedArch;
@@ -1435,7 +1254,7 @@
       }
     })();
 
-    /* ===== 表單：把 alignment + archetype + theme 同步送出（已使用你的 entry id） ===== */
+    /* ===== 表單：同步 alignment + archetype ===== */
     const toast = $('#toast');
     const iframe = $('#hidden_iframe');
     let submittedAt = 0;
@@ -1448,7 +1267,6 @@
         return false;
       }
 
-      // 填 hidden 欄位（已替換成正確 entry id）
       const fAlign = $('#f_alignment');
       const fArch  = $('#f_archetype');
       const fTheme = $('#f_theme');
@@ -1457,9 +1275,9 @@
       const theme = localStorage.getItem('hestia_theme') || 'embers';
       const arch  = localStorage.getItem('hestia_archetype') || '';
 
-      if(fAlign) fAlign.value = align; // entry.324440347
-      if(fTheme) fTheme.value = theme; // entry.1471764886
-      if(fArch)  fArch.value  = arch;  // entry.1640422124
+      if(fAlign) fAlign.value = align;
+      if(fTheme) fTheme.value = theme;
+      if(fArch)  fArch.value  = arch;
 
       submittedAt = Date.now();
       return true;
@@ -1467,19 +1285,23 @@
 
     iframe.addEventListener('load',()=>{
       if(Date.now()-submittedAt<300) return;
+
+      // 清空輸入
       $('#email').value='';
+
+      // 本地計數 +1（你若接上 COUNT_ENDPOINT，可改成改抓遠端總數）
+      bumpLocalJoinCount();
+
       toast.classList.add('show');
       setTimeout(()=>toast.classList.remove('show'),2600);
     });
 
-    /* ===== 章節點：高亮目前章節 + 點擊跳轉 + 「吸氣式」過場 ===== */
+    /* ===== 章節點：高亮 + 吸氣式過場 ===== */
     const breath = $('#breath');
-    const sections = ['s1','s2','s3','s4','s5','s6','s7'].map(id=>document.getElementById(id));
+    const sections = ['s1','s2','s3','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
     const dots = $$('.dot');
 
-    function setActiveDot(idx){
-      dots.forEach((d,i)=>d.classList.toggle('active', i===idx));
-    }
+    function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
 
     let lastActive = 0;
     function updateActiveDot(){
@@ -1514,7 +1336,7 @@
       }, {passive:true});
     });
 
-    /* Tooltip：長按顯示（mobile-friendly） */
+    /* Tooltip：長按 */
     let pressTimer = null;
     dots.forEach(dot=>{
       const show = ()=>{
@@ -1527,7 +1349,7 @@
       dot.addEventListener('pointerleave', ()=>{ if(pressTimer) clearTimeout(pressTimer); });
     });
 
-    /* 首次滑動：進度點做一次微亮提示 */
+    /* 首次滑動提示 */
     const dotsNav = $('#dotsNav');
     let hinted = false;
     function onFirstScroll(){
@@ -1552,6 +1374,187 @@
 
     setTimeout(requestCheck, 60);
     setTimeout(()=>{ requestCheck(); requestAnimationFrame(extraTick); }, 260);
+
+    /* =========================
+       1) Collective Flame Engine
+       ========================= */
+    const joinCountEl = $('#joinCount');
+    const canvas = $('#flameCanvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
+
+    let hearthStarted = false;
+    let flameLevel = 0; // 0..1
+    let targetLevel = 0;
+    let particles = [];
+    let rafId = null;
+
+    function getLocalCount(){
+      const n = parseInt(localStorage.getItem(LOCAL_COUNT_KEY) || "0", 10);
+      return (Number.isFinite(n) ? n : 0);
+    }
+    function bumpLocalJoinCount(){
+      const n = getLocalCount() + 1;
+      localStorage.setItem(LOCAL_COUNT_KEY, String(n));
+      syncJoinCountUI();
+      // 提升火焰
+      setTargetFromCount(getTotalCount());
+    }
+    function getTotalCount(){
+      // 基數 + 本地累加（你可把 base 改成目前真實已加入數）
+      return LOCAL_COUNT_FALLBACK_BASE + getLocalCount();
+    }
+    function syncJoinCountUI(){
+      if(joinCountEl) joinCountEl.textContent = String(getTotalCount());
+    }
+
+    function setTargetFromCount(count){
+      // 以對數拉伸，讓成長更自然：前期變化明顯、後期趨緩
+      const level = Math.min(1, Math.log10(Math.max(10, count)) / Math.log10(3000));
+      targetLevel = Math.max(0.08, level);
+    }
+
+    async function fetchRemoteCount(){
+      if(!COUNT_ENDPOINT) return null;
+      try{
+        const res = await fetch(COUNT_ENDPOINT, {cache:"no-store"});
+        if(!res.ok) return null;
+        const data = await res.json();
+        const c = parseInt(data && data.count, 10);
+        if(!Number.isFinite(c)) return null;
+        return c;
+      }catch(_){
+        return null;
+      }
+    }
+
+    async function refreshCount(){
+      // 若有遠端：用遠端覆蓋（並保留本地只作「你自己這台」的熱度感）
+      const remote = await fetchRemoteCount();
+      if(remote != null){
+        if(joinCountEl) joinCountEl.textContent = String(remote);
+        setTargetFromCount(remote);
+        return;
+      }
+      // 無遠端：用本地
+      syncJoinCountUI();
+      setTargetFromCount(getTotalCount());
+    }
+
+    function resizeCanvasToDisplaySize(){
+      if(!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const w = Math.max(320, Math.floor(rect.width * dpr));
+      const h = Math.max(200, Math.floor(rect.height * dpr));
+      if(canvas.width !== w || canvas.height !== h){
+        canvas.width = w;
+        canvas.height = h;
+      }
+    }
+
+    function spawnParticle(intensity){
+      const w = canvas.width, h = canvas.height;
+      const baseX = w * 0.5;
+      const baseY = h * 0.86;
+
+      // 強度越高：更密、更高、更快
+      const spread = w * (0.12 + intensity * 0.14);
+      const x = baseX + (Math.random() - 0.5) * spread;
+      const y = baseY + (Math.random() - 0.5) * 6;
+
+      const vy = -(2.2 + intensity * 5.8) * (0.6 + Math.random()*0.8);
+      const vx = (Math.random() - 0.5) * (0.6 + intensity * 1.8);
+      const life = 40 + Math.floor(intensity * 55) + Math.floor(Math.random() * 18);
+      const size = (2.2 + intensity * 6.4) * (0.55 + Math.random()*0.7);
+
+      return {
+        x,y,vx,vy,life,ttl:life,size,
+        // 使用 alpha 控制顏色，不指定硬色盤（走你現有的 accent + 白）
+        hot: Math.random() < (0.18 + intensity*0.18) // 熱芯
+      };
+    }
+
+    function draw(){
+      if(!ctx || !canvas) return;
+
+      resizeCanvasToDisplaySize();
+
+      // ease to target
+      flameLevel += (targetLevel - flameLevel) * 0.05;
+
+      const w = canvas.width, h = canvas.height;
+
+      // 清理
+      ctx.clearRect(0,0,w,h);
+
+      // 底部微亮基座
+      ctx.save();
+      ctx.globalAlpha = 0.22 + flameLevel * 0.22;
+      const baseR = w*(0.16 + flameLevel*0.14);
+      const g = ctx.createRadialGradient(w*0.5, h*0.88, 0, w*0.5, h*0.88, baseR);
+      g.addColorStop(0, "rgba(255,255,255,0.22)");
+      g.addColorStop(0.25, "rgba(255,255,255,0.10)");
+      g.addColorStop(1, "rgba(255,255,255,0.00)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(w*0.5, h*0.88, baseR, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+
+      // 每幀生成粒子：依火焰等級
+      const spawnN = Math.floor(2 + flameLevel * 10);
+      for(let i=0;i<spawnN;i++){
+        particles.push(spawnParticle(flameLevel));
+      }
+
+      // 更新 + 繪製粒子
+      const next = [];
+      for(const p of particles){
+        p.life -= 1;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy *= 0.985; // 上升逐漸變慢
+        p.vx *= 0.99;
+
+        const t = p.life / p.ttl; // 1 -> 0
+        const alpha = Math.max(0, Math.min(1, t)) * (0.28 + flameLevel * 0.42);
+
+        // size & blur feeling
+        const r = p.size * (0.7 + (1-t)*0.6);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        // 用白/玫瑰金感（靠 alpha + 混合）呈現，不指定固定顏色塊
+        // hot 粒子更亮
+        ctx.fillStyle = p.hot ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.70)";
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+
+        if(p.life > 0 && p.y > -40) next.push(p);
+      }
+      particles = next;
+
+      rafId = requestAnimationFrame(draw);
+    }
+
+    function startFlame(){
+      refreshCount();
+      if(rafId) cancelAnimationFrame(rafId);
+      draw();
+
+      // 若有遠端：定期刷新
+      if(COUNT_ENDPOINT){
+        setInterval(refreshCount, COUNT_POLL_MS);
+      }
+    }
+
+    // 初始同步（即使尚未進入視窗，也先把數字放上）
+    refreshCount();
+    window.addEventListener('resize', ()=>{ if(hearthStarted) resizeCanvasToDisplaySize(); });
   </script>
 </body>
 </html>

@@ -106,8 +106,7 @@
     .s1{background:linear-gradient(180deg,#000,#000);}
     .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
     .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
-    /* 新增：Flame Mark page */
-    .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
+    .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));} /* Flame Mark */
     .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
     .s5{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
     .s6{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
@@ -180,6 +179,7 @@
       letter-spacing:.22em;
       text-transform:uppercase;
       color:rgba(255,255,255,.68);
+      max-width: 92vw;
     }
 
     .secno{
@@ -224,6 +224,8 @@
       font-weight:450;
       opacity:.9;
       color:rgba(255,255,255,.86);
+      max-width:92vw;
+      overflow-wrap:anywhere;
     }
     .tagline{
       margin-top:10px;
@@ -237,6 +239,7 @@
       padding:0 10px;
       max-width:92vw;
       overflow-wrap:anywhere;
+      text-align:center;
     }
     @keyframes breatheText{ 0%,100%{opacity:.55;} 50%{opacity:.95;} }
 
@@ -342,6 +345,9 @@
       pointer-events:none;
       transition: opacity .18s ease, transform .18s ease;
       transform-origin: 100% 50%;
+      max-width: 72vw;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
     .dot:hover::after,
     .dot:focus-visible::after,
@@ -375,6 +381,7 @@
       backdrop-filter: blur(6px);
       position:relative;
       z-index:2;
+      overflow:hidden;
     }
     .info-card .mini{ margin-bottom:10px; display:flex; justify-content:center; }
 
@@ -418,6 +425,8 @@
       user-select:none;
       -webkit-tap-highlight-color: transparent;
       transform: translateY(0) scale(1);
+      width:min(220px, 72vw);
+      aspect-ratio:1/1;
     }
     .logo-frame.in{ clip-path: circle(120% at 50% 50%); }
     .logo-frame::before{
@@ -590,7 +599,7 @@
     }
     .sanctuary-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
 
-    /* FLAME MARK (page) */
+    /* FLAME MARK (page) - 回到你說的「標語的符號」版本 + 字級更接近品牌識別頁 */
     .flame-stage{
       position:relative;
       width:min(var(--wrap), 92vw);
@@ -599,6 +608,7 @@
       align-items:center;
       gap:14px;
       z-index:2;
+      margin:0 auto;
     }
     .flame-frame{
       border-radius:18px;
@@ -619,6 +629,7 @@
       will-change: clip-path;
       width:min(220px, 72vw);
       aspect-ratio:1/1;
+      margin: 0 auto;
     }
     .flame-frame.in{ clip-path: circle(120% at 50% 48%); }
     .flame-frame .corner-hint{ opacity:0; }
@@ -644,7 +655,7 @@
       0%{ filter: drop-shadow(0 0 14px rgba(230,118,144,.14)); }
       100%{ filter: drop-shadow(0 0 26px rgba(230,118,144,.22)); }
     }
-    .manifest{
+    .flame-copy{
       width:min(var(--wrap), 92vw);
       margin-top:0;
       padding:18px 16px;
@@ -657,15 +668,16 @@
       position:relative;
       z-index:2;
       text-align:left;
-      overflow-wrap:anywhere;
+      overflow:hidden;
     }
-    .manifest .quote-zh{
-      font-size:0.8em;
-      color: rgba(255,255,255,.82);
-      overflow-wrap:anywhere;
+    .flame-copy p{
+      font-size:clamp(15px, 2.4vw, 18px);
+      line-height:1.72;
+      color: rgba(255,255,255,.84);
+      max-width:100%;
     }
 
-    /* Rest of styles (05~08 / Result / Hearth) — 維持你已完美版本 */
+    /* Rest */
     .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
     .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); max-width:100%; }
 
@@ -709,6 +721,7 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.40);
       backdrop-filter: blur(6px);
       max-width:100%;
+      overflow:hidden;
     }
     .q h3{ margin:0 0 12px; font-size:14px; letter-spacing:.12em; color:rgba(255,255,255,.80); font-weight:650; overflow-wrap:anywhere; }
     .opts{ display:grid; gap:10px; }
@@ -750,6 +763,7 @@
       cursor:pointer;
       transition: transform .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease;
       max-width:92vw;
+      white-space:nowrap;
     }
     .ghost-btn:active{ transform: scale(.99); }
     .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
@@ -769,6 +783,7 @@
       z-index:2;
       text-align:left;
       position:relative;
+      max-width: 92vw;
     }
     .result-page::after{
       content:"";
@@ -788,12 +803,13 @@
       background: rgba(0,0,0,.18);
       padding:14px 14px;
       box-shadow: 0 18px 60px rgba(0,0,0,.30);
-      overflow-wrap:anywhere;
+      overflow:hidden;
     }
     .arch-card .t{ margin:0 0 6px; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.62); }
-    .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); }
-    .arch-actions{ margin-top:14px; display:flex; justify-content:center; position:relative; z-index:2; }
+    .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); overflow-wrap:anywhere; word-break:break-word; }
+    .arch-actions{ margin-top:14px; display:flex; justify-content:center; position:relative; z-index:2; flex-wrap:wrap; gap:10px; }
 
+    /* Hearth single card centered */
     .hearth-wrap{
       width:min(var(--wrap), 92vw);
       margin:0 auto;
@@ -809,6 +825,7 @@
       z-index:2;
       position:relative;
       text-align:center;
+      max-width: 92vw;
     }
     .hearth-wrap::after{
       content:"";
@@ -818,7 +835,7 @@
       pointer-events:none;
       opacity:.85;
     }
-    .hearth-top{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .hearth-top{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; }
     .hearth-canvas{
       width:min(520px, 86vw);
       height:240px;
@@ -828,12 +845,13 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.35);
       overflow:hidden;
       display:block;
+      margin:0 auto;
     }
     @media (max-width: 420px){
       .hearth-canvas{ height:220px; }
     }
     .hearth-level{ font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.66); margin-top:-2px; }
-    .microcopy{ margin-top:10px; font-size:12px; letter-spacing:.10em; color:rgba(255,255,255,.62); position:relative; z-index:2; padding:0 6px; overflow-wrap:anywhere; }
+    .microcopy{ margin-top:10px; font-size:12px; letter-spacing:.10em; color:rgba(255,255,255,.62); position:relative; z-index:2; padding:0 6px; overflow-wrap:anywhere; text-align:center; }
 
     form{
       margin-top:18px;
@@ -844,6 +862,7 @@
       position:relative;
       z-index:2;
       width:100%;
+      max-width: 92vw;
     }
     input[type="email"]{
       padding:12px 20px;border-radius:12px;
@@ -858,6 +877,7 @@
       cursor:pointer;transition:background .42s, transform .22s ease;
       letter-spacing:.08em;
       max-width:92vw;
+      white-space:nowrap;
     }
     button:hover{filter: brightness(.96);}
     button:active{ transform: scale(.99); }
@@ -871,6 +891,7 @@
       z-index:2;
       flex-wrap:wrap;
       padding:0 6px;
+      max-width: 92vw;
     }
     .links a{
       color:rgba(255,255,255,.86);
@@ -887,6 +908,11 @@
       position:relative;
       z-index:2;
       user-select:none;
+      text-align:center;
+      max-width:92vw;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
 
     .toast{
@@ -913,7 +939,7 @@
   <div class="breath" id="breath" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- Dots：新增 FLAME MARK -->
+  <!-- Dots -->
   <nav class="dots" id="dotsNav" aria-label="Section navigation">
     <button class="dot" data-target="s1" data-label="HERO" aria-label="Go to Hero"></button>
     <button class="dot" data-target="s2" data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
@@ -955,7 +981,7 @@
     <div class="stack">
       <div class="secno reveal" style="--d:140ms;">03</div>
 
-      <div class="logo-frame frame-size" id="logoFrame" role="button" aria-label="Interact with brand mark" tabindex="0" data-mode="primary">
+      <div class="logo-frame" id="logoFrame" role="button" aria-label="Interact with brand mark" tabindex="0" data-mode="primary">
         <div class="corner-hint" aria-hidden="true"></div>
         <img class="logo-mark" id="logoMark" src="Hlogo.png" alt="HESTIA mark" />
       </div>
@@ -969,35 +995,35 @@
         <div class="bullet reveal" style="--d:440ms;">代表力量與柔韌的平衡，也象徵身體與心靈的統一。</div>
       </div>
 
-      <div class="sig reveal" style="--d:520ms;">HESTIA的主標識，將在服裝等所有核心視覺中作為第一辨識。</div>
+      <div class="sig reveal" style="--d:520ms;">HESTIA 的主標識，將在服裝等所有核心視覺中作為第一辨識。</div>
     </div>
   </section>
 
- <!-- ④ FLAME MARK（標語的符號） -->
-<section class="s4b" id="s4b">
-  <div class="secno reveal" style="--d:140ms;">04</div>
+  <!-- ④ FLAME MARK -->
+  <section class="s4b" id="s4b">
+    <div class="secno reveal" style="--d:140ms;">04</div>
 
-  <div class="flame-stage">
-    <div style="display:flex;justify-content:center;margin-bottom:4px;">
-      <span class="kicker reveal" style="--d:180ms;">FLAME MARK</span>
+    <div class="flame-stage">
+      <div class="sanctuary-kicker">
+        <span class="kicker reveal" style="--d:180ms;">FLAME MARK</span>
+      </div>
+
+      <div class="flame-frame" id="flameFrame" aria-label="Flame Mark reveal">
+        <div class="corner-hint" aria-hidden="true"></div>
+        <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" />
+      </div>
+
+      <h2 class="reveal" style="--d:220ms;margin-top:4px;">標語的符號</h2>
+
+      <div class="flame-copy">
+        <p class="late" data-late style="margin:0 0 8px;">這不只是口號，而是一種信念。</p>
+        <p class="late" data-late style="margin:0 0 8px;">標籤又如何？那是與生俱來的特色。</p>
+        <p class="late" data-late style="margin:0 0 8px;">HESTIA 透過品牌標語「Own Your Flame」</p>
+        <p class="late" data-late style="margin:0 0 8px;">無論性別、身形、背景，這些火焰屬於你自己。</p>
+        <p class="late" data-late style="margin:0;">不用變成誰，你只需要更像你！</p>
+      </div>
     </div>
-
-    <div class="flame-frame" id="flameFrame" aria-label="Flame Mark reveal">
-      <div class="corner-hint" aria-hidden="true"></div>
-      <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" />
-    </div>
-
-    <h2 class="reveal" style="--d:260ms;">標語的符號</h2>
-
-    <div class="manifest flame-copy reveal" style="--d:320ms;">
-      <p class="late" data-late>這不只是口號，而是一種信念。</p>
-      <p class="late" data-late>標籤又如何？那是與生俱來的特色。</p>
-      <p class="late" data-late>HESTIA 透過品牌標語「Own Your Flame」</p>
-      <p class="late" data-late>無論性別、身形、背景，這些火焰屬於你自己。</p>
-      <p class="late" data-late>不用變成誰，你只需要更像你！</p>
-    </div>
-  </div>
-</section>
+  </section>
 
   <!-- ⑤ Digital Sanctuary -->
   <section class="s4" id="s4">
@@ -1012,7 +1038,7 @@
 
       <div class="sanctuary-sub">
         <p class="late" data-late>這裡的每一次互動，都是我們的共感。</p>
-        <p class="late" data-late>你的每一次停留與選擇，都會成為Hestia的一部分。</p>
+        <p class="late" data-late>你的每一次停留與選擇，都會成為 Hestia 的一部分。</p>
       </div>
     </div>
   </section>
@@ -1025,8 +1051,7 @@
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">AESTHETIC ALIGNMENT</span></div>
       <h2 class="reveal" style="--d:220ms;">你偏好的沉靜色調</h2>
       <p class="reveal" style="--d:260ms;">
-        不是投票，也不做排名；
-        只是讓內心的顏色，更接近你真正願意穿上身的那種。
+        有些顏色不需要被解釋。它們只是讓你停下來，多看一秒。
       </p>
 
       <div class="align-grid" id="alignGrid" aria-label="Aesthetic alignment choices">
@@ -1034,7 +1059,7 @@
           <div class="row">
             <div>
               <div class="title">DAWN</div>
-              <p class="desc">冷霧灰 × 鼠尾草綠｜乾淨、節制，像貓頭鷹散發的神秘。</p>
+              <p class="desc">冷霧灰 × 鼠尾草綠，乾淨、節制，像貓頭鷹的神秘。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#b8c7c0;"></span>
@@ -1048,7 +1073,7 @@
           <div class="row">
             <div>
               <div class="title">EMBERS</div>
-              <p class="desc">赤陶棕 × 暖橙金｜彩度更高，如鳳凰羽毛的華麗。</p>
+              <p class="desc">赤陶棕 × 暖橙金，彩度更高，如鳳凰的羽毛。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#c07a6a;"></span>
@@ -1062,7 +1087,7 @@
           <div class="row">
             <div>
               <div class="title">STONE</div>
-              <p class="desc">石墨黑 × 午夜藍｜安靜、銳利，彷彿雪豹凝視的力量。</p>
+              <p class="desc">石墨黑 × 午夜藍，安靜、銳利，彷彿雪豹凝視的力量。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#9aa6d6;"></span>
@@ -1085,36 +1110,36 @@
 
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">INTROSPECTIVE REFLECTION</span></div>
-      <h2 class="reveal" style="--d:220ms;">你喜好或習慣的運動結構</h2>
+      <h2 class="reveal" style="--d:220ms;">你喜好或習慣的運動狀態</h2>
       <p class="reveal" style="--d:260ms;">
-        不需要想太多。用直覺選，會更接近你真正想要的狀態與穿著感。
+        開始動之前，每個人都會先進入一種狀態。不是對錯，只是你比較熟悉哪一種。
       </p>
 
       <div class="quiz" id="quiz">
         <div class="q reveal" style="--d:320ms;" data-q="q1">
-          <h3>當你想開始動起來，你更接近哪種狀態？</h3>
+          <h3>當你準備開始動起來時，你更接近哪一種感覺？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="A">先讓環境安靜下來，慢慢把注意力收回身體。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="B">一點刺激或節奏，讓情緒被點燃，身體自然跟上。。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="C">明確的目標與結構，一開始就進入專注狀態。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="A">先讓周圍慢下來，找到一個安靜的位置。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="B">需要一點節奏或刺激，讓身體慢慢被帶進去。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="C">很清楚自己要做什麼，一開始就能專注。</div>
           </div>
         </div>
 
         <div class="q reveal" style="--d:380ms;" data-q="q2">
-          <h3>你希望運動時，服飾帶給你的感受是？</h3>
+          <h3>運動時，你比較在意的是？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">安靜包覆、不打擾思緒，存在感低但可靠。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="B">有能量、有流動感，讓動作看起來更有生命。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="C">結構清楚、支撐到位，讓每個動作都更精準。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">不被打擾，能專心感受當下。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="B">有流動感，動起來會覺得「對了」。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="C">清楚、俐落，每個動作都有目的。</div>
           </div>
         </div>
 
         <div class="q reveal" style="--d:440ms;" data-q="q3">
-          <h3>完成訓練後，你最想留下的是？</h3>
+          <h3>結束之後，你最希望留下的是？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">一種安定、沉靜，像夜裡還醒著的思緒。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="B">一股被釋放的熱度，感覺自己再次進化。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="C">清楚、俐落的完成感，知道自己做得很好。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">一種安定，像事情慢慢回到正軌。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="B">被釋放的感覺，身體與情緒都輕了一點。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="C">很明確的完成感，知道自己做到了。</div>
           </div>
         </div>
 
@@ -1145,8 +1170,8 @@
           <p class="v" id="archRhythm">—</p>
         </div>
         <div class="arch-card reveal" style="--d:440ms;">
-          <div class="t">STYLE + COLOR DIRECTION</div>
-          <p class="v" id="archStyle">—</p>
+          <div class="t">COLOR DIRECTION</div>
+          <p class="v" id="archColor">—</p>
         </div>
       </div>
 
@@ -1228,20 +1253,18 @@
       $$('.reveal').forEach(el=>{
         if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
       });
-
       $$('.late[data-late]').forEach(el=>{
         if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
       });
 
-      if(!logoRevealed && inView(logoFrame, 0.80, 0.15)){
+      if(!logoRevealed && logoFrame && inView(logoFrame, 0.80, 0.15)){
         logoRevealed = true;
         logoFrame.classList.add('in');
         setTimeout(()=>logoMark.classList.add('in'), 520);
         setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
       }
 
-      /* Flame Mark reveal */
-      if(!flameRevealed && inView(flameFrame, 0.80, 0.15)){
+      if(!flameRevealed && flameFrame && inView(flameFrame, 0.80, 0.15)){
         flameRevealed = true;
         flameFrame.classList.add('in');
         setTimeout(()=>flameImg.classList.add('in'), 520);
@@ -1277,13 +1300,15 @@
       logoFrame.setAttribute('data-mode', modes[modeIdx]);
       popOnce();
     }
-    logoFrame.addEventListener('click', cycleMode);
-    logoFrame.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        cycleMode();
-      }
-    });
+    if(logoFrame){
+      logoFrame.addEventListener('click', cycleMode);
+      logoFrame.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          cycleMode();
+        }
+      });
+    }
 
     let logoRevealed = false;
     let flameRevealed = false;
@@ -1327,52 +1352,91 @@
       });
     });
 
-    /* Archetype */
+    /* Archetype (27 combos, but front-end只顯示一個結果；不談剪裁/工藝) */
     const unlockBtn = $('#unlockBtn');
-    const archPicked  = $('#archPicked');
+    const archPickedEl = $('#archPicked');
     const archTitle = $('#archTitle');
     const archKey   = $('#archKey');
     const archCore  = $('#archCore');
     const archRhythm= $('#archRhythm');
-    const archStyle = $('#archStyle');
+    const archColor = $('#archColor');
 
     const answers = { q1:null, q2:null, q3:null };
     const opts = $$('.opt');
 
-    function computeArchetype(){
-      const counts = {A:0,B:0,C:0};
-      Object.values(answers).forEach(v=>{ if(v) counts[v]++; });
-      const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+    const AXIS = {
+      q1: { A:{k:'QUIET ENTRY', zh:'安靜入場'}, B:{k:'RHYTHM ENTRY', zh:'節奏入場'}, C:{k:'DIRECT ENTRY', zh:'直接入場'} },
+      q2: { A:{k:'SENSING', zh:'感受優先'},   B:{k:'FLOW', zh:'流動優先'},   C:{k:'PRECISION', zh:'精準優先'} },
+      q3: { A:{k:'GROUND', zh:'回到安定'},    B:{k:'RELEASE', zh:'釋放鬆開'}, C:{k:'COMPLETE', zh:'完成收束'} }
+    };
 
-      if(top === 'A'){
+    function animalFromAlignment(align){
+      if(align === 'DAWN'){
         return {
-          key:'The Night Watcher',
-          zh:'夜守觀者',
-          core:'你偏好把節奏先放慢，擅長在安靜中觀察，在低噪音裡累積力量。讓身體回到可控的穩定；你的力量來自「長期一致」。',
-          rhythm:'適合循序漸進、節奏均勻的訓練安排：穩定心率、有餘裕的重量感，讓你越練越安定。',
-          style:'輪廓偏簡潔、低噪、耐看；材質重視手感與延展。配色偏冷霧灰、鼠尾草、低飽和中性色，細節用微光或細線條收住質感。'
+          animal:'貓頭鷹',
+          en:'OWL',
+          colorText:'冷霧灰 × 鼠尾草綠。乾淨、節制，留一點神秘的呼吸。',
+          tone:'你擅長在安靜裡整理自己，先把世界降噪，才進入狀態。'
         };
       }
-      if(top === 'B'){
+      if(align === 'EMBERS'){
         return {
-          key:'The Inner Phoenix',
-          zh:'內在點燃者',
-          core:'你需要一點推力才進得去，但一旦熱起來，你會非常穩且帶張力；你是「沉靜裡的燃」。',
-          rhythm:'適合有起伏的訓練節奏：前段暖身、後段爆發；你越動越進入狀態，越能把情緒轉成力量。',
-          style:'配色偏赤陶棕、暖玫瑰金、深酒紅或黑。剪裁俐落、有線條流動感，讓能量能被看見。'
+          animal:'鳳凰',
+          en:'PHOENIX',
+          colorText:'赤陶棕 × 暖橙金。彩度更高，但熱度是往內走的。',
+          tone:'你需要一點溫度才能開始，一旦對了，整個人會被喚醒。'
         };
       }
       return {
-        key:'The Silent Focus',
-        zh:'靜域獵者',
-        core:'你喜歡乾淨、清晰的結構感；當一切變得有秩序，你就能把專注推到很深。',
-        rhythm:'適合明確分區、目標導向的訓練：組數、節奏、休息都清楚，你會因此更穩、更有效率。',
-        style:'喜好剪裁與結構分明；配色偏石墨黑、午夜藍、冷金屬灰，越純粹越耐看。'
+        animal:'雪豹',
+        en:'SNOW LEOPARD',
+        colorText:'石墨黑 × 午夜藍。安靜、銳利，像凝視一樣收斂。',
+        tone:'你把專注收得很深，一旦進入狀態，雜訊自然退後。'
       };
     }
 
+    function buildArchetype(){
+      const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
+      const a = animalFromAlignment(align);
+
+      const a1 = AXIS.q1[answers.q1];
+      const a2 = AXIS.q2[answers.q2];
+      const a3 = AXIS.q3[answers.q3];
+
+      const key = `${a.en} · ${a1.k} / ${a2.k} / ${a3.k}`;
+      const title = `${a.animal｜${a1.zh}}`;
+
+      // 27 變體：用三軸組合出描述（不露「你被研究」的口吻）
+      const core = [
+        a.tone,
+        `你更像是「${a1.zh}」的人：先把自己放到對的位置，再讓身體接手。`,
+        `過程中你偏向「${a2.zh}」，所以你會在細節裡找到安心感。`,
+        `結束後你希望是「${a3.zh}」，這會影響你對運動的黏著度。`,
+        `這不是分類，也不會被比較；它只是你此刻的傾向。`
+      ].join(' ');
+
+      const rhythm = (()=> {
+        const entry = answers.q1, focus = answers.q2, after = answers.q3;
+        const line1 = entry==='A' ? '先慢後穩：給自己 5–8 分鐘安靜熱身，讓節奏自然對上。'
+                    : entry==='B' ? '先帶起來：用有節奏的暖身把身體叫醒，越動越進入狀態。'
+                    : '一開始就進：你適合明確的開始訊號，進場後就把注意力鎖住。';
+
+        const line2 = focus==='A' ? '你在意感受：把注意力放在呼吸、肌肉收縮與節奏一致，會更容易持續。'
+                    : focus==='B' ? '你在意流動：用連貫的段落或循環式安排，會讓你更有「對了」的感覺。'
+                    : '你在意精準：把目標、組數、休息寫清楚，你會練得更穩也更有效率。';
+
+        const line3 = after==='A' ? '收尾要安定：留 2–4 分鐘緩和，讓你帶著安定離開。'
+                    : after==='B' ? '收尾要釋放：用拉伸或慢呼吸把緊繃放掉，你會更願意回來。'
+                    : '收尾要完成：用簡單的結束儀式（記錄、回顧）讓你有明確的完成感。';
+
+        return `${line1} ${line2} ${line3}`;
+      })();
+
+      return { key, title, core, rhythm, colorText: a.colorText, archetypeName: `${a.animal｜${a1.zh}}` };
+    }
+
     function updateUnlock(){
-      unlockBtn.disabled = !Object.values(answers).every(Boolean);
+      if(unlockBtn) unlockBtn.disabled = !Object.values(answers).every(Boolean);
     }
 
     function setOptState(q, chosenEl){
@@ -1402,49 +1466,54 @@
       });
     });
 
-    unlockBtn.addEventListener('click', ()=>{
-      const r = computeArchetype();
+    if(unlockBtn){
+      unlockBtn.addEventListener('click', ()=>{
+        const r = buildArchetype();
 
-      archTitle.textContent = r.zh;
-      archKey.textContent   = r.key;
-      archCore.textContent  = r.core;
-      archRhythm.textContent= r.rhythm;
-      archStyle.textContent = r.style;
+        archTitle.textContent = r.title;
+        archKey.textContent   = r.key;
+        archCore.textContent  = r.core;
+        archRhythm.textContent= r.rhythm;
+        archColor.textContent = r.colorText;
 
-      localStorage.setItem('hestia_archetype', r.zh);
-      localStorage.setItem('hestia_archetype_key', r.key);
+        localStorage.setItem('hestia_archetype', r.archetypeName);
+        localStorage.setItem('hestia_archetype_key', r.key);
 
-      if(archPicked) archPicked.textContent = r.zh;
+        if(archPickedEl) archPickedEl.textContent = r.archetypeName;
 
-      setTimeout(()=>{
-        const s7 = document.getElementById('s7');
-        if(s7) s7.scrollIntoView({behavior:'smooth', block:'start'});
+        setTimeout(()=>{
+          const s7 = document.getElementById('s7');
+          if(s7) s7.scrollIntoView({behavior:'smooth', block:'start'});
+          setTimeout(requestCheck, 180);
+        }, 420);
+      });
+    }
+
+    const toHearthBtn = $('#toHearthBtn');
+    if(toHearthBtn){
+      toHearthBtn.addEventListener('click', ()=>{
+        const s8 = document.getElementById('s8');
+        if(s8) s8.scrollIntoView({behavior:'smooth', block:'start'});
         setTimeout(requestCheck, 180);
-      }, 420);
-    });
-
-    $('#toHearthBtn').addEventListener('click', ()=>{
-      const s8 = document.getElementById('s8');
-      if(s8) s8.scrollIntoView({behavior:'smooth', block:'start'});
-      setTimeout(requestCheck, 180);
-    });
+      });
+    }
 
     (function hydrateSaved(){
       const savedArch = localStorage.getItem('hestia_archetype');
-      if(savedArch && archPicked) archPicked.textContent = savedArch;
+      const savedKey  = localStorage.getItem('hestia_archetype_key');
+      if(savedArch && archPickedEl) archPickedEl.textContent = savedArch;
+      if(savedArch && savedKey){
+        archTitle.textContent = savedArch;
+        archKey.textContent = savedKey;
+      }
       const savedAlign = localStorage.getItem('hestia_alignment');
       if(savedAlign){
         if(alignPicked) alignPicked.textContent = savedAlign;
         if(alignPicked2) alignPicked2.textContent = savedAlign;
       }
-      const savedKey = localStorage.getItem('hestia_archetype_key');
-      if(savedArch && savedKey){
-        archTitle.textContent = savedArch;
-        archKey.textContent = savedKey;
-      }
     })();
 
-    /* Form */
+    /* Toast + GForm */
     const toast = $('#toast');
     const iframe = $('#hidden_iframe');
     let submittedAt = 0;
@@ -1474,16 +1543,18 @@
       return true;
     }
 
-    iframe.addEventListener('load',()=>{
-      if(Date.now()-submittedAt<350) return;
-      $('#email').value='';
-      toast.classList.add('show');
-      setTimeout(()=>toast.classList.remove('show'),2600);
-    });
+    if(iframe){
+      iframe.addEventListener('load',()=>{
+        if(Date.now()-submittedAt<350) return;
+        $('#email').value='';
+        toast.classList.add('show');
+        setTimeout(()=>toast.classList.remove('show'),2600);
+      });
+    }
 
     /* Dots behavior */
     const breath = $('#breath');
-    const sections = ['s1','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
+    const sections = ['s1','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id)).filter(Boolean);
     const dots = $$('.dot');
 
     function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
@@ -1500,7 +1571,7 @@
       });
       setActiveDot(best.idx);
 
-      if(best.idx !== lastActive){
+      if(best.idx !== lastActive && breath){
         breath.classList.add('transition');
         requestAnimationFrame(()=>{
           breath.classList.add('release');
@@ -1526,8 +1597,8 @@
     function onFirstScroll(){
       if(hinted) return;
       hinted = true;
-      dotsNav.classList.add('hint');
-      setTimeout(()=>dotsNav.classList.remove('hint'), 1200);
+      if(dotsNav) dotsNav.classList.add('hint');
+      setTimeout(()=>dotsNav && dotsNav.classList.remove('hint'), 1200);
       window.removeEventListener('scroll', onFirstScroll, {passive:true});
     }
     window.addEventListener('scroll', onFirstScroll, {passive:true});
@@ -1544,7 +1615,7 @@
     setTimeout(()=>{ requestCheck(); requestAnimationFrame(extraTick); }, 260);
 
     /* =========================
-       Collective Hearth (Canvas 2D) - 你指定火焰版本
+       Collective Hearth (Canvas 2D) - 你指定火焰版本（修正語法，避免整頁掛掉）
     ========================== */
     const canvas = $('#flameCanvas');
     const ctx = canvas.getContext('2d', { alpha:true });
@@ -1585,7 +1656,7 @@
     }
     function applyLevel(){
       const n = getCount();
-      hearthLevelEl.textContent = levelFromCount(n);
+      if(hearthLevelEl) hearthLevelEl.textContent = levelFromCount(n);
       const base = (n < 50) ? 0.92 :
                    (n < 150) ? 0.98 :
                    (n < 350) ? 1.04 :
@@ -1626,7 +1697,7 @@
       const b = 0.10 + boost*0.06;
       g.addColorStop(0, `rgba(230,118,144,${0.12*globalIntensity + b})`);
       g.addColorStop(0.45, `rgba(193,138,74,${0.08*globalIntensity + b*0.6})`);
-      g.addColorStop(1, 'rgba(0,0,0,0)');
+      g.addColorStop(1, 'rgba(0,0,0,0)'); /* 修正：引號一致，避免整個 JS 中斷 */
       ctx.fillStyle = g;
       ctx.fillRect(0,0,W,H);
 

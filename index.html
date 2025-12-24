@@ -33,14 +33,17 @@
 
       --breath-a: rgba(230,118,144,.22);
       --breath-b: rgba(120,80,120,.13);
+
+      --wrap: 760px; /* 統一約束寬度（05/06/07 一致） */
     }
+
+    *{ box-sizing:border-box; }
 
     html,body{
       margin:0;padding:0;overflow-x:hidden;background:#000;color:var(--text);
       font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
     }
 
-    /* Theme switching (Aesthetic Alignment) */
     body{ transition: background-color 1.2s ease; }
     body[data-theme="dawn"]{
       --sanctuary-1:#0b1012;
@@ -81,6 +84,7 @@
       position:relative;
       z-index:1;
       scroll-margin-top: 8px;
+      width:100%;
     }
 
     h1,h2{margin:0 0 18px;color:#fff;}
@@ -88,29 +92,29 @@
     h2{font-size:clamp(24px,4vw,40px);}
 
     p{
-      max-width:760px;
+      max-width:var(--wrap);
       font-size:clamp(16px,2vw,20px);
       line-height:1.72;
       margin:0 auto;
       color:var(--text);
+      overflow-wrap:anywhere;
+      word-break:break-word;
     }
 
     .we-accent{color:var(--accent);text-shadow:0 0 22px rgba(230,118,144,.22);}
+    .i-accent{color:var(--accent);text-shadow:0 0 22px rgba(230,118,144,.22);}
 
-    /* ====== 背景分幕（Hero 維持原本） ====== */
+    /* ====== 背景分幕 ====== */
     .s1{background:linear-gradient(180deg,#000,#000);}
-
-    /* ====== Digital Sanctuary 分幕（更沉靜 + 可變色） ====== */
     .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
     .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
     .s4{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
     .s5{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
     .s6{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
-    .s7{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
-    .s8{background:linear-gradient(180deg,#000,var(--sanctuary-2));}
-    .s9{background:linear-gradient(180deg,var(--sanctuary-2),#000);}
+    .s7{background:linear-gradient(180deg,var(--sanctuary-5),#000);}     /* Archetype Result */
+    .s8{background:linear-gradient(180deg,#000,#000);}                  /* Collective Hearth */
 
-    /* ====== 全頁呼吸柔光（跟著主題變） ====== */
+    /* ====== 全頁呼吸柔光 ====== */
     .breath{
       position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
       background:
@@ -131,24 +135,21 @@
       100%{background-position:48% 105%,52% 0%;}
     }
     .breath.transition{
-      animation: none;
-      opacity: .12;
-      transform: scale(.985);
-      filter: saturate(1.02);
-      transition: transform .58s cubic-bezier(.22,.61,.36,1), opacity .58s cubic-bezier(.22,.61,.36,1);
+      animation:none;
+      opacity:.12;
+      transform:scale(.985);
+      filter:saturate(1.02);
+      transition:transform .58s cubic-bezier(.22,.61,.36,1), opacity .58s cubic-bezier(.22,.61,.36,1);
     }
-    .breath.transition.release{
-      opacity: .11;
-      transform: scale(1);
-    }
+    .breath.transition.release{ opacity:.11; transform:scale(1); }
 
-    /* ====== 柔粒覆層（grain） ====== */
+    /* ====== 柔粒覆層 ====== */
     .grain{
       position:fixed;inset:0;pointer-events:none;z-index:1;
       opacity:.055;mix-blend-mode:overlay;
       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
-      background-size: 240px 240px;
-      transform: translateZ(0);
+      background-size:240px 240px;
+      transform:translateZ(0);
     }
 
     /* ====== 進場 ====== */
@@ -170,11 +171,9 @@
     }
     .late.in{opacity:1;transform:none;}
 
-    /* ===== 共用：簡報式小標 ===== */
     .kicker{
       display:inline-flex;
-      align-items:center;
-      justify-content:center;
+      align-items:center;justify-content:center;
       padding:8px 12px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
@@ -186,7 +185,6 @@
       color:rgba(255,255,255,.68);
     }
 
-    /* ===== 章節編號（01/02/03...） ===== */
     .secno{
       font-size:11px;
       letter-spacing:.42em;
@@ -204,13 +202,12 @@
       background:rgba(255,255,255,.10);
     }
 
-    /* ===== 髮絲線底線強調（關鍵詞） ===== */
     .hair-underline{
       display:inline-block;
       padding-bottom:2px;
       background-image: linear-gradient(transparent calc(100% - 1px), rgba(255,255,255,.22) 1px);
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
+      background-repeat:no-repeat;
+      background-size:100% 100%;
     }
 
     /* ===== Hero（維持原本） ===== */
@@ -221,6 +218,7 @@
     .wordmark{
       display:block;margin:0 auto;width:clamp(260px,60vw,560px);
       filter:drop-shadow(0 10px 28px rgba(0,0,0,.52));
+      max-width:92vw;
     }
     .submark{
       margin-top:-5px;
@@ -233,14 +231,15 @@
     .tagline{
       margin-top:10px;
       font-weight:300;
-      letter-spacing:.22em;
+      letter-spacing:.14em;
       font-size:clamp(14px,1.8vw,18px);
       color:rgba(255,255,255,.75);
       text-shadow:0 0 10px rgba(230,118,144,.22);
       animation:breatheText 7s ease-in-out infinite;
       position:relative;z-index:2;
-      text-align:center;
-      padding: 0 12px;
+      padding:0 10px;
+      max-width:92vw;
+      overflow-wrap:anywhere;
     }
     @keyframes breatheText{ 0%,100%{opacity:.55;} 50%{opacity:.95;} }
 
@@ -268,14 +267,13 @@
         left:50%;
         transform:translateX(-50%);
         margin:0;
-        width:min(92vw, 520px);
+        width:max-content;
+        max-width:92vw;
         text-align:center;
       }
       .s1 .tagline{ bottom: calc(28vh - 10px); }
       .s1 .arrow{ bottom: calc(28vh - 33px - 10px); }
-      .s1 .arrow{
-        animation: breatheText 7s ease-in-out infinite, floatYKeepCenter 3.6s ease-in-out infinite;
-      }
+      .s1 .arrow{ animation: breatheText 7s ease-in-out infinite, floatYKeepCenter 3.6s ease-in-out infinite; }
       @keyframes floatYKeepCenter{
         0%,100%{ transform:translateX(-50%) translateY(0); }
         50%    { transform:translateX(-50%) translateY(8px); }
@@ -287,6 +285,8 @@
       line-height:1.08;
       letter-spacing:.04em;
       font-weight:700;
+      max-width:92vw;
+      overflow-wrap:anywhere;
     }
 
     /* ========== 章節點（維持原版大小與樣式） ========== */
@@ -326,7 +326,6 @@
       50%{     box-shadow: 0 0 12px rgba(255,255,255,.62), 0 0 26px rgba(255,255,255,.26); transform: scale(1.08); }
     }
     .dot:active{ transform: scale(1.15); }
-
     .dot::after{
       content: attr(data-label);
       position:absolute;
@@ -353,7 +352,6 @@
       opacity:1;
       transform: translateY(-50%) translateX(-2px);
     }
-
     .dots.hint .dot{
       box-shadow: 0 0 0 rgba(255,255,255,0);
       animation: hintPulse 1.2s ease-in-out 1;
@@ -363,15 +361,14 @@
       40%{ opacity:1; box-shadow: 0 0 10px rgba(255,255,255,.22); }
       100%{ opacity:.60; box-shadow: 0 0 0 rgba(255,255,255,0); }
     }
-
     @media (max-width: 640px){
       .dot{ width:6px;height:6px; }
       .dot::after{ font-size:10px; padding:6px 8px; right:16px; }
     }
 
-    /* ========== WHO：資訊卡（維持） ========== */
+    /* ========== WHO：資訊卡 ========== */
     .info-card{
-      width:min(720px, 92vw);
+      width:min(var(--wrap), 92vw);
       margin-top:18px;
       padding:18px 16px;
       border-radius:18px;
@@ -382,11 +379,7 @@
       position:relative;
       z-index:2;
     }
-    .info-card .mini{
-      margin-bottom:10px;
-      display:flex;
-      justify-content:center;
-    }
+    .info-card .mini{ margin-bottom:10px; display:flex; justify-content:center; }
     .info-card .mini .kicker{ transform: translateY(-2px); }
 
     /* ========== 展示框：HLOGO / FLAME MARK 統一尺寸 ========== */
@@ -395,10 +388,10 @@
       aspect-ratio: 1 / 1;
     }
 
-    /* ========== LOGO PAGE（回到原兩頁敘事結構） ========== */
+    /* ========== PRIMARY MARK（原敘事） ========== */
     .s3{ padding-top:70px; padding-bottom:70px; }
     .s3 .stack{
-      width:min(760px, 92vw);
+      width:min(var(--wrap), 92vw);
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -432,7 +425,6 @@
       transform: translateY(0) scale(1);
     }
     .logo-frame.in{ clip-path: circle(120% at 50% 50%); }
-
     .logo-frame::before{
       content:"";
       position:absolute;
@@ -442,14 +434,8 @@
       opacity:0;
       pointer-events:none;
     }
-    .logo-frame.sheen::before{
-      opacity:1;
-      animation: sheenSweep 2.8s cubic-bezier(.22,.61,.36,1) 1 both;
-    }
-    @keyframes sheenSweep{
-      0%{ transform: translateX(-35%) rotate(12deg); }
-      100%{ transform: translateX(35%) rotate(12deg); }
-    }
+    .logo-frame.sheen::before{ opacity:1; animation: sheenSweep 2.8s cubic-bezier(.22,.61,.36,1) 1 both; }
+    @keyframes sheenSweep{ 0%{ transform: translateX(-35%) rotate(12deg);} 100%{ transform: translateX(35%) rotate(12deg);} }
 
     .logo-frame:hover{
       border-color: rgba(255,255,255,.16);
@@ -496,11 +482,7 @@
     .corner-hint::after{ right:10px; bottom:10px; transform: rotate(180deg); }
     .logo-frame.in .corner-hint{ opacity:.9; }
     .logo-frame.hint .corner-hint{ animation: hintGlow 1.35s ease-in-out 1; }
-    @keyframes hintGlow{
-      0%{ opacity:.25; }
-      45%{ opacity:1; }
-      100%{ opacity:.9; }
-    }
+    @keyframes hintGlow{ 0%{opacity:.25;} 45%{opacity:1;} 100%{opacity:.9;} }
 
     .logo-mark{
       width: clamp(120px, 26vw, 210px);
@@ -512,6 +494,7 @@
       will-change: opacity, transform, filter;
       position:relative;
       z-index:2;
+      max-width:100%;
     }
     .logo-mark.in{ opacity:1; transform: translateY(0) scale(1); }
     .logo-frame[data-mode="mono"] .logo-mark{
@@ -520,15 +503,15 @@
 
     .logo-frame.pulse{ animation: stagePulse .62s cubic-bezier(.22,.61,.36,1) both; }
     @keyframes stagePulse{
-      0%   { transform: translateY(0) scale(1); }
-      35%  { transform: translateY(-1px) scale(1.02); }
-      100% { transform: translateY(0) scale(1); }
+      0%{ transform: translateY(0) scale(1); }
+      35%{ transform: translateY(-1px) scale(1.02); }
+      100%{ transform: translateY(0) scale(1); }
     }
     .logo-mark.pop{ animation: markPop .62s cubic-bezier(.22,.61,.36,1) both; }
     @keyframes markPop{
-      0%   { filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
-      40%  { filter: drop-shadow(0 0 18px rgba(230,118,144,.18)); transform: translateY(-1px) scale(1.03); }
-      100% { filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
+      0%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
+      40%{ filter: drop-shadow(0 0 18px rgba(230,118,144,.18)); transform: translateY(-1px) scale(1.03); }
+      100%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
     }
 
     .s3 .label{
@@ -543,7 +526,7 @@
     }
 
     .s3 .bullets{
-      width:min(640px, 92vw);
+      width:min(var(--wrap), 92vw);
       margin-top:2px;
       display:grid;
       gap:10px;
@@ -555,6 +538,7 @@
       color:rgba(255,255,255,.84);
       line-height:1.7;
       font-size:clamp(15px, 2.4vw, 18px);
+      overflow-wrap:anywhere;
     }
     .s3 .bullet::before{
       content:"";
@@ -564,7 +548,7 @@
       box-shadow:0 0 0 3px rgba(255,255,255,.10);
     }
     .s3 .sig{
-      width:min(640px, 92vw);
+      width:min(var(--wrap), 92vw);
       margin-top:10px;
       padding-top:14px;
       border-top:1px solid rgba(255,255,255,.10);
@@ -572,12 +556,13 @@
       font-size:13px;
       letter-spacing:.10em;
       text-align:left;
+      overflow-wrap:anywhere;
     }
 
-    /* ========== Sanctuary 卡片 ======== */
+    /* ========== Sanctuary wrap（統一容器） ========== */
     .sanctuary-wrap{
       position:relative;
-      width:min(760px, 92vw);
+      width:min(var(--wrap), 92vw);
       padding:22px 18px 18px;
       border-radius:22px;
       border:1px solid rgba(255,255,255,.10);
@@ -588,8 +573,7 @@
       backdrop-filter: blur(7px);
       overflow:hidden;
       z-index:2;
-      box-sizing:border-box;
-      max-width: 92vw;
+      margin:0 auto;
     }
     .sanctuary-wrap::before{
       content:"";
@@ -609,37 +593,28 @@
       pointer-events:none;
       opacity:.85;
     }
-    .sanctuary-kicker{
-      display:flex;
-      justify-content:center;
-      margin-bottom:10px;
-      position:relative;
-      z-index:2;
-    }
+    .sanctuary-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
 
-    .sanctuary-sub{
-      max-width:620px;
-      line-height:1.62;
-      margin:14px auto 0;
-      position:relative;
-      z-index:2;
-    }
+    /* ========== Digital Sanctuary 說明文字（你指定移除後段） ========== */
+    .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
     .sanctuary-sub p{
       font-size:clamp(15px,3.8vw,18px);
       color:rgba(255,255,255,.82);
+      max-width:100%;
     }
 
-    /* ========== Aesthetic Alignment ======== */
+    /* ========== Aesthetic Alignment（05：選項不超出） ========== */
     .align-grid{
-      width:min(820px, 94vw);
+      width:100%;
       display:grid;
-      grid-template-columns: 1fr;
+      grid-template-columns:1fr;
       gap:12px;
       margin-top:16px;
       position:relative;
       z-index:2;
     }
     .mood{
+      width:100%;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
@@ -652,6 +627,7 @@
       -webkit-tap-highlight-color: transparent;
       transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
       padding:14px 14px 12px;
+      max-width:100%;
     }
     .mood:active{ transform: scale(.99); }
     .mood.dim{ opacity:.42; }
@@ -662,9 +638,10 @@
     }
     .mood .row{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:10px;
+      flex-wrap:wrap;
     }
     .mood .title{
       font-size:14px;
@@ -678,22 +655,27 @@
       color:rgba(255,255,255,.82);
       font-size:clamp(15px, 3.8vw, 17px);
       line-height:1.55;
+      max-width:100%;
+      overflow-wrap:anywhere;
     }
     .mood .sw{
       display:flex;
       gap:8px;
       align-items:center;
       justify-content:flex-end;
+      margin-left:auto;
+      padding-top:4px;
     }
     .dot-swatch{
       width:10px;height:10px;border-radius:50%;
       border:1px solid rgba(255,255,255,.18);
       box-shadow: 0 0 0 3px rgba(255,255,255,.04);
+      flex:0 0 auto;
     }
 
-    /* ========== Reflection Quiz ======== */
+    /* ========== Introspective Reflection（06：選項不超出） ========== */
     .quiz{
-      width:min(820px, 94vw);
+      width:100%;
       margin-top:14px;
       display:grid;
       gap:14px;
@@ -702,13 +684,14 @@
       text-align:left;
     }
     .q{
+      width:100%;
       padding:16px 14px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.10);
       background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
       box-shadow: 0 18px 60px rgba(0,0,0,.40);
       backdrop-filter: blur(6px);
-      box-sizing:border-box;
+      max-width:100%;
     }
     .q h3{
       margin:0 0 12px;
@@ -716,9 +699,11 @@
       letter-spacing:.12em;
       color:rgba(255,255,255,.80);
       font-weight:650;
+      overflow-wrap:anywhere;
     }
     .opts{ display:grid; gap:10px; }
     .opt{
+      width:100%;
       padding:12px 12px;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.12);
@@ -731,9 +716,9 @@
       -webkit-tap-highlight-color: transparent;
       transition: transform .22s ease, opacity .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
       position:relative;
-      box-sizing:border-box;
       overflow-wrap:anywhere;
-      word-break: break-word;
+      word-break:break-word;
+      max-width:100%;
     }
     .opt:active{ transform: scale(.99); }
     .opt.dim{ opacity:.42; }
@@ -744,11 +729,7 @@
       box-shadow: 0 0 18px rgba(230,118,144,.12);
     }
 
-    .quiz-actions{
-      display:flex;
-      justify-content:center;
-      margin-top:6px;
-    }
+    .quiz-actions{ display:flex; justify-content:center; margin-top:6px; }
     .ghost-btn{
       padding:12px 18px;
       border-radius:12px;
@@ -759,118 +740,109 @@
       letter-spacing:.10em;
       cursor:pointer;
       transition: transform .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease;
+      max-width:92vw;
     }
     .ghost-btn:active{ transform: scale(.99); }
     .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
-    /* ========== YOUR ARCHETYPE（避免超出螢幕） ======== */
-    .archetype-card{
-      width:min(820px, 94vw);
+    /* ========== Archetype Result（獨立頁，不溢出） ========== */
+    .result-page{
+      width:min(var(--wrap), 92vw);
+      margin:0 auto;
+      padding:22px 18px 18px;
       border-radius:22px;
       border:1px solid rgba(255,255,255,.10);
       background:
-        radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,.015) 60%),
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      box-shadow: 0 18px 62px rgba(0,0,0,.46);
-      backdrop-filter: blur(6px);
-      padding:18px 16px;
-      box-sizing:border-box;
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
+      backdrop-filter: blur(7px);
       overflow:hidden;
+      z-index:2;
+      text-align:left;
+      position:relative;
     }
-    .archetype-head{
+    .result-page::after{
+      content:"";
+      position:absolute;inset:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      pointer-events:none;
+      opacity:.85;
+    }
+    .rp-kicker{
       display:flex;
-      flex-direction:column;
-      gap:8px;
-      align-items:center;
-      text-align:center;
+      justify-content:center;
+      margin-bottom:10px;
       position:relative;
       z-index:2;
     }
-    .arch-kicker{
+    .arch-title{
+      margin:6px 0 4px;
+      font-size:clamp(22px, 5vw, 32px);
+      font-weight:850;
+      letter-spacing:.06em;
+      color:#fff;
+      position:relative;
+      z-index:2;
+      overflow-wrap:anywhere;
+    }
+    .arch-sub{
+      margin:0 0 14px;
+      font-size:13px;
+      letter-spacing:.20em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.66);
+      position:relative;
+      z-index:2;
+      overflow-wrap:anywhere;
+    }
+    .arch-grid{
+      display:grid;
+      gap:10px;
+      position:relative;
+      z-index:2;
+    }
+    .arch-card{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding:14px 14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.30);
+      overflow-wrap:anywhere;
+    }
+    .arch-card .t{
+      margin:0 0 6px;
       font-size:12px;
       letter-spacing:.22em;
       text-transform:uppercase;
-      color: rgba(255,255,255,.62);
-      margin:0;
+      color:rgba(255,255,255,.62);
     }
-    .arch-title{
+    .arch-card .v{
       margin:0;
-      font-size: clamp(28px, 6vw, 44px);
-      font-weight: 900;
-      letter-spacing: .06em;
-      color:#fff;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-    }
-    .arch-sub{
-      margin:0;
-      color: rgba(255,255,255,.80);
-      font-size: clamp(14px, 3.8vw, 16px);
+      font-size:15px;
       line-height:1.7;
-      max-width: 720px;
+      color:rgba(255,255,255,.84);
     }
-    .arch-grid{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-      text-align:left;
-    }
-    .arch-box{
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-      box-shadow: 0 18px 60px rgba(0,0,0,.40);
-      padding:14px 14px;
-      box-sizing:border-box;
-    }
-    .arch-box h4{
-      margin:0 0 8px;
-      font-size:13px;
-      letter-spacing:.14em;
-      color: rgba(255,255,255,.82);
-      text-transform:uppercase;
-    }
-    .arch-box ul{
-      margin:0;
-      padding-left: 18px;
-      color: rgba(255,255,255,.80);
-      line-height:1.65;
-      font-size: 14px;
-    }
-    .arch-box li{ margin: 6px 0; }
-
     .arch-actions{
       margin-top:14px;
       display:flex;
-      gap:10px;
       justify-content:center;
-      flex-wrap:wrap;
+      position:relative;
+      z-index:2;
     }
-    .pill-btn{
-      padding:12px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.04);
-      color: rgba(255,255,255,.88);
-      font-weight:800;
-      letter-spacing:.10em;
-      cursor:pointer;
-      transition: transform .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease;
-    }
-    .pill-btn:active{ transform: scale(.99); }
+    .arch-actions .ghost-btn{ width:auto; }
 
-    /* ========== FLAME MARK ======== */
+    /* ========== FLAME MARK（保留原本說明，中文縮小 20%） ========== */
     .flame-stage{
       position:relative;
-      width:min(760px, 92vw);
+      width:min(var(--wrap), 92vw);
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:14px;
       z-index:2;
     }
-
     .flame-frame{
       border-radius:18px;
       background:
@@ -892,7 +864,6 @@
     .flame-frame.in{ clip-path: circle(120% at 50% 48%); }
     .flame-frame .corner-hint{ opacity:0; }
     .flame-frame.in .corner-hint{ opacity:.9; }
-
     .flame-img{
       width: clamp(120px, 26vw, 210px);
       margin:0;
@@ -903,6 +874,7 @@
       will-change: opacity, transform, filter;
       position:relative;
       z-index:2;
+      max-width:100%;
     }
     .flame-img.in{
       opacity:1;
@@ -910,12 +882,11 @@
       animation: flameBreath 8.8s ease-in-out infinite alternate;
     }
     @keyframes flameBreath{
-      0%   { filter: drop-shadow(0 0 14px rgba(230,118,144,.14)); }
-      100% { filter: drop-shadow(0 0 26px rgba(230,118,144,.22)); }
+      0%{ filter: drop-shadow(0 0 14px rgba(230,118,144,.14)); }
+      100%{ filter: drop-shadow(0 0 26px rgba(230,118,144,.22)); }
     }
-
     .manifest{
-      width:min(760px, 92vw);
+      width:min(var(--wrap), 92vw);
       margin-top:0;
       padding:18px 16px;
       border-radius:18px;
@@ -926,152 +897,135 @@
       backdrop-filter: blur(6px);
       position:relative;
       z-index:2;
-      box-sizing:border-box;
-      max-width: 92vw;
-      overflow:hidden;
+      text-align:left;
+      overflow-wrap:anywhere;
     }
-
     .manifest .quote-zh{
-      font-size: 0.8em;
+      font-size:0.8em;
       color: rgba(255,255,255,.82);
       overflow-wrap:anywhere;
-      word-break:break-word;
     }
 
-    /* ========== Collective Hearth: single card + mobile safe ===== */
-    .s9{
-      padding-left: 20px;
-      padding-right: 20px;
-    }
+    /* ========== Collective Hearth（單一方塊、手機置中、含 Canvas 火焰） ========== */
     .hearth-wrap{
-      width: min(760px, 92vw);
-      margin: 0 auto;
-      display: block;
-    }
-    .hearth-card{
-      position:relative;
-      width: 100%;
-      margin: 0 auto;
-      padding: 22px 18px 18px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.10);
+      width:min(var(--wrap), 92vw);
+      margin:0 auto;
+      padding:22px 18px 18px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
       background:
         radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
       box-shadow: 0 22px 72px rgba(0,0,0,.46);
       backdrop-filter: blur(7px);
-      overflow: hidden;
-      box-sizing: border-box;
+      overflow:hidden;
+      z-index:2;
+      position:relative;
+      text-align:center;
     }
-    .hearth-card::after{
+    .hearth-wrap::after{
       content:"";
-      position:absolute;
-      inset:14px;
+      position:absolute;inset:14px;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.06);
       pointer-events:none;
       opacity:.85;
     }
-    .hearth-inner{
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      align-items: center;
-      text-align: center;
-    }
-    .hearth-card *{ box-sizing: border-box; }
 
-    .flame-meter{
-      width: 100%;
-      margin: 0;
-      padding: 14px 12px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-      box-shadow: 0 18px 60px rgba(0,0,0,.40);
-    }
-    .meter-head{
-      width: 100%;
+    .hearth-top{
+      position:relative;
+      z-index:2;
       display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
+      flex-direction:column;
+      align-items:center;
       gap:10px;
-      margin-bottom:10px;
     }
-    .meter-title{
-      font-size:11px;
+
+    .hearth-canvas{
+      width:min(520px, 86vw);
+      height:240px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      overflow:hidden;
+      display:block;
+    }
+    @media (max-width: 420px){
+      .hearth-canvas{ height:220px; }
+    }
+
+    .hearth-level{
+      font-size:12px;
       letter-spacing:.22em;
       text-transform:uppercase;
-      color: rgba(255,255,255,.62);
-    }
-    .meter-count{
-      font-size:12px;
-      color: rgba(255,255,255,.74);
-      letter-spacing:.10em;
-    }
-    .flame-canvas{
-      width: 100%;
-      height: 220px;
-      display:block;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      overflow:hidden;
+      color:rgba(255,255,255,.66);
+      margin-top:-2px;
     }
 
-    .join-wrap{
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      box-shadow: none;
+    .microcopy{
+      margin-top:10px;
+      font-size:12px;
+      letter-spacing:.10em;
+      color:rgba(255,255,255,.62);
+      position:relative;
+      z-index:2;
+      padding:0 6px;
+      overflow-wrap:anywhere;
     }
 
     form{
-      margin-top:10px;
-      display:flex;flex-wrap:wrap;gap:12px;
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
       justify-content:center;
-      position:relative;z-index:2;
+      position:relative;
+      z-index:2;
       width:100%;
     }
     input[type="email"]{
       padding:12px 20px;border-radius:12px;
       border:1px solid rgba(255,255,255,.16);
-      min-width:0;
-      flex: 1 1 220px;
-      max-width: 360px;
+      min-width:min(320px, 82vw);
       font-size:16px;color:#222;background:#fff;outline:none;
-      box-sizing:border-box;
+      max-width:100%;
     }
     button{
       padding:12px 22px;border:none;border-radius:12px;
       font-weight:800;font-size:16px;color:#fff;background:var(--accent);
       cursor:pointer;transition:background .42s, transform .22s ease;
       letter-spacing:.08em;
-      flex: 0 0 auto;
-      box-sizing:border-box;
+      max-width:92vw;
     }
     button:hover{filter: brightness(.96);}
     button:active{ transform: scale(.99); }
 
-    .links{display:flex;gap:18px;justify-content:center;margin-top:14px;position:relative;z-index:2;flex-wrap:wrap;}
-    .links a{color:rgba(255,255,255,.86);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.22);padding-bottom:2px;}
-
-    .microcopy{
-      margin-top:8px;
-      font-size:12px;
-      letter-spacing:.10em;
-      color:rgba(255,255,255,.62);
+    .links{
+      display:flex;
+      gap:18px;
+      justify-content:center;
+      margin-top:14px;
+      position:relative;
+      z-index:2;
+      flex-wrap:wrap;
+      padding:0 6px;
+    }
+    .links a{
+      color:rgba(255,255,255,.86);
+      text-decoration:none;
+      border-bottom:1px solid rgba(255,255,255,.22);
+      padding-bottom:2px;
+      white-space:nowrap;
     }
 
-    .hearth-footer{
-      margin-top: 10px;
-      font-size: 11px;
-      letter-spacing: .22em;
-      color: rgba(255,255,255,.55);
-      text-align:center;
+    .footer-mark{
+      margin-top:18px;
+      font-size:11px;
+      letter-spacing:.18em;
+      color:rgba(255,255,255,.40);
+      position:relative;
+      z-index:2;
       user-select:none;
     }
 
@@ -1083,12 +1037,12 @@
       opacity:0;pointer-events:none;transition:opacity .28s ease;
       z-index:99;
       color:rgba(255,255,255,.88);
-      max-width: 92vw;
-      box-sizing:border-box;
+      max-width:92vw;
       text-align:center;
     }
     .toast.show{opacity:1;}
 
+    /* 無障礙：偏好減少動態 */
     @media (prefers-reduced-motion: reduce){
       .breath, .grain, .dot.active, .flame-img.in{ animation:none !important; }
       .reveal, .late, .logo-frame, .flame-frame, .mood, .opt{ transition:none !important; }
@@ -1106,11 +1060,10 @@
     <button class="dot" data-target="s2" data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
     <button class="dot" data-target="s3" data-label="PRIMARY MARK" aria-label="Go to Primary Mark"></button>
     <button class="dot" data-target="s4" data-label="DIGITAL SANCTUARY" aria-label="Go to Digital Sanctuary"></button>
-    <button class="dot" data-target="s5" data-label="AESTHETIC ALIGNMENT" aria-label="Go to Aesthetic Alignment"></button>
-    <button class="dot" data-target="s6" data-label="REFLECTION" aria-label="Go to Reflection"></button>
-    <button class="dot" data-target="s7" data-label="YOUR ARCHETYPE" aria-label="Go to Your Archetype"></button>
-    <button class="dot" data-target="s8" data-label="FLAME MARK" aria-label="Go to Flame Mark"></button>
-    <button class="dot" data-target="s9" data-label="COLLECTIVE HEARTH" aria-label="Go to Collective Hearth"></button>
+    <button class="dot" data-target="s5" data-label="AESTHETIC" aria-label="Go to Aesthetic Alignment"></button>
+    <button class="dot" data-target="s6" data-label="REFLECTION" aria-label="Go to Introspective Reflection"></button>
+    <button class="dot" data-target="s7" data-label="ARCHETYPE" aria-label="Go to Archetype"></button>
+    <button class="dot" data-target="s8" data-label="HEARTH" aria-label="Go to Collective Hearth"></button>
   </nav>
 
   <!-- ① Hero -->
@@ -1168,7 +1121,7 @@
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">DIGITAL SANCTUARY</span></div>
 
       <h2 class="reveal" style="--d:220ms;">
-        現在安靜下來，讓我們一起餐與 HEST<span class="we-accent">i</span>A
+        現在安靜下來，讓我們一起餐與 HEST<span class="i-accent">i</span>A
       </h2>
 
       <div class="sanctuary-sub">
@@ -1185,8 +1138,9 @@
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">AESTHETIC ALIGNMENT</span></div>
       <h2 class="reveal" style="--d:220ms;">你偏好的沉靜色調</h2>
-      <p class="reveal" style="--d:260ms;max-width:640px;">
-        這是一段很短的感覺測試。你的選擇會幫我們更懂「怎樣的色系與質感，會讓你願意長期穿著」。
+      <p class="reveal" style="--d:260ms;">
+        我們會把你的選擇當作「質感方向」的參考。不是投票，也不做排名；
+        只是讓未來的配色，更接近你真正願意穿上身的那種安靜。
       </p>
 
       <div class="align-grid" id="alignGrid" aria-label="Aesthetic alignment choices">
@@ -1246,8 +1200,8 @@
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">INTROSPECTIVE REFLECTION</span></div>
       <h2 class="reveal" style="--d:220ms;">你喜好或習慣的運動結構</h2>
-      <p class="reveal" style="--d:260ms;max-width:640px;">
-        不是測驗壓力，也不是標籤。只是讓你更清楚：你在「動起來」時，需要的是哪一種支撐。
+      <p class="reveal" style="--d:260ms;">
+        不需要想太多。用直覺選，會更接近你真正想要的狀態與穿著感。
       </p>
 
       <div class="quiz" id="quiz">
@@ -1285,149 +1239,87 @@
     </div>
   </section>
 
-  <!-- ⑦ YOUR ARCHETYPE（獨立畫面，資訊更完整） -->
+  <!-- ⑦ Archetype Result（獨立頁） -->
   <section class="s7" id="s7">
     <div class="secno reveal" style="--d:140ms;">07</div>
 
-    <div class="archetype-card">
-      <div class="archetype-head">
-        <p class="arch-kicker reveal" style="--d:180ms;">YOUR ARCHETYPE</p>
-        <h2 class="reveal" style="--d:220ms;margin:0;">你的原型</h2>
-        <p class="reveal" style="--d:260ms;max-width:680px;margin:0;">
-          這不是分類，也不是規定你是誰。它只是在描述：你「怎麼把自己放進運動裡」，以及你可能會偏好的穿著結構。
-        </p>
-      </div>
+    <div class="result-page" id="resultPage" aria-live="polite">
+      <div class="rp-kicker"><span class="kicker reveal" style="--d:180ms;">YOUR ARCHETYPE</span></div>
 
-      <div class="archetype-head" style="margin-top:12px;">
-        <div class="arch-title reveal" id="archTitle" style="--d:320ms;">—</div>
-        <p class="arch-sub reveal" id="archLead" style="--d:360ms;">—</p>
-      </div>
+      <div class="arch-title reveal" style="--d:220ms;" id="archTitle">—</div>
+      <div class="arch-sub reveal" style="--d:260ms;" id="archKey">—</div>
 
       <div class="arch-grid">
-        <div class="arch-box reveal" style="--d:420ms;">
-          <h4>你需要的支撐</h4>
-          <ul id="archSupport">
-            <li>—</li>
-          </ul>
+        <div class="arch-card reveal" style="--d:320ms;">
+          <div class="t">CORE STATE</div>
+          <p class="v" id="archCore">—</p>
         </div>
-
-        <div class="arch-box reveal" style="--d:480ms;">
-          <h4>你會喜歡的穿著結構</h4>
-          <ul id="archStructure">
-            <li>—</li>
-          </ul>
+        <div class="arch-card reveal" style="--d:380ms;">
+          <div class="t">TRAINING RHYTHM</div>
+          <p class="v" id="archRhythm">—</p>
         </div>
-
-        <div class="arch-box reveal" style="--d:540ms;">
-          <h4>對應的沉靜色系方向</h4>
-          <ul id="archPalette">
-            <li>—</li>
-          </ul>
+        <div class="arch-card reveal" style="--d:440ms;">
+          <div class="t">STYLE + COLOR DIRECTION</div>
+          <p class="v" id="archStyle">—</p>
         </div>
       </div>
 
-      <div class="arch-actions reveal" style="--d:620ms;">
-        <button class="pill-btn" type="button" id="toFlameMark">繼續了解 Flame Mark</button>
-        <button class="pill-btn" type="button" id="toHearth">前往集體爐火</button>
+      <div class="microcopy reveal" style="--d:520ms;text-align:center;">
+        你已選的色調：<span class="we-accent" id="alignPicked2">EMBERS</span>｜
+        你的原型：<span class="we-accent" id="archPicked">—</span>
       </div>
 
-      <div class="microcopy reveal" style="--d:700ms;text-align:center;">
-        目前色調：<span class="we-accent" id="alignPicked3">EMBERS</span>｜你的原型：<span class="we-accent" id="archPicked3">—</span>
+      <div class="arch-actions reveal" style="--d:560ms;">
+        <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
       </div>
     </div>
   </section>
 
-  <!-- ⑧ FLAME MARK -->
+  <!-- ⑧ Collective Hearth（單一方塊） -->
   <section class="s8" id="s8">
     <div class="secno reveal" style="--d:140ms;">08</div>
 
-    <div class="flame-stage">
-      <div class="flame-frame frame-size" id="flameFrame" aria-hidden="true">
-        <div class="corner-hint" aria-hidden="true"></div>
-        <img class="flame-img" id="flameImg" src="Flamemark.png" alt="The Flame Mark">
-      </div>
-
-      <div class="manifest">
-        <div style="display:flex;justify-content:center;margin-bottom:10px;">
-          <span class="kicker reveal" style="--d:200ms;">THE FLAME MARK</span>
+    <div class="hearth-wrap">
+      <div class="hearth-top">
+        <div style="display:flex;justify-content:center;margin-bottom:2px;position:relative;z-index:2;">
+          <span class="kicker reveal" style="--d:200ms;">COLLECTIVE HEARTH</span>
         </div>
 
-        <h2 class="late" data-late style="margin-bottom:12px;">標語的符號</h2>
-        <p class="late quote-zh" data-late>
-          這不只是口號，而是一種信念。<br>
-          標籤又如何？那是與生俱來的特色。<br>
-          HESTIA 透過「Own Your Flame」<br>
-          無論性別、身形、背景，這些火焰屬於你自己。<br>
-          不用變成誰，你只需要更像你。
+        <!-- 真火焰 Canvas（你指定版本） -->
+        <canvas class="hearth-canvas" id="flameCanvas" aria-label="Hestia Collective Hearth Flame"></canvas>
+
+        <div class="hearth-level reveal" style="--d:260ms;">
+          HEARTH LEVEL：<span id="hearthLevel" class="we-accent">—</span>
+        </div>
+
+        <h2 class="reveal" style="--d:300ms;margin-bottom:6px;">集體爐火</h2>
+        <p class="reveal" style="--d:340ms;max-width:680px;">
+          把你的光點，投入火焰！不用搶先，只要守護。
         </p>
-      </div>
-    </div>
-  </section>
 
-  <!-- ⑨ Collective Hearth（單一方塊 + 真火焰動畫 + 置中不溢出 + 底部®） -->
-  <section class="s9" id="s9">
-    <div class="secno reveal" style="--d:140ms;">09</div>
-
-    <div class="hearth-wrap">
-      <div class="hearth-card">
-        <div class="hearth-inner">
-
-          <div style="display:flex;justify-content:center;margin-bottom:6px;">
-            <span class="kicker reveal" style="--d:180ms;">COLLECTIVE HEARTH</span>
-          </div>
-
-          <h2 class="reveal" style="--d:220ms;margin-bottom:0;">集體爐火</h2>
-
-          <p class="reveal" style="--d:260ms;max-width:680px;margin:0;">
-            把你的光點，投入火焰！不用搶先，只要守護。
-          </p>
-
-          <div class="microcopy reveal" style="--d:300ms;margin-top:2px;">
-            你已選的色調：<span class="we-accent" id="alignPicked2">EMBERS</span>｜
-            你的原型：<span class="we-accent" id="archPicked">—</span>
-          </div>
-
-          <!-- 表單 -->
-          <div class="join-wrap reveal" style="--d:340ms;">
-            <form id="notify"
+        <form id="notify"
               action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
               method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
 
-              <input id="email" type="email" name="entry.345729382" placeholder="輸入你的Email" required />
+          <!-- 你已測通：entry.345729382 = Email -->
+          <input id="email" type="email" name="entry.345729382" placeholder="輸入你的Email" required />
 
-              <!-- 重要：請把下面 3 個 entry id 換成你表單實測正確的（你說你已經測到正確欄位） -->
-              <input type="hidden" id="f_alignment" name="entry.111111111" value="">
-              <input type="hidden" id="f_archetype"  name="entry.222222222" value="">
-              <input type="hidden" id="f_theme"      name="entry.333333333" value="">
+          <!-- 你已測通：entry 對應 -->
+          <input type="hidden" id="f_alignment" name="entry.324440347" value="">
+          <input type="hidden" id="f_archetype"  name="entry.1640422124" value="">
+          <input type="hidden" id="f_theme"      name="entry.1471764886" value="">
 
-              <button type="submit">加入火焰</button>
-            </form>
+          <button id="tendBtn" type="submit">加入火焰</button>
+        </form>
 
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-            <div class="links reveal" style="--d:380ms;margin-top:10px;">
-              <a href="https://www.instagram.com/hestia.taiwan/" target="_blank" rel="noopener">Instagram</a>
-              <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">LINE 官方帳號</a>
-            </div>
-          </div>
-
-          <!-- 真火焰動畫 + 計數 -->
-          <div class="flame-meter reveal" style="--d:420ms;">
-            <div class="meter-head">
-              <div class="meter-title">LIVE FLAME</div>
-              <div class="meter-count">已加入：<strong id="joinCount">—</strong></div>
-            </div>
-
-            <canvas class="flame-canvas" id="flameCanvas" width="1200" height="440" aria-label="Collective flame animation"></canvas>
-
-            <div class="microcopy" style="margin-top:10px;">
-              火焰會隨加入者累積而更旺；你的登記會成為其中一點熱度。
-            </div>
-          </div>
-
-          <div class="hearth-footer">HESTIA TAIWAN®</div>
-
+        <div class="links reveal" style="--d:420ms;">
+          <a href="https://www.instagram.com/hestia.taiwan/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">LINE 官方帳號</a>
         </div>
+
+        <div class="footer-mark">HESTIA TAIWAN®</div>
       </div>
     </div>
   </section>
@@ -1461,25 +1353,11 @@
         if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
       });
 
-      /* LOGO：框先揭幕，再圖，再 sheen */
       if(!logoRevealed && inView(logoFrame, 0.80, 0.15)){
         logoRevealed = true;
         logoFrame.classList.add('in');
         setTimeout(()=>logoMark.classList.add('in'), 520);
         setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
-      }
-
-      /* FLAME MARK：框揭幕，再圖 */
-      if(!flameRevealed && inView(flameFrame, 0.80, 0.15)){
-        flameRevealed = true;
-        flameFrame.classList.add('in');
-        setTimeout(()=>flameImg.classList.add('in'), 520);
-      }
-
-      /* Collective Hearth：進入畫面才啟動火焰 */
-      if(!hearthStarted && inView($('#flameCanvas'), 0.88, 0.05)){
-        hearthStarted = true;
-        startFlame();
       }
     }
 
@@ -1497,7 +1375,7 @@
       setTimeout(requestCheck, 420);
     });
 
-    /* ===== LOGO PAGE：互動 ===== */
+    /* ===== LOGO PAGE：點擊切換模式 ===== */
     const logoFrame = $('#logoFrame');
     const logoMark  = $('#logoMark');
     const modes = ['primary','fabric','mono'];
@@ -1532,23 +1410,17 @@
       setTimeout(()=>logoFrame.classList.remove('hint'), 1450);
     }
 
-    /* ===== FLAME MARK ===== */
-    const flameFrame = $('#flameFrame');
-    const flameImg = $('#flameImg');
-    let flameRevealed = false;
     let logoRevealed = false;
 
-    /* ===== Aesthetic Alignment：選擇後整體主題更明顯變色 ===== */
+    /* ===== Aesthetic Alignment：選擇後整體變色 ===== */
     const moods = $$('#alignGrid .mood');
     const alignPicked = $('#alignPicked');
     const alignPicked2 = $('#alignPicked2');
-    const alignPicked3 = $('#alignPicked3');
 
     function setTheme(theme, value){
       document.body.setAttribute('data-theme', theme);
-      if(alignPicked)  alignPicked.textContent  = value;
+      if(alignPicked) alignPicked.textContent = value;
       if(alignPicked2) alignPicked2.textContent = value;
-      if(alignPicked3) alignPicked3.textContent = value;
 
       localStorage.setItem('hestia_theme', theme);
       localStorage.setItem('hestia_alignment', value);
@@ -1559,13 +1431,12 @@
         m.classList.toggle('dim', !on);
       });
 
-      setTimeout(()=>{ moods.forEach(m=> m.classList.remove('dim')); }, 1400);
+      setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
     }
 
     function initTheme(){
       const savedTheme = localStorage.getItem('hestia_theme') || 'embers';
-      const savedAlign = localStorage.getItem('hestia_alignment') ||
-        (savedTheme === 'dawn' ? 'DAWN' : savedTheme === 'stone' ? 'STONE' : 'EMBERS');
+      const savedAlign = localStorage.getItem('hestia_alignment') || (savedTheme === 'dawn' ? 'DAWN' : savedTheme === 'stone' ? 'STONE' : 'EMBERS');
       setTheme(savedTheme, savedAlign);
     }
     initTheme();
@@ -1575,21 +1446,21 @@
       m.addEventListener('click', act);
       m.addEventListener('keydown', (e)=>{
         if(e.key === 'Enter' || e.key === ' '){
-          e.preventDefault(); act();
+          e.preventDefault();
+          act();
         }
       });
     });
 
-    /* ===== Reflection：三題，解鎖後跳到 Archetype 獨立頁 ===== */
+    /* ===== Reflection：三題 -> 解鎖原型 -> 跳到獨立頁 ===== */
     const unlockBtn = $('#unlockBtn');
     const archPicked  = $('#archPicked');
-    const archPicked3 = $('#archPicked3');
 
     const archTitle = $('#archTitle');
-    const archLead  = $('#archLead');
-    const archSupport   = $('#archSupport');
-    const archStructure = $('#archStructure');
-    const archPalette   = $('#archPalette');
+    const archKey   = $('#archKey');
+    const archCore  = $('#archCore');
+    const archRhythm= $('#archRhythm');
+    const archStyle = $('#archStyle');
 
     const answers = { q1:null, q2:null, q3:null };
     const opts = $$('.opt');
@@ -1599,79 +1470,35 @@
       Object.values(answers).forEach(v=>{ if(v) counts[v]++; });
       const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
 
-      const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
-
       if(top === 'A'){
         return {
-          key: 'CALM KEEPER',
-          zh: '安定守序者',
-          lead: '你不是不想衝，而是更重視「可持續」。你會把訓練當作一種整理：整理呼吸、整理節奏、整理自己。',
-          support: [
-            '需要「穩」：節奏一致、壓力可控、慢慢變強。',
-            '需要「柔」：不勒不吵，但在關鍵處給支撐。',
-            '需要「空」：留白與餘裕，讓身體願意待在裡面。'
-          ],
-          structure: [
-            '柔和包覆的剪裁（不壓迫胸腹），但肩背有微支撐線。',
-            '低噪機能：表面乾淨，細節藏在縫線、版型與材質。',
-            '適合：落肩短T、輕量外搭、日常機能褲。'
-          ],
-          palette: [
-            `以 ${align} 為基底再降彩度：霧灰、鼠尾草、低飽和黑。`,
-            '質感方向：磨砂、細緻紋理、低反光。',
-            '點綴：極小面積金屬或線性光澤。'
-          ]
+          key:'CALM KEEPER',
+          zh:'安定守序者',
+          core:'你偏好把節奏先放慢，讓身體回到可控的穩定；你的力量來自「長期一致」。',
+          rhythm:'適合循序漸進、節奏均勻的訓練安排：穩定心率、有餘裕的重量感，讓你越練越安定。',
+          style:'輪廓偏簡潔、低噪、耐看；材質重視手感與延展。配色偏冷霧灰、鼠尾草、低飽和中性色，細節用微光或細線條收住質感。'
         };
       }
-
       if(top === 'B'){
         return {
-          key: 'INNER IGNITER',
-          zh: '內在點燃者',
-          lead: '你需要一點推力才進得去，但一旦進入，你會越來越穩。你喜歡那種「不吵，但有火」的存在感。',
-          support: [
-            '需要「啟動」：視覺或觸感要能讓你願意開始。',
-            '需要「線條」：輪廓要俐落，讓狀態被拉起來。',
-            '需要「張力」：低調但有記憶點。'
-          ],
-          structure: [
-            '俐落剪裁（肩胸線清楚），但整體仍保持沉靜。',
-            '局部強調（如側邊拼接、肩線、腰頭結構）。',
-            '適合：細肩背心、短褲、貼身內層與輕外搭。'
-          ],
-          palette: [
-            `以 ${align} 為主：玫瑰金/赤陶棕系，搭配深色底。`,
-            '質感方向：微光澤、金屬感低強度反射。',
-            '點綴：局部亮點（小面積）來做「啟動」。'
-          ]
+          key:'INNER IGNITER',
+          zh:'內在點燃者',
+          core:'你需要一點推力才進得去，但一旦熱起來，你會非常穩且帶張力；你是「沉靜裡的燃」。',
+          rhythm:'適合有起伏的訓練節奏：前段暖身、後段爆發；你越動越進入狀態，越能把情緒轉成力量。',
+          style:'輪廓俐落、局部有存在感（切線、拼接、比例收束）；配色偏赤陶棕、暖玫瑰金、深酒紅或黑，讓張力藏在細節裡。'
         };
       }
-
       return {
-        key: 'FOCUS FORGER',
-        zh: '專注鍛造者',
-        lead: '你要的是清楚：清楚的材質、清楚的功能、清楚的結構。你不是冷，是你把力氣都用在「做對」。',
-        support: [
-          '需要「秩序」：穿上去就能進入狀態。',
-          '需要「耐看」：越看越順，越穿越對。',
-          '需要「準」：剪裁與機能細節要講理。'
-        ],
-        structure: [
-          '結構感明確（肩線、側片、腰頭），讓輪廓乾淨。',
-          '材質對比：主布低反光，局部可用更緊實的面料。',
-          '適合：訓練短T、結構短褲、俐落外套或帽款。'
-        ],
-        palette: [
-          `以 ${align} 為參考：石墨黑、午夜藍、冷灰白。`,
-          '質感方向：乾淨霧面、清晰織紋、線性反光。',
-          '點綴：同色系深淺差做層次。'
-        ]
+        key:'FOCUS FORGER',
+        zh:'專注鍛造者',
+        core:'你喜歡乾淨、清晰的結構感；當一切變得有秩序，你就能把專注推到很深。',
+        rhythm:'適合明確分區、目標導向的訓練：組數、節奏、休息都清楚，你會因此更穩、更有效率。',
+        style:'剪裁與材質結構要清晰（線條、份量、支撐感）；配色偏石墨黑、午夜藍、冷金屬灰，走「越看越順」的高級耐看路線。'
       };
     }
 
     function updateUnlock(){
-      const ok = Object.values(answers).every(Boolean);
-      unlockBtn.disabled = !ok;
+      unlockBtn.disabled = !Object.values(answers).every(Boolean);
     }
 
     function setOptState(q, chosenEl){
@@ -1681,7 +1508,7 @@
         o.classList.toggle('active', on);
         o.classList.toggle('dim', !on);
       });
-      setTimeout(()=> group.forEach(o=>o.classList.remove('dim')), 1400);
+      setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 1400);
     }
 
     opts.forEach(o=>{
@@ -1695,81 +1522,58 @@
       o.addEventListener('click', act);
       o.addEventListener('keydown', (e)=>{
         if(e.key === 'Enter' || e.key === ' '){
-          e.preventDefault(); act();
+          e.preventDefault();
+          act();
         }
       });
     });
 
-    function fillList(ul, items){
-      if(!ul) return;
-      ul.innerHTML = '';
-      items.forEach(t=>{
-        const li = document.createElement('li');
-        li.textContent = t;
-        ul.appendChild(li);
-      });
-    }
-
     unlockBtn.addEventListener('click', ()=>{
       const r = computeArchetype();
 
-      // Persist
+      archTitle.textContent = r.zh;
+      archKey.textContent   = r.key;
+      archCore.textContent  = r.core;
+      archRhythm.textContent= r.rhythm;
+      archStyle.textContent = r.style;
+
       localStorage.setItem('hestia_archetype', r.zh);
       localStorage.setItem('hestia_archetype_key', r.key);
 
-      // Update UI badges
-      if(archPicked)  archPicked.textContent  = r.zh;
-      if(archPicked3) archPicked3.textContent = r.zh;
+      if(archPicked) archPicked.textContent = r.zh;
 
-      // Fill Archetype page
-      if(archTitle) archTitle.textContent = r.zh;
-      if(archLead)  archLead.textContent  = r.lead;
-      fillList(archSupport, r.support);
-      fillList(archStructure, r.structure);
-      fillList(archPalette, r.palette);
-
-      // Smooth jump to independent page
-      const sec = document.getElementById('s7');
-      if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
-
-      // Make sure reveals fire
-      setTimeout(requestCheck, 120);
-      setTimeout(requestCheck, 520);
+      // 切到獨立 Archetype 頁
+      setTimeout(()=>{
+        const s7 = document.getElementById('s7');
+        if(s7) s7.scrollIntoView({behavior:'smooth', block:'start'});
+        setTimeout(requestCheck, 180);
+      }, 420);
     });
 
-    // hydrate saved
+    // s7 -> s8
+    $('#toHearthBtn').addEventListener('click', ()=>{
+      const s8 = document.getElementById('s8');
+      if(s8) s8.scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(requestCheck, 180);
+    });
+
+    // 初始顯示已保存資料
     (function hydrateSaved(){
       const savedArch = localStorage.getItem('hestia_archetype');
-      if(savedArch){
-        if(archPicked)  archPicked.textContent  = savedArch;
-        if(archPicked3) archPicked3.textContent = savedArch;
-        if(archTitle)   archTitle.textContent   = savedArch;
-
-        // rebuild archetype text on load if possible
-        const r = computeArchetype();
-        if(archLead) archLead.textContent = r.lead;
-        fillList(archSupport, r.support);
-        fillList(archStructure, r.structure);
-        fillList(archPalette, r.palette);
-      }
-
+      if(savedArch && archPicked) archPicked.textContent = savedArch;
       const savedAlign = localStorage.getItem('hestia_alignment');
       if(savedAlign){
-        if(alignPicked)  alignPicked.textContent  = savedAlign;
+        if(alignPicked) alignPicked.textContent = savedAlign;
         if(alignPicked2) alignPicked2.textContent = savedAlign;
-        if(alignPicked3) alignPicked3.textContent = savedAlign;
+      }
+      const savedKey = localStorage.getItem('hestia_archetype_key');
+      if(savedArch && savedKey){
+        archTitle.textContent = savedArch;
+        archKey.textContent = savedKey;
       }
     })();
 
-    // Archetype actions
-    $('#toFlameMark')?.addEventListener('click', ()=>{
-      $('#s8')?.scrollIntoView({behavior:'smooth', block:'start'});
-    });
-    $('#toHearth')?.addEventListener('click', ()=>{
-      $('#s9')?.scrollIntoView({behavior:'smooth', block:'start'});
-    });
-
-    /* ===== 表單（Google Form） ===== */
+    /* ===== 表單：把 alignment + archetype + theme 同步送出（你已測通 entry） ===== */
     const toast = $('#toast');
     const iframe = $('#hidden_iframe');
     let submittedAt = 0;
@@ -1782,45 +1586,43 @@
         return false;
       }
 
-      const fAlign = $('#f_alignment');
-      const fArch  = $('#f_archetype');
-      const fTheme = $('#f_theme');
-
       const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
       const theme = localStorage.getItem('hestia_theme') || 'embers';
       const arch  = localStorage.getItem('hestia_archetype') || '';
 
-      if(fAlign) fAlign.value = align;
-      if(fTheme) fTheme.value = theme;
-      if(fArch)  fArch.value  = arch;
+      $('#f_alignment').value = align;
+      $('#f_theme').value = theme;
+      $('#f_archetype').value = arch;
 
       submittedAt = Date.now();
+
+      // 立即視覺回饋：投入火焰 + count++ + level 更新
+      castSparkFromElement($('#tendBtn'));
+      setCount(getCount()+1);
+      applyLevel();
+
       return true;
     }
 
     iframe.addEventListener('load',()=>{
-      if(Date.now()-submittedAt<300) return;
+      if(Date.now()-submittedAt<350) return;
       $('#email').value='';
-      bumpLocalJoinCount(); // 送出成功 → 本地 +1 → 火焰更旺
       toast.classList.add('show');
       setTimeout(()=>toast.classList.remove('show'),2600);
     });
 
-    /* ===== 章節點：高亮目前章節 + 點擊跳轉 + 「吸氣式」過場 ===== */
+    /* ===== 章節點：高亮目前章節 + 點擊跳轉 + 呼吸過場 ===== */
     const breath = $('#breath');
-    const sections = ['s1','s2','s3','s4','s5','s6','s7','s8','s9'].map(id=>document.getElementById(id));
+    const sections = ['s1','s2','s3','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
     const dots = $$('.dot');
 
-    function setActiveDot(idx){
-      dots.forEach((d,i)=>d.classList.toggle('active', i===idx));
-    }
+    function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
 
     let lastActive = 0;
     function updateActiveDot(){
       const vh = window.innerHeight;
       let best = {idx:0, score:999999};
       sections.forEach((sec, idx)=>{
-        if(!sec) return;
         const r = sec.getBoundingClientRect();
         const center = r.top + r.height/2;
         const score = Math.abs(center - vh/2);
@@ -1849,7 +1651,6 @@
       }, {passive:true});
     });
 
-    // Tooltip：長按顯示（mobile-friendly）
     let pressTimer = null;
     dots.forEach(dot=>{
       const show = ()=>{
@@ -1862,7 +1663,6 @@
       dot.addEventListener('pointerleave', ()=>{ if(pressTimer) clearTimeout(pressTimer); });
     });
 
-    // 首次滑動提示
     const dotsNav = $('#dotsNav');
     let hinted = false;
     function onFirstScroll(){
@@ -1889,211 +1689,148 @@
     setTimeout(()=>{ requestCheck(); requestAnimationFrame(extraTick); }, 260);
 
     /* =========================
-       Collective Hearth: TRUE FLAME (noise flame)
-       ========================= */
-
-    // 你若有後台計數 API，可填這裡（例：https://.../count）
-    // 沒有也沒關係：會用本機 local + 基底數，並在送出後變旺。
-    const COUNT_ENDPOINT = "";           // <-- 可留空
-    const COUNT_POLL_MS  = 12000;
-    const LOCAL_COUNT_KEY = "hestia_join_local";
-    const LOCAL_COUNT_FALLBACK_BASE = 128; // 你可以改成你想呈現的起始值
-
-    const joinCountEl = $('#joinCount');
+       Collective Hearth (Canvas 2D)
+       - 你提供的火焰版本：原樣套用
+    ========================== */
     const canvas = $('#flameCanvas');
-    const ctx = canvas ? canvas.getContext('2d') : null;
+    const ctx = canvas.getContext('2d', { alpha:true });
+    let W=0,H=0, dpr=1;
 
-    let hearthStarted = false;
-    let flameLevel = 0;
-    let targetLevel = 0;
-    let rafId = null;
-
-    function getLocalCount(){
-      const n = parseInt(localStorage.getItem(LOCAL_COUNT_KEY) || "0", 10);
-      return (Number.isFinite(n) ? n : 0);
-    }
-    function getTotalCount(){
-      return LOCAL_COUNT_FALLBACK_BASE + getLocalCount();
-    }
-    function syncJoinCountUI(){
-      if(joinCountEl) joinCountEl.textContent = String(getTotalCount());
-    }
-    function setTargetFromCount(count){
-      const level = Math.min(1, Math.log10(Math.max(10, count)) / Math.log10(3000));
-      targetLevel = Math.max(0.10, level);
-    }
-    function bumpLocalJoinCount(){
-      const n = getLocalCount() + 1;
-      localStorage.setItem(LOCAL_COUNT_KEY, String(n));
-      syncJoinCountUI();
-      setTargetFromCount(getTotalCount());
-    }
-
-    async function fetchRemoteCount(){
-      if(!COUNT_ENDPOINT) return null;
-      try{
-        const res = await fetch(COUNT_ENDPOINT, {cache:"no-store"});
-        if(!res.ok) return null;
-        const data = await res.json();
-        const c = parseInt(data && data.count, 10);
-        if(!Number.isFinite(c)) return null;
-        return c;
-      }catch(_){
-        return null;
-      }
-    }
-
-    async function refreshCount(){
-      const remote = await fetchRemoteCount();
-      if(remote != null){
-        if(joinCountEl) joinCountEl.textContent = String(remote);
-        setTargetFromCount(remote);
-        return;
-      }
-      syncJoinCountUI();
-      setTargetFromCount(getTotalCount());
-    }
-
-    function resizeCanvasToDisplaySize(){
-      if(!canvas) return;
+    function resizeCanvas(){
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      const w = Math.max(320, Math.floor(rect.width * dpr));
-      const h = Math.max(220, Math.floor(rect.height * dpr));
-      if(canvas.width !== w || canvas.height !== h){
-        canvas.width = w;
-        canvas.height = h;
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = Math.floor(rect.width * dpr);
+      H = Math.floor(rect.height * dpr);
+      canvas.width = W;
+      canvas.height = H;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('load', resizeCanvas);
+    resizeCanvas();
+
+    const particles = [];
+    let running = true;
+    let boost = 0;
+    let globalIntensity = 1.0;
+
+    const HEARTH_KEY = 'hestia_hearth_count';
+    const hearthLevelEl = $('#hearthLevel');
+
+    function getCount(){
+      return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
+    }
+    function setCount(n){
+      localStorage.setItem(HEARTH_KEY, String(n));
+    }
+    function levelFromCount(n){
+      if(n < 50) return 'Ember';
+      if(n < 150) return 'Glow';
+      if(n < 350) return 'Warmth';
+      if(n < 700) return 'Hearth';
+      return 'Flame';
+    }
+    function applyLevel(){
+      const n = getCount();
+      hearthLevelEl.textContent = levelFromCount(n);
+      const base = (n < 50) ? 0.92 :
+                   (n < 150) ? 0.98 :
+                   (n < 350) ? 1.04 :
+                   (n < 700) ? 1.10 : 1.16;
+      globalIntensity = base;
+    }
+    applyLevel();
+
+    function addParticle(x, y, vx, vy, life, size, hue){
+      particles.push({x,y,vx,vy,life,maxLife:life,size,hue});
+    }
+
+    function spawnBase(){
+      const baseX = W * 0.5;
+      const baseY = H * 0.82;
+      const n = 6;
+      for(let i=0;i<n;i++){
+        const spread = (0.20 + Math.random()*0.18) * W * 0.12;
+        const x = baseX + (Math.random()*2-1) * spread;
+        const y = baseY + (Math.random()*2-1) * (H*0.006);
+        const vx = (Math.random()*2-1) * (W*0.00025);
+        const vy = -(H*0.0012 + Math.random() * H*0.0016);
+        const life = 56 + Math.random()*42;
+        const size = (1.4 + Math.random()*2.4) * dpr;
+        const hue = 18 + Math.random()*28;
+        addParticle(x,y,vx,vy,life,size,hue);
       }
     }
 
-    // Noise helpers
-    function fract(x){ return x - Math.floor(x); }
-    function hash2(x, y){
-      return fract(Math.sin(x*127.1 + y*311.7) * 43758.5453123);
-    }
-    function lerp(a,b,t){ return a + (b-a)*t; }
-    function smooth(t){ return t*t*(3-2*t); }
-    function valueNoise(x,y){
-      const xi = Math.floor(x), yi = Math.floor(y);
-      const xf = x - xi, yf = y - yi;
-      const u = smooth(xf), v = smooth(yf);
-      const n00 = hash2(xi, yi);
-      const n10 = hash2(xi+1, yi);
-      const n01 = hash2(xi, yi+1);
-      const n11 = hash2(xi+1, yi+1);
-      return lerp(lerp(n00, n10, u), lerp(n01, n11, u), v);
-    }
-    function fbm(x,y){
-      let f = 0, amp = 0.55, freq = 1.0;
-      for(let i=0;i<4;i++){
-        f += amp * valueNoise(x*freq, y*freq);
-        freq *= 2.0;
-        amp *= 0.5;
-      }
-      return f;
-    }
+    function draw(){
+      if(!running) return;
 
-    let t0 = performance.now();
-    function drawFlame(){
-      if(!ctx || !canvas) return;
+      boost *= 0.92;
+      ctx.clearRect(0,0,W,H);
 
-      resizeCanvasToDisplaySize();
+      const gx = W*0.5, gy = H*0.86;
+      const g = ctx.createRadialGradient(gx,gy,0,gx,gy,H*0.42);
+      const b = 0.10 + boost*0.06;
+      g.addColorStop(0, `rgba(230,118,144,${0.12*globalIntensity + b})`);
+      g.addColorStop(0.45, `rgba(193,138,74,${0.08*globalIntensity + b*0.6})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
 
-      flameLevel += (targetLevel - flameLevel) * 0.045;
+      spawnBase();
 
-      const w = canvas.width, h = canvas.height;
-      const now = performance.now();
-      const time = (now - t0) * 0.0008;
-
-      ctx.clearRect(0,0,w,h);
-
-      // base bloom
-      ctx.save();
-      const baseY = h * 0.86;
-      const baseR = w * (0.18 + flameLevel * 0.12);
-      ctx.globalAlpha = 0.18 + flameLevel * 0.22;
-      const bg = ctx.createRadialGradient(w*0.5, baseY, 0, w*0.5, baseY, baseR);
-      bg.addColorStop(0, "rgba(255,255,255,0.18)");
-      bg.addColorStop(0.35, "rgba(255,255,255,0.08)");
-      bg.addColorStop(1, "rgba(255,255,255,0.00)");
-      ctx.fillStyle = bg;
-      ctx.beginPath();
-      ctx.arc(w*0.5, baseY, baseR, 0, Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-
-      const img = ctx.createImageData(w, h);
-      const data = img.data;
-
-      const flameHeight = h * (0.52 + flameLevel * 0.26);
-      const flameWidth  = w * (0.22 + flameLevel * 0.10);
-
-      for(let y=0; y<h; y++){
-        const yn = y / h;
-        const fy = (baseY - y) / flameHeight;
-        if(fy < 0) continue;
-
-        for(let x=0; x<w; x++){
-          const xn = x / w;
-          const dx = (x - w*0.5) / flameWidth;
-          const r = Math.abs(dx);
-
-          const taper = Math.max(0, 1 - r*r);
-          if(taper <= 0) continue;
-
-          const n = fbm(xn*3.4 + time*0.9, yn*4.2 - time*1.2);
-          const swirl = fbm(xn*6.0 - time*1.6, yn*6.0 + time*0.7);
-
-          let d = taper * (fy + 0.15) - (1.05 - fy) * 0.22;
-          d += (n-0.5) * (0.45 + flameLevel*0.28);
-          d += (swirl-0.5) * 0.18;
-
-          if(d <= 0) continue;
-
-          const core = Math.max(0, 1 - r*1.8) * Math.min(1, fy*1.3);
-          const alpha = Math.min(1, d) * (0.45 + flameLevel*0.35);
-
-          let R = 255, G = 255, B = 255;
-          const warm = 0.10 + flameLevel*0.18;
-          G = Math.floor(255 - (core*warm*40));
-          B = Math.floor(255 - (core*warm*70));
-
-          const idx = (y*w + x) * 4;
-          data[idx+0] = R;
-          data[idx+1] = G;
-          data[idx+2] = B;
-          data[idx+3] = Math.floor(alpha * 255);
+      for(let i=particles.length-1;i>=0;i--){
+        const p = particles[i];
+        p.life -= 1;
+        if(p.life <= 0){
+          particles.splice(i,1);
+          continue;
         }
+
+        const t = 1 - p.life/p.maxLife;
+        const cx = W*0.5;
+        p.vx += (cx - p.x) * (W*0.00000010);
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy *= 0.995;
+        p.vx *= 0.996;
+
+        const a = (1 - t) * 0.26 * globalIntensity + boost*0.04;
+        const size = p.size * (1.0 + t*0.55);
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${p.hue}, 82%, ${56 + t*10}%, ${Math.max(0, a)})`;
+        ctx.arc(p.x, p.y, size, 0, Math.PI*2);
+        ctx.fill();
       }
 
-      ctx.putImageData(img, 0, 0);
+      const cap = 520;
+      if(particles.length > cap) particles.splice(0, particles.length-cap);
 
-      // top glow
-      ctx.save();
-      ctx.globalCompositeOperation = "screen";
-      ctx.globalAlpha = 0.20 + flameLevel*0.20;
-      const glow = ctx.createRadialGradient(w*0.5, baseY - flameHeight*0.55, 0, w*0.5, baseY - flameHeight*0.55, w*0.32);
-      glow.addColorStop(0, "rgba(255,255,255,0.20)");
-      glow.addColorStop(1, "rgba(255,255,255,0.00)");
-      ctx.fillStyle = glow;
-      ctx.fillRect(0,0,w,h);
-      ctx.restore();
-
-      rafId = requestAnimationFrame(drawFlame);
+      requestAnimationFrame(draw);
     }
+    requestAnimationFrame(draw);
 
-    function startFlame(){
-      refreshCount();
-      if(rafId) cancelAnimationFrame(rafId);
-      drawFlame();
+    function castSparkFromElement(el){
+      if(!el) return;
+      const r = el.getBoundingClientRect();
+      const c = canvas.getBoundingClientRect();
+      const startX = (r.left + r.width*0.5 - c.left) * dpr;
+      const startY = (r.top + r.height*0.5 - c.top) * dpr;
 
-      if(COUNT_ENDPOINT){
-        setInterval(refreshCount, COUNT_POLL_MS);
+      const targetX = W*0.5;
+      const targetY = H*0.80;
+
+      const sparks = 32;
+      for(let i=0;i<sparks;i++){
+        const dx = (targetX - startX);
+        const dy = (targetY - startY);
+        const vx = dx * (0.008 + Math.random()*0.004) + (Math.random()*2-1)*W*0.0006;
+        const vy = dy * (0.010 + Math.random()*0.004) - Math.random()*H*0.002;
+        addParticle(startX, startY, vx, vy, 34 + Math.random()*18, (1.6+Math.random()*2.2)*dpr, 330 + Math.random()*20);
       }
-    }
 
-    refreshCount();
-    window.addEventListener('resize', ()=>{ if(hearthStarted) resizeCanvasToDisplaySize(); });
+      boost = Math.min(1.2, boost + 0.85);
+    }
   </script>
 </body>
 </html>

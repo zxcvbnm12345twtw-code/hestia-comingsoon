@@ -106,6 +106,7 @@
     .s1{background:linear-gradient(180deg,#000,#000);}
     .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
     .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
+    /* 新增：Flame Mark page */
     .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
     .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
     .s5{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
@@ -179,7 +180,6 @@
       letter-spacing:.22em;
       text-transform:uppercase;
       color:rgba(255,255,255,.68);
-      max-width: 92vw;
     }
 
     .secno{
@@ -224,8 +224,6 @@
       font-weight:450;
       opacity:.9;
       color:rgba(255,255,255,.86);
-      max-width:92vw;
-      overflow-wrap:anywhere;
     }
     .tagline{
       margin-top:10px;
@@ -239,7 +237,6 @@
       padding:0 10px;
       max-width:92vw;
       overflow-wrap:anywhere;
-      text-align:center;
     }
     @keyframes breatheText{ 0%,100%{opacity:.55;} 50%{opacity:.95;} }
 
@@ -345,9 +342,6 @@
       pointer-events:none;
       transition: opacity .18s ease, transform .18s ease;
       transform-origin: 100% 50%;
-      max-width: 72vw;
-      overflow:hidden;
-      text-overflow:ellipsis;
     }
     .dot:hover::after,
     .dot:focus-visible::after,
@@ -381,9 +375,13 @@
       backdrop-filter: blur(6px);
       position:relative;
       z-index:2;
-      overflow:hidden;
     }
     .info-card .mini{ margin-bottom:10px; display:flex; justify-content:center; }
+
+    .frame-size{
+      width:min(220px, 72vw);
+      aspect-ratio: 1 / 1;
+    }
 
     /* Primary Mark */
     .s3{ padding-top:70px; padding-bottom:70px; }
@@ -420,8 +418,6 @@
       user-select:none;
       -webkit-tap-highlight-color: transparent;
       transform: translateY(0) scale(1);
-      width:min(220px, 72vw);
-      aspect-ratio:1/1;
     }
     .logo-frame.in{ clip-path: circle(120% at 50% 50%); }
     .logo-frame::before{
@@ -594,7 +590,7 @@
     }
     .sanctuary-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
 
-    /* FLAME MARK */
+    /* FLAME MARK (page) */
     .flame-stage{
       position:relative;
       width:min(var(--wrap), 92vw);
@@ -603,7 +599,6 @@
       align-items:center;
       gap:14px;
       z-index:2;
-      margin:0 auto;
     }
     .flame-frame{
       border-radius:18px;
@@ -624,7 +619,6 @@
       will-change: clip-path;
       width:min(220px, 72vw);
       aspect-ratio:1/1;
-      margin: 0 auto;
     }
     .flame-frame.in{ clip-path: circle(120% at 50% 48%); }
     .flame-frame .corner-hint{ opacity:0; }
@@ -650,7 +644,7 @@
       0%{ filter: drop-shadow(0 0 14px rgba(230,118,144,.14)); }
       100%{ filter: drop-shadow(0 0 26px rgba(230,118,144,.22)); }
     }
-    .flame-copy{
+    .manifest{
       width:min(var(--wrap), 92vw);
       margin-top:0;
       padding:18px 16px;
@@ -663,15 +657,15 @@
       position:relative;
       z-index:2;
       text-align:left;
-      overflow:hidden;
+      overflow-wrap:anywhere;
     }
-    .flame-copy p{
-      font-size:clamp(15px, 2.4vw, 18px);
-      line-height:1.72;
-      color: rgba(255,255,255,.84);
-      max-width:100%;
+    .manifest .quote-zh{
+      font-size:0.8em;
+      color: rgba(255,255,255,.82);
+      overflow-wrap:anywhere;
     }
 
+    /* Rest of styles (05~08 / Result / Hearth) — 維持你已完美版本 */
     .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
     .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); max-width:100%; }
 
@@ -715,7 +709,6 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.40);
       backdrop-filter: blur(6px);
       max-width:100%;
-      overflow:hidden;
     }
     .q h3{ margin:0 0 12px; font-size:14px; letter-spacing:.12em; color:rgba(255,255,255,.80); font-weight:650; overflow-wrap:anywhere; }
     .opts{ display:grid; gap:10px; }
@@ -757,7 +750,6 @@
       cursor:pointer;
       transition: transform .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease;
       max-width:92vw;
-      white-space:nowrap;
     }
     .ghost-btn:active{ transform: scale(.99); }
     .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
@@ -777,7 +769,6 @@
       z-index:2;
       text-align:left;
       position:relative;
-      max-width: 92vw;
     }
     .result-page::after{
       content:"";
@@ -797,11 +788,11 @@
       background: rgba(0,0,0,.18);
       padding:14px 14px;
       box-shadow: 0 18px 60px rgba(0,0,0,.30);
-      overflow:hidden;
+      overflow-wrap:anywhere;
     }
     .arch-card .t{ margin:0 0 6px; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.62); }
-    .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); overflow-wrap:anywhere; word-break:break-word; }
-    .arch-actions{ margin-top:14px; display:flex; justify-content:center; position:relative; z-index:2; flex-wrap:wrap; gap:10px; }
+    .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); }
+    .arch-actions{ margin-top:14px; display:flex; justify-content:center; position:relative; z-index:2; }
 
     .hearth-wrap{
       width:min(var(--wrap), 92vw);
@@ -818,7 +809,6 @@
       z-index:2;
       position:relative;
       text-align:center;
-      max-width: 92vw;
     }
     .hearth-wrap::after{
       content:"";
@@ -828,7 +818,7 @@
       pointer-events:none;
       opacity:.85;
     }
-    .hearth-top{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; }
+    .hearth-top{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; }
     .hearth-canvas{
       width:min(520px, 86vw);
       height:240px;
@@ -838,13 +828,12 @@
       box-shadow: 0 18px 60px rgba(0,0,0,.35);
       overflow:hidden;
       display:block;
-      margin:0 auto;
     }
     @media (max-width: 420px){
       .hearth-canvas{ height:220px; }
     }
     .hearth-level{ font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.66); margin-top:-2px; }
-    .microcopy{ margin-top:10px; font-size:12px; letter-spacing:.10em; color:rgba(255,255,255,.62); position:relative; z-index:2; padding:0 6px; overflow-wrap:anywhere; text-align:center; }
+    .microcopy{ margin-top:10px; font-size:12px; letter-spacing:.10em; color:rgba(255,255,255,.62); position:relative; z-index:2; padding:0 6px; overflow-wrap:anywhere; }
 
     form{
       margin-top:18px;
@@ -855,7 +844,6 @@
       position:relative;
       z-index:2;
       width:100%;
-      max-width: 92vw;
     }
     input[type="email"]{
       padding:12px 20px;border-radius:12px;
@@ -870,7 +858,6 @@
       cursor:pointer;transition:background .42s, transform .22s ease;
       letter-spacing:.08em;
       max-width:92vw;
-      white-space:nowrap;
     }
     button:hover{filter: brightness(.96);}
     button:active{ transform: scale(.99); }
@@ -884,7 +871,6 @@
       z-index:2;
       flex-wrap:wrap;
       padding:0 6px;
-      max-width: 92vw;
     }
     .links a{
       color:rgba(255,255,255,.86);
@@ -901,11 +887,6 @@
       position:relative;
       z-index:2;
       user-select:none;
-      text-align:center;
-      max-width:92vw;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
     }
 
     .toast{
@@ -932,6 +913,7 @@
   <div class="breath" id="breath" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
+  <!-- Dots：新增 FLAME MARK -->
   <nav class="dots" id="dotsNav" aria-label="Section navigation">
     <button class="dot" data-target="s1" data-label="HERO" aria-label="Go to Hero"></button>
     <button class="dot" data-target="s2" data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
@@ -944,6 +926,7 @@
     <button class="dot" data-target="s8" data-label="HEARTH" aria-label="Go to Collective Hearth"></button>
   </nav>
 
+  <!-- ① Hero -->
   <section class="s1" id="s1">
     <div class="brand">
       <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
@@ -953,6 +936,7 @@
     <div class="arrow">↓</div>
   </section>
 
+  <!-- ② WHO WE ARE -->
   <section class="s2" id="s2">
     <div class="secno reveal" style="--d:120ms;">02</div>
     <h2 class="reveal in who-title" style="--d:160ms;">WHO <span class="we-accent">WE</span> ARE?</h2>
@@ -966,11 +950,12 @@
     </div>
   </section>
 
+  <!-- ③ PRIMARY MARK -->
   <section class="s3" id="s3">
     <div class="stack">
       <div class="secno reveal" style="--d:140ms;">03</div>
 
-      <div class="logo-frame" id="logoFrame" role="button" aria-label="Interact with brand mark" tabindex="0" data-mode="primary">
+      <div class="logo-frame frame-size" id="logoFrame" role="button" aria-label="Interact with brand mark" tabindex="0" data-mode="primary">
         <div class="corner-hint" aria-hidden="true"></div>
         <img class="logo-mark" id="logoMark" src="Hlogo.png" alt="HESTIA mark" />
       </div>
@@ -988,31 +973,35 @@
     </div>
   </section>
 
-  <section class="s4b" id="s4b">
-    <div class="secno reveal" style="--d:140ms;">04</div>
+  <!-- ④ FLAME MARK（標語的符號） -->
+<section class="s4b" id="s4b">
+  <div class="secno reveal" style="--d:140ms;">04</div>
 
-    <div class="flame-stage">
-      <div class="sanctuary-kicker">
-        <span class="kicker reveal" style="--d:180ms;">FLAME MARK</span>
-      </div>
-
-      <div class="flame-frame" id="flameFrame" aria-label="Flame Mark reveal">
-        <div class="corner-hint" aria-hidden="true"></div>
-        <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" />
-      </div>
-
-      <h2 class="reveal" style="--d:220ms;margin-top:4px;">標語的符號</h2>
-
-      <div class="flame-copy">
-        <p class="late" data-late style="margin:0 0 8px;">這不只是口號，而是一種信念。</p>
-        <p class="late" data-late style="margin:0 0 8px;">標籤又如何？那是與生俱來的特色。</p>
-        <p class="late" data-late style="margin:0 0 8px;">HESTIA 透過品牌標語「Own Your Flame」</p>
-        <p class="late" data-late style="margin:0 0 8px;">無論性別、身形、背景，這些火焰屬於你自己。</p>
-        <p class="late" data-late style="margin:0;">不用變成誰，你只需要更像你！</p>
-      </div>
+  <div class="flame-stage">
+    <div style="display:flex;justify-content:center;margin-bottom:4px;">
+      <span class="kicker reveal" style="--d:180ms;">FLAME MARK</span>
     </div>
-  </section>
 
+    <div class="flame-frame" id="flameFrame" aria-label="Flame Mark reveal">
+      <div class="corner-hint" aria-hidden="true"></div>
+      <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" />
+    </div>
+
+    <div class="label reveal" style="--d:220ms;">OWN YOUR FLAME</div>
+    <h2 class="reveal" style="--d:260ms;">標語的符號</h2>
+
+    <div class="manifest flame-copy reveal" style="--d:320ms;">
+      <p class="late" data-late>這不只是口號，而是一種信念。</p>
+      <p class="late" data-late>標籤又如何？那是與生俱來的特色。</p>
+      <p class="late" data-late>HESTIA 透過品牌標語「Own Your Flame」</p>
+      <p class="late" data-late>無論性別、身形、背景，這些火焰屬於你自己。</p>
+      <p class="late" data-late>不用變成誰，你只需要更像你！</p>
+    </div>
+  </div>
+</section>
+
+
+  <!-- ⑤ Digital Sanctuary -->
   <section class="s4" id="s4">
     <div class="secno reveal" style="--d:140ms;">05</div>
 
@@ -1020,7 +1009,7 @@
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">DIGITAL SANCTUARY</span></div>
 
       <h2 class="reveal" style="--d:220ms;">
-        現在安靜下來，讓我們一起參與 HEST<span class="i-accent">i</span>A
+        現在安靜下來，讓我們一起餐與 HEST<span class="i-accent">i</span>A
       </h2>
 
       <div class="sanctuary-sub">
@@ -1030,6 +1019,7 @@
     </div>
   </section>
 
+  <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
     <div class="secno reveal" style="--d:140ms;">06</div>
 
@@ -1037,7 +1027,8 @@
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">AESTHETIC ALIGNMENT</span></div>
       <h2 class="reveal" style="--d:220ms;">你偏好的沉靜色調</h2>
       <p class="reveal" style="--d:260ms;">
-        有些顏色不需要被解釋。它們只是讓你停下來，多看一秒。
+        我們會把你的選擇當作「質感方向」的參考。不是投票，也不做排名；
+        只是讓未來的配色，更接近你真正願意穿上身的那種安靜。
       </p>
 
       <div class="align-grid" id="alignGrid" aria-label="Aesthetic alignment choices">
@@ -1045,7 +1036,7 @@
           <div class="row">
             <div>
               <div class="title">DAWN</div>
-              <p class="desc">冷霧灰 × 鼠尾草綠，乾淨、節制，像貓頭鷹的神秘。</p>
+              <p class="desc">冷霧灰 × 鼠尾草綠，乾淨、節制、帶一點呼吸感。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#b8c7c0;"></span>
@@ -1059,7 +1050,7 @@
           <div class="row">
             <div>
               <div class="title">EMBERS</div>
-              <p class="desc">赤陶棕 × 暖橙金，彩度更高，如鳳凰的羽毛。</p>
+              <p class="desc">赤陶棕 × 暖玫瑰金，溫度更高，但依然內斂。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#c07a6a;"></span>
@@ -1073,7 +1064,7 @@
           <div class="row">
             <div>
               <div class="title">STONE</div>
-              <p class="desc">石墨黑 × 午夜藍，安靜、銳利，彷彿雪豹凝視的力量。</p>
+              <p class="desc">石墨黑 × 午夜藍，安靜、銳利、帶點未說出口的力量。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#9aa6d6;"></span>
@@ -1090,41 +1081,42 @@
     </div>
   </section>
 
+  <!-- ⑦ Introspective Reflection -->
   <section class="s6" id="s6">
     <div class="secno reveal" style="--d:140ms;">07</div>
 
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">INTROSPECTIVE REFLECTION</span></div>
-      <h2 class="reveal" style="--d:220ms;">你喜好或習慣的運動狀態</h2>
+      <h2 class="reveal" style="--d:220ms;">你喜好或習慣的運動結構</h2>
       <p class="reveal" style="--d:260ms;">
-        開始動之前，每個人都會先進入一種狀態。不是對錯，只是你比較熟悉哪一種。
+        不需要想太多。用直覺選，會更接近你真正想要的狀態與穿著感。
       </p>
 
       <div class="quiz" id="quiz">
         <div class="q reveal" style="--d:320ms;" data-q="q1">
-          <h3>當你準備開始動起來時，你更接近哪一種感覺？</h3>
+          <h3>當你想開始動起來，你更接近哪種狀態？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="A">先讓周圍慢下來，找到一個安靜的位置。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="B">需要一點節奏或刺激，讓身體慢慢被帶進去。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="C">很清楚自己要做什麼，一開始就能專注。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="A">先把心收回來，找一個安靜的節奏。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="B">需要一點推力，越動越熱，才進得去。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="C">喜歡很乾淨的專注，一進場就不分心。</div>
           </div>
         </div>
 
         <div class="q reveal" style="--d:380ms;" data-q="q2">
-          <h3>運動時，你比較在意的是？</h3>
+          <h3>你希望服飾帶給你的感覺更像？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">不被打擾，能專心感受當下。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="B">有流動感，動起來會覺得「對了」。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="C">清楚、俐落，每個動作都有目的。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">柔和包覆、自在伸展，像呼吸一樣自然。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="B">線條俐落、有存在感，但不張揚。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="C">機能清晰、乾淨耐看，越看越順。</div>
           </div>
         </div>
 
         <div class="q reveal" style="--d:440ms;" data-q="q3">
-          <h3>結束之後，你最希望留下的是？</h3>
+          <h3>你最想在日常裡保留的是？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">一種安定，像事情慢慢回到正軌。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="B">被釋放的感覺，身體與情緒都輕了一點。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="C">很明確的完成感，知道自己做到了。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">安定與餘裕。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="B">自信與張力。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="C">秩序與清晰。</div>
           </div>
         </div>
 
@@ -1135,6 +1127,7 @@
     </div>
   </section>
 
+  <!-- ⑧ Archetype Result -->
   <section class="s7" id="s7">
     <div class="secno reveal" style="--d:140ms;">08</div>
 
@@ -1154,8 +1147,8 @@
           <p class="v" id="archRhythm">—</p>
         </div>
         <div class="arch-card reveal" style="--d:440ms;">
-          <div class="t">COLOR DIRECTION</div>
-          <p class="v" id="archColor">—</p>
+          <div class="t">STYLE + COLOR DIRECTION</div>
+          <p class="v" id="archStyle">—</p>
         </div>
       </div>
 
@@ -1170,6 +1163,7 @@
     </div>
   </section>
 
+  <!-- ⑨ Collective Hearth -->
   <section class="s8" id="s8">
     <div class="secno reveal" style="--d:140ms;">09</div>
 
@@ -1216,549 +1210,482 @@
   <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
   <script>
-    // 穩定化：所有初始化等 DOMReady，避免某些 host/框架載入順序造成整頁炸掉
-    document.addEventListener('DOMContentLoaded', () => {
-      const $ = (s, r=document) => r.querySelector(s);
-      const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+    const $ = (s, r=document) => r.querySelector(s);
+    const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
-      function inView(el, topRatio=0.78, bottomRatio=0.18){
-        if(!el) return false;
-        const r = el.getBoundingClientRect();
-        const vh = window.innerHeight || document.documentElement.clientHeight;
-        const topLine = vh * topRatio;
-        const bottomLine = vh * bottomRatio;
-        return (r.top <= topLine) && (r.bottom >= bottomLine);
+    function inView(el, topRatio=0.78, bottomRatio=0.18){
+      if(!el) return false;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const topLine = vh * topRatio;
+      const bottomLine = vh * bottomRatio;
+      return (r.top <= topLine) && (r.bottom >= bottomLine);
+    }
+
+    /* Reveal */
+    let ticking = false;
+    function rafCheck(){
+      ticking = false;
+
+      $$('.reveal').forEach(el=>{
+        if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
+      });
+
+      $$('.late[data-late]').forEach(el=>{
+        if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
+      });
+
+      if(!logoRevealed && inView(logoFrame, 0.80, 0.15)){
+        logoRevealed = true;
+        logoFrame.classList.add('in');
+        setTimeout(()=>logoMark.classList.add('in'), 520);
+        setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
       }
 
-      /* Reveal */
-      let ticking = false;
-
-      let logoRevealed = false;
-      let flameRevealed = false;
-
-      const logoFrame = $('#logoFrame');
-      const logoMark  = $('#logoMark');
-
-      const flameFrame = $('#flameFrame');
-      const flameImg   = $('#flameImg');
-
-      function rafCheck(){
-        ticking = false;
-
-        $$('.reveal').forEach(el=>{
-          if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-        });
-        $$('.late[data-late]').forEach(el=>{
-          if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-        });
-
-        if(!logoRevealed && logoFrame && logoMark && inView(logoFrame, 0.80, 0.15)){
-          logoRevealed = true;
-          logoFrame.classList.add('in');
-          setTimeout(()=>logoMark.classList.add('in'), 520);
-          setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
-        }
-
-        if(!flameRevealed && flameFrame && flameImg && inView(flameFrame, 0.80, 0.15)){
-          flameRevealed = true;
-          flameFrame.classList.add('in');
-          setTimeout(()=>flameImg.classList.add('in'), 520);
-        }
+      /* Flame Mark reveal */
+      if(!flameRevealed && inView(flameFrame, 0.80, 0.15)){
+        flameRevealed = true;
+        flameFrame.classList.add('in');
+        setTimeout(()=>flameImg.classList.add('in'), 520);
       }
-
-      function requestCheck(){
-        if(ticking) return;
-        ticking = true;
-        requestAnimationFrame(rafCheck);
-      }
-
-      window.addEventListener('scroll', requestCheck, {passive:true});
-      window.addEventListener('resize', requestCheck);
-
+    }
+    function requestCheck(){
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(rafCheck);
+    }
+    window.addEventListener('scroll', requestCheck, {passive:true});
+    window.addEventListener('resize', requestCheck);
+    window.addEventListener('load', ()=>{
       requestCheck();
       setTimeout(requestCheck, 120);
       setTimeout(requestCheck, 420);
-
-      /* LOGO click cycle */
-      if(logoFrame && logoMark){
-        const modes = ['primary','fabric','mono'];
-        let modeIdx = 0;
-
-        function popOnce(){
-          logoFrame.classList.remove('pulse');
-          logoMark.classList.remove('pop');
-          void logoFrame.offsetWidth;
-          logoFrame.classList.add('pulse');
-          logoMark.classList.add('pop');
-        }
-        function cycleMode(){
-          modeIdx = (modeIdx + 1) % modes.length;
-          logoFrame.setAttribute('data-mode', modes[modeIdx]);
-          popOnce();
-        }
-
-        logoFrame.addEventListener('click', cycleMode);
-        logoFrame.addEventListener('keydown', (e)=>{
-          if(e.key === 'Enter' || e.key === ' '){
-            e.preventDefault();
-            cycleMode();
-          }
-        });
-      }
-
-      /* Aesthetic */
-      const moods = $$('#alignGrid .mood');
-      const alignPicked = $('#alignPicked');
-      const alignPicked2 = $('#alignPicked2');
-
-      function setTheme(theme, value){
-        document.body.setAttribute('data-theme', theme);
-        if(alignPicked) alignPicked.textContent = value;
-        if(alignPicked2) alignPicked2.textContent = value;
-
-        localStorage.setItem('hestia_theme', theme);
-        localStorage.setItem('hestia_alignment', value);
-
-        moods.forEach(m=>{
-          const on = (m.dataset.theme === theme);
-          m.classList.toggle('active', on);
-          m.classList.toggle('dim', !on);
-        });
-        setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
-      }
-
-      function initTheme(){
-        const savedTheme = localStorage.getItem('hestia_theme') || 'embers';
-        const savedAlign = localStorage.getItem('hestia_alignment') || (savedTheme === 'dawn' ? 'DAWN' : savedTheme === 'stone' ? 'STONE' : 'EMBERS');
-        setTheme(savedTheme, savedAlign);
-      }
-
-      if(moods.length){
-        initTheme();
-        moods.forEach(m=>{
-          const act = ()=> setTheme(m.dataset.theme, m.dataset.value);
-          m.addEventListener('click', act);
-          m.addEventListener('keydown', (e)=>{
-            if(e.key === 'Enter' || e.key === ' '){
-              e.preventDefault();
-              act();
-            }
-          });
-        });
-      }
-
-      /* Archetype */
-      const unlockBtn = $('#unlockBtn');
-      const archPickedEl = $('#archPicked');
-      const archTitle = $('#archTitle');
-      const archKey   = $('#archKey');
-      const archCore  = $('#archCore');
-      const archRhythm= $('#archRhythm');
-      const archColor = $('#archColor');
-
-      const answers = { q1:null, q2:null, q3:null };
-      const opts = $$('.opt');
-
-      const AXIS = {
-        q1: { A:{k:'QUIET ENTRY', zh:'安靜入場'}, B:{k:'RHYTHM ENTRY', zh:'節奏入場'}, C:{k:'DIRECT ENTRY', zh:'直接入場'} },
-        q2: { A:{k:'SENSING', zh:'感受優先'},   B:{k:'FLOW', zh:'流動優先'},   C:{k:'PRECISION', zh:'精準優先'} },
-        q3: { A:{k:'GROUND', zh:'回到安定'},    B:{k:'RELEASE', zh:'釋放鬆開'}, C:{k:'COMPLETE', zh:'完成收束'} }
-      };
-
-      function animalFromAlignment(align){
-        if(align === 'DAWN'){
-          return {
-            animal:'貓頭鷹',
-            en:'OWL',
-            colorText:'冷霧灰 × 鼠尾草綠。乾淨、節制，留一點神秘的呼吸。',
-            tone:'你擅長在安靜裡整理自己，先把世界降噪，才進入狀態。'
-          };
-        }
-        if(align === 'EMBERS'){
-          return {
-            animal:'鳳凰',
-            en:'PHOENIX',
-            colorText:'赤陶棕 × 暖橙金。彩度更高，但熱度是往內走的。',
-            tone:'你需要一點溫度才能開始，一旦對了，整個人會被喚醒。'
-          };
-        }
-        return {
-          animal:'雪豹',
-          en:'SNOW LEOPARD',
-          colorText:'石墨黑 × 午夜藍。安靜、銳利，像凝視一樣收斂。',
-          tone:'你把專注收得很深，一旦進入狀態，雜訊自然退後。'
-        };
-      }
-
-      function buildArchetype(){
-        const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
-        const a = animalFromAlignment(align);
-
-        const a1 = AXIS.q1[answers.q1];
-        const a2 = AXIS.q2[answers.q2];
-        const a3 = AXIS.q3[answers.q3];
-
-        const key = `${a.en} · ${a1.k} / ${a2.k} / ${a3.k}`;
-        const title = `${a.animal｜${a1.zh}}`;
-
-        const core = [
-          a.tone,
-          `你更像是「${a1.zh}」的人：先把自己放到對的位置，再讓身體接手。`,
-          `過程中你偏向「${a2.zh}」，所以你會在細節裡找到安心感。`,
-          `結束後你希望是「${a3.zh}」，這會影響你對運動的黏著度。`,
-          `這不是分類，也不會被比較；它只是你此刻的傾向。`
-        ].join(' ');
-
-        const rhythm = (()=> {
-          const entry = answers.q1, focus = answers.q2, after = answers.q3;
-          const line1 = entry==='A' ? '先慢後穩：給自己 5–8 分鐘安靜熱身，讓節奏自然對上。'
-                      : entry==='B' ? '先帶起來：用有節奏的暖身把身體叫醒，越動越進入狀態。'
-                      : '一開始就進：你適合明確的開始訊號，進場後就把注意力鎖住。';
-
-          const line2 = focus==='A' ? '你在意感受：把注意力放在呼吸、肌肉收縮與節奏一致，會更容易持續。'
-                      : focus==='B' ? '你在意流動：用連貫的段落或循環式安排，會讓你更有「對了」的感覺。'
-                      : '你在意精準：把目標、組數、休息寫清楚，你會練得更穩也更有效率。';
-
-          const line3 = after==='A' ? '收尾要安定：留 2–4 分鐘緩和，讓你帶著安定離開。'
-                      : after==='B' ? '收尾要釋放：用拉伸或慢呼吸把緊繃放掉，你會更願意回來。'
-                      : '收尾要完成：用簡單的結束儀式（記錄、回顧）讓你有明確的完成感。';
-
-          return `${line1} ${line2} ${line3}`;
-        })();
-
-        return { key, title, core, rhythm, colorText: a.colorText, archetypeName: `${a.animal｜${a1.zh}}` };
-      }
-
-      function updateUnlock(){
-        if(unlockBtn) unlockBtn.disabled = !Object.values(answers).every(Boolean);
-      }
-
-      function setOptState(q, chosenEl){
-        const group = opts.filter(o=>o.dataset.q === q);
-        group.forEach(o=>{
-          const on = (o === chosenEl);
-          o.classList.toggle('active', on);
-          o.classList.toggle('dim', !on);
-        });
-        setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 1400);
-      }
-
-      opts.forEach(o=>{
-        const act = ()=>{
-          const q = o.dataset.q;
-          const a = o.dataset.a;
-          answers[q] = a;
-          setOptState(q, o);
-          updateUnlock();
-        };
-        o.addEventListener('click', act);
-        o.addEventListener('keydown', (e)=>{
-          if(e.key === 'Enter' || e.key === ' '){
-            e.preventDefault();
-            act();
-          }
-        });
-      });
-
-      if(unlockBtn){
-        unlockBtn.addEventListener('click', ()=>{
-          const r = buildArchetype();
-
-          if(archTitle) archTitle.textContent = r.title;
-          if(archKey)   archKey.textContent   = r.key;
-          if(archCore)  archCore.textContent  = r.core;
-          if(archRhythm)archRhythm.textContent= r.rhythm;
-          if(archColor) archColor.textContent = r.colorText;
-
-          localStorage.setItem('hestia_archetype', r.archetypeName);
-          localStorage.setItem('hestia_archetype_key', r.key);
-
-          if(archPickedEl) archPickedEl.textContent = r.archetypeName;
-
-          setTimeout(()=>{
-            const s7 = document.getElementById('s7');
-            if(s7) s7.scrollIntoView({behavior:'smooth', block:'start'});
-            setTimeout(requestCheck, 180);
-          }, 420);
-        });
-      }
-
-      const toHearthBtn = $('#toHearthBtn');
-      if(toHearthBtn){
-        toHearthBtn.addEventListener('click', ()=>{
-          const s8 = document.getElementById('s8');
-          if(s8) s8.scrollIntoView({behavior:'smooth', block:'start'});
-          setTimeout(requestCheck, 180);
-        });
-      }
-
-      (function hydrateSaved(){
-        const savedArch = localStorage.getItem('hestia_archetype');
-        const savedKey  = localStorage.getItem('hestia_archetype_key');
-        if(savedArch && archPickedEl) archPickedEl.textContent = savedArch;
-        if(savedArch && savedKey && archTitle && archKey){
-          archTitle.textContent = savedArch;
-          archKey.textContent = savedKey;
-        }
-        const savedAlign = localStorage.getItem('hestia_alignment');
-        if(savedAlign){
-          if(alignPicked) alignPicked.textContent = savedAlign;
-          if(alignPicked2) alignPicked2.textContent = savedAlign;
-        }
-      })();
-
-      /* Toast + GForm */
-      const toast = $('#toast');
-      const iframe = $('#hidden_iframe');
-      let submittedAt = 0;
-
-      window.submitGForm = function submitGForm(e){
-        const input = $('#email');
-        const email = (input && input.value ? input.value : '').trim();
-        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-          alert('請輸入有效的 Email');
-          return false;
-        }
-
-        const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
-        const theme = localStorage.getItem('hestia_theme') || 'embers';
-        const arch  = localStorage.getItem('hestia_archetype') || '';
-
-        const fa = $('#f_alignment');
-        const ft = $('#f_theme');
-        const far = $('#f_archetype');
-        if(fa) fa.value = align;
-        if(ft) ft.value = theme;
-        if(far) far.value = arch;
-
-        submittedAt = Date.now();
-
-        const tendBtn = $('#tendBtn');
-        castSparkFromElement(tendBtn);
-        setCount(getCount()+1);
-        applyLevel();
-
-        return true;
-      }
-
-      if(iframe){
-        iframe.addEventListener('load',()=>{
-          if(Date.now()-submittedAt<350) return;
-          const em = $('#email');
-          if(em) em.value='';
-          if(toast){
-            toast.classList.add('show');
-            setTimeout(()=>toast.classList.remove('show'),2600);
-          }
-        });
-      }
-
-      /* Dots behavior */
-      const breath = $('#breath');
-      const sections = ['s1','s2','s3','s4b','s4','s5','s6','s7','s8']
-        .map(id=>document.getElementById(id)).filter(Boolean);
-      const dots = $$('.dot');
-
-      function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
-
-      let lastActive = 0;
-      function updateActiveDot(){
-        const vh = window.innerHeight;
-        let best = {idx:0, score:999999};
-        sections.forEach((sec, idx)=>{
-          const r = sec.getBoundingClientRect();
-          const center = r.top + r.height/2;
-          const score = Math.abs(center - vh/2);
-          if(score < best.score) best = {idx, score};
-        });
-        setActiveDot(best.idx);
-
-        if(best.idx !== lastActive && breath){
-          breath.classList.add('transition');
-          requestAnimationFrame(()=>{
-            breath.classList.add('release');
-            setTimeout(()=>breath.classList.remove('transition','release'), 620);
-          });
-          lastActive = best.idx;
-        }
-      }
-
-      dots.forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          const id = btn.getAttribute('data-target');
-          const target = document.getElementById(id);
-          if(!target) return;
-          target.scrollIntoView({behavior:'smooth', block:'start'});
-          setTimeout(requestCheck, 120);
-          setTimeout(requestCheck, 520);
-        }, {passive:true});
-      });
-
-      const dotsNav = $('#dotsNav');
-      let hinted = false;
-      function onFirstScroll(){
-        if(hinted) return;
-        hinted = true;
-        if(dotsNav) dotsNav.classList.add('hint');
-        setTimeout(()=>dotsNav && dotsNav.classList.remove('hint'), 1200);
-        window.removeEventListener('scroll', onFirstScroll);
-      }
-      window.addEventListener('scroll', onFirstScroll, {passive:true});
-
-      window.addEventListener('scroll', ()=>{ requestAnimationFrame(updateActiveDot); }, {passive:true});
-      window.addEventListener('resize', ()=>requestAnimationFrame(updateActiveDot));
-      requestAnimationFrame(updateActiveDot);
-      setTimeout(()=>requestAnimationFrame(updateActiveDot), 240);
-
-      setTimeout(requestCheck, 60);
-      setTimeout(()=>{ requestCheck(); requestAnimationFrame(updateActiveDot); }, 260);
-
-      /* =========================
-         Collective Hearth (Canvas 2D)
-      ========================== */
-      const canvas = $('#flameCanvas');
-      if(!canvas) return;
-
-      const ctx = canvas.getContext && canvas.getContext('2d', { alpha:true });
-      if(!ctx) return; // 取不到 context 就跳過動畫，避免整頁掛掉
-
-      let W=0,H=0, dpr=1;
-
-      function resizeCanvas(){
-        const rect = canvas.getBoundingClientRect();
-        dpr = Math.min(2, window.devicePixelRatio || 1);
-        W = Math.max(1, Math.floor(rect.width * dpr));
-        H = Math.max(1, Math.floor(rect.height * dpr));
-        canvas.width = W;
-        canvas.height = H;
-      }
-      window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
-
-      const particles = [];
-      let running = true;
-      let boost = 0;
-      let globalIntensity = 1.0;
-
-      const HEARTH_KEY = 'hestia_hearth_count';
-      const hearthLevelEl = $('#hearthLevel');
-
-      function getCount(){
-        const v = parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
-        return Number.isFinite(v) ? v : 37;
-      }
-      function setCount(n){
-        localStorage.setItem(HEARTH_KEY, String(n));
-      }
-      function levelFromCount(n){
-        if(n < 50) return 'Ember';
-        if(n < 150) return 'Glow';
-        if(n < 350) return 'Warmth';
-        if(n < 700) return 'Hearth';
-        return 'Flame';
-      }
-      function applyLevel(){
-        const n = getCount();
-        if(hearthLevelEl) hearthLevelEl.textContent = levelFromCount(n);
-        const base = (n < 50) ? 0.92 :
-                     (n < 150) ? 0.98 :
-                     (n < 350) ? 1.04 :
-                     (n < 700) ? 1.10 : 1.16;
-        globalIntensity = base;
-      }
-      applyLevel();
-
-      function addParticle(x, y, vx, vy, life, size, hue){
-        particles.push({x,y,vx,vy,life,maxLife:life,size,hue});
-      }
-
-      function spawnBase(){
-        const baseX = W * 0.5;
-        const baseY = H * 0.82;
-        const n = 6;
-        for(let i=0;i<n;i++){
-          const spread = (0.20 + Math.random()*0.18) * W * 0.12;
-          const x = baseX + (Math.random()*2-1) * spread;
-          const y = baseY + (Math.random()*2-1) * (H*0.006);
-          const vx = (Math.random()*2-1) * (W*0.00025);
-          const vy = -(H*0.0012 + Math.random() * H*0.0016);
-          const life = 56 + Math.random()*42;
-          const size = (1.4 + Math.random()*2.4) * dpr;
-          const hue = 18 + Math.random()*28;
-          addParticle(x,y,vx,vy,life,size,hue);
-        }
-      }
-
-      function draw(){
-        if(!running) return;
-
-        boost *= 0.92;
-        ctx.clearRect(0,0,W,H);
-
-        const gx = W*0.5, gy = H*0.86;
-        const g = ctx.createRadialGradient(gx,gy,0,gx,gy,H*0.42);
-        const b = 0.10 + boost*0.06;
-        g.addColorStop(0, `rgba(230,118,144,${0.12*globalIntensity + b})`);
-        g.addColorStop(0.45, `rgba(193,138,74,${0.08*globalIntensity + b*0.6})`);
-        g.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = g;
-        ctx.fillRect(0,0,W,H);
-
-        spawnBase();
-
-        for(let i=particles.length-1;i>=0;i--){
-          const p = particles[i];
-          p.life -= 1;
-          if(p.life <= 0){
-            particles.splice(i,1);
-            continue;
-          }
-
-          const t = 1 - p.life/p.maxLife;
-          const cx = W*0.5;
-          p.vx += (cx - p.x) * (W*0.00000010);
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy *= 0.995;
-          p.vx *= 0.996;
-
-          const a = (1 - t) * 0.26 * globalIntensity + boost*0.04;
-          const size = p.size * (1.0 + t*0.55);
-
-          ctx.beginPath();
-          ctx.fillStyle = `hsla(${p.hue}, 82%, ${56 + t*10}%, ${Math.max(0, a)})`;
-          ctx.arc(p.x, p.y, size, 0, Math.PI*2);
-          ctx.fill();
-        }
-
-        const cap = 520;
-        if(particles.length > cap) particles.splice(0, particles.length-cap);
-
-        requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-
-      function castSparkFromElement(el){
-        if(!el) return;
-        const r = el.getBoundingClientRect();
-        const c = canvas.getBoundingClientRect();
-        const startX = (r.left + r.width*0.5 - c.left) * dpr;
-        const startY = (r.top + r.height*0.5 - c.top) * dpr;
-
-        const targetX = W*0.5;
-        const targetY = H*0.80;
-
-        const sparks = 32;
-        for(let i=0;i<sparks;i++){
-          const dx = (targetX - startX);
-          const dy = (targetY - startY);
-          const vx = dx * (0.008 + Math.random()*0.004) + (Math.random()*2-1)*W*0.0006;
-          const vy = dy * (0.010 + Math.random()*0.004) - Math.random()*H*0.002;
-          addParticle(startX, startY, vx, vy, 34 + Math.random()*18, (1.6+Math.random()*2.2)*dpr, 330 + Math.random()*20);
-        }
-        boost = Math.min(1.2, boost + 0.85);
+    });
+
+    /* LOGO click cycle */
+    const logoFrame = $('#logoFrame');
+    const logoMark  = $('#logoMark');
+    const modes = ['primary','fabric','mono'];
+    let modeIdx = 0;
+    function popOnce(){
+      logoFrame.classList.remove('pulse');
+      logoMark.classList.remove('pop');
+      void logoFrame.offsetWidth;
+      logoFrame.classList.add('pulse');
+      logoMark.classList.add('pop');
+    }
+    function cycleMode(){
+      modeIdx = (modeIdx + 1) % modes.length;
+      logoFrame.setAttribute('data-mode', modes[modeIdx]);
+      popOnce();
+    }
+    logoFrame.addEventListener('click', cycleMode);
+    logoFrame.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        cycleMode();
       }
     });
+
+    let logoRevealed = false;
+    let flameRevealed = false;
+    const flameFrame = $('#flameFrame');
+    const flameImg   = $('#flameImg');
+
+    /* Aesthetic */
+    const moods = $$('#alignGrid .mood');
+    const alignPicked = $('#alignPicked');
+    const alignPicked2 = $('#alignPicked2');
+
+    function setTheme(theme, value){
+      document.body.setAttribute('data-theme', theme);
+      if(alignPicked) alignPicked.textContent = value;
+      if(alignPicked2) alignPicked2.textContent = value;
+
+      localStorage.setItem('hestia_theme', theme);
+      localStorage.setItem('hestia_alignment', value);
+
+      moods.forEach(m=>{
+        const on = (m.dataset.theme === theme);
+        m.classList.toggle('active', on);
+        m.classList.toggle('dim', !on);
+      });
+      setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
+    }
+    function initTheme(){
+      const savedTheme = localStorage.getItem('hestia_theme') || 'embers';
+      const savedAlign = localStorage.getItem('hestia_alignment') || (savedTheme === 'dawn' ? 'DAWN' : savedTheme === 'stone' ? 'STONE' : 'EMBERS');
+      setTheme(savedTheme, savedAlign);
+    }
+    initTheme();
+    moods.forEach(m=>{
+      const act = ()=> setTheme(m.dataset.theme, m.dataset.value);
+      m.addEventListener('click', act);
+      m.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          act();
+        }
+      });
+    });
+
+    /* Archetype */
+    const unlockBtn = $('#unlockBtn');
+    const archPicked  = $('#archPicked');
+    const archTitle = $('#archTitle');
+    const archKey   = $('#archKey');
+    const archCore  = $('#archCore');
+    const archRhythm= $('#archRhythm');
+    const archStyle = $('#archStyle');
+
+    const answers = { q1:null, q2:null, q3:null };
+    const opts = $$('.opt');
+
+    function computeArchetype(){
+      const counts = {A:0,B:0,C:0};
+      Object.values(answers).forEach(v=>{ if(v) counts[v]++; });
+      const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+
+      if(top === 'A'){
+        return {
+          key:'CALM KEEPER',
+          zh:'安定守序者',
+          core:'你偏好把節奏先放慢，讓身體回到可控的穩定；你的力量來自「長期一致」。',
+          rhythm:'適合循序漸進、節奏均勻的訓練安排：穩定心率、有餘裕的重量感，讓你越練越安定。',
+          style:'輪廓偏簡潔、低噪、耐看；材質重視手感與延展。配色偏冷霧灰、鼠尾草、低飽和中性色，細節用微光或細線條收住質感。'
+        };
+      }
+      if(top === 'B'){
+        return {
+          key:'INNER IGNITER',
+          zh:'內在點燃者',
+          core:'你需要一點推力才進得去，但一旦熱起來，你會非常穩且帶張力；你是「沉靜裡的燃」。',
+          rhythm:'適合有起伏的訓練節奏：前段暖身、後段爆發；你越動越進入狀態，越能把情緒轉成力量。',
+          style:'輪廓俐落、局部有存在感（切線、拼接、比例收束）；配色偏赤陶棕、暖玫瑰金、深酒紅或黑，讓張力藏在細節裡。'
+        };
+      }
+      return {
+        key:'FOCUS FORGER',
+        zh:'專注鍛造者',
+        core:'你喜歡乾淨、清晰的結構感；當一切變得有秩序，你就能把專注推到很深。',
+        rhythm:'適合明確分區、目標導向的訓練：組數、節奏、休息都清楚，你會因此更穩、更有效率。',
+        style:'剪裁與材質結構要清晰（線條、份量、支撐感）；配色偏石墨黑、午夜藍、冷金屬灰，走「越看越順」的高級耐看路線。'
+      };
+    }
+
+    function updateUnlock(){
+      unlockBtn.disabled = !Object.values(answers).every(Boolean);
+    }
+
+    function setOptState(q, chosenEl){
+      const group = opts.filter(o=>o.dataset.q === q);
+      group.forEach(o=>{
+        const on = (o === chosenEl);
+        o.classList.toggle('active', on);
+        o.classList.toggle('dim', !on);
+      });
+      setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 1400);
+    }
+
+    opts.forEach(o=>{
+      const act = ()=>{
+        const q = o.dataset.q;
+        const a = o.dataset.a;
+        answers[q] = a;
+        setOptState(q, o);
+        updateUnlock();
+      };
+      o.addEventListener('click', act);
+      o.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          act();
+        }
+      });
+    });
+
+    unlockBtn.addEventListener('click', ()=>{
+      const r = computeArchetype();
+
+      archTitle.textContent = r.zh;
+      archKey.textContent   = r.key;
+      archCore.textContent  = r.core;
+      archRhythm.textContent= r.rhythm;
+      archStyle.textContent = r.style;
+
+      localStorage.setItem('hestia_archetype', r.zh);
+      localStorage.setItem('hestia_archetype_key', r.key);
+
+      if(archPicked) archPicked.textContent = r.zh;
+
+      setTimeout(()=>{
+        const s7 = document.getElementById('s7');
+        if(s7) s7.scrollIntoView({behavior:'smooth', block:'start'});
+        setTimeout(requestCheck, 180);
+      }, 420);
+    });
+
+    $('#toHearthBtn').addEventListener('click', ()=>{
+      const s8 = document.getElementById('s8');
+      if(s8) s8.scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(requestCheck, 180);
+    });
+
+    (function hydrateSaved(){
+      const savedArch = localStorage.getItem('hestia_archetype');
+      if(savedArch && archPicked) archPicked.textContent = savedArch;
+      const savedAlign = localStorage.getItem('hestia_alignment');
+      if(savedAlign){
+        if(alignPicked) alignPicked.textContent = savedAlign;
+        if(alignPicked2) alignPicked2.textContent = savedAlign;
+      }
+      const savedKey = localStorage.getItem('hestia_archetype_key');
+      if(savedArch && savedKey){
+        archTitle.textContent = savedArch;
+        archKey.textContent = savedKey;
+      }
+    })();
+
+    /* Form */
+    const toast = $('#toast');
+    const iframe = $('#hidden_iframe');
+    let submittedAt = 0;
+
+    function submitGForm(e){
+      const input = $('#email');
+      const email = (input.value||'').trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        alert('請輸入有效的 Email');
+        return false;
+      }
+
+      const align = localStorage.getItem('hestia_alignment') || 'EMBERS';
+      const theme = localStorage.getItem('hestia_theme') || 'embers';
+      const arch  = localStorage.getItem('hestia_archetype') || '';
+
+      $('#f_alignment').value = align;
+      $('#f_theme').value = theme;
+      $('#f_archetype').value = arch;
+
+      submittedAt = Date.now();
+
+      castSparkFromElement($('#tendBtn'));
+      setCount(getCount()+1);
+      applyLevel();
+
+      return true;
+    }
+
+    iframe.addEventListener('load',()=>{
+      if(Date.now()-submittedAt<350) return;
+      $('#email').value='';
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'),2600);
+    });
+
+    /* Dots behavior */
+    const breath = $('#breath');
+    const sections = ['s1','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
+    const dots = $$('.dot');
+
+    function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
+
+    let lastActive = 0;
+    function updateActiveDot(){
+      const vh = window.innerHeight;
+      let best = {idx:0, score:999999};
+      sections.forEach((sec, idx)=>{
+        const r = sec.getBoundingClientRect();
+        const center = r.top + r.height/2;
+        const score = Math.abs(center - vh/2);
+        if(score < best.score) best = {idx, score};
+      });
+      setActiveDot(best.idx);
+
+      if(best.idx !== lastActive){
+        breath.classList.add('transition');
+        requestAnimationFrame(()=>{
+          breath.classList.add('release');
+          setTimeout(()=>breath.classList.remove('transition','release'), 620);
+        });
+        lastActive = best.idx;
+      }
+    }
+
+    dots.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.getAttribute('data-target');
+        const target = document.getElementById(id);
+        if(!target) return;
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+        setTimeout(requestCheck, 120);
+        setTimeout(requestCheck, 520);
+      }, {passive:true});
+    });
+
+    const dotsNav = $('#dotsNav');
+    let hinted = false;
+    function onFirstScroll(){
+      if(hinted) return;
+      hinted = true;
+      dotsNav.classList.add('hint');
+      setTimeout(()=>dotsNav.classList.remove('hint'), 1200);
+      window.removeEventListener('scroll', onFirstScroll, {passive:true});
+    }
+    window.addEventListener('scroll', onFirstScroll, {passive:true});
+
+    function extraTick(){ updateActiveDot(); }
+    window.addEventListener('scroll', ()=>{ requestAnimationFrame(extraTick); }, {passive:true});
+    window.addEventListener('load', ()=>{
+      requestAnimationFrame(extraTick);
+      setTimeout(()=>requestAnimationFrame(extraTick), 240);
+    });
+    window.addEventListener('resize', ()=>requestAnimationFrame(extraTick));
+
+    setTimeout(requestCheck, 60);
+    setTimeout(()=>{ requestCheck(); requestAnimationFrame(extraTick); }, 260);
+
+    /* =========================
+       Collective Hearth (Canvas 2D) - 你指定火焰版本
+    ========================== */
+    const canvas = $('#flameCanvas');
+    const ctx = canvas.getContext('2d', { alpha:true });
+    let W=0,H=0, dpr=1;
+
+    function resizeCanvas(){
+      const rect = canvas.getBoundingClientRect();
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      W = Math.floor(rect.width * dpr);
+      H = Math.floor(rect.height * dpr);
+      canvas.width = W;
+      canvas.height = H;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('load', resizeCanvas);
+    resizeCanvas();
+
+    const particles = [];
+    let running = true;
+    let boost = 0;
+    let globalIntensity = 1.0;
+
+    const HEARTH_KEY = 'hestia_hearth_count';
+    const hearthLevelEl = $('#hearthLevel');
+
+    function getCount(){
+      return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
+    }
+    function setCount(n){
+      localStorage.setItem(HEARTH_KEY, String(n));
+    }
+    function levelFromCount(n){
+      if(n < 50) return 'Ember';
+      if(n < 150) return 'Glow';
+      if(n < 350) return 'Warmth';
+      if(n < 700) return 'Hearth';
+      return 'Flame';
+    }
+    function applyLevel(){
+      const n = getCount();
+      hearthLevelEl.textContent = levelFromCount(n);
+      const base = (n < 50) ? 0.92 :
+                   (n < 150) ? 0.98 :
+                   (n < 350) ? 1.04 :
+                   (n < 700) ? 1.10 : 1.16;
+      globalIntensity = base;
+    }
+    applyLevel();
+
+    function addParticle(x, y, vx, vy, life, size, hue){
+      particles.push({x,y,vx,vy,life,maxLife:life,size,hue});
+    }
+
+    function spawnBase(){
+      const baseX = W * 0.5;
+      const baseY = H * 0.82;
+      const n = 6;
+      for(let i=0;i<n;i++){
+        const spread = (0.20 + Math.random()*0.18) * W * 0.12;
+        const x = baseX + (Math.random()*2-1) * spread;
+        const y = baseY + (Math.random()*2-1) * (H*0.006);
+        const vx = (Math.random()*2-1) * (W*0.00025);
+        const vy = -(H*0.0012 + Math.random() * H*0.0016);
+        const life = 56 + Math.random()*42;
+        const size = (1.4 + Math.random()*2.4) * dpr;
+        const hue = 18 + Math.random()*28;
+        addParticle(x,y,vx,vy,life,size,hue);
+      }
+    }
+
+    function draw(){
+      if(!running) return;
+
+      boost *= 0.92;
+      ctx.clearRect(0,0,W,H);
+
+      const gx = W*0.5, gy = H*0.86;
+      const g = ctx.createRadialGradient(gx,gy,0,gx,gy,H*0.42);
+      const b = 0.10 + boost*0.06;
+      g.addColorStop(0, `rgba(230,118,144,${0.12*globalIntensity + b})`);
+      g.addColorStop(0.45, `rgba(193,138,74,${0.08*globalIntensity + b*0.6})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+
+      spawnBase();
+
+      for(let i=particles.length-1;i>=0;i--){
+        const p = particles[i];
+        p.life -= 1;
+        if(p.life <= 0){
+          particles.splice(i,1);
+          continue;
+        }
+
+        const t = 1 - p.life/p.maxLife;
+        const cx = W*0.5;
+        p.vx += (cx - p.x) * (W*0.00000010);
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy *= 0.995;
+        p.vx *= 0.996;
+
+        const a = (1 - t) * 0.26 * globalIntensity + boost*0.04;
+        const size = p.size * (1.0 + t*0.55);
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(${p.hue}, 82%, ${56 + t*10}%, ${Math.max(0, a)})`;
+        ctx.arc(p.x, p.y, size, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      const cap = 520;
+      if(particles.length > cap) particles.splice(0, particles.length-cap);
+
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+
+    function castSparkFromElement(el){
+      if(!el) return;
+      const r = el.getBoundingClientRect();
+      const c = canvas.getBoundingClientRect();
+      const startX = (r.left + r.width*0.5 - c.left) * dpr;
+      const startY = (r.top + r.height*0.5 - c.top) * dpr;
+
+      const targetX = W*0.5;
+      const targetY = H*0.80;
+
+      const sparks = 32;
+      for(let i=0;i<sparks;i++){
+        const dx = (targetX - startX);
+        const dy = (targetY - startY);
+        const vx = dx * (0.008 + Math.random()*0.004) + (Math.random()*2-1)*W*0.0006;
+        const vy = dy * (0.010 + Math.random()*0.004) - Math.random()*H*0.002;
+        addParticle(startX, startY, vx, vy, 34 + Math.random()*18, (1.6+Math.random()*2.2)*dpr, 330 + Math.random()*20);
+      }
+      boost = Math.min(1.2, boost + 0.85);
+    }
   </script>
 </body>
 </html>

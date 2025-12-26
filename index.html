@@ -158,8 +158,6 @@
 /* 09 才回黑 */
 .s8{ background: linear-gradient(180deg, var(--sanctuary-5), #000 72%, #000); }
 
-}
-
     .breath{
       position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
       background:
@@ -1840,6 +1838,13 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
     const moods = $$('#alignGrid .mood');
     const alignPicked = $('#alignPicked');
     const alignPicked2 = $('#alignPicked2');
+    const emblemMap = {
+  rose_ember: "ROSE.png",
+  midnight_tracker: "MID.png",
+  veil_warden: "VEIL.png",
+  low_tide_keeper: "LOW.png"
+};
+
 
     let currentTheme = '';
     let currentAlign = '';
@@ -2013,6 +2018,13 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
 
     unlockBtn.addEventListener('click', ()=>{
       const r = computeArchetype();
+
+            // ✅ 08 Emblem：依主題切換 PNG
+      const emblemEl = document.getElementById("archetypeEmblem");
+      if (emblemEl) {
+        const src = emblemMap[currentTheme] || "";
+        emblemEl.src = src;
+      }
 
       archTitle.textContent = r.zh;
       archKey.textContent   = r.key;

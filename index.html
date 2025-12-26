@@ -46,28 +46,10 @@
     body{ transition: background-color 1.2s ease; }
 
     /* =========================
-       初始（無 data-theme）＝無彩黑白灰，不帶任何預設底色傾向
-    ========================== */
-    body:not([data-theme]),
-    body[data-theme=""],
-    body[data-theme="mono_base"]{
-      --sanctuary-1:#000000;
-      --sanctuary-2:#070707;
-      --sanctuary-3:#0d0d0d;
-      --sanctuary-4:#121212;
-      --sanctuary-5:#171717;
-
-      --breath-a: rgba(255,255,255,.10);
-      --breath-b: rgba(255,255,255,.06);
-
-      --accent:#ffffff;
-    }
-
-    /* =========================
        06 四種色調（ROSE EMBER 改成橘紅鳳凰系）
     ========================== */
 
-    /* ROSE EMBER (鳳凰)  Warm / High Sat */
+    /* ROSE EMBER (鳳凰)  Warm / High Sat  —— 改為橘紅系 */
     body[data-theme="rose_ember"]{
       --sanctuary-1:#120a07;
       --sanctuary-2:#1e0e09;
@@ -88,10 +70,8 @@
       --sanctuary-3:#10142a;
       --sanctuary-4:#161b3a;
       --sanctuary-5:#1c2348;
-
       --breath-a: rgba(59,108,255,.18);
       --breath-b: rgba(154,166,214,.12);
-
       --accent:#3b6cff;
     }
 
@@ -102,10 +82,8 @@
       --sanctuary-3:#221a15;
       --sanctuary-4:#2a211b;
       --sanctuary-5:#3a2f27;
-
       --breath-a: rgba(208,194,182,.18);
       --breath-b: rgba(184,168,154,.12);
-
       --accent:#d0c2b6;
     }
 
@@ -116,10 +94,8 @@
       --sanctuary-3:#0f1c1a;
       --sanctuary-4:#142423;
       --sanctuary-5:#1b3331;
-
       --breath-a: rgba(143,191,175,.20);
       --breath-b: rgba(184,199,192,.12);
-
       --accent:#8fbfaf;
     }
 
@@ -148,8 +124,8 @@
       word-break:break-word;
     }
 
-    .we-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,255,255,.12);}
-    .i-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,255,255,.12);}
+    .we-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,106,42,.16);}
+    .i-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,106,42,.16);}
 
     .s1{background:linear-gradient(180deg,#000,#000);}
     .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
@@ -158,10 +134,7 @@
     .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
     .s5{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
     .s6{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
-
-    /* 08 結果頁延續 06 主題背景（截圖更漂亮） */
-    .s7{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
-
+    .s7{background:linear-gradient(180deg,#000,#000);}
     .s8{background:linear-gradient(180deg,#000,#000);}
 
     .breath{
@@ -281,7 +254,7 @@
       letter-spacing:.14em;
       font-size:clamp(14px,1.8vw,18px);
       color:rgba(255,255,255,.75);
-      text-shadow:0 0 10px rgba(255,255,255,.12);
+      text-shadow:0 0 10px rgba(255,106,42,.16);
       animation:breatheText 7s ease-in-out infinite;
       position:relative;z-index:2;
       padding:0 10px;
@@ -406,7 +379,7 @@
     @keyframes hintPulse{
       0%{ opacity:.55; }
       40%{ opacity:1; box-shadow: 0 0 10px rgba(255,255,255,.22); }
-      100%{opacity:.60; box-shadow: 0 0 0 rgba(255,255,255,0); }
+      100%{ opacity:.60; box-shadow: 0 0 0 rgba(255,255,255,0); }
     }
     @media (max-width: 640px){
       .dot{ width:6px;height:6px; }
@@ -486,7 +459,7 @@
       border-color: rgba(255,255,255,.16);
       box-shadow:
         0 24px 82px rgba(0,0,0,.55),
-        0 0 26px rgba(255,255,255,.08),
+        0 0 26px rgba(255,106,42,.10),
         inset 0 1px 0 rgba(255,255,255,.06);
       transform: translateY(-1px) scale(1.01);
     }
@@ -555,7 +528,7 @@
     .logo-mark.pop{ animation: markPop .62s cubic-bezier(.22,.61,.36,1) both; }
     @keyframes markPop{
       0%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
-      40%{ filter: drop-shadow(0 0 18px rgba(255,255,255,.10)); transform: translateY(-1px) scale(1.03); }
+      40%{ filter: drop-shadow(0 0 18px rgba(255,106,42,.18)); transform: translateY(-1px) scale(1.03); }
       100%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
     }
 
@@ -640,6 +613,42 @@
     }
     .sanctuary-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
 
+    /* 05 全屏沉靜（保留全屏容器） */
+    #s4{ padding:0; }
+    #s4 .sanctuary-wrap{
+      width:100%;
+      height:100vh;
+      max-width:none;
+      border-radius:0;
+      border:none;
+      box-shadow:none;
+      background: transparent;
+      backdrop-filter:none;
+      padding:0 20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+    }
+    #s4 .sanctuary-wrap::before,
+    #s4 .sanctuary-wrap::after{ display:none; }
+
+    /* 05 電影式淡入淡出（只影響該段文案，不碰其他動畫） */
+    .cinema{
+      width:min(var(--wrap), 92vw);
+      text-align:center;
+      position:relative;
+      z-index:2;
+    }
+    .cinema-step{
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity .95s cubic-bezier(.22,.61,.36,1), transform .95s cubic-bezier(.22,.61,.36,1);
+      will-change: opacity, transform;
+    }
+    .cinema-step.show{ opacity:1; transform:none; }
+    .cinema-step.hide{ opacity:0; transform: translateY(-6px); }
+
     /* FLAME MARK (page) */
     .flame-stage{
       position:relative;
@@ -691,8 +700,8 @@
       animation: flameBreath 8.8s ease-in-out infinite alternate;
     }
     @keyframes flameBreath{
-      0%{ filter: drop-shadow(0 0 14px rgba(255,255,255,.10)); }
-      100%{ filter: drop-shadow(0 0 26px rgba(255,255,255,.16)); }
+      0%{ filter: drop-shadow(0 0 14px rgba(255,106,42,.14)); }
+      100%{ filter: drop-shadow(0 0 26px rgba(255,106,42,.22)); }
     }
     .manifest{
       width:min(var(--wrap), 92vw);
@@ -709,17 +718,15 @@
       text-align:left;
       overflow-wrap:anywhere;
     }
-    .manifest .quote-zh{
-      font-size:0.8em;
-      color: rgba(255,255,255,.82);
-      overflow-wrap:anywhere;
-    }
 
-    /* Rest of styles (05~08 / Result / Hearth) */
+    /* 04 文案置中對齊 */
+    .manifest.center{ text-align:center; }
+
+    /* Rest of styles (06~09 / cards) */
     .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
     .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); max-width:100%; }
 
-    .align-grid{ width:100%; display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px; position:relative; z-index:2; }
+    .align-grid{ width:100%; display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px; position:relative; z-index:2; text-align:left; }
     .mood{
       width:100%;
       border-radius:18px;
@@ -740,7 +747,7 @@
     .mood.dim{ opacity:.42; }
     .mood.active{
       border-color: rgba(255,255,255,.18);
-      box-shadow: 0 18px 80px rgba(0,0,0,.55), 0 0 28px rgba(255,255,255,.08);
+      box-shadow: 0 18px 80px rgba(0,0,0,.55), 0 0 28px rgba(255,106,42,.10);
       transform: translateY(-1px);
     }
     .mood .row{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap; }
@@ -786,8 +793,9 @@
       opacity:1;
       border-color: rgba(255,255,255,.20);
       background: rgba(255,255,255,.06);
-      box-shadow: 0 0 18px rgba(255,255,255,.10);
+      box-shadow: 0 0 18px rgba(255,106,42,.12);
     }
+
     .quiz-actions{ display:flex; justify-content:center; margin-top:6px; }
     .ghost-btn{
       padding:12px 18px;
@@ -804,9 +812,6 @@
     .ghost-btn:active{ transform: scale(.99); }
     .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
-    /* =========================
-       08 Result Page — 更像品牌卡（只加強質感，不改版面/動畫）
-    ========================== */
     .result-page{
       width:min(var(--wrap), 92vw);
       margin:0 auto;
@@ -814,32 +819,14 @@
       border-radius:22px;
       border:1px solid rgba(255,255,255,.10);
       background:
-        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.06), rgba(255,255,255,.012) 60%),
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      box-shadow:
-        0 28px 96px rgba(0,0,0,.54),
-        0 0 34px rgba(255,255,255,.06);
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
       backdrop-filter: blur(7px);
       overflow:hidden;
       z-index:2;
       text-align:left;
       position:relative;
-      isolation:isolate;
-    }
-    /* 品牌卡的「內框」你原本有，保留；再加一層斜向光帶 + 主題呼吸光 */
-    .result-page::before{
-      content:"";
-      position:absolute;
-      inset:-30%;
-      background:
-        radial-gradient(60% 40% at 30% 20%, rgba(255,255,255,.10), rgba(255,255,255,0) 60%),
-        radial-gradient(45% 35% at 78% 62%, rgba(255,255,255,.06), rgba(255,255,255,0) 62%),
-        linear-gradient(110deg, rgba(255,255,255,0) 35%, rgba(255,255,255,.08) 50%, rgba(255,255,255,0) 65%);
-      transform: rotate(10deg);
-      opacity:.55;
-      pointer-events:none;
-      mix-blend-mode:screen;
-      z-index:0;
     }
     .result-page::after{
       content:"";
@@ -847,10 +834,8 @@
       border-radius:18px;
       border:1px solid rgba(255,255,255,.06);
       pointer-events:none;
-      opacity:.88;
-      z-index:1;
+      opacity:.85;
     }
-
     .rp-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
     .arch-title{ margin:6px 0 4px; font-size:clamp(22px, 5vw, 32px); font-weight:850; letter-spacing:.06em; color:#fff; position:relative; z-index:2; overflow-wrap:anywhere; }
     .arch-sub{ margin:0 0 14px; font-size:13px; letter-spacing:.20em; text-transform:uppercase; color:rgba(255,255,255,.66); position:relative; z-index:2; overflow-wrap:anywhere; }
@@ -862,12 +847,59 @@
       padding:14px 14px;
       box-shadow: 0 18px 60px rgba(0,0,0,.30);
       overflow-wrap:anywhere;
-      position:relative;
-      z-index:2;
     }
     .arch-card .t{ margin:0 0 6px; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.62); }
     .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); }
     .arch-actions{ margin-top:14px; display:flex; justify-content:center; position:relative; z-index:2; }
+
+    .arch-emblem{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin:8px 0 10px;
+      position:relative;
+      z-index:2;
+    }
+    .emblem-slot{
+      width:min(260px, 78vw);
+      aspect-ratio: 1 / 1;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 18px 60px rgba(0,0,0,.30);
+      display:grid;
+      place-items:center;
+      color: rgba(255,255,255,.62);
+      font-size:12px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      user-select:none;
+    }
+    .result-watermark{
+      margin-top:14px;
+      padding-top:14px;
+      border-top:1px solid rgba(255,255,255,.10);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      position:relative;
+      z-index:2;
+      opacity:.48;
+      user-select:none;
+    }
+    .result-watermark img{
+      width:16px;
+      height:16px;
+      object-fit:contain;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,.35));
+    }
+    .result-watermark span{
+      font-size:11px;
+      letter-spacing:.18em;
+      color:rgba(255,255,255,.70);
+      text-transform:uppercase;
+    }
 
     .hearth-wrap{
       width:min(var(--wrap), 92vw);
@@ -977,53 +1009,28 @@
     }
     .toast.show{opacity:1;}
 
-    /* =========================
-       05 Cinema (全屏沉靜/滑動觸發/慢一點)
-    ========================== */
-    .cinema{
-      position:relative;
-      width:100%;
-      min-height:60vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:10px 6px;
-    }
-    .cinema-step{
-      opacity:0;
-      transform: translateY(10px);
-      transition: opacity 1.35s cubic-bezier(.22,.61,.36,1), transform 1.35s cubic-bezier(.22,.61,.36,1);
-      will-change: opacity, transform;
-    }
-    .cinema-step.show{ opacity:1; transform:none; }
-    .cinema-step.hide{ opacity:0; transform: translateY(-8px); }
-
     @media (prefers-reduced-motion: reduce){
       .breath, .grain, .dot.active, .flame-img.in{ animation:none !important; }
       .reveal, .late, .logo-frame, .flame-frame, .mood, .opt{ transition:none !important; }
-      .cinema-step{ transition:none !important; transform:none !important; opacity:1 !important; }
+      .cinema-step{ transition:none !important; opacity:1 !important; transform:none !important; }
     }
   </style>
 </head>
 
-<!-- 初始永遠從無彩開始：data-theme="" -->
-<body data-theme="">
+<body data-theme="rose_ember">
   <div class="breath" id="breath" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- Dots -->
   <nav class="dots" id="dotsNav" aria-label="Section navigation">
     <button class="dot" data-target="s1" data-label="HERO" aria-label="Go to Hero"></button>
     <button class="dot" data-target="s2" data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
-    <button class="dot" data-target="s3" data-label="PRIMARY MARK" aria-label="Go to Primary Mark"></button>
-    <button class="dot" data-target="s4b" data-label="FLAME MARK" aria-label="Go to Flame Mark"></button>
+    <button class="dot" data-target="s3" data-label="BRAND MARK" aria-label="Go to Brand Mark"></button>
+    <button class="dot" data-target="s4b" data-label="BRAND TAGLINE" aria-label="Go to Brand Tagline"></button>
     <button class="dot" data-target="s4" data-label="SANCTUARY" aria-label="Go to Sanctuary"></button>
     <button class="dot" data-target="s5" data-label="AESTHETIC" aria-label="Go to Aesthetic Alignment"></button>
     <button class="dot" data-target="s6" data-label="REFLECTION" aria-label="Go to Introspective Reflection"></button>
     <button class="dot" data-target="s7" data-label="ARCHETYPE" aria-label="Go to Archetype"></button>
-    <button class="dot" data-target="s8" data-label="HEARTH" aria-label="Go to Collective Hearth"></button>
+    <button class="dot" data-target="s8" data-label="HEARTH" aria-label="Go to Our Flame"></button>
   </nav>
 
   <!-- ① Hero -->
@@ -1032,7 +1039,9 @@
       <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
       <div class="submark">TAIWAN</div>
     </div>
-    <div class="tagline">即將到來，讓我們一起開始</div>
+
+    <!-- 1：Hero 下方文案替換 -->
+    <div class="tagline">即將到來，搶先進入 HEST<span class="i-accent">i</span>A 宇宙</div>
     <div class="arrow">↓</div>
   </section>
 
@@ -1041,6 +1050,8 @@
     <div class="secno reveal" style="--d:120ms;">02</div>
     <h2 class="reveal in who-title" style="--d:160ms;">WHO <span class="we-accent">WE</span> ARE?</h2>
 
+    <!-- 2：WHY HESTIA 和 WHAT...位置對調 —— 先 WHY HESTIA -->
+    <!-- 3：WHY HESTIA 文案改回（回到更經典/品牌本體敘事） -->
     <div class="info-card">
       <div class="mini"><span class="kicker reveal in">WHY HESTIA?</span></div>
       <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
@@ -1048,32 +1059,43 @@
       <p class="late" data-late>我們相信，每個人心中都有一簇火焰，</p>
       <p class="late" data-late>等待被看見、被擁抱、被點燃。</p>
     </div>
+
+    <!-- 4：WHAT WE DID -> WHAT WE DO（介紹品牌做服裝，而非解釋頁面） -->
+    <div class="info-card" style="margin-top:12px;">
+      <div class="mini"><span class="kicker reveal in">WHAT WE DO</span></div>
+      <p class="late" data-late>HESTIA 是一個健身與生活並行的服裝品牌。</p>
+      <p class="late" data-late>不管在生活與訓練之間，都能展現符合自己的自信與品味。</p>
+    </div>
   </section>
 
-  <!-- ③ PRIMARY MARK -->
+  <!-- ③ BRAND MARK（原 03 PRIMARY MARK） -->
   <section class="s3" id="s3">
     <div class="stack">
       <div class="secno reveal" style="--d:140ms;">03</div>
 
       <div class="logo-frame frame-size" id="logoFrame" role="button" aria-label="Interact with brand mark" tabindex="0" data-mode="primary">
         <div class="corner-hint" aria-hidden="true"></div>
-        <img class="logo-mark" id="logoMark" src="Hlogo.png" alt="HESTIA mark" />
+        <img class="logo-mark" id="logoMark" src="HLOGO.png" alt="HESTIA mark" />
       </div>
 
-      <div class="label reveal" style="--d:220ms;">PRIMARY MARK</div>
+      <!-- 4：PRIMARY MARK -> BRAND MARK -->
+      <div class="label reveal" style="--d:220ms;">BRAND MARK</div>
+
+      <!-- 4：標誌揭露 -> 品牌識別 -->
       <h2 class="reveal" style="--d:260ms;">品牌識別</h2>
 
-      <div class="bullets">
+      <!-- 4：內容請改回之前的 —— 這裡用「最典型的品牌識別描述」版本（更接近原本標誌介紹語氣） -->
+       <div class="bullets">
         <div class="bullet reveal" style="--d:320ms;">LOGO 靈感來自「火焰燃燒的線條」，帶出<span class="hair-underline">力量</span>與<span class="hair-underline">節制</span>的平衡。</div>
         <div class="bullet reveal" style="--d:380ms;">拱型外型呼應爐灶女神的意象，象徵<span class="hair-underline">歸屬</span>、<span class="hair-underline">溫暖</span>與內在之火。</div>
         <div class="bullet reveal" style="--d:440ms;">代表力量與柔韌的平衡，也象徵身體與心靈的統一。</div>
       </div>
 
-      <div class="sig reveal" style="--d:520ms;">HESTIA 的主標識，將在服裝等所有核心視覺中作為第一辨識。</div>
+      <div class="sig reveal" style="--d:520ms;">HESTIA的主標識，將在服裝等所有核心視覺中作為第一辨識。</div>
     </div>
   </section>
 
-  <!-- ④ FLAME MARK -->
+  <!-- ④ BRAND TAGLINE（原 04 標語揭露） -->
   <section class="s4b" id="s4b">
     <div class="secno reveal" style="--d:140ms;">04</div>
 
@@ -1087,9 +1109,11 @@
         <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" />
       </div>
 
-      <h2 class="reveal" style="--d:260ms;">標語的符號</h2>
+      <!-- 5：標語揭露 -> 品牌標語 -->
+      <h2 class="reveal" style="--d:260ms;">品牌標語</h2>
 
-      <div class="manifest flame-copy reveal" style="--d:320ms;">
+      <!-- 5：內容置中對齊 -->
+      <div class="manifest center flame-copy reveal" style="--d:320ms;">
         <p class="late" data-late>這不只是口號，而是一種信念。</p>
         <p class="late" data-late>標籤又如何？那是與生俱來的特色。</p>
         <p class="late" data-late>HESTIA 透過品牌標語「Own Your Flame」</p>
@@ -1099,24 +1123,20 @@
     </div>
   </section>
 
-  <!-- ⑤ Sanctuary (全屏沉靜 / 取消 05 字樣 / 滑動觸發逐段) -->
+  <!-- ⑤ Sanctuary（移除 DIGITAL SANCTUARY 字樣；改成電影式淡入淡出） -->
   <section class="s4" id="s4">
-    <!-- 移除 05 secno：不顯示 05 -->
+    <div class="secno reveal" style="--d:140ms;">05</div>
+
     <div class="sanctuary-wrap">
-      <!-- 依你要求：移除 DIGITAL SANCTUARY 字樣，只留標題與說明 -->
-      <div class="cinema" id="cinema" aria-label="Sanctuary cinematic text">
-        <div class="cinema-step" id="cinemaLine1">
-          <h2 style="margin-bottom:0;">現在安靜下來</h2>
+      <!-- 6：移除 kicker，只留標題與說明文字（由 JS 控制淡入淡出） -->
+      <div class="cinema" id="cinema">
+        <div class="cinema-step" id="cinemaTitle">
+          <h2 style="margin-bottom:10px;">現在安靜下來</h2>
+          <h2 style="margin-bottom:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
         </div>
 
-        <!-- 第二句：淡入後不淡出 -->
-        <div class="cinema-step" id="cinemaLine2">
-          <h2 style="margin:10px 0 0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
-        </div>
-
-        <!-- 說明：淡入後淡出（電影沉靜感） -->
         <div class="cinema-step" id="cinemaDesc">
-          <p style="margin-top:18px;">這裡的每一次停留，都是你與自己對齊的瞬間。</p>
+          <p style="margin-top:0;">這裡的每一次停留，都是你與自己對齊的瞬間。</p>
           <p>你的每一次選擇，或許都會成為 Hestia 的一部分。</p>
         </div>
       </div>
@@ -1131,30 +1151,32 @@
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">AESTHETIC ALIGNMENT</span></div>
       <h2 class="reveal" style="--d:220ms;">你偏好的沉靜色調</h2>
       <p class="reveal" style="--d:260ms;">
-        不是投票，也不做排名；
-        只是讓你的選擇，更貼近真正的你自己。
+        不是投票，也不做排名；只是讓你的選擇更貼近你想長期維持的狀態。
       </p>
 
       <div class="align-grid" id="alignGrid" aria-label="Aesthetic alignment choices">
-        <div class="mood reveal" style="--d:320ms;" role="button" tabindex="0" data-theme="rose_ember" data-value="ROSE EMBER">
+        <!-- 7：ROSE EMBER 改成橘紅鳳凰系（含 swatch） -->
+        <div class="mood reveal" style="--d:320ms;" role="button" tabindex="0"
+             data-theme="rose_ember" data-value="ROSE EMBER" data-animal="PHOENIX">
           <div class="row">
             <div>
               <div class="title">ROSE EMBER</div>
-              <p class="desc">橘紅火羽 × 熾亮金橙，彩度更高，像鳳凰展翼時的熱烈與華麗。</p>
+              <p class="desc">像鳳凰讓光出場：色彩不急著收斂，反而是讓能量擴散；在被看見與被回應中，越分享越被點燃。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#ff6a2a;"></span>
-              <span class="dot-swatch" style="background:#ffae5a;"></span>
-              <span class="dot-swatch" style="background:#120a07;"></span>
+              <span class="dot-swatch" style="background:#ff9150;"></span>
+              <span class="dot-swatch" style="background:#1e0e09;"></span>
             </div>
           </div>
         </div>
 
-        <div class="mood reveal" style="--d:380ms;" role="button" tabindex="0" data-theme="midnight_tracker" data-value="MIDNIGHT TRACKER">
+        <div class="mood reveal" style="--d:380ms;" role="button" tabindex="0"
+             data-theme="midnight_tracker" data-value="MIDNIGHT TRACKER" data-animal="BLACK WOLF">
           <div class="row">
             <div>
               <div class="title">MIDNIGHT TRACKER</div>
-              <p class="desc">電藍冷光 × 深夜靛黑，飽和卻克制，像黑狼在夜裡鎖定方向的專注。</p>
+              <p class="desc">像黑狼在夜裡定向：色彩用來標記邊界與目標，主動切入、好惡分明；不延長過程，能很快完成判斷與推進。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#3b6cff;"></span>
@@ -1164,37 +1186,39 @@
           </div>
         </div>
 
-        <div class="mood reveal" style="--d:440ms;" role="button" tabindex="0" data-theme="veil_warden" data-value="VEIL WARDEN">
+        <div class="mood reveal" style="--d:440ms;" role="button" tabindex="0"
+             data-theme="veil_warden" data-value="VEIL WARDEN" data-animal="DEER">
           <div class="row">
             <div>
               <div class="title">VEIL WARDEN</div>
-              <p class="desc">岩灰暖霧 × 米杏柔光，低彩卻耐看，像鹿穩穩走在自己的節奏裡。</p>
+              <p class="desc">像鹿踩著溫馴穿過晨霧：色彩避開視覺刺激，讓節奏是日常狀態。不追求高峰，而踏實且穩定。</p>
             </div>
             <div class="sw" aria-hidden="true">
-              <span class="dot-swatch" style="background:#d0c2b6;"></span>
               <span class="dot-swatch" style="background:#b8a89a;"></span>
-              <span class="dot-swatch" style="background:#0e0b09;"></span>
+              <span class="dot-swatch" style="background:#d0c2b6;"></span>
+              <span class="dot-swatch" style="background:#2a2320;"></span>
             </div>
           </div>
         </div>
 
-        <div class="mood reveal" style="--d:500ms;" role="button" tabindex="0" data-theme="low_tide_keeper" data-value="LOW TIDE KEEPER">
+        <div class="mood reveal" style="--d:500ms;" role="button" tabindex="0"
+             data-theme="low_tide_keeper" data-value="LOW TIDE KEEPER" data-animal="PYTHON">
           <div class="row">
             <div>
               <div class="title">LOW TIDE KEEPER</div>
-              <p class="desc">深海青綠 × 冷霧墨黑，低彩而沉著，像蟒蛇低伏時的冷靜掌控。</p>
+              <p class="desc">像蟒蛇把呼吸藏進陰影：色彩刻意被壓低，可能為了隱藏，也可能為了保留。只是安靜觀察、冷靜伏擊。</p>
             </div>
             <div class="sw" aria-hidden="true">
-              <span class="dot-swatch" style="background:#8fbfaf;"></span>
               <span class="dot-swatch" style="background:#b8c7c0;"></span>
-              <span class="dot-swatch" style="background:#071010;"></span>
+              <span class="dot-swatch" style="background:#8fbfaf;"></span>
+              <span class="dot-swatch" style="background:#1e2a28;"></span>
             </div>
           </div>
         </div>
       </div>
 
       <div class="microcopy reveal" style="--d:560ms;">
-        已選擇：<span id="alignPicked" class="we-accent">—</span>
+        已選擇：<span id="alignPicked" class="we-accent">ROSE EMBER</span>
       </div>
     </div>
   </section>
@@ -1205,40 +1229,59 @@
 
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">INTROSPECTIVE REFLECTION</span></div>
-      <h2 class="reveal" style="--d:220ms;">你喜好或習慣的運動結構</h2>
+      <h2 class="reveal" style="--d:220ms;">你的節奏與生活方式</h2>
       <p class="reveal" style="--d:260ms;">
-        不需要想太多。用直覺選，會更接近你真正想要的狀態與穿著感。
+        用直覺選，哪些是你最常回到的那種狀態？
       </p>
 
       <div class="quiz" id="quiz">
         <div class="q reveal" style="--d:320ms;" data-q="q1">
           <h3>當你想開始動起來，你更接近哪種狀態？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="A">先讓環境安靜下來，慢慢把注意力收回身體。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="B">一點刺激或節奏，讓情緒被點燃，身體自然跟上。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="C">明確的目標與結構，一開始就進入專注狀態。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="A">先把世界的聲音調低，慢慢把注意力收回身體。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="B">需要一點火花或節奏，情緒一被點亮，身體就跟上。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q1" data-a="C">目標先立起來；結構越清楚，我越能直接進入專注。</div>
           </div>
         </div>
 
         <div class="q reveal" style="--d:380ms;" data-q="q2">
-          <h3>在運動時，你最在意服飾帶給你的感受是？</h3>
+          <h3>運動或外出時，你最在意穿著帶給你的感受是？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">安靜包覆、不打擾思緒，存在感低但可靠。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="B">有能量、有流動感，讓動作看起來更有生命。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="C">結構清楚、支撐到位，讓每個動作都更精準。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">安靜包覆、不打擾思緒；存在感低但可靠。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="B">有能量、有流動感；看起來就像正在發生。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q2" data-a="C">支撐到位、結構清楚；讓每個動作更精準。</div>
           </div>
         </div>
 
         <div class="q reveal" style="--d:440ms;" data-q="q3">
           <h3>完成一段訓練後，你最想留下的是？</h3>
           <div class="opts">
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">一種安定、沉靜，像每日按部就班的歸屬。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="B">一股被釋放的熱度，感覺自己再次被更新。</div>
-            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="C">清楚、俐落的完成感，知道自己做得很好。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">一種安定與歸屬：像每天按部就班的回家感。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="B">一股被釋放的熱：像重新啟動，越來越像自己。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q3" data-a="C">清楚俐落的完成感：知道自己做得準、做得好。</div>
           </div>
         </div>
 
-        <div class="quiz-actions reveal" style="--d:520ms;">
+        <div class="q reveal" style="--d:500ms;" data-q="q4">
+          <h3>在日常生活裡，你更常用哪種方式維持狀態？</h3>
+          <div class="opts">
+            <div class="opt" role="button" tabindex="0" data-q="q4" data-a="A">固定的步調、固定的選擇：穩穩的，就是最省力的。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q4" data-a="B">我需要變化與刺激：新鮮感會讓我更想出門、更想動。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q4" data-a="C">我習慣做取捨：把多餘的拿掉，留下有效與精準。</div>
+          </div>
+        </div>
+
+        <div class="q reveal" style="--d:560ms;" data-q="q5">
+          <h3>如果可以嘗試「你想當的另一種動物」，你會選？</h3>
+          <div class="opts">
+            <div class="opt" role="button" tabindex="0" data-q="q5" data-a="PHOENIX">鳳凰｜想更華麗、張揚，讓能量被看見也樂於分享。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q5" data-a="BLACKWOLF">黑狼｜想更果斷、進攻，把目標推進到結果。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q5" data-a="DEER">鹿｜想更溫馴、規律，讓生活變得更可持續。</div>
+            <div class="opt" role="button" tabindex="0" data-q="q5" data-a="PYTHON">蟒蛇｜想更冷靜、觀察，沉住氣再一擊掌控成功。</div>
+          </div>
+        </div>
+
+        <div class="quiz-actions reveal" style="--d:620ms;">
           <button class="ghost-btn" id="unlockBtn" type="button" disabled>解鎖我的原型</button>
         </div>
       </div>
@@ -1252,36 +1295,47 @@
     <div class="result-page" id="resultPage" aria-live="polite">
       <div class="rp-kicker"><span class="kicker reveal" style="--d:180ms;">YOUR ARCHETYPE</span></div>
 
-      <div class="arch-title reveal" style="--d:220ms;" id="archTitle">—</div>
-      <div class="arch-sub reveal" style="--d:260ms;" id="archKey">—</div>
+      <!-- 8：移除「從此刻開始⋯歡迎你⋯」整段文字區域（已刪） -->
+
+      <div class="arch-emblem reveal" style="--d:220ms;">
+        <div class="emblem-slot">EMBLEM SLOT</div>
+      </div>
+
+      <div class="arch-title reveal" style="--d:260ms;" id="archTitle">—</div>
+      <div class="arch-sub reveal" style="--d:300ms;" id="archKey">—</div>
 
       <div class="arch-grid">
-        <div class="arch-card reveal" style="--d:320ms;">
+        <div class="arch-card reveal" style="--d:360ms;">
           <div class="t">CORE STATE</div>
           <p class="v" id="archCore">—</p>
         </div>
-        <div class="arch-card reveal" style="--d:380ms;">
-          <div class="t">TRAINING RHYTHM</div>
+        <div class="arch-card reveal" style="--d:420ms;">
+          <div class="t">TRAINING + LIFE RHYTHM</div>
           <p class="v" id="archRhythm">—</p>
         </div>
-        <div class="arch-card reveal" style="--d:440ms;">
+        <div class="arch-card reveal" style="--d:480ms;">
           <div class="t">STYLE + COLOR DIRECTION</div>
           <p class="v" id="archStyle">—</p>
         </div>
       </div>
 
-      <div class="microcopy reveal" style="--d:520ms;text-align:center;">
-        你已選的色調：<span class="we-accent" id="alignPicked2">—</span>｜
+      <div class="microcopy reveal" style="--d:540ms;text-align:center;">
+        你已選的色調：<span class="we-accent" id="alignPicked2">ROSE EMBER</span>｜
         你的原型：<span class="we-accent" id="archPicked">—</span>
       </div>
 
-      <div class="arch-actions reveal" style="--d:560ms;">
+      <div class="arch-actions reveal" style="--d:580ms;">
         <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
+      </div>
+
+      <div class="result-watermark reveal" style="--d:620ms;">
+        <img src="HLOGO.png" alt="HESTIA watermark logo" />
+        <span>HESTIA TAIWAN®</span>
       </div>
     </div>
   </section>
 
-  <!-- ⑨ Collective Hearth -->
+  <!-- ⑨ Our Flame -->
   <section class="s8" id="s8">
     <div class="secno reveal" style="--d:140ms;">09</div>
 
@@ -1291,13 +1345,14 @@
           <span class="kicker reveal" style="--d:200ms;">COLLECTIVE HEARTH</span>
         </div>
 
-        <canvas class="hearth-canvas" id="flameCanvas" aria-label="Hestia Collective Hearth Flame"></canvas>
+        <canvas class="hearth-canvas" id="flameCanvas" aria-label="Hestia Our Flame"></canvas>
 
         <div class="hearth-level reveal" style="--d:260ms;">
           HEARTH LEVEL：<span id="hearthLevel" class="we-accent">—</span>
         </div>
 
-        <h2 class="reveal" style="--d:300ms;margin-bottom:6px;">集體爐火</h2>
+        <!-- 9：集體爐火改成「共焰｜OUR FLAME」 -->
+        <h2 class="reveal" style="--d:300ms;margin-bottom:6px;">共焰｜OUR FLAME</h2>
         <p class="reveal" style="--d:340ms;max-width:680px;">
           把你的光點，投入火焰！不用搶先，只要守護。
         </p>
@@ -1306,10 +1361,13 @@
               action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
               method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
 
-          <input id="email" type="email" name="entry.345729382" placeholder="輸入你的Email" required />
+          <input id="email" type="email" name="entry.345729382" placeholder="輸入你的Email搶先收到最新消息" required />
+
           <input type="hidden" id="f_alignment" name="entry.324440347" value="">
           <input type="hidden" id="f_archetype"  name="entry.1640422124" value="">
           <input type="hidden" id="f_theme"      name="entry.1471764886" value="">
+          <input type="hidden" id="f_alt"        name="entry.999999999" value="">
+
           <button id="tendBtn" type="submit">加入火焰</button>
         </form>
 
@@ -1360,17 +1418,14 @@
         setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
       }
 
-      /* Flame Mark reveal */
       if(!flameRevealed && inView(flameFrame, 0.80, 0.15)){
         flameRevealed = true;
         flameFrame.classList.add('in');
         setTimeout(()=>flameImg.classList.add('in'), 520);
       }
 
-      /* 05 Cinema trigger (scroll only) */
-      if(inView(document.getElementById('s4'), 0.78, 0.18)){
-        runCinema();
-      }
+      // 05：電影式淡入淡出（以「滑到該段」作為觸發點）
+      maybeRunCinema();
     }
     function requestCheck(){
       if(ticking) return;
@@ -1416,79 +1471,94 @@
     const flameImg   = $('#flameImg');
 
     /* =========================
-       05 Cinema (慢一點；第二句淡入後不淡出)
+       05 Cinema sequence (scroll-triggered)
+       - 只在使用者滑到該 section 時播放一次：標題淡入→淡出→說明淡入→淡出
+       - 不改你的全站 reveal/late 系統
     ========================== */
-    const cinemaLine1 = $('#cinemaLine1');
-    const cinemaLine2 = $('#cinemaLine2');
-    const cinemaDesc  = $('#cinemaDesc');
+    const s4 = document.getElementById('s4');
+    const cinemaTitle = document.getElementById('cinemaTitle');
+    const cinemaDesc  = document.getElementById('cinemaDesc');
+    let cinemaPlayed = false;
     let cinemaBusy = false;
 
-    const sleep = (ms)=> new Promise(r=>setTimeout(r, ms));
+    function sleep(ms){ return new Promise(res=>setTimeout(res, ms)); }
 
     async function runCinema(){
       if(cinemaBusy) return;
       cinemaBusy = true;
 
-      [cinemaLine1, cinemaLine2, cinemaDesc].forEach(el=>{
-        if(!el) return;
-        el.classList.remove('show','hide');
-      });
+      // reset
+      cinemaTitle.classList.remove('show','hide');
+      cinemaDesc.classList.remove('show','hide');
 
-      await sleep(120);
+      await sleep(60);
 
-      // Line1 in (更慢)
-      cinemaLine1.classList.add('show');
-      await sleep(1600);
+      // title in
+      cinemaTitle.classList.add('show');
+      await sleep(1100);
 
-      // Line1 out
-      cinemaLine1.classList.remove('show');
-      cinemaLine1.classList.add('hide');
-      await sleep(1200);
+      // title out
+      cinemaTitle.classList.remove('show');
+      cinemaTitle.classList.add('hide');
+      await sleep(850);
 
-      // Line2 in（淡入後不淡出）
-      cinemaLine2.classList.add('show');
-      await sleep(900);
-
-      // Desc in
+      // desc in
+      cinemaDesc.classList.remove('hide');
       cinemaDesc.classList.add('show');
-      await sleep(2200);
+      await sleep(1500);
 
-      // Desc out（保留電影感；若你要不淡出，刪掉下面兩行即可）
+      // desc out
       cinemaDesc.classList.remove('show');
       cinemaDesc.classList.add('hide');
 
       cinemaBusy = false;
     }
 
+    function maybeRunCinema(){
+      if(cinemaPlayed) return;
+      if(!s4) return;
+      // 「指定滑動才」：進入可視範圍才觸發
+      if(inView(s4, 0.70, 0.25)){
+        cinemaPlayed = true;
+        runCinema();
+      }
+    }
+
     /* =========================
-       Aesthetic (初始永遠無彩；不記錄曾經選擇)
+       06 Aesthetic（不記錄、不回填）
     ========================== */
     const moods = $$('#alignGrid .mood');
     const alignPicked = $('#alignPicked');
     const alignPicked2 = $('#alignPicked2');
 
-    function setTheme(theme, value){
-      document.body.setAttribute('data-theme', theme || '');
+    let currentTheme = 'rose_ember';
+    let currentAlign = 'ROSE EMBER';
+    let currentAnimal = 'PHOENIX';
 
-      if(alignPicked) alignPicked.textContent = value || '—';
-      if(alignPicked2) alignPicked2.textContent = value || '—';
+    function setTheme(theme, value, animal){
+      currentTheme = theme;
+      currentAlign = value;
+      currentAnimal = animal || '';
+
+      document.body.setAttribute('data-theme', theme);
+      if(alignPicked) alignPicked.textContent = value;
+      if(alignPicked2) alignPicked2.textContent = value;
 
       moods.forEach(m=>{
-        const on = theme && (m.dataset.theme === theme);
+        const on = (m.dataset.theme === theme);
         m.classList.toggle('active', on);
-        m.classList.toggle('dim', theme ? !on : false); // 初始不 dim
+        m.classList.toggle('dim', !on);
       });
       setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
     }
 
     function initTheme(){
-      // 初始永遠無彩（不帶任何 archetype 底色）
-      setTheme('', '');
+      setTheme('rose_ember', 'ROSE EMBER', 'PHOENIX');
     }
     initTheme();
 
     moods.forEach(m=>{
-      const act = ()=> setTheme(m.dataset.theme, m.dataset.value);
+      const act = ()=> setTheme(m.dataset.theme, m.dataset.value, m.dataset.animal);
       m.addEventListener('click', act);
       m.addEventListener('keydown', (e)=>{
         if(e.key === 'Enter' || e.key === ' '){
@@ -1498,7 +1568,9 @@
       });
     });
 
-    /* Archetype */
+    /* =========================
+       07/08 Archetype
+    ========================== */
     const unlockBtn = $('#unlockBtn');
     const archPicked  = $('#archPicked');
     const archTitle = $('#archTitle');
@@ -1507,43 +1579,90 @@
     const archRhythm= $('#archRhythm');
     const archStyle = $('#archStyle');
 
-    const answers = { q1:null, q2:null, q3:null };
+    const answers = { q1:null, q2:null, q3:null, q4:null, q5:null };
     const opts = $$('.opt');
 
-    function computeArchetype(){
+    function driveFromAnswers(){
       const counts = {A:0,B:0,C:0};
-      Object.values(answers).forEach(v=>{ if(v) counts[v]++; });
-      const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+      ['q1','q2','q3','q4'].forEach(k=>{
+        const v = answers[k];
+        if(v) counts[v]++;
+      });
+      return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+    }
 
-      if(top === 'A'){
+    function archetypeByAlign(){
+      if(currentAlign === 'VEIL WARDEN'){
         return {
-          key:'CALM KEEPER',
-          zh:'安定守序者',
-          core:'你偏好把節奏先放慢，讓身體回到可控的穩定；你的力量來自「長期一致」。',
-          rhythm:'適合循序漸進、節奏均勻的訓練安排：穩定心率、有餘裕的重量感，讓你越練越安定。',
-          style:'輪廓偏簡潔、低噪、耐看；材質重視手感與延展。配色可走岩灰、霧白、低飽和中性色，細節用微光或細線條收住質感。'
+          key:'VEIL WARDEN',
+          zh:'霧幕守望者',
+          coreBase:'你偏好低刺激、可持續的溫柔秩序；越規律，越能讓狀態長期在線。',
+          rhythmBase:'訓練與生活都適合「穩定堆疊」：固定節奏、固定選擇，慢慢變強，慢慢變更好。',
+          styleBase:'暖色低彩度為主：岩灰、暖米、霧感棕；用細節質地而非高對比取勝，越看越耐。'
         };
       }
-      if(top === 'B'){
+      if(currentAlign === 'MIDNIGHT TRACKER'){
         return {
-          key:'INNER IGNITER',
-          zh:'內在點燃者',
-          core:'你需要一點推力才進得去，但一旦熱起來，你會非常穩且帶張力；你是「沉靜裡的燃」。',
-          rhythm:'適合有起伏的訓練節奏：前段暖身、後段爆發；你越動越進入狀態，越能把情緒轉成力量。',
-          style:'輪廓俐落、局部有存在感（切線、拼接、比例收束）；配色偏橘紅、暖金、深棕黑，讓張力藏在細節裡。'
+          key:'MIDNIGHT TRACKER',
+          zh:'午夜追跡者',
+          coreBase:'你重視精準與推進感；越清楚目標，越能把自己帶到結果。',
+          rhythmBase:'適合有結構的安排：分區明確、動作有效、回饋直接；你喜歡「做就做到位」。',
+          styleBase:'冷色高彩度搭配碳黑/岩灰：高對比用來定義輪廓與邊界，俐落、強勢但不吵。'
+        };
+      }
+      if(currentAlign === 'LOW TIDE KEEPER'){
+        return {
+          key:'LOW TIDE KEEPER',
+          zh:'低伏掌控者',
+          coreBase:'你擅長把能量收起來；看似安靜，其實一直在觀察與校準時機。',
+          rhythmBase:'適合「慢熱→精準出手」：暖身與鋪墊很重要，一旦進入狀態就能高度掌控。',
+          styleBase:'冷色低彩度為主：冷霧灰、深松綠、深炭黑；張力藏在材質與比例裡。'
         };
       }
       return {
-        key:'FOCUS FORGER',
-        zh:'專注鍛造者',
-        core:'你喜歡乾淨、清晰的結構感；當一切變得有秩序，你就能把專注推到很深。',
-        rhythm:'適合明確分區、目標導向的訓練：組數、節奏、休息都清楚，你會因此更穩、更有效率。',
-        style:'線條與支撐感要清晰；配色偏深夜藍、冷電藍、碳黑，走「越看越順」的高級耐看路線。'
+        key:'ROSE EMBER',
+        zh:'玫燼點燃者',
+        coreBase:'你喜歡讓能量被看見；華麗不是浮誇，而是你願意把狀態分享出去的方式。',
+        rhythmBase:'適合有起伏的節奏：前段點火、後段爆發；你越動越進入狀態，越能把熱轉成力量。',
+        styleBase:'橘紅高彩度搭配深色底：赤陶、熔岩橘、深炭黑；視覺像火光，細節像餘燼。'
+      };
+    }
+
+    function nuanceByDrive(d){
+      if(d === 'A') return {
+        core:'你更在意「長期穩定」與舒適的可持續；不求一次到頂，但求一直在線。',
+        rhythm:'你最吃「固定節奏」：規律、循序、可預期，越持續越強。',
+        style:'你會自然偏向低噪與耐看；把質感放在手感、比例與細節裡。'
+      };
+      if(d === 'B') return {
+        core:'你需要一點火花才會更像自己；當能量被點亮，你的狀態會非常完整。',
+        rhythm:'你適合有起伏的節奏：暖身→推進→釋放，越動越進入。',
+        style:'你允許「存在感」：色彩或細節像呼吸，讓人一眼就知道你正在發生。'
+      };
+      return {
+        core:'你偏好清晰、有效、可量化的感覺；越準，越安心。',
+        rhythm:'你適合結構化安排：組數、節奏、休息都清楚，效率會拉滿。',
+        style:'你會偏愛邊界明確的線條與俐落對比；乾淨、精準、耐看。'
+      };
+    }
+
+    function computeArchetype(){
+      const base = archetypeByAlign();
+      const drive = driveFromAnswers();
+      const nuance = nuanceByDrive(drive);
+
+      return {
+        key: base.key,
+        zh: base.zh,
+        core: `${base.coreBase} ${nuance.core}`,
+        rhythm: `${base.rhythmBase} ${nuance.rhythm}`,
+        style: `${base.styleBase} ${nuance.style}`
       };
     }
 
     function updateUnlock(){
-      unlockBtn.disabled = !Object.values(answers).every(Boolean);
+      const reqOk = ['q1','q2','q3','q4'].every(k=>Boolean(answers[k]));
+      unlockBtn.disabled = !reqOk;
     }
 
     function setOptState(q, chosenEl){
@@ -1610,13 +1729,14 @@
         return false;
       }
 
-      const theme = document.body.getAttribute('data-theme') || '';
-      const align = (alignPicked && alignPicked.textContent) ? alignPicked.textContent : '';
-      const arch  = (archPicked && archPicked.textContent) ? archPicked.textContent : '';
+      const align = currentAlign || 'ROSE EMBER';
+      const theme = currentTheme || 'rose_ember';
+      const arch  = (archPicked && archPicked.textContent && archPicked.textContent !== '—') ? archPicked.textContent : '';
 
       $('#f_alignment').value = align;
       $('#f_theme').value = theme;
       $('#f_archetype').value = arch;
+      $('#f_alt').value = answers.q5 || '';
 
       submittedAt = Date.now();
 
@@ -1777,8 +1897,8 @@
       const gx = W*0.5, gy = H*0.86;
       const g = ctx.createRadialGradient(gx,gy,0,gx,gy,H*0.42);
       const b = 0.10 + boost*0.06;
-      g.addColorStop(0, `rgba(230,118,144,${0.12*globalIntensity + b})`);
-      g.addColorStop(0.45, `rgba(193,138,74,${0.08*globalIntensity + b*0.6})`);
+      g.addColorStop(0, `rgba(255,106,42,${0.12*globalIntensity + b})`);
+      g.addColorStop(0.45, `rgba(255,175,90,${0.08*globalIntensity + b*0.6})`);
       g.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = g;
       ctx.fillRect(0,0,W,H);

@@ -45,6 +45,22 @@
 
     body{ transition: background-color 1.2s ease; }
 
+    /* 初始（無 data-theme）＝無彩黑白灰，不帶任何預設底色傾向 */
+body:not([data-theme]),
+body[data-theme=""],
+body[data-theme="mono_base"]{
+  --sanctuary-1:#000000;
+  --sanctuary-2:#070707;
+  --sanctuary-3:#0d0d0d;
+  --sanctuary-4:#121212;
+  --sanctuary-5:#171717;
+
+  --breath-a: rgba(255,255,255,.10);
+  --breath-b: rgba(255,255,255,.06);
+
+  --accent:#ffffff;
+}
+
     /* =========================
        06 四種色調（ROSE EMBER 改成橘紅鳳凰系）
     ========================== */
@@ -134,7 +150,10 @@
     .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
     .s5{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
     .s6{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
-    .s7{background:linear-gradient(180deg,#000,#000);}
+    /* 08 結果頁也延續 06 的主題背景 */
+.s7{
+  background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5));
+}
     .s8{background:linear-gradient(180deg,#000,#000);}
 
     .breath{
@@ -1017,7 +1036,7 @@
   </style>
 </head>
 
-<body data-theme="rose_ember">
+<body data-theme="">
   <div class="breath" id="breath" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
@@ -1125,23 +1144,26 @@
 
   <!-- ⑤ Sanctuary（移除 DIGITAL SANCTUARY 字樣；改成電影式淡入淡出） -->
   <section class="s4" id="s4">
-    <div class="secno reveal" style="--d:140ms;">05</div>
 
     <div class="sanctuary-wrap">
       <!-- 6：移除 kicker，只留標題與說明文字（由 JS 控制淡入淡出） -->
       <div class="cinema" id="cinema">
-        <div class="cinema-step" id="cinemaTitle">
-          <h2 style="margin-bottom:10px;">現在安靜下來</h2>
-          <h2 style="margin-bottom:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
-        </div>
+  <div class="cinema-step" id="cinemaLine1">
+    <h2 style="margin-bottom:0;">現在安靜下來</h2>
+  </div>
 
-        <div class="cinema-step" id="cinemaDesc">
-          <p style="margin-top:0;">這裡的每一次停留，都是你與自己對齊的瞬間。</p>
-          <p>你的每一次選擇，或許都會成為 Hestia 的一部分。</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- 第二句：淡入後不淡出（常駐） -->
+  <div class="cinema-step" id="cinemaLine2">
+    <h2 style="margin:10px 0 0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
+  </div>
+
+  <!-- 說明：仍可淡入淡出（電影節奏） -->
+  <div class="cinema-step" id="cinemaDesc">
+    <p style="margin-top:18px;">這裡的每一次停留，都是你與自己對齊的瞬間。</p>
+    <p>你的每一次選擇，或許都會成為 Hestia 的一部分。</p>
+  </div>
+</div>
+</section>
 
   <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
@@ -1476,43 +1498,44 @@
        - 不改你的全站 reveal/late 系統
     ========================== */
     const s4 = document.getElementById('s4');
-    const cinemaTitle = document.getElementById('cinemaTitle');
-    const cinemaDesc  = document.getElementById('cinemaDesc');
-    let cinemaPlayed = false;
-    let cinemaBusy = false;
+    const cinemaLine1 = document.getElementById('cinemaLine1');
+const cinemaLine2 = document.getElementById('cinemaLine2');
+const cinemaDesc  = document.getElementById('cinemaDesc');
 
-    function sleep(ms){ return new Promise(res=>setTimeout(res, ms)); }
+async function runCinema(){
+  if(cinemaBusy) return;
+  cinemaBusy = true;
 
-    async function runCinema(){
-      if(cinemaBusy) return;
-      cinemaBusy = true;
+  // reset
+  [cinemaLine1, cinemaLine2, cinemaDesc].forEach(el=>{
+    el.classList.remove('show','hide');
+  });
 
-      // reset
-      cinemaTitle.classList.remove('show','hide');
-      cinemaDesc.classList.remove('show','hide');
+  await sleep(120);
 
-      await sleep(60);
+  // Line1 in (更慢)
+  cinemaLine1.classList.add('show');
+  await sleep(1600);
 
-      // title in
-      cinemaTitle.classList.add('show');
-      await sleep(1100);
+  // Line1 out
+  cinemaLine1.classList.remove('show');
+  cinemaLine1.classList.add('hide');
+  await sleep(1200);
 
-      // title out
-      cinemaTitle.classList.remove('show');
-      cinemaTitle.classList.add('hide');
-      await sleep(850);
+  // Line2 in（第二句淡入後不淡出）
+  cinemaLine2.classList.add('show');
+  await sleep(900);
 
-      // desc in
-      cinemaDesc.classList.remove('hide');
-      cinemaDesc.classList.add('show');
-      await sleep(1500);
+  // Desc in
+  cinemaDesc.classList.add('show');
+  await sleep(2200);
 
-      // desc out
-      cinemaDesc.classList.remove('show');
-      cinemaDesc.classList.add('hide');
+  // Desc out（可保留電影感）
+  cinemaDesc.classList.remove('show');
+  cinemaDesc.classList.add('hide');
 
-      cinemaBusy = false;
-    }
+  cinemaBusy = false;
+}
 
     function maybeRunCinema(){
       if(cinemaPlayed) return;
@@ -1545,17 +1568,20 @@
       if(alignPicked2) alignPicked2.textContent = value;
 
       moods.forEach(m=>{
-        const on = (m.dataset.theme === theme);
-        m.classList.toggle('active', on);
-        m.classList.toggle('dim', !on);
-      });
-      setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
+  const on = theme && (m.dataset.theme === theme);
+  m.classList.toggle('active', on);
+  // 初始 theme 為空：不 dim
+  m.classList.toggle('dim', theme ? !on : false);
+});
+setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
     }
 
     function initTheme(){
-      setTheme('rose_ember', 'ROSE EMBER', 'PHOENIX');
-    }
-    initTheme();
+  // 初始永遠無彩（不帶任何 archetype 底色）
+  setTheme('', '', '');
+}
+initTheme();
+
 
     moods.forEach(m=>{
       const act = ()=> setTheme(m.dataset.theme, m.dataset.value, m.dataset.animal);

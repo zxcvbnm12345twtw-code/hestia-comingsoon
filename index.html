@@ -154,8 +154,10 @@
     .s6{background:linear-gradient(180deg,var(--sanctuary-5),var(--sanctuary-5));}
     .s7{background:linear-gradient(180deg,var(--sanctuary-5),var(--sanctuary-5));}
 
-    /* ✅ 09 底部才回到黑 */
-    .s8{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
+    /* 09 延續 08 主題色，往下才回黑 */
+.s8{
+  background: linear-gradient(180deg, var(--sanctuary-5), #000 72%, #000);
+}
 
     .breath{
       position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
@@ -1093,6 +1095,103 @@
       .cinema-step{ transition:none !important; opacity:1 !important; transform:none !important; }
       .ghost-btn.ready{ animation:none !important; }
     }
+    /* =========================
+   08 RESULT: Brand-card + 16:9 screenshot-friendly
+   (override only)
+========================= */
+
+/* 08 section 本身縮一點上下留白 */
+#s7{
+  padding: 42px 16px;
+}
+
+/* 卡面整體縮緊：更像「品牌卡」 */
+#s7 .result-page{
+  padding: 16px 14px 14px;
+  border-radius: 20px;
+}
+
+/* 上方 kicker 稍微收斂 */
+#s7 .rp-kicker{ margin-bottom: 8px; }
+
+/* Emblem slot：大幅縮小（你現在最佔高度的來源） */
+#s7 .emblem-slot{
+  width: min(210px, 70vw);
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  font-size: 11px;
+  letter-spacing: .18em;
+}
+
+/* 標題區縮緊 */
+#s7 .arch-title{
+  margin: 6px 0 2px;
+  font-size: clamp(20px, 4.6vw, 30px);
+}
+#s7 .arch-sub{
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: .18em;
+}
+
+/* 三張資訊卡：縮小內距與文字行高 */
+#s7 .arch-card{
+  padding: 12px 12px;
+  border-radius: 14px;
+}
+#s7 .arch-card .t{
+  margin: 0 0 6px;
+  font-size: 11px;
+  letter-spacing: .18em;
+}
+#s7 .arch-card .v{
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* 底部 microcopy / 按鈕 / watermark 都縮一點高度 */
+#s7 .microcopy{ margin-top: 10px; }
+#s7 .arch-actions{ margin-top: 10px; }
+#s7 .result-watermark{
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+/* 16:9 / 寬螢幕：自動變左右兩欄，確保「同一屏」截圖完整 */
+@media (min-width: 900px), (min-aspect-ratio: 16/9){
+  #s7{
+    padding: 26px 18px;
+  }
+  #s7 .result-page{
+    width: min(1080px, 92vw);
+    /* 限制卡面高度在視窗內（截圖一屏收完） */
+    max-height: calc(100vh - 56px);
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: auto auto 1fr auto auto;
+    column-gap: 16px;
+    align-items: start;
+  }
+
+  #s7 .rp-kicker{ grid-column: 1 / -1; }
+  #s7 .arch-emblem{ grid-column: 1; grid-row: 2 / span 3; margin: 0; }
+  #s7 .arch-title{ grid-column: 2; }
+  #s7 .arch-sub{ grid-column: 2; }
+
+  /* 右側三卡：更緊密排列 */
+  #s7 .arch-grid{
+    grid-column: 2;
+    gap: 10px;
+  }
+
+  /* 底部資訊/按鈕/浮水印：跨欄 */
+  #s7 .microcopy{ grid-column: 1 / -1; }
+  #s7 .arch-actions{ grid-column: 1 / -1; }
+  #s7 .result-watermark{ grid-column: 1 / -1; }
+}
+
   </style>
 </head>
 

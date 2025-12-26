@@ -1340,19 +1340,22 @@
   <section class="s4" id="s4">
     <div class="sanctuary-wrap">
       <div class="cinema" id="cinema">
-        <div class="cinema-step" id="cinemaLine1">
-          <h2 style="margin-bottom:0;">現在安靜下來</h2>
-        </div>
+  <div class="cinema-step" id="cinemaT1">
+    <h2 style="margin:0;">你的每一次選擇</h2>
+  </div>
 
-        <div class="cinema-step" id="cinemaLine2">
-          <h2 style="margin:10px 0 0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
-        </div>
+  <div class="cinema-step" id="cinemaT2">
+    <h2 style="margin:10px 0 0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2>
+  </div>
 
-        <div class="cinema-step" id="cinemaDesc">
-          <p style="margin-top:18px;">這裡的每一次停留，都是你與自己對齊的瞬間。</p>
-          <p>你的每一次選擇，或許都會成為 Hestia 的一部分。</p>
-        </div>
-      </div>
+  <div class="cinema-step" id="cinemaT3">
+    <h2 style="margin:10px 0 0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2>
+  </div>
+
+  <div class="cinema-step" id="cinemaT4">
+    <h2 style="margin:10px 0 0;">讓我們開始吧</h2>
+  </div>
+</div>
     </div>
   </section>
 
@@ -1413,7 +1416,7 @@
           </div>
         </div>
 
-        <div class="mood reveal" style="--d:500ms;" role="button" tabindex="0"
+        <div class="mood reveal" style="--d:460ms;" role="button" tabindex="0"
              data-theme="low_tide_keeper" data-value="LOW TIDE KEEPER" data-animal="PYTHON">
           <div class="row">
             <div>
@@ -1691,42 +1694,50 @@
        05 Cinema sequence
     ========================== */
     const s4 = document.getElementById('s4');
-    const cinemaLine1 = document.getElementById('cinemaLine1');
-    const cinemaLine2 = document.getElementById('cinemaLine2');
-    const cinemaDesc  = document.getElementById('cinemaDesc');
+const cinemaT1 = document.getElementById('cinemaT1');
+const cinemaT2 = document.getElementById('cinemaT2');
+const cinemaT3 = document.getElementById('cinemaT3');
+const cinemaT4 = document.getElementById('cinemaT4');
 
-    let cinemaPlayed = false;
-    let cinemaBusy = false;
+let cinemaPlayed = false;
+let cinemaBusy = false;
 
-    async function runCinema(){
-      if(cinemaBusy) return;
-      cinemaBusy = true;
+async function runCinema(){
+  if(cinemaBusy) return;
+  cinemaBusy = true;
 
-      [cinemaLine1, cinemaLine2, cinemaDesc].forEach(el=>{
-        if(!el) return;
-        el.classList.remove('show','hide');
-      });
+  const steps = [cinemaT1, cinemaT2, cinemaT3, cinemaT4].filter(Boolean);
+  steps.forEach(el => el.classList.remove('show','hide'));
 
-      await sleep(120);
+  // 整體節奏更慢：前置更長一點
+  await sleep(220);
 
-      cinemaLine1.classList.add('show');
-      await sleep(1600);
+  // T1：淡入 → 停留 → 淡出
+  cinemaT1?.classList.add('show');
+  await sleep(2200);
+  cinemaT1?.classList.remove('show');
+  cinemaT1?.classList.add('hide');
+  await sleep(1500);
 
-      cinemaLine1.classList.remove('show');
-      cinemaLine1.classList.add('hide');
-      await sleep(1200);
+  // T2：淡入 → 停留 → 淡出
+  cinemaT2?.classList.add('show');
+  await sleep(2200);
+  cinemaT2?.classList.remove('show');
+  cinemaT2?.classList.add('hide');
+  await sleep(1500);
 
-      cinemaLine2.classList.add('show');
-      await sleep(900);
+  // T3：淡入 → 停留 → 淡出
+  cinemaT3?.classList.add('show');
+  await sleep(2400);
+  cinemaT3?.classList.remove('show');
+  cinemaT3?.classList.add('hide');
+  await sleep(1500);
 
-      cinemaDesc.classList.add('show');
-      await sleep(2200);
+  // T4：淡入後不淡出（停在畫面上）
+  cinemaT4?.classList.add('show');
 
-      cinemaDesc.classList.remove('show');
-      cinemaDesc.classList.add('hide');
-
-      cinemaBusy = false;
-    }
+  cinemaBusy = false;
+}
 
     function maybeRunCinema(){
       if(cinemaPlayed) return;

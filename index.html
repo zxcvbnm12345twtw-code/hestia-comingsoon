@@ -1708,38 +1708,56 @@ const cinemaT4 = document.getElementById('cinemaT4');
 const cinemaT5 = document.getElementById('cinemaT5');
 const cinemaT6 = document.getElementById('cinemaT6');
 
+let cinemaPlayed = false;
 let cinemaBusy = false;
 
 async function runCinema(){
-  if (cinemaBusy) return;
+  if(cinemaBusy) return;
   cinemaBusy = true;
 
-  const steps = [
-    cinemaT1,
-    cinemaT2,
-    cinemaT3,
-    cinemaT4,
-    cinemaT5,
-    cinemaT6
-  ].filter(Boolean);
-
-  // 初始化
+  const steps = [cinemaT1, cinemaT2, cinemaT3, cinemaT4, cinemaT5, cinemaT6].filter(Boolean);
   steps.forEach(el => el.classList.remove('show','hide'));
 
-  await sleep(240);
+  // 整體節奏更慢：前置更長一點
+  await sleep(220);
 
-  // 前五行：淡入 → 停留 → 淡出
-  for (let i = 0; i < steps.length - 1; i++) {
-    const el = steps[i];
-    el.classList.add('show');
-    await sleep(2200);          // 停留久一點
-    el.classList.remove('show');
-    el.classList.add('hide');
-    await sleep(1500);          // 淡出後留白
-  }
+  // T1：淡入 → 停留 → 淡出
+  cinemaT1?.classList.add('show');
+  await sleep(2200);
+  cinemaT1?.classList.remove('show');
+  cinemaT1?.classList.add('hide');
+  await sleep(1500);
 
-  // 最後一行：只淡入，不淡出
-  steps[steps.length - 1].classList.add('show');
+  // T2：淡入 → 停留 → 淡出
+  cinemaT2?.classList.add('show');
+  await sleep(2200);
+  cinemaT2?.classList.remove('show');
+  cinemaT2?.classList.add('hide');
+  await sleep(1500);
+
+  // T3：淡入 → 停留 → 淡出
+  cinemaT3?.classList.add('show');
+  await sleep(2400);
+  cinemaT3?.classList.remove('show');
+  cinemaT3?.classList.add('hide');
+  await sleep(1500);
+
+  // T4：淡入 → 停留 → 淡出
+  cinemaT4?.classList.add('show');
+  await sleep(2200);
+  cinemaT4?.classList.remove('show');
+  cinemaT4?.classList.add('hide');
+  await sleep(1500);
+
+  // T5：淡入 → 停留 → 淡出
+  cinemaT5?.classList.add('show');
+  await sleep(2400);
+  cinemaT5?.classList.remove('show');
+  cinemaT5?.classList.add('hide');
+  await sleep(1500);
+  
+  // T6：淡入後不淡出（停在畫面上）
+  cinemaT6?.classList.add('show');
 
   cinemaBusy = false;
 }

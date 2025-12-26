@@ -46,26 +46,26 @@
     body{ transition: background-color 1.2s ease; }
 
     /* 初始（無 data-theme）＝無彩黑白灰，不帶任何預設底色傾向 */
-body:not([data-theme]),
-body[data-theme=""],
-body[data-theme="mono_base"]{
-  --sanctuary-1:#000000;
-  --sanctuary-2:#070707;
-  --sanctuary-3:#0d0d0d;
-  --sanctuary-4:#121212;
-  --sanctuary-5:#171717;
+    body:not([data-theme]),
+    body[data-theme=""],
+    body[data-theme="mono_base"]{
+      --sanctuary-1:#000000;
+      --sanctuary-2:#070707;
+      --sanctuary-3:#0d0d0d;
+      --sanctuary-4:#121212;
+      --sanctuary-5:#171717;
 
-  --breath-a: rgba(255,255,255,.10);
-  --breath-b: rgba(255,255,255,.06);
+      --breath-a: rgba(255,255,255,.10);
+      --breath-b: rgba(255,255,255,.06);
 
-  --accent:#ffffff;
-}
+      --accent:#ffffff;
+    }
 
     /* =========================
        06 四種色調（ROSE EMBER 改成橘紅鳳凰系）
     ========================== */
 
-    /* ROSE EMBER (鳳凰)  Warm / High Sat  —— 改為橘紅系 */
+    /* ROSE EMBER (鳳凰)  Warm / High Sat */
     body[data-theme="rose_ember"]{
       --sanctuary-1:#120a07;
       --sanctuary-2:#1e0e09;
@@ -149,12 +149,13 @@ body[data-theme="mono_base"]{
     .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
     .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
     .s5{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
-    .s6{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
-    /* 08 結果頁也延續 06 的主題背景 */
-.s7{
-  background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5));
-}
-    .s8{background:linear-gradient(180deg,#000,#000);}
+
+    /* ✅ 修正：07/08 延續同一段底色，避免斷層 */
+    .s6{background:linear-gradient(180deg,var(--sanctuary-5),var(--sanctuary-5));}
+    .s7{background:linear-gradient(180deg,var(--sanctuary-5),var(--sanctuary-5));}
+
+    /* ✅ 09 底部才回到黑 */
+    .s8{background:linear-gradient(180deg,var(--sanctuary-5),#000);}
 
     .breath{
       position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
@@ -398,7 +399,7 @@ body[data-theme="mono_base"]{
     @keyframes hintPulse{
       0%{ opacity:.55; }
       40%{ opacity:1; box-shadow: 0 0 10px rgba(255,255,255,.22); }
-      100%{ opacity:.60; box-shadow: 0 0 0 rgba(255,255,255,0); }
+      100%{opacity:.60; box-shadow: 0 0 0 rgba(255,255,255,0); }
     }
     @media (max-width: 640px){
       .dot{ width:6px;height:6px; }
@@ -652,7 +653,7 @@ body[data-theme="mono_base"]{
     #s4 .sanctuary-wrap::before,
     #s4 .sanctuary-wrap::after{ display:none; }
 
-    /* 05 電影式淡入淡出（只影響該段文案，不碰其他動畫） */
+    /* 05 電影式淡入淡出 */
     .cinema{
       width:min(var(--wrap), 92vw);
       text-align:center;
@@ -737,11 +738,8 @@ body[data-theme="mono_base"]{
       text-align:left;
       overflow-wrap:anywhere;
     }
-
-    /* 04 文案置中對齊 */
     .manifest.center{ text-align:center; }
 
-    /* Rest of styles (06~09 / cards) */
     .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
     .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); max-width:100%; }
 
@@ -815,21 +813,41 @@ body[data-theme="mono_base"]{
       box-shadow: 0 0 18px rgba(255,106,42,.12);
     }
 
-    .quiz-actions{ display:flex; justify-content:center; margin-top:6px; }
+    .quiz-actions{ display:flex; justify-content:center; margin-top:6px; gap:10px; flex-direction:column; align-items:center; }
+    .unlock-hint{
+      font-size:12px;
+      letter-spacing:.10em;
+      color:rgba(255,255,255,.62);
+      text-align:center;
+      padding:0 6px;
+    }
+
     .ghost-btn{
       padding:12px 18px;
       border-radius:12px;
       border:1px solid rgba(255,255,255,.16);
       background: rgba(255,255,255,.04);
       color: rgba(255,255,255,.88);
-      font-weight:700;
+      font-weight:800;
       letter-spacing:.10em;
       cursor:pointer;
-      transition: transform .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease, box-shadow .22s ease;
       max-width:92vw;
     }
     .ghost-btn:active{ transform: scale(.99); }
     .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
+
+    /* ✅ 解鎖可點時：強烈但克制的品牌提示（更快讓人知道要做什麼） */
+    .ghost-btn.ready{
+      border-color: rgba(255,255,255,.26);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 0 18px rgba(255,106,42,.14);
+      animation: unlockPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes unlockPulse{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-1px); }
+    }
 
     .result-page{
       width:min(var(--wrap), 92vw);
@@ -857,7 +875,10 @@ body[data-theme="mono_base"]{
     }
     .rp-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
     .arch-title{ margin:6px 0 4px; font-size:clamp(22px, 5vw, 32px); font-weight:850; letter-spacing:.06em; color:#fff; position:relative; z-index:2; overflow-wrap:anywhere; }
-    .arch-sub{ margin:0 0 14px; font-size:13px; letter-spacing:.20em; text-transform:uppercase; color:rgba(255,255,255,.66); position:relative; z-index:2; overflow-wrap:anywhere; }
+    .arch-sub{ margin:0 0 12px; font-size:13px; letter-spacing:.20em; text-transform:uppercase; color:rgba(255,255,255,.66); position:relative; z-index:2; overflow-wrap:anywhere; }
+
+    /* ✅ 08 卡面更像「品牌卡」：16:9 截圖友好（桌面） */
+    .result-shell{ position:relative; z-index:2; display:grid; gap:12px; }
     .arch-grid{ display:grid; gap:10px; position:relative; z-index:2; }
     .arch-card{
       border-radius:16px;
@@ -869,13 +890,14 @@ body[data-theme="mono_base"]{
     }
     .arch-card .t{ margin:0 0 6px; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.62); }
     .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); }
-    .arch-actions{ margin-top:14px; display:flex; justify-content:center; position:relative; z-index:2; }
+
+    .arch-actions{ margin-top:10px; display:flex; justify-content:center; position:relative; z-index:2; }
 
     .arch-emblem{
       width:100%;
       display:flex;
       justify-content:center;
-      margin:8px 0 10px;
+      margin:0;
       position:relative;
       z-index:2;
     }
@@ -894,9 +916,10 @@ body[data-theme="mono_base"]{
       text-transform:uppercase;
       user-select:none;
     }
+
     .result-watermark{
-      margin-top:14px;
-      padding-top:14px;
+      margin-top:12px;
+      padding-top:12px;
       border-top:1px solid rgba(255,255,255,.10);
       display:flex;
       align-items:center;
@@ -918,6 +941,42 @@ body[data-theme="mono_base"]{
       letter-spacing:.18em;
       color:rgba(255,255,255,.70);
       text-transform:uppercase;
+    }
+
+    /* ✅ 08：桌面 16:9 一頁呈現（資訊都在同一張卡內） */
+    @media (min-width: 980px){
+      .result-page{
+        width:min(1120px, 92vw);
+        aspect-ratio: 16 / 9;
+        padding:18px 18px 16px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+      }
+      .result-shell{
+        grid-template-columns: 320px 1fr;
+        align-items:stretch;
+        gap:14px;
+      }
+      .arch-emblem{
+        justify-content:flex-start;
+      }
+      .emblem-slot{
+        width: 300px;
+        aspect-ratio: 1 / 1;
+      }
+      .arch-grid{
+        grid-template-columns: 1fr 1fr;
+        gap:10px;
+      }
+      .arch-card{
+        padding:12px 12px;
+      }
+      .arch-card:nth-child(1){ grid-column: 1 / 3; } /* CORE STATE 橫跨，閱讀更像品牌卡資訊層級 */
+      .arch-title{ margin-top:0; }
+      .arch-sub{ margin-bottom:8px; }
+      .arch-actions{ margin-top:8px; }
+      .result-watermark{ margin-top:10px; padding-top:10px; }
     }
 
     .hearth-wrap{
@@ -1032,6 +1091,7 @@ body[data-theme="mono_base"]{
       .breath, .grain, .dot.active, .flame-img.in{ animation:none !important; }
       .reveal, .late, .logo-frame, .flame-frame, .mood, .opt{ transition:none !important; }
       .cinema-step{ transition:none !important; opacity:1 !important; transform:none !important; }
+      .ghost-btn.ready{ animation:none !important; }
     }
   </style>
 </head>
@@ -1059,7 +1119,6 @@ body[data-theme="mono_base"]{
       <div class="submark">TAIWAN</div>
     </div>
 
-    <!-- 1：Hero 下方文案替換 -->
     <div class="tagline">即將到來，搶先進入 HEST<span class="i-accent">i</span>A 宇宙</div>
     <div class="arrow">↓</div>
   </section>
@@ -1069,8 +1128,6 @@ body[data-theme="mono_base"]{
     <div class="secno reveal" style="--d:120ms;">02</div>
     <h2 class="reveal in who-title" style="--d:160ms;">WHO <span class="we-accent">WE</span> ARE?</h2>
 
-    <!-- 2：WHY HESTIA 和 WHAT...位置對調 —— 先 WHY HESTIA -->
-    <!-- 3：WHY HESTIA 文案改回（回到更經典/品牌本體敘事） -->
     <div class="info-card">
       <div class="mini"><span class="kicker reveal in">WHY HESTIA?</span></div>
       <p class="late" data-late>HESTIA 的名字來自希臘神話中守護火爐的女神，</p>
@@ -1079,7 +1136,6 @@ body[data-theme="mono_base"]{
       <p class="late" data-late>等待被看見、被擁抱、被點燃。</p>
     </div>
 
-    <!-- 4：WHAT WE DID -> WHAT WE DO（介紹品牌做服裝，而非解釋頁面） -->
     <div class="info-card" style="margin-top:12px;">
       <div class="mini"><span class="kicker reveal in">WHAT WE DO</span></div>
       <p class="late" data-late>HESTIA 是一個健身與生活並行的服裝品牌。</p>
@@ -1087,7 +1143,7 @@ body[data-theme="mono_base"]{
     </div>
   </section>
 
-  <!-- ③ BRAND MARK（原 03 PRIMARY MARK） -->
+  <!-- ③ BRAND MARK -->
   <section class="s3" id="s3">
     <div class="stack">
       <div class="secno reveal" style="--d:140ms;">03</div>
@@ -1097,14 +1153,10 @@ body[data-theme="mono_base"]{
         <img class="logo-mark" id="logoMark" src="HLOGO.png" alt="HESTIA mark" />
       </div>
 
-      <!-- 4：PRIMARY MARK -> BRAND MARK -->
       <div class="label reveal" style="--d:220ms;">BRAND MARK</div>
-
-      <!-- 4：標誌揭露 -> 品牌識別 -->
       <h2 class="reveal" style="--d:260ms;">品牌識別</h2>
 
-      <!-- 4：內容請改回之前的 —— 這裡用「最典型的品牌識別描述」版本（更接近原本標誌介紹語氣） -->
-       <div class="bullets">
+      <div class="bullets">
         <div class="bullet reveal" style="--d:320ms;">LOGO 靈感來自「火焰燃燒的線條」，帶出<span class="hair-underline">力量</span>與<span class="hair-underline">節制</span>的平衡。</div>
         <div class="bullet reveal" style="--d:380ms;">拱型外型呼應爐灶女神的意象，象徵<span class="hair-underline">歸屬</span>、<span class="hair-underline">溫暖</span>與內在之火。</div>
         <div class="bullet reveal" style="--d:440ms;">代表力量與柔韌的平衡，也象徵身體與心靈的統一。</div>
@@ -1114,7 +1166,7 @@ body[data-theme="mono_base"]{
     </div>
   </section>
 
-  <!-- ④ BRAND TAGLINE（原 04 標語揭露） -->
+  <!-- ④ BRAND TAGLINE -->
   <section class="s4b" id="s4b">
     <div class="secno reveal" style="--d:140ms;">04</div>
 
@@ -1128,10 +1180,8 @@ body[data-theme="mono_base"]{
         <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" />
       </div>
 
-      <!-- 5：標語揭露 -> 品牌標語 -->
       <h2 class="reveal" style="--d:260ms;">品牌標語</h2>
 
-      <!-- 5：內容置中對齊 -->
       <div class="manifest center flame-copy reveal" style="--d:320ms;">
         <p class="late" data-late>這不只是口號，而是一種信念。</p>
         <p class="late" data-late>標籤又如何？那是與生俱來的特色。</p>
@@ -1142,28 +1192,25 @@ body[data-theme="mono_base"]{
     </div>
   </section>
 
-  <!-- ⑤ Sanctuary（移除 DIGITAL SANCTUARY 字樣；改成電影式淡入淡出） -->
+  <!-- ⑤ Sanctuary -->
   <section class="s4" id="s4">
-
     <div class="sanctuary-wrap">
-      <!-- 6：移除 kicker，只留標題與說明文字（由 JS 控制淡入淡出） -->
       <div class="cinema" id="cinema">
-  <div class="cinema-step" id="cinemaLine1">
-    <h2 style="margin-bottom:0;">現在安靜下來</h2>
-  </div>
+        <div class="cinema-step" id="cinemaLine1">
+          <h2 style="margin-bottom:0;">現在安靜下來</h2>
+        </div>
 
-  <!-- 第二句：淡入後不淡出（常駐） -->
-  <div class="cinema-step" id="cinemaLine2">
-    <h2 style="margin:10px 0 0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
-  </div>
+        <div class="cinema-step" id="cinemaLine2">
+          <h2 style="margin:10px 0 0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
+        </div>
 
-  <!-- 說明：仍可淡入淡出（電影節奏） -->
-  <div class="cinema-step" id="cinemaDesc">
-    <p style="margin-top:18px;">這裡的每一次停留，都是你與自己對齊的瞬間。</p>
-    <p>你的每一次選擇，或許都會成為 Hestia 的一部分。</p>
-  </div>
-</div>
-</section>
+        <div class="cinema-step" id="cinemaDesc">
+          <p style="margin-top:18px;">這裡的每一次停留，都是你與自己對齊的瞬間。</p>
+          <p>你的每一次選擇，或許都會成為 Hestia 的一部分。</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
@@ -1177,7 +1224,6 @@ body[data-theme="mono_base"]{
       </p>
 
       <div class="align-grid" id="alignGrid" aria-label="Aesthetic alignment choices">
-        <!-- 7：ROSE EMBER 改成橘紅鳳凰系（含 swatch） -->
         <div class="mood reveal" style="--d:320ms;" role="button" tabindex="0"
              data-theme="rose_ember" data-value="ROSE EMBER" data-animal="PHOENIX">
           <div class="row">
@@ -1240,7 +1286,7 @@ body[data-theme="mono_base"]{
       </div>
 
       <div class="microcopy reveal" style="--d:560ms;">
-        已選擇：<span id="alignPicked" class="we-accent">ROSE EMBER</span>
+        已選擇：<span id="alignPicked" class="we-accent">—</span>
       </div>
     </div>
   </section>
@@ -1304,6 +1350,7 @@ body[data-theme="mono_base"]{
         </div>
 
         <div class="quiz-actions reveal" style="--d:620ms;">
+          <div class="unlock-hint" id="unlockHint">完成前四題後，按鈕會點亮。</div>
           <button class="ghost-btn" id="unlockBtn" type="button" disabled>解鎖我的原型</button>
         </div>
       </div>
@@ -1317,42 +1364,44 @@ body[data-theme="mono_base"]{
     <div class="result-page" id="resultPage" aria-live="polite">
       <div class="rp-kicker"><span class="kicker reveal" style="--d:180ms;">YOUR ARCHETYPE</span></div>
 
-      <!-- 8：移除「從此刻開始⋯歡迎你⋯」整段文字區域（已刪） -->
-
-      <div class="arch-emblem reveal" style="--d:220ms;">
-        <div class="emblem-slot">EMBLEM SLOT</div>
-      </div>
-
-      <div class="arch-title reveal" style="--d:260ms;" id="archTitle">—</div>
-      <div class="arch-sub reveal" style="--d:300ms;" id="archKey">—</div>
-
-      <div class="arch-grid">
-        <div class="arch-card reveal" style="--d:360ms;">
-          <div class="t">CORE STATE</div>
-          <p class="v" id="archCore">—</p>
+      <div class="result-shell">
+        <div class="arch-emblem reveal" style="--d:220ms;">
+          <div class="emblem-slot">EMBLEM SLOT</div>
         </div>
-        <div class="arch-card reveal" style="--d:420ms;">
-          <div class="t">TRAINING + LIFE RHYTHM</div>
-          <p class="v" id="archRhythm">—</p>
+
+        <div>
+          <div class="arch-title reveal" style="--d:260ms;" id="archTitle">—</div>
+          <div class="arch-sub reveal" style="--d:300ms;" id="archKey">—</div>
+
+          <div class="arch-grid">
+            <div class="arch-card reveal" style="--d:360ms;">
+              <div class="t">CORE STATE</div>
+              <p class="v" id="archCore">—</p>
+            </div>
+            <div class="arch-card reveal" style="--d:420ms;">
+              <div class="t">TRAINING + LIFE RHYTHM</div>
+              <p class="v" id="archRhythm">—</p>
+            </div>
+            <div class="arch-card reveal" style="--d:480ms;">
+              <div class="t">STYLE + COLOR DIRECTION</div>
+              <p class="v" id="archStyle">—</p>
+            </div>
+          </div>
+
+          <div class="microcopy reveal" style="--d:540ms;text-align:center;">
+            你已選的色調：<span class="we-accent" id="alignPicked2">—</span>｜
+            你的原型：<span class="we-accent" id="archPicked">—</span>
+          </div>
+
+          <div class="arch-actions reveal" style="--d:580ms;">
+            <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
+          </div>
+
+          <div class="result-watermark reveal" style="--d:620ms;">
+            <img src="HLOGO.png" alt="HESTIA watermark logo" />
+            <span>HESTIA TAIWAN®</span>
+          </div>
         </div>
-        <div class="arch-card reveal" style="--d:480ms;">
-          <div class="t">STYLE + COLOR DIRECTION</div>
-          <p class="v" id="archStyle">—</p>
-        </div>
-      </div>
-
-      <div class="microcopy reveal" style="--d:540ms;text-align:center;">
-        你已選的色調：<span class="we-accent" id="alignPicked2">ROSE EMBER</span>｜
-        你的原型：<span class="we-accent" id="archPicked">—</span>
-      </div>
-
-      <div class="arch-actions reveal" style="--d:580ms;">
-        <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
-      </div>
-
-      <div class="result-watermark reveal" style="--d:620ms;">
-        <img src="HLOGO.png" alt="HESTIA watermark logo" />
-        <span>HESTIA TAIWAN®</span>
       </div>
     </div>
   </section>
@@ -1373,7 +1422,6 @@ body[data-theme="mono_base"]{
           HEARTH LEVEL：<span id="hearthLevel" class="we-accent">—</span>
         </div>
 
-        <!-- 9：集體爐火改成「共焰｜OUR FLAME」 -->
         <h2 class="reveal" style="--d:300ms;margin-bottom:6px;">共焰｜OUR FLAME</h2>
         <p class="reveal" style="--d:340ms;max-width:680px;">
           把你的光點，投入火焰！不用搶先，只要守護。
@@ -1411,6 +1459,8 @@ body[data-theme="mono_base"]{
     const $ = (s, r=document) => r.querySelector(s);
     const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
+    function sleep(ms){ return new Promise(res => setTimeout(res, ms)); }
+
     function inView(el, topRatio=0.78, bottomRatio=0.18){
       if(!el) return false;
       const r = el.getBoundingClientRect();
@@ -1446,7 +1496,6 @@ body[data-theme="mono_base"]{
         setTimeout(()=>flameImg.classList.add('in'), 520);
       }
 
-      // 05：電影式淡入淡出（以「滑到該段」作為觸發點）
       maybeRunCinema();
     }
     function requestCheck(){
@@ -1493,54 +1542,50 @@ body[data-theme="mono_base"]{
     const flameImg   = $('#flameImg');
 
     /* =========================
-       05 Cinema sequence (scroll-triggered)
-       - 只在使用者滑到該 section 時播放一次：標題淡入→淡出→說明淡入→淡出
-       - 不改你的全站 reveal/late 系統
+       05 Cinema sequence
+       ✅ 修正：原本缺少 cinemaPlayed / cinemaBusy / sleep，導致完全不會跑
     ========================== */
     const s4 = document.getElementById('s4');
     const cinemaLine1 = document.getElementById('cinemaLine1');
-const cinemaLine2 = document.getElementById('cinemaLine2');
-const cinemaDesc  = document.getElementById('cinemaDesc');
+    const cinemaLine2 = document.getElementById('cinemaLine2');
+    const cinemaDesc  = document.getElementById('cinemaDesc');
 
-async function runCinema(){
-  if(cinemaBusy) return;
-  cinemaBusy = true;
+    let cinemaPlayed = false;
+    let cinemaBusy = false;
 
-  // reset
-  [cinemaLine1, cinemaLine2, cinemaDesc].forEach(el=>{
-    el.classList.remove('show','hide');
-  });
+    async function runCinema(){
+      if(cinemaBusy) return;
+      cinemaBusy = true;
 
-  await sleep(120);
+      [cinemaLine1, cinemaLine2, cinemaDesc].forEach(el=>{
+        if(!el) return;
+        el.classList.remove('show','hide');
+      });
 
-  // Line1 in (更慢)
-  cinemaLine1.classList.add('show');
-  await sleep(1600);
+      await sleep(120);
 
-  // Line1 out
-  cinemaLine1.classList.remove('show');
-  cinemaLine1.classList.add('hide');
-  await sleep(1200);
+      cinemaLine1.classList.add('show');
+      await sleep(1600);
 
-  // Line2 in（第二句淡入後不淡出）
-  cinemaLine2.classList.add('show');
-  await sleep(900);
+      cinemaLine1.classList.remove('show');
+      cinemaLine1.classList.add('hide');
+      await sleep(1200);
 
-  // Desc in
-  cinemaDesc.classList.add('show');
-  await sleep(2200);
+      cinemaLine2.classList.add('show');
+      await sleep(900);
 
-  // Desc out（可保留電影感）
-  cinemaDesc.classList.remove('show');
-  cinemaDesc.classList.add('hide');
+      cinemaDesc.classList.add('show');
+      await sleep(2200);
 
-  cinemaBusy = false;
-}
+      cinemaDesc.classList.remove('show');
+      cinemaDesc.classList.add('hide');
+
+      cinemaBusy = false;
+    }
 
     function maybeRunCinema(){
       if(cinemaPlayed) return;
       if(!s4) return;
-      // 「指定滑動才」：進入可視範圍才觸發
       if(inView(s4, 0.70, 0.25)){
         cinemaPlayed = true;
         runCinema();
@@ -1548,40 +1593,38 @@ async function runCinema(){
     }
 
     /* =========================
-       06 Aesthetic（不記錄、不回填）
+       06 Aesthetic（主題色）
     ========================== */
     const moods = $$('#alignGrid .mood');
     const alignPicked = $('#alignPicked');
     const alignPicked2 = $('#alignPicked2');
 
-    let currentTheme = 'rose_ember';
-    let currentAlign = 'ROSE EMBER';
-    let currentAnimal = 'PHOENIX';
+    let currentTheme = '';
+    let currentAlign = '';
+    let currentAnimal = '';
 
     function setTheme(theme, value, animal){
-      currentTheme = theme;
-      currentAlign = value;
+      currentTheme = theme || '';
+      currentAlign = value || '';
       currentAnimal = animal || '';
 
-      document.body.setAttribute('data-theme', theme);
-      if(alignPicked) alignPicked.textContent = value;
-      if(alignPicked2) alignPicked2.textContent = value;
+      document.body.setAttribute('data-theme', currentTheme);
+
+      if(alignPicked)  alignPicked.textContent  = currentAlign || '—';
+      if(alignPicked2) alignPicked2.textContent = currentAlign || '—';
 
       moods.forEach(m=>{
-  const on = theme && (m.dataset.theme === theme);
-  m.classList.toggle('active', on);
-  // 初始 theme 為空：不 dim
-  m.classList.toggle('dim', theme ? !on : false);
-});
-setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 1400);
+        const on = currentTheme && (m.dataset.theme === currentTheme);
+        m.classList.toggle('active', on);
+        m.classList.toggle('dim', currentTheme ? !on : false);
+      });
+      setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 900);
     }
 
     function initTheme(){
-  // 初始永遠無彩（不帶任何 archetype 底色）
-  setTheme('', '', '');
-}
-initTheme();
-
+      setTheme('', '', '');
+    }
+    initTheme();
 
     moods.forEach(m=>{
       const act = ()=> setTheme(m.dataset.theme, m.dataset.value, m.dataset.animal);
@@ -1596,8 +1639,11 @@ initTheme();
 
     /* =========================
        07/08 Archetype
+       ✅ 修正：解鎖按鈕「更快明確」：一滿足條件就點亮 + pulse
     ========================== */
     const unlockBtn = $('#unlockBtn');
+    const unlockHint = $('#unlockHint');
+
     const archPicked  = $('#archPicked');
     const archTitle = $('#archTitle');
     const archKey   = $('#archKey');
@@ -1689,6 +1735,11 @@ initTheme();
     function updateUnlock(){
       const reqOk = ['q1','q2','q3','q4'].every(k=>Boolean(answers[k]));
       unlockBtn.disabled = !reqOk;
+      unlockBtn.classList.toggle('ready', reqOk);
+
+      if(unlockHint){
+        unlockHint.textContent = reqOk ? '已完成。點擊「解鎖我的原型」。' : '完成前四題後，按鈕會點亮。';
+      }
     }
 
     function setOptState(q, chosenEl){
@@ -1698,7 +1749,7 @@ initTheme();
         o.classList.toggle('active', on);
         o.classList.toggle('dim', !on);
       });
-      setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 1400);
+      setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 700);
     }
 
     opts.forEach(o=>{
@@ -1733,7 +1784,7 @@ initTheme();
         const s7 = document.getElementById('s7');
         if(s7) s7.scrollIntoView({behavior:'smooth', block:'start'});
         setTimeout(requestCheck, 180);
-      }, 420);
+      }, 260);
     });
 
     $('#toHearthBtn').addEventListener('click', ()=>{
@@ -1755,8 +1806,8 @@ initTheme();
         return false;
       }
 
-      const align = currentAlign || 'ROSE EMBER';
-      const theme = currentTheme || 'rose_ember';
+      const align = currentAlign || '—';
+      const theme = currentTheme || '';
       const arch  = (archPicked && archPicked.textContent && archPicked.textContent !== '—') ? archPicked.textContent : '';
 
       $('#f_alignment').value = align;
@@ -1792,6 +1843,7 @@ initTheme();
       const vh = window.innerHeight;
       let best = {idx:0, score:999999};
       sections.forEach((sec, idx)=>{
+        if(!sec) return;
         const r = sec.getBoundingClientRect();
         const center = r.top + r.height/2;
         const score = Math.abs(center - vh/2);

@@ -148,15 +148,10 @@
     .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
     .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
     .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
-/* =========================
-   06-09 背景連續：避免 section 邊界斷層
-   (override)
-========================= */
-.s5{ background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5)); }
-.s6{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
-.s7{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
-/* 09 才回黑 */
-.s8{ background: linear-gradient(180deg, var(--sanctuary-5), #000 72%, #000); }
+    .s5{ background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5)); }
+    .s6{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
+    .s7{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
+    .s8{ background: linear-gradient(180deg, var(--sanctuary-5), #000 72%, #000); }
 
     .breath{
       position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
@@ -838,7 +833,6 @@
     .ghost-btn:active{ transform: scale(.99); }
     .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
 
-    /* ✅ 解鎖可點時：強烈但克制的品牌提示（更快讓人知道要做什麼） */
     .ghost-btn.ready{
       border-color: rgba(255,255,255,.26);
       background: rgba(255,255,255,.06);
@@ -878,7 +872,6 @@
     .arch-title{ margin:6px 0 4px; font-size:clamp(22px, 5vw, 32px); font-weight:850; letter-spacing:.06em; color:#fff; position:relative; z-index:2; overflow-wrap:anywhere; }
     .arch-sub{ margin:0 0 12px; font-size:13px; letter-spacing:.20em; text-transform:uppercase; color:rgba(255,255,255,.66); position:relative; z-index:2; overflow-wrap:anywhere; }
 
-    /* ✅ 08 卡面更像「品牌卡」：16:9 截圖友好（桌面） */
     .result-shell{ position:relative; z-index:2; display:grid; gap:12px; }
     .arch-grid{ display:grid; gap:10px; position:relative; z-index:2; }
     .arch-card{
@@ -944,7 +937,6 @@
       text-transform:uppercase;
     }
 
-    /* ✅ 08：桌面 16:9 一頁呈現（資訊都在同一張卡內） */
     @media (min-width: 980px){
       .result-page{
         width:min(1120px, 92vw);
@@ -973,7 +965,7 @@
       .arch-card{
         padding:12px 12px;
       }
-      .arch-card:nth-child(1){ grid-column: 1 / 3; } /* CORE STATE 橫跨，閱讀更像品牌卡資訊層級 */
+      .arch-card:nth-child(1){ grid-column: 1 / 3; }
       .arch-title{ margin-top:0; }
       .arch-sub{ margin-bottom:8px; }
       .arch-actions{ margin-top:8px; }
@@ -1094,242 +1086,153 @@
       .cinema-step{ transition:none !important; opacity:1 !important; transform:none !important; }
       .ghost-btn.ready{ animation:none !important; }
     }
-    /* =========================
-   08 RESULT: Brand-card + 16:9 screenshot-friendly
-   (override only)
-========================= */
 
-/* 08 section 本身縮一點上下留白 */
-#s7{
-  padding: 42px 16px;
-}
+    /* 你的 override CSS（保留原樣） */
+    #s7{ padding: 42px 16px; }
+    #s7 .result-page{ padding: 16px 14px 14px; border-radius: 20px; }
+    #s7 .rp-kicker{ margin-bottom: 8px; }
+    #s7 .emblem-slot{ width: min(210px, 70vw); aspect-ratio: 1 / 1; border-radius: 16px; font-size: 11px; letter-spacing: .18em; }
+    #s7 .arch-title{ margin: 6px 0 2px; font-size: clamp(20px, 4.6vw, 30px); }
+    #s7 .arch-sub{ margin: 0 0 10px; font-size: 12px; letter-spacing: .18em; }
+    #s7 .arch-card{ padding: 12px 12px; border-radius: 14px; }
+    #s7 .arch-card .t{ margin: 0 0 6px; font-size: 11px; letter-spacing: .18em; }
+    #s7 .arch-card .v{ font-size: 14px; line-height: 1.55; }
+    #s7 .microcopy{ margin-top: 10px; }
+    #s7 .arch-actions{ margin-top: 10px; }
+    #s7 .result-watermark{ margin-top: 10px; padding-top: 10px; }
 
-/* 卡面整體縮緊：更像「品牌卡」 */
-#s7 .result-page{
-  padding: 16px 14px 14px;
-  border-radius: 20px;
-}
+    @media (min-width: 900px), (min-aspect-ratio: 16/9){
+      #s7{ padding: 26px 18px; }
+      #s7 .result-page{
+        width: min(1080px, 92vw);
+        max-height: calc(100vh - 56px);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        grid-template-rows: auto auto 1fr auto auto;
+        column-gap: 16px;
+        align-items: start;
+      }
+      #s7 .rp-kicker{ grid-column: 1 / -1; }
+      #s7 .arch-emblem{ grid-column: 1; grid-row: 2 / span 3; margin: 0; }
+      #s7 .arch-title{ grid-column: 2; }
+      #s7 .arch-sub{ grid-column: 2; }
+      #s7 .arch-grid{ grid-column: 2; gap: 10px; }
+      #s7 .microcopy{ grid-column: 1 / -1; }
+      #s7 .arch-actions{ grid-column: 1 / -1; }
+      #s7 .result-watermark{ grid-column: 1 / -1; }
+    }
 
-/* 上方 kicker 稍微收斂 */
-#s7 .rp-kicker{ margin-bottom: 8px; }
+    :root{
+      --card-bg: rgba(255,255,255,.035);
+      --card-border: rgba(255,255,255,.10);
+      --card-shadow: 0 14px 44px rgba(0,0,0,.34);
+      --card-inset: inset 0 1px 0 rgba(255,255,255,.06);
+    }
 
-/* Emblem slot：大幅縮小（你現在最佔高度的來源） */
-#s7 .emblem-slot{
-  width: min(210px, 70vw);
-  aspect-ratio: 1 / 1;
-  border-radius: 16px;
-  font-size: 11px;
-  letter-spacing: .18em;
-}
+    .sanctuary-wrap,
+    .info-card,
+    .mood,
+    .q,
+    .result-page,
+    .arch-card,
+    .hearth-wrap{
+      background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,.018));
+      border-color: var(--card-border);
+      box-shadow: var(--card-shadow), var(--card-inset);
+    }
 
-/* 標題區縮緊 */
-#s7 .arch-title{
-  margin: 6px 0 2px;
-  font-size: clamp(20px, 4.6vw, 30px);
-}
-#s7 .arch-sub{
-  margin: 0 0 10px;
-  font-size: 12px;
-  letter-spacing: .18em;
-}
+    #s7 .result-page,
+    #s8 .hearth-wrap{
+      box-shadow: 0 12px 40px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.06);
+    }
 
-/* 三張資訊卡：縮小內距與文字行高 */
-#s7 .arch-card{
-  padding: 12px 12px;
-  border-radius: 14px;
-}
-#s7 .arch-card .t{
-  margin: 0 0 6px;
-  font-size: 11px;
-  letter-spacing: .18em;
-}
-#s7 .arch-card .v{
-  font-size: 14px;
-  line-height: 1.55;
-}
+    body:not([data-theme]),
+    body[data-theme=""],
+    body[data-theme="mono_base"]{
+      --mono-glow-cool: rgba(190,210,255,.22);
+      --mono-glow-warm: rgba(255,214,200,.16);
+      --mono-glow-white: rgba(255,255,255,.22);
+    }
 
-/* 底部 microcopy / 按鈕 / watermark 都縮一點高度 */
-#s7 .microcopy{ margin-top: 10px; }
-#s7 .arch-actions{ margin-top: 10px; }
-#s7 .result-watermark{
-  margin-top: 10px;
-  padding-top: 10px;
-}
+    body:not([data-theme]) .we-accent,
+    body[data-theme=""] .we-accent,
+    body[data-theme="mono_base"] .we-accent,
+    body:not([data-theme]) .i-accent,
+    body[data-theme=""] .i-accent,
+    body[data-theme="mono_base"] .i-accent{
+      color: rgba(255,255,255,.96);
+      text-shadow:
+        0 0 18px var(--mono-glow-white),
+        0 0 22px var(--mono-glow-cool),
+        0 0 26px var(--mono-glow-warm);
+    }
 
-/* 16:9 / 寬螢幕：自動變左右兩欄，確保「同一屏」截圖完整 */
-@media (min-width: 900px), (min-aspect-ratio: 16/9){
-  #s7{
-    padding: 26px 18px;
-  }
-  #s7 .result-page{
-    width: min(1080px, 92vw);
-    /* 限制卡面高度在視窗內（截圖一屏收完） */
-    max-height: calc(100vh - 56px);
-    overflow: hidden;
+    #unlockBtn[disabled]{
+      opacity:.62;
+      background: rgba(255,255,255,.03);
+      border-color: rgba(255,255,255,.12);
+      box-shadow: none;
+    }
 
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    grid-template-rows: auto auto 1fr auto auto;
-    column-gap: 16px;
-    align-items: start;
-  }
+    #s7 .microcopy.reveal,
+    #s7 .arch-actions.reveal,
+    #s7 .result-watermark.reveal{
+      opacity:1 !important;
+      transform:none !important;
+      transition:none !important;
+    }
 
-  #s7 .rp-kicker{ grid-column: 1 / -1; }
-  #s7 .arch-emblem{ grid-column: 1; grid-row: 2 / span 3; margin: 0; }
-  #s7 .arch-title{ grid-column: 2; }
-  #s7 .arch-sub{ grid-column: 2; }
+    #s7 .arch-title,
+    #s7 .arch-sub{
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #s7 .arch-sub{
+      letter-spacing: .28em;
+      opacity: .72;
+    }
 
-  /* 右側三卡：更緊密排列 */
-  #s7 .arch-grid{
-    grid-column: 2;
-    gap: 10px;
-  }
+    #s7 .emblem-slot{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: transparent;
+    }
 
-  /* 底部資訊/按鈕/浮水印：跨欄 */
-  #s7 .microcopy{ grid-column: 1 / -1; }
-  #s7 .arch-actions{ grid-column: 1 / -1; }
-  #s7 .result-watermark{ grid-column: 1 / -1; }
-}
-/* =========================
-   Card shadow 改為更乾淨：減少底緣黑帶
-   (override)
-========================= */
-:root{
-  --card-bg: rgba(255,255,255,.035);
-  --card-border: rgba(255,255,255,.10);
-  --card-shadow: 0 14px 44px rgba(0,0,0,.34);
-  --card-inset: inset 0 1px 0 rgba(255,255,255,.06);
-}
+    #s7 .emblem-img{
+      width: 72%;
+      max-width: 220px;
+      height: auto;
+      display:block;
+      filter: saturate(1.05) contrast(1.05);
+    }
 
-.sanctuary-wrap,
-.info-card,
-.mood,
-.q,
-.result-page,
-.arch-card,
-.hearth-wrap{
-  background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,.018));
-  border-color: var(--card-border);
-  box-shadow: var(--card-shadow), var(--card-inset);
-}
-
-/* 08/09 特別容易出現「底部黑帶」：陰影再收斂一點 */
-#s7 .result-page,
-#s8 .hearth-wrap{
-  box-shadow: 0 12px 40px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.06);
-}
-
-    /* =========================
-   Mono 初始：i / WE 也要有辨識度（不帶主題色）
-========================= */
-body:not([data-theme]),
-body[data-theme=""],
-body[data-theme="mono_base"]{
-  --mono-glow-cool: rgba(190,210,255,.22);
-  --mono-glow-warm: rgba(255,214,200,.16);
-  --mono-glow-white: rgba(255,255,255,.22);
-}
-
-/* 只在無彩時啟用，其他主題沿用原本 accent 光暈 */
-body:not([data-theme]) .we-accent,
-body[data-theme=""] .we-accent,
-body[data-theme="mono_base"] .we-accent,
-body:not([data-theme]) .i-accent,
-body[data-theme=""] .i-accent,
-body[data-theme="mono_base"] .i-accent{
-  color: rgba(255,255,255,.96);
-  text-shadow:
-    0 0 18px var(--mono-glow-white),
-    0 0 22px var(--mono-glow-cool),
-    0 0 26px var(--mono-glow-warm);
-}
-/* 07 解鎖按鈕：未完成也顯示，但不可按，且提示性更強 */
-#unlockBtn[disabled]{
-  opacity:.62;
-  background: rgba(255,255,255,.03);
-  border-color: rgba(255,255,255,.12);
-  box-shadow: none;
-}
-/* =========================
-   08 截圖友善：底部資訊固定可見（不跟 reveal 進場）
-========================= */
-#s7 .microcopy.reveal,
-#s7 .arch-actions.reveal,
-#s7 .result-watermark.reveal{
-  opacity:1 !important;
-  transform:none !important;
-  transition:none !important;
-}
-
-    /* =========================
-   08 Archetype 標題置中（品牌卡視覺）
-   ONLY for section 08
-========================= */
-#s7 .arch-title,
-#s7 .arch-sub{
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* 微調英文副標的品牌感 */
-#s7 .arch-sub{
-  letter-spacing: .28em; /* 比原本略拉開，更像品牌卡 */
-  opacity: .72;
-}
-/* =========================
-   08 Archetype Emblem – Metallic Shadow & Edge
-========================= */
-
-#s7 .emblem-slot{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: transparent;
-}
-
-#s7 .emblem-img{
-  width: 72%;
-  max-width: 220px;
-  height: auto;
-  display:block;
-
-  /* 基礎：避免過亮 */
-  filter: saturate(1.05) contrast(1.05);
-}
-
-/* ---------- Phoenix / ROSE EMBER ---------- */
-body[data-theme="rose_ember"] #archetypeEmblem{
-  filter:
-    drop-shadow(0 14px 38px rgba(122,43,18,.55))   /* Shadow */
-    drop-shadow(0 0 18px rgba(255,210,184,.45))   /* Edge */
-    saturate(1.12);
-}
-
-/* ---------- Black Wolf / MIDNIGHT TRACKER ---------- */
-body[data-theme="midnight_tracker"] #archetypeEmblem{
-  filter:
-    drop-shadow(0 14px 38px rgba(10,19,53,.60))
-    drop-shadow(0 0 18px rgba(175,194,255,.45))
-    saturate(1.08);
-}
-
-/* ---------- Deer / VEIL WARDEN ---------- */
-body[data-theme="veil_warden"] #archetypeEmblem{
-  filter:
-    drop-shadow(0 14px 34px rgba(74,58,48,.48))
-    drop-shadow(0 0 16px rgba(242,230,214,.42))
-    saturate(1.03);
-}
-
-/* ---------- Serpent / LOW TIDE KEEPER ---------- */
-body[data-theme="low_tide_keeper"] #archetypeEmblem{
-  filter:
-    drop-shadow(0 14px 36px rgba(11,36,32,.55))
-    drop-shadow(0 0 18px rgba(191,230,218,.45))
-    saturate(1.06);
-}
-
+    body[data-theme="rose_ember"] #archetypeEmblem{
+      filter:
+        drop-shadow(0 14px 38px rgba(122,43,18,.55))
+        drop-shadow(0 0 18px rgba(255,210,184,.45))
+        saturate(1.12);
+    }
+    body[data-theme="midnight_tracker"] #archetypeEmblem{
+      filter:
+        drop-shadow(0 14px 38px rgba(10,19,53,.60))
+        drop-shadow(0 0 18px rgba(175,194,255,.45))
+        saturate(1.08);
+    }
+    body[data-theme="veil_warden"] #archetypeEmblem{
+      filter:
+        drop-shadow(0 14px 34px rgba(74,58,48,.48))
+        drop-shadow(0 0 16px rgba(242,230,214,.42))
+        saturate(1.03);
+    }
+    body[data-theme="low_tide_keeper"] #archetypeEmblem{
+      filter:
+        drop-shadow(0 14px 36px rgba(11,36,32,.55))
+        drop-shadow(0 0 18px rgba(191,230,218,.45))
+        saturate(1.06);
+    }
   </style>
 </head>
 
@@ -1604,9 +1507,8 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
       <div class="result-shell">
         <div class="arch-emblem reveal" style="--d:220ms;">
           <div class="emblem-slot">
-  <img id="archetypeEmblem" class="emblem-img" src="" alt="HESTIA Archetype Emblem">
-</div>
-
+            <img id="archetypeEmblem" class="emblem-img" src="" alt="HESTIA Archetype Emblem">
+          </div>
         </div>
 
         <div>
@@ -1783,7 +1685,6 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
 
     /* =========================
        05 Cinema sequence
-       ✅ 修正：原本缺少 cinemaPlayed / cinemaBusy / sleep，導致完全不會跑
     ========================== */
     const s4 = document.getElementById('s4');
     const cinemaLine1 = document.getElementById('cinemaLine1');
@@ -1839,12 +1740,11 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
     const alignPicked = $('#alignPicked');
     const alignPicked2 = $('#alignPicked2');
     const emblemMap = {
-  rose_ember: "ROSE.png",
-  midnight_tracker: "MID.png",
-  veil_warden: "VEIL.png",
-  low_tide_keeper: "LOW.png"
-};
-
+      rose_ember: "ROSE.png",
+      midnight_tracker: "MID.png",
+      veil_warden: "VEIL.png",
+      low_tide_keeper: "LOW.png"
+    };
 
     let currentTheme = '';
     let currentAlign = '';
@@ -1884,10 +1784,112 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
       });
     });
 
-    /* =========================
+    /* =========================================================
        07/08 Archetype
-       ✅ 修正：解鎖按鈕「更快明確」：一滿足條件就點亮 + pulse
-    ========================== */
+       ✅ 新增：07 BAC（以選項位置映射）＋多數決＋平手 B>A>C
+       ✅ 新增：四原型 × ABC（12 組）只覆寫第2/3欄文案
+       ✅ 不更動前台題目與文案，也不改任何 data-a
+    ========================================================= */
+
+    // 07 單題選項位置 → ABC（固定：1=B、2=A、3=C）
+    const Q07_INDEX_TO_ABC = { 1: "B", 2: "A", 3: "C" };
+    // 平手優先序：B > A > C
+    const TIE_PRIORITY = ["B", "A", "C"];
+
+    function derive07BiasFromIndexes(qIdx){
+      // qIdx: {q1:1..3, q2:1..3, q3:1..3, q4:1..3}
+      const counts = { A:0, B:0, C:0 };
+      ["q1","q2","q3","q4"].forEach(k=>{
+        const idx = qIdx[k];
+        const abc = Q07_INDEX_TO_ABC[idx];
+        if(abc) counts[abc] += 1;
+      });
+
+      const maxVal = Math.max(counts.A, counts.B, counts.C);
+      const tied = Object.keys(counts).filter(k => counts[k] === maxVal);
+
+      if(tied.length === 1) return tied[0];
+
+      for(const k of TIE_PRIORITY){
+        if(tied.includes(k)) return k;
+      }
+      return "B";
+    }
+
+    function archetypeKeyFromTheme(){
+      // 你前台顯示仍沿用原本（霧幕守望者/午夜追跡者...），但後台文案套用四原型
+      if(currentTheme === "rose_ember") return "PHOENIX";
+      if(currentTheme === "midnight_tracker") return "PANTHER"; // 你的前台用黑狼，但這裡映射到黑豹原型用文案
+      if(currentTheme === "veil_warden") return "DEER";
+      if(currentTheme === "low_tide_keeper") return "PYTHON";
+      return "PHOENIX";
+    }
+
+    // 12 組（第2/3欄文案）
+    const RESULT_COPY = {
+      "PHOENIX_A": {
+        rhythm: "你適合在狀態到位時「順勢推進」的節奏。訓練與生活不必過度規劃，抓住能量高點行動，反而能帶來最大成長。你不怕變動，行動本身就是你的校準方式。",
+        style: "你會自然被高對比、明確主視覺吸引。偏好能量感強的配色與俐落輪廓，服裝對你而言是一種宣告，而不是背景。"
+      },
+      "PHOENIX_B": {
+        rhythm: "你適合有節奏的推進方式，在穩定中累積能量。訓練與生活彼此支撐，不追求爆發，但每一步都算數。",
+        style: "你傾向溫暖但不張揚的色系，細節比輪廓重要。耐看、可重複搭配的設計，會讓你越穿越對。"
+      },
+      "PHOENIX_C": {
+        rhythm: "你需要在推進與休息之間留白。訓練與生活應保留彈性，避免一次燃燒過多，讓狀態能長期維持。",
+        style: "你會選擇包覆感高、觸感舒適的材質。色彩偏低彩度，讓穿著成為保護層，而非刺激源。"
+      },
+
+      "PANTHER_A": {
+        rhythm: "你適合主動掌控節奏，設定目標後直接推進。訓練與生活對你而言是執行系統，清楚、果斷、不拖延。",
+        style: "你偏好線條銳利、結構明確的設計。高對比與強輪廓能呼應你的主權感，穿著即是立場。"
+      },
+      "PANTHER_B": {
+        rhythm: "你在穩定節奏中發揮最佳表現。訓練與生活越有秩序，你的力量越能完整輸出。",
+        style: "你適合低調但精準的配色。比例、剪裁與材質質感，會比裝飾更重要。"
+      },
+      "PANTHER_C": {
+        rhythm: "你需要清楚界線來維持狀態。訓練與生活都不適合過度干擾，保留空間反而讓你更強。",
+        style: "你會傾向低曝光、低彩度的色系。設計不必吸睛，但一定要耐看、耐用。"
+      },
+
+      "DEER_A": {
+        rhythm: "你適合在感覺對的時候行動。訓練與生活應保留變化，讓身體與情緒帶路，而不是被計畫綁住。",
+        style: "你會被自然對比與流動感吸引。色彩與材質需要有呼吸感，而非過度結構。"
+      },
+      "DEER_B": {
+        rhythm: "你適合溫和而可持續的節奏。訓練與生活需要一致，穩定感會直接反映在狀態上。",
+        style: "你偏好柔和、低彩度的色系。質地與觸感會影響你對一件衣服的長期喜好。"
+      },
+      "DEER_C": {
+        rhythm: "你需要高度配合當下狀態。訓練與生活不宜勉強，調整本身就是前進的一部分。",
+        style: "你會選擇貼近膚感、安心的材質。設計越溫和，你越能自在使用。"
+      },
+
+      "PYTHON_A": {
+        rhythm: "你適合在鎖定方向後持續加壓。訓練與生活一旦進入狀態，就能長時間推進。",
+        style: "你偏好存在感強但不花俏的設計。深色系與重量感材質能呼應你的能量模式。"
+      },
+      "PYTHON_B": {
+        rhythm: "你在長期穩定輸出中最有優勢。訓練與生活不求變化，而求深度與持續。",
+        style: "你會選擇低調、厚實、耐看的配色。衣服對你而言是長期夥伴。"
+      },
+      "PYTHON_C": {
+        rhythm: "你需要避免頻繁切換。訓練與生活適合單一路線深挖，保留能量比速度更重要。",
+        style: "你偏好低干擾設計。顏色、版型與材質都以「不打斷狀態」為優先。"
+      }
+    };
+
+    function applyResultCopy(archetypeKey, bias){
+      const key = `${archetypeKey}_${bias}`;
+      const copy = RESULT_COPY[key] || RESULT_COPY[`${archetypeKey}_B`];
+      if(copy){
+        if(archRhythm) archRhythm.textContent = copy.rhythm;
+        if(archStyle)  archStyle.textContent  = copy.style;
+      }
+      return { bias, key };
+    }
+
     const unlockBtn = $('#unlockBtn');
     const unlockHint = $('#unlockHint');
 
@@ -1898,16 +1900,19 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
     const archRhythm= $('#archRhythm');
     const archStyle = $('#archStyle');
 
+    // 保留你原本的答案容器（q5 仍用 data-a）
     const answers = { q1:null, q2:null, q3:null, q4:null, q5:null };
+
+    // ✅ 新增：q1~q4 記錄「選到第幾個選項（1/2/3）」→ 用來做 BAC 統計
+    const answerIdx = { q1:null, q2:null, q3:null, q4:null };
+
     const opts = $$('.opt');
 
-    function driveFromAnswers(){
-      const counts = {A:0,B:0,C:0};
-      ['q1','q2','q3','q4'].forEach(k=>{
-        const v = answers[k];
-        if(v) counts[v]++;
-      });
-      return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+    function getOptionIndexWithinQuestion(optEl){
+      const q = optEl.dataset.q;
+      const group = opts.filter(o => o.dataset.q === q);
+      const idx = group.indexOf(optEl);
+      return idx >= 0 ? (idx + 1) : null; // 1..N
     }
 
     function archetypeByAlign(){
@@ -1915,72 +1920,53 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
         return {
           key:'VEIL WARDEN',
           zh:'霧幕守望者',
-          coreBase:'你偏好低刺激、可持續的溫柔秩序；越規律，越能讓狀態長期在線。',
-          rhythmBase:'訓練與生活都適合「穩定堆疊」：固定節奏、固定選擇，慢慢變強，慢慢變更好。',
-          styleBase:'暖色低彩度為主：岩灰、暖米、霧感棕；用細節質地而非高對比取勝，越看越耐。'
+          coreBase:'你偏好低刺激、可持續的溫柔秩序；越規律，越能讓狀態長期在線。'
         };
       }
       if(currentAlign === 'MIDNIGHT TRACKER'){
         return {
           key:'MIDNIGHT TRACKER',
           zh:'午夜追跡者',
-          coreBase:'你重視精準與推進感；越清楚目標，越能把自己帶到結果。',
-          rhythmBase:'適合有結構的安排：分區明確、動作有效、回饋直接；你喜歡「做就做到位」。',
-          styleBase:'冷色高彩度搭配碳黑/岩灰：高對比用來定義輪廓與邊界，俐落、強勢但不吵。'
+          coreBase:'你重視精準與推進感；越清楚目標，越能把自己帶到結果。'
         };
       }
       if(currentAlign === 'LOW TIDE KEEPER'){
         return {
           key:'LOW TIDE KEEPER',
           zh:'低伏掌控者',
-          coreBase:'你擅長把能量收起來；看似安靜，其實一直在觀察與校準時機。',
-          rhythmBase:'適合「慢熱→精準出手」：暖身與鋪墊很重要，一旦進入狀態就能高度掌控。',
-          styleBase:'冷色低彩度為主：冷霧灰、深松綠、深炭黑；張力藏在材質與比例裡。'
+          coreBase:'你擅長把能量收起來；看似安靜，其實一直在觀察與校準時機。'
         };
       }
       return {
         key:'ROSE EMBER',
         zh:'玫燼點燃者',
-        coreBase:'你喜歡讓能量被看見；華麗不是浮誇，而是你願意把狀態分享出去的方式。',
-        rhythmBase:'適合有起伏的節奏：前段點火、後段爆發；你越動越進入狀態，越能把熱轉成力量。',
-        styleBase:'橘紅高彩度搭配深色底：赤陶、熔岩橘、深炭黑；視覺像火光，細節像餘燼。'
-      };
-    }
-
-    function nuanceByDrive(d){
-      if(d === 'A') return {
-        core:'你更在意「長期穩定」與舒適的可持續；不求一次到頂，但求一直在線。',
-        rhythm:'你最吃「固定節奏」：規律、循序、可預期，越持續越強。',
-        style:'你會自然偏向低噪與耐看；把質感放在手感、比例與細節裡。'
-      };
-      if(d === 'B') return {
-        core:'你需要一點火花才會更像自己；當能量被點亮，你的狀態會非常完整。',
-        rhythm:'你適合有起伏的節奏：暖身→推進→釋放，越動越進入。',
-        style:'你允許「存在感」：色彩或細節像呼吸，讓人一眼就知道你正在發生。'
-      };
-      return {
-        core:'你偏好清晰、有效、可量化的感覺；越準，越安心。',
-        rhythm:'你適合結構化安排：組數、節奏、休息都清楚，效率會拉滿。',
-        style:'你會偏愛邊界明確的線條與俐落對比；乾淨、精準、耐看。'
+        coreBase:'你喜歡讓能量被看見；華麗不是浮誇，而是你願意把狀態分享出去的方式。'
       };
     }
 
     function computeArchetype(){
       const base = archetypeByAlign();
-      const drive = driveFromAnswers();
-      const nuance = nuanceByDrive(drive);
+
+      // ✅ 依「選項位置」做 BAC 統計（多數決 + 平手 B>A>C）
+      const bias = derive07BiasFromIndexes(answerIdx); // "A" | "B" | "C"
+
+      // ✅ 四原型鍵（供 12 組文案使用）
+      const archetypeKey = archetypeKeyFromTheme();
 
       return {
         key: base.key,
         zh: base.zh,
-        core: `${base.coreBase} ${nuance.core}`,
-        rhythm: `${base.rhythmBase} ${nuance.rhythm}`,
-        style: `${base.styleBase} ${nuance.style}`
+        core: base.coreBase,
+        bias,
+        archetypeKey
       };
     }
 
     function updateUnlock(){
-      const reqOk = ['q1','q2','q3','q4','q5'].every(k=>Boolean(answers[k]));
+      const reqOk =
+        ["q1","q2","q3","q4"].every(k => Boolean(answerIdx[k])) &&
+        Boolean(answers.q5);
+
       unlockBtn.disabled = !reqOk;
       unlockBtn.classList.toggle('ready', reqOk);
 
@@ -2003,7 +1989,14 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
       const act = ()=>{
         const q = o.dataset.q;
         const a = o.dataset.a;
+
         answers[q] = a;
+
+        // ✅ 只針對 q1~q4 記錄「位置索引」
+        if(q !== "q5"){
+          answerIdx[q] = getOptionIndexWithinQuestion(o);
+        }
+
         setOptState(q, o);
         updateUnlock();
       };
@@ -2019,18 +2012,20 @@ body[data-theme="low_tide_keeper"] #archetypeEmblem{
     unlockBtn.addEventListener('click', ()=>{
       const r = computeArchetype();
 
-            // ✅ 08 Emblem：依主題切換 PNG
+      // ✅ 08 Emblem：依主題切換 PNG
       const emblemEl = document.getElementById("archetypeEmblem");
       if (emblemEl) {
         const src = emblemMap[currentTheme] || "";
         emblemEl.src = src;
       }
 
+      // 1) 不動你原本「原型名稱」顯示邏輯
       archTitle.textContent = r.zh;
       archKey.textContent   = r.key;
       archCore.textContent  = r.core;
-      archRhythm.textContent= r.rhythm;
-      archStyle.textContent = r.style;
+
+      // 2) ✅ 第2/3欄改走 12 組文案（四原型 × ABC）
+      applyResultCopy(r.archetypeKey, r.bias);
 
       if(archPicked) archPicked.textContent = r.zh;
 

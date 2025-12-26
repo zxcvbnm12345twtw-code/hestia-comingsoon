@@ -1175,13 +1175,17 @@
       box-shadow: none;
     }
 
-    #s7 .microcopy.reveal,
-    #s7 .arch-actions.reveal,
-    #s7 .result-watermark.reveal{
-      opacity:1 !important;
-      transform:none !important;
-      transition:none !important;
-    }
+/* =========================
+   08 截圖友善：底部資訊固定可見（不跟 reveal 進場）
+   (override)
+========================= */
+#s7 .microcopy,
+#s7 .arch-actions,
+#s7 .result-watermark{
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
 
     #s7 .arch-title,
     #s7 .arch-sub{
@@ -1535,14 +1539,14 @@
             你的原型：<span class="we-accent" id="archPicked">—</span>
           </div>
 
-          <div class="arch-actions reveal" style="--d:580ms;">
-            <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
-          </div>
+         <div class="result-watermark reveal" style="--d:580ms;">
+  <img src="HLOGO.png" alt="HESTIA watermark logo" />
+  <span>HESTIA TAIWAN®</span>
+</div>
 
-          <div class="result-watermark reveal" style="--d:620ms;">
-            <img src="HLOGO.png" alt="HESTIA watermark logo" />
-            <span>HESTIA TAIWAN®</span>
-          </div>
+<div class="arch-actions reveal" style="--d:620ms;">
+  <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
+</div>
         </div>
       </div>
     </div>

@@ -1279,6 +1279,58 @@ body[data-theme="mono_base"] .i-accent{
   letter-spacing: .28em; /* 比原本略拉開，更像品牌卡 */
   opacity: .72;
 }
+/* =========================
+   08 Archetype Emblem – Metallic Shadow & Edge
+========================= */
+
+#s7 .emblem-slot{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: transparent;
+}
+
+#s7 .emblem-img{
+  width: 72%;
+  max-width: 220px;
+  height: auto;
+  display:block;
+
+  /* 基礎：避免過亮 */
+  filter: saturate(1.05) contrast(1.05);
+}
+
+/* ---------- Phoenix / ROSE EMBER ---------- */
+body[data-theme="rose_ember"] #archetypeEmblem{
+  filter:
+    drop-shadow(0 14px 38px rgba(122,43,18,.55))   /* Shadow */
+    drop-shadow(0 0 18px rgba(255,210,184,.45))   /* Edge */
+    saturate(1.12);
+}
+
+/* ---------- Black Wolf / MIDNIGHT TRACKER ---------- */
+body[data-theme="midnight_tracker"] #archetypeEmblem{
+  filter:
+    drop-shadow(0 14px 38px rgba(10,19,53,.60))
+    drop-shadow(0 0 18px rgba(175,194,255,.45))
+    saturate(1.08);
+}
+
+/* ---------- Deer / VEIL WARDEN ---------- */
+body[data-theme="veil_warden"] #archetypeEmblem{
+  filter:
+    drop-shadow(0 14px 34px rgba(74,58,48,.48))
+    drop-shadow(0 0 16px rgba(242,230,214,.42))
+    saturate(1.03);
+}
+
+/* ---------- Serpent / LOW TIDE KEEPER ---------- */
+body[data-theme="low_tide_keeper"] #archetypeEmblem{
+  filter:
+    drop-shadow(0 14px 36px rgba(11,36,32,.55))
+    drop-shadow(0 0 18px rgba(191,230,218,.45))
+    saturate(1.06);
+}
 
   </style>
 </head>
@@ -1553,7 +1605,10 @@ body[data-theme="mono_base"] .i-accent{
 
       <div class="result-shell">
         <div class="arch-emblem reveal" style="--d:220ms;">
-          <div class="emblem-slot">EMBLEM SLOT</div>
+          <div class="emblem-slot">
+  <img id="archetypeEmblem" class="emblem-img" src="" alt="HESTIA Archetype Emblem">
+</div>
+
         </div>
 
         <div>

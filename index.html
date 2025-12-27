@@ -2206,31 +2206,72 @@ async function runCinema(){
     let globalIntensity = 1.0;
 
     const HEARTH_KEY = 'hestia_hearth_count';
-    const hearthLevelEl = $('#hearthLevel');
+const HEARTH_LEVEL_KEY = 'hestia_hearth_level'; // ✅ ②：記住上一次等級
+const hearthLevelEl = $('#hearthLevel');
 
-    function getCount(){
-      return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
-    }
-    function setCount(n){
-      localStorage.setItem(HEARTH_KEY, String(n));
-    }
-    function levelFromCount(n){
-      if(n < 50) return 'Ember';
-      if(n < 150) return 'Glow';
-      if(n < 350) return 'Warmth';
-      if(n < 700) return 'Hearth';
-      return 'Flame';
-    }
-    function applyLevel(){
-      const n = getCount();
-      hearthLevelEl.textContent = levelFromCount(n);
-      const base = (n < 50) ? 0.92 :
-                   (n < 150) ? 0.98 :
-                   (n < 350) ? 1.04 :
-                   (n < 700) ? 1.10 : 1.16;
-      globalIntensity = base;
-    }
-    applyLevel();
+let levelBoost = 0; // ✅ ③：升級瞬間火焰推升（短暫）
+
+function getCount(){
+  return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
+}
+function setCount(n){
+  localStorage.setItem(HEARTH_KEY, String(n));
+}
+
+function levelFromCount(n){
+  if(n < 50) return 'Ember';
+  if(n < 150) return 'Glow';
+  if(n < 350) return 'Warmth';
+  if(n < 700) return 'Hearth';
+  return 'Flame';
+}
+
+// ✅ ②：跨等級提示（沿用既有 toast，不新增任何 DOM）
+function showHearthToast(from, to){
+  const msg = {
+    Ember:  '火種被更多人守住了。',
+    Glow:   '微光開始聚集。',
+    Warmth: '溫度正在形成。',
+    Hearth: '爐火已穩定燃燒。',
+    Flame:  '這裡成為真正的火焰。'
+  };
+
+  if(!toast) return;
+  toast.textContent = `HEARTH UPGRADED｜${to.toUpperCase()} — ${msg[to] || ''}`;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 3200);
+}
+
+function applyLevel(){
+  const n = getCount();
+  const newLevel = levelFromCount(n);
+
+  // ✅ ②：比對前一次等級（第一次進站不提示）
+  const prevLevel = localStorage.getItem(HEARTH_LEVEL_KEY);
+
+  // 寫入 UI
+  if(hearthLevelEl) hearthLevelEl.textContent = newLevel;
+
+  // ✅ ②：只在真的跨等級時提示一次 + ✅ ③：同時觸發火焰瞬間增強
+  if(prevLevel && prevLevel !== newLevel){
+    showHearthToast(prevLevel, newLevel);
+
+    levelBoost = 1.0;                // 升級瞬間推升
+    setTimeout(()=> levelBoost = 0, 1200); // 1.2 秒後回復
+  }
+
+  // 存下這次等級
+  localStorage.setItem(HEARTH_LEVEL_KEY, newLevel);
+
+  // 你原本的強度 mapping（保留不動）
+  const base = (n < 50) ? 0.92 :
+               (n < 150) ? 0.98 :
+               (n < 350) ? 1.04 :
+               (n < 700) ? 1.10 : 1.16;
+  globalIntensity = base;
+}
+
+applyLevel();
 
     function addParticle(x, y, vx, vy, life, size, hue){
       particles.push({x,y,vx,vy,life,maxLife:life,size,hue});
@@ -2256,7 +2297,8 @@ async function runCinema(){
     function draw(){
       if(!running) return;
 
-      boost *= 0.92;
+      boost = Math.max(boost, levelBoost);
+boost *= 0.92;
       ctx.clearRect(0,0,W,H);
 
       const gx = W*0.5, gy = H*0.86;

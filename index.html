@@ -62,6 +62,130 @@
     }
 
     /* =========================
+       01.5 PRETONE（僅在 mono_base / 空主題時生效；06 選到 data-theme 後由主題接管）
+    ========================== */
+    .s1b{ background: linear-gradient(180deg,#000,var(--sanctuary-1)); }
+
+    .pretone-grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    @media (min-width: 760px){
+      .pretone-grid{ grid-template-columns: repeat(5, minmax(0,1fr)); }
+    }
+
+    .pretone{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.86);
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+    .pretone:active{ transform: scale(.99); }
+    .pretone .chip{
+      width:14px;height:14px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.04);
+      flex:0 0 auto;
+    }
+    .pretone .nm{
+      font-size:13px;
+      letter-spacing:.14em;
+      font-weight:800;
+    }
+    .pretone .hx{
+      margin-left:auto;
+      font-size:11px;
+      letter-spacing:.10em;
+      color: rgba(255,255,255,.62);
+    }
+    .pretone.active{
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 0 18px rgba(255,255,255,.10);
+    }
+
+    /* 只在「尚未選 06 主題」時，讓 PRETONE 介入 */
+    body[data-precolor][data-theme=""],
+    body[data-precolor][data-theme="mono_base"]{
+      --sanctuary-1:#000000;
+      --sanctuary-2:#070707;
+      --sanctuary-3:#0d0d0d;
+      --sanctuary-4:#121212;
+      --sanctuary-5:#171717;
+    }
+
+    body[data-precolor="red"][data-theme=""],
+    body[data-precolor="red"][data-theme="mono_base"]{
+      --accent:#B91C1C;
+      --breath-a: rgba(185,28,28,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-precolor="orange"][data-theme=""],
+    body[data-precolor="orange"][data-theme="mono_base"]{
+      --accent:#D9480F;
+      --breath-a: rgba(217,72,15,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-precolor="yellow"][data-theme=""],
+    body[data-precolor="yellow"][data-theme="mono_base"]{
+      --accent:#C8A100;
+      --breath-a: rgba(200,161,0,.16);
+      --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-precolor="green"][data-theme=""],
+    body[data-precolor="green"][data-theme="mono_base"]{
+      --accent:#1F7A5A;
+      --breath-a: rgba(31,122,90,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-precolor="blue"][data-theme=""],
+    body[data-precolor="blue"][data-theme="mono_base"]{
+      --accent:#2B4C7E;
+      --breath-a: rgba(43,76,126,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-precolor="purple"][data-theme=""],
+    body[data-precolor="purple"][data-theme="mono_base"]{
+      --accent:#5B2C83;
+      --breath-a: rgba(91,44,131,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-precolor="khaki"][data-theme=""],
+    body[data-precolor="khaki"][data-theme="mono_base"]{
+      --accent:#A8925A;
+      --breath-a: rgba(168,146,90,.16);
+      --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-precolor="black"][data-theme=""],
+    body[data-precolor="black"][data-theme="mono_base"]{
+      --accent:#ffffff;
+      --breath-a: rgba(255,255,255,.08);
+      --breath-b: rgba(255,255,255,.04);
+    }
+    body[data-precolor="gray"][data-theme=""],
+    body[data-precolor="gray"][data-theme="mono_base"]{
+      --accent:#cfcfcf;
+      --breath-a: rgba(255,255,255,.10);
+      --breath-b: rgba(255,255,255,.05);
+    }
+    body[data-precolor="white"][data-theme=""],
+    body[data-precolor="white"][data-theme="mono_base"]{
+      --accent:#f5f5f5;
+      --breath-a: rgba(255,255,255,.14);
+      --breath-b: rgba(255,255,255,.07);
+    }
+
+    /* =========================
        06 四種色調（ROSE EMBER 改成橘紅鳳凰系）
     ========================== */
 
@@ -649,21 +773,33 @@
     #s4 .sanctuary-wrap::before,
     #s4 .sanctuary-wrap::after{ display:none; }
 
-    /* 05 電影式淡入淡出 */
+    /* =========================
+       05 Cinema：同位置疊放淡入淡出 + 不往下換行推版
+    ========================== */
     .cinema{
       width:min(var(--wrap), 92vw);
-      text-align:center;
       position:relative;
+      height: 220px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
       z-index:2;
     }
     .cinema-step{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
       opacity:0;
-      transform: translateY(10px);
-      transition: opacity .95s cubic-bezier(.22,.61,.36,1), transform .95s cubic-bezier(.22,.61,.36,1);
-      will-change: opacity, transform;
+      transform:none;
+      transition: opacity .70s cubic-bezier(.22,.61,.36,1);
+      will-change: opacity;
     }
-    .cinema-step.show{ opacity:1; transform:none; }
-    .cinema-step.hide{ opacity:0; transform: translateY(-6px); }
+    .cinema-step.show{ opacity:1; }
+    .cinema-step.hide{ opacity:0; }
 
     /* FLAME MARK (page) */
     .flame-stage{
@@ -1175,17 +1311,17 @@
       box-shadow: none;
     }
 
-/* =========================
-   08 截圖友善：底部資訊固定可見（不跟 reveal 進場）
-   (override)
-========================= */
-#s7 .microcopy,
-#s7 .arch-actions,
-#s7 .result-watermark{
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
+    /* =========================
+       08 截圖友善：底部資訊固定可見（不跟 reveal 進場）
+       (override)
+    ========================== */
+    #s7 .microcopy,
+    #s7 .arch-actions,
+    #s7 .result-watermark{
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
 
     #s7 .arch-title,
     #s7 .arch-sub{
@@ -1245,15 +1381,16 @@
   <div class="grain" aria-hidden="true"></div>
 
   <nav class="dots" id="dotsNav" aria-label="Section navigation">
-    <button class="dot" data-target="s1" data-label="HERO" aria-label="Go to Hero"></button>
-    <button class="dot" data-target="s2" data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
-    <button class="dot" data-target="s3" data-label="BRAND MARK" aria-label="Go to Brand Mark"></button>
+    <button class="dot" data-target="s1"  data-label="HERO" aria-label="Go to Hero"></button>
+    <button class="dot" data-target="s1b" data-label="TONE" aria-label="Go to Tone"></button>
+    <button class="dot" data-target="s2"  data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
+    <button class="dot" data-target="s3"  data-label="BRAND MARK" aria-label="Go to Brand Mark"></button>
     <button class="dot" data-target="s4b" data-label="BRAND TAGLINE" aria-label="Go to Brand Tagline"></button>
-    <button class="dot" data-target="s4" data-label="SANCTUARY" aria-label="Go to Sanctuary"></button>
-    <button class="dot" data-target="s5" data-label="AESTHETIC" aria-label="Go to Aesthetic Alignment"></button>
-    <button class="dot" data-target="s6" data-label="REFLECTION" aria-label="Go to Introspective Reflection"></button>
-    <button class="dot" data-target="s7" data-label="ARCHETYPE" aria-label="Go to Archetype"></button>
-    <button class="dot" data-target="s8" data-label="HEARTH" aria-label="Go to Our Flame"></button>
+    <button class="dot" data-target="s4"  data-label="SANCTUARY" aria-label="Go to Sanctuary"></button>
+    <button class="dot" data-target="s5"  data-label="AESTHETIC" aria-label="Go to Aesthetic Alignment"></button>
+    <button class="dot" data-target="s6"  data-label="REFLECTION" aria-label="Go to Introspective Reflection"></button>
+    <button class="dot" data-target="s7"  data-label="ARCHETYPE" aria-label="Go to Archetype"></button>
+    <button class="dot" data-target="s8"  data-label="HEARTH" aria-label="Go to Our Flame"></button>
   </nav>
 
   <!-- ① Hero -->
@@ -1265,6 +1402,44 @@
 
     <div class="tagline">即將到來，搶先進入 HEST<span class="i-accent">i</span>A 宇宙</div>
     <div class="arrow">↓</div>
+  </section>
+
+  <!-- ①.5 PRETONE -->
+  <section class="s1b" id="s1b">
+    <div class="secno reveal" style="--d:120ms;">01.5</div>
+
+    <div class="sanctuary-wrap">
+      <div class="sanctuary-kicker">
+        <span class="kicker reveal in">PRE-TONE</span>
+      </div>
+
+      <h2 class="reveal" style="--d:180ms;">先選一個你喜歡的色調吧？</h2>
+      <p class="reveal" style="--d:220ms;">
+        這會先替整個體驗套上一層「氣質底色」，之後你在 06 的選擇會再把它精準定型。
+      </p>
+
+      <div class="pretone-grid reveal" style="--d:280ms;" id="pretoneGrid" aria-label="Pre-tone color palette">
+        <button class="pretone" type="button" data-pre="red"    data-hex="#B91C1C"><span class="chip" style="background:#B91C1C"></span><span class="nm">紅</span><span class="hx">#B91C1C</span></button>
+        <button class="pretone" type="button" data-pre="orange" data-hex="#D9480F"><span class="chip" style="background:#D9480F"></span><span class="nm">橙</span><span class="hx">#D9480F</span></button>
+        <button class="pretone" type="button" data-pre="yellow" data-hex="#C8A100"><span class="chip" style="background:#C8A100"></span><span class="nm">黃</span><span class="hx">#C8A100</span></button>
+        <button class="pretone" type="button" data-pre="green"  data-hex="#1F7A5A"><span class="chip" style="background:#1F7A5A"></span><span class="nm">綠</span><span class="hx">#1F7A5A</span></button>
+        <button class="pretone" type="button" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">藍</span><span class="hx">#2B4C7E</span></button>
+        <button class="pretone" type="button" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">紫</span><span class="hx">#5B2C83</span></button>
+
+        <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">卡其</span><span class="hx">#A8925A</span></button>
+        <button class="pretone" type="button" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">黑</span><span class="hx">#0B0C10</span></button>
+        <button class="pretone" type="button" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">灰</span><span class="hx">#3A3A3A</span></button>
+        <button class="pretone" type="button" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">白</span><span class="hx">#F5F5F5</span></button>
+      </div>
+
+      <div class="microcopy reveal" style="--d:340ms;">
+        已選擇：<span id="pretonePicked" class="we-accent">—</span>
+      </div>
+
+      <div class="arch-actions reveal" style="--d:380ms;">
+        <button class="ghost-btn" id="toWhoBtn" type="button">繼續</button>
+      </div>
+    </div>
   </section>
 
   <!-- ② WHO WE ARE -->
@@ -1340,29 +1515,25 @@
   <section class="s4" id="s4">
     <div class="sanctuary-wrap">
       <div class="cinema" id="cinema">
-  <div class="cinema-step" id="cinemaT1">
-    <h2 style="margin-bottom:0;">現在安靜下來</h2>
-  </div>
- <div class="cinema-step" id="cinemaT2">
-    <h2 style="margin:10px 0 0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
-  </div>
-     
-  <div class="cinema-step" id="cinemaT3">
-    <h2 style="margin:0;">你的每一次選擇</h2>
-  </div>
-
-  <div class="cinema-step" id="cinemaT4">
-    <h2 style="margin:10px 0 0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2>
-  </div>
-
-  <div class="cinema-step" id="cinemaT5">
-    <h2 style="margin:10px 0 0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2>
-  </div>
-
-  <div class="cinema-step" id="cinemaT6">
-    <h2 style="margin:10px 0 0;">讓我們開始吧</h2>
-  </div>
-</div>
+        <div class="cinema-step" id="cinemaT1">
+          <h2 style="margin:0;">現在安靜下來</h2>
+        </div>
+        <div class="cinema-step" id="cinemaT2">
+          <h2 style="margin:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
+        </div>
+        <div class="cinema-step" id="cinemaT3">
+          <h2 style="margin:0;">你的每一次選擇</h2>
+        </div>
+        <div class="cinema-step" id="cinemaT4">
+          <h2 style="margin:0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2>
+        </div>
+        <div class="cinema-step" id="cinemaT5">
+          <h2 style="margin:0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2>
+        </div>
+        <div class="cinema-step" id="cinemaT6">
+          <h2 style="margin:0;">讓我們開始吧</h2>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1423,7 +1594,8 @@
           </div>
         </div>
 
-        <div class="mood reveal" style="--d:460ms;" role="button" tabindex="0"
+        <!-- ✅ 1.06 選項4 出場稍晚：--d 從 460ms 改成 440ms，跟前一張一致 -->
+        <div class="mood reveal" style="--d:440ms;" role="button" tabindex="0"
              data-theme="low_tide_keeper" data-value="LOW TIDE KEEPER" data-animal="PYTHON">
           <div class="row">
             <div>
@@ -1549,14 +1721,15 @@
             你的原型：<span class="we-accent" id="archPicked">—</span>
           </div>
 
-         <div class="result-watermark reveal" style="--d:580ms;">
-  <img src="HLOGO.png" alt="HESTIA watermark logo" />
-  <span>HESTIA TAIWAN®</span>
-</div>
+          <!-- ✅ 你要求：交換「把光點投入火焰」按鈕與 HESTIA TAIWAN 字樣的位置 -->
+          <div class="arch-actions reveal" style="--d:580ms;">
+            <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
+          </div>
 
-<div class="arch-actions reveal" style="--d:620ms;">
-  <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
-</div>
+          <div class="result-watermark reveal" style="--d:620ms;">
+            <img src="HLOGO.png" alt="HESTIA watermark logo" />
+            <span>HESTIA TAIWAN®</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1698,69 +1871,124 @@
     const flameImg   = $('#flameImg');
 
     /* =========================
-       05 Cinema sequence
+       01.5 PRETONE
+    ========================== */
+    const PRETONE_KEY = 'hestia_pretone';
+    const pretonePicked = $('#pretonePicked');
+
+    function setPreTone(preKey, hex){
+      const key = preKey || '';
+      if(key){
+        document.body.setAttribute('data-precolor', key);
+        localStorage.setItem(PRETONE_KEY, key);
+      }else{
+        document.body.removeAttribute('data-precolor');
+        localStorage.removeItem(PRETONE_KEY);
+      }
+      if(pretonePicked) pretonePicked.textContent = (hex || key || '—');
+      setTimeout(requestCheck, 80);
+    }
+
+    function initPreTone(){
+      const saved = localStorage.getItem(PRETONE_KEY) || '';
+      if(saved){
+        document.body.setAttribute('data-precolor', saved);
+      }
+    }
+    initPreTone();
+
+    const pretoneBtns = $$('#pretoneGrid .pretone');
+    pretoneBtns.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        pretoneBtns.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        setPreTone(btn.dataset.pre, btn.dataset.hex);
+      });
+    });
+
+    (function syncPreToneUI(){
+      const saved = localStorage.getItem(PRETONE_KEY) || '';
+      if(!saved) return;
+      const hit = pretoneBtns.find(b=>b.dataset.pre === saved);
+      if(hit){
+        pretoneBtns.forEach(b=>b.classList.remove('active'));
+        hit.classList.add('active');
+        if(pretonePicked) pretonePicked.textContent = hit.dataset.hex || saved.toUpperCase();
+      }
+    })();
+
+    $('#toWhoBtn')?.addEventListener('click', ()=>{
+      const s2 = document.getElementById('s2');
+      if(s2) s2.scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(requestCheck, 160);
+    });
+
+    /* =========================
+       05 Cinema sequence（更快 + 強制停留跑完才允許下滑到 06）
     ========================== */
     const s4 = document.getElementById('s4');
-const cinemaT1 = document.getElementById('cinemaT1');
-const cinemaT2 = document.getElementById('cinemaT2');
-const cinemaT3 = document.getElementById('cinemaT3');
-const cinemaT4 = document.getElementById('cinemaT4');
-const cinemaT5 = document.getElementById('cinemaT5');
-const cinemaT6 = document.getElementById('cinemaT6');
+    const cinemaT1 = document.getElementById('cinemaT1');
+    const cinemaT2 = document.getElementById('cinemaT2');
+    const cinemaT3 = document.getElementById('cinemaT3');
+    const cinemaT4 = document.getElementById('cinemaT4');
+    const cinemaT5 = document.getElementById('cinemaT5');
+    const cinemaT6 = document.getElementById('cinemaT6');
 
-let cinemaPlayed = false;
-let cinemaBusy = false;
+    let cinemaPlayed = false;
+    let cinemaBusy = false;
 
-async function runCinema(){
-  if(cinemaBusy) return;
-  cinemaBusy = true;
+    function lockScroll(on){
+      if(on){
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+      }else{
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+      }
+    }
 
-  const steps = [cinemaT1, cinemaT2, cinemaT3, cinemaT4, cinemaT5, cinemaT6].filter(Boolean);
-  steps.forEach(el => el.classList.remove('show','hide'));
+    async function runCinema(){
+      if(cinemaBusy) return;
+      cinemaBusy = true;
 
-  // 整體節奏更慢：前置更長一點
-  await sleep(220);
+      lockScroll(true);
 
-  // T1：淡入 → 停留 → 淡出
-  cinemaT1?.classList.add('show');
-  await sleep(2200);
-  cinemaT1?.classList.remove('show');
-  cinemaT1?.classList.add('hide');
-  await sleep(1500);
+      const steps = [cinemaT1, cinemaT2, cinemaT3, cinemaT4, cinemaT5, cinemaT6].filter(Boolean);
+      steps.forEach(el => el.classList.remove('show','hide'));
 
-  // T2：淡入 → 停留 → 淡出
-  cinemaT2?.classList.add('show');
-  await sleep(2200);
-  cinemaT2?.classList.remove('show');
-  cinemaT2?.classList.add('hide');
-  await sleep(1500);
+      await sleep(140);
 
-  // T3：淡入 → 停留 → 淡出
-  cinemaT3?.classList.add('show');
-  await sleep(2400);
-  cinemaT3?.classList.remove('show');
-  cinemaT3?.classList.add('hide');
-  await sleep(1500);
+      cinemaT1?.classList.add('show');
+      await sleep(1200);
+      cinemaT1?.classList.remove('show'); cinemaT1?.classList.add('hide');
+      await sleep(520);
 
-  // T4：淡入 → 停留 → 淡出
-  cinemaT4?.classList.add('show');
-  await sleep(2200);
-  cinemaT4?.classList.remove('show');
-  cinemaT4?.classList.add('hide');
-  await sleep(1500);
+      cinemaT2?.classList.add('show');
+      await sleep(1100);
+      cinemaT2?.classList.remove('show'); cinemaT2?.classList.add('hide');
+      await sleep(520);
 
-  // T5：淡入 → 停留 → 淡出
-  cinemaT5?.classList.add('show');
-  await sleep(2400);
-  cinemaT5?.classList.remove('show');
-  cinemaT5?.classList.add('hide');
-  await sleep(1500);
-  
-  // T6：淡入後不淡出（停在畫面上）
-  cinemaT6?.classList.add('show');
+      cinemaT3?.classList.add('show');
+      await sleep(1100);
+      cinemaT3?.classList.remove('show'); cinemaT3?.classList.add('hide');
+      await sleep(520);
 
-  cinemaBusy = false;
-}
+      cinemaT4?.classList.add('show');
+      await sleep(1100);
+      cinemaT4?.classList.remove('show'); cinemaT4?.classList.add('hide');
+      await sleep(520);
+
+      cinemaT5?.classList.add('show');
+      await sleep(1200);
+      cinemaT5?.classList.remove('show'); cinemaT5?.classList.add('hide');
+      await sleep(520);
+
+      cinemaT6?.classList.add('show');   // ✅ 淡入後不淡出
+      await sleep(680);
+
+      cinemaBusy = false;
+      lockScroll(false);
+    }
 
     function maybeRunCinema(){
       if(cinemaPlayed) return;
@@ -1823,31 +2051,22 @@ async function runCinema(){
     });
 
     /* =========================================================
-       07/08 Archetype
-       ✅ 新增：07 BAC（以選項位置映射）＋多數決＋平手 B>A>C
-       ✅ 新增：四原型 × ABC（12 組）只覆寫第2/3欄文案
-       ✅ 不更動前台題目與文案，也不改任何 data-a
+       07/08 Archetype（原樣保留）
     ========================================================= */
 
-    // 07 單題選項位置 → ABC（固定：1=B、2=A、3=C）
     const Q07_INDEX_TO_ABC = { 1: "B", 2: "A", 3: "C" };
-    // 平手優先序：B > A > C
     const TIE_PRIORITY = ["B", "A", "C"];
 
     function derive07BiasFromIndexes(qIdx){
-      // qIdx: {q1:1..3, q2:1..3, q3:1..3, q4:1..3}
       const counts = { A:0, B:0, C:0 };
       ["q1","q2","q3","q4"].forEach(k=>{
         const idx = qIdx[k];
         const abc = Q07_INDEX_TO_ABC[idx];
         if(abc) counts[abc] += 1;
       });
-
       const maxVal = Math.max(counts.A, counts.B, counts.C);
       const tied = Object.keys(counts).filter(k => counts[k] === maxVal);
-
       if(tied.length === 1) return tied[0];
-
       for(const k of TIE_PRIORITY){
         if(tied.includes(k)) return k;
       }
@@ -1855,15 +2074,13 @@ async function runCinema(){
     }
 
     function archetypeKeyFromTheme(){
-      // 你前台顯示仍沿用原本（霧幕守望者/午夜追跡者...），但後台文案套用四原型
       if(currentTheme === "rose_ember") return "PHOENIX";
-      if(currentTheme === "midnight_tracker") return "PANTHER"; // 你的前台用黑狼，但這裡映射到黑豹原型用文案
+      if(currentTheme === "midnight_tracker") return "PANTHER";
       if(currentTheme === "veil_warden") return "DEER";
       if(currentTheme === "low_tide_keeper") return "PYTHON";
       return "PHOENIX";
     }
 
-    // 12 組（第2/3欄文案）
     const RESULT_COPY = {
       "PHOENIX_A": {
         rhythm: "你適合在狀態到位時「順勢推進」的節奏。訓練與生活不必過度規劃，抓住能量高點行動，反而能帶來最大成長。你不怕變動，行動本身就是你的校準方式。",
@@ -1938,10 +2155,7 @@ async function runCinema(){
     const archRhythm= $('#archRhythm');
     const archStyle = $('#archStyle');
 
-    // 保留你原本的答案容器（q5 仍用 data-a）
     const answers = { q1:null, q2:null, q3:null, q4:null, q5:null };
-
-    // ✅ 新增：q1~q4 記錄「選到第幾個選項（1/2/3）」→ 用來做 BAC 統計
     const answerIdx = { q1:null, q2:null, q3:null, q4:null };
 
     const opts = $$('.opt');
@@ -1950,54 +2164,27 @@ async function runCinema(){
       const q = optEl.dataset.q;
       const group = opts.filter(o => o.dataset.q === q);
       const idx = group.indexOf(optEl);
-      return idx >= 0 ? (idx + 1) : null; // 1..N
+      return idx >= 0 ? (idx + 1) : null;
     }
 
     function archetypeByAlign(){
       if(currentAlign === 'VEIL WARDEN'){
-        return {
-          key:'VEIL WARDEN',
-          zh:'霧幕守望者',
-          coreBase:'你偏好低刺激、可持續的溫柔秩序；越規律，越能讓狀態長期在線。'
-        };
+        return { key:'VEIL WARDEN', zh:'霧幕守望者', coreBase:'你偏好低刺激、可持續的溫柔秩序；越規律，越能讓狀態長期在線。' };
       }
       if(currentAlign === 'MIDNIGHT TRACKER'){
-        return {
-          key:'MIDNIGHT TRACKER',
-          zh:'午夜追跡者',
-          coreBase:'你重視精準與推進感；越清楚目標，越能把自己帶到結果。'
-        };
+        return { key:'MIDNIGHT TRACKER', zh:'午夜追跡者', coreBase:'你重視精準與推進感；越清楚目標，越能把自己帶到結果。' };
       }
       if(currentAlign === 'LOW TIDE KEEPER'){
-        return {
-          key:'LOW TIDE KEEPER',
-          zh:'低伏掌控者',
-          coreBase:'你擅長把能量收起來；看似安靜，其實一直在觀察與校準時機。'
-        };
+        return { key:'LOW TIDE KEEPER', zh:'低伏掌控者', coreBase:'你擅長把能量收起來；看似安靜，其實一直在觀察與校準時機。' };
       }
-      return {
-        key:'ROSE EMBER',
-        zh:'玫燼點燃者',
-        coreBase:'你喜歡讓能量被看見；華麗不是浮誇，而是你願意把狀態分享出去的方式。'
-      };
+      return { key:'ROSE EMBER', zh:'玫燼點燃者', coreBase:'你喜歡讓能量被看見；華麗不是浮誇，而是你願意把狀態分享出去的方式。' };
     }
 
     function computeArchetype(){
       const base = archetypeByAlign();
-
-      // ✅ 依「選項位置」做 BAC 統計（多數決 + 平手 B>A>C）
-      const bias = derive07BiasFromIndexes(answerIdx); // "A" | "B" | "C"
-
-      // ✅ 四原型鍵（供 12 組文案使用）
+      const bias = derive07BiasFromIndexes(answerIdx);
       const archetypeKey = archetypeKeyFromTheme();
-
-      return {
-        key: base.key,
-        zh: base.zh,
-        core: base.coreBase,
-        bias,
-        archetypeKey
-      };
+      return { key: base.key, zh: base.zh, core: base.coreBase, bias, archetypeKey };
     }
 
     function updateUnlock(){
@@ -2029,8 +2216,6 @@ async function runCinema(){
         const a = o.dataset.a;
 
         answers[q] = a;
-
-        // ✅ 只針對 q1~q4 記錄「位置索引」
         if(q !== "q5"){
           answerIdx[q] = getOptionIndexWithinQuestion(o);
         }
@@ -2050,19 +2235,16 @@ async function runCinema(){
     unlockBtn.addEventListener('click', ()=>{
       const r = computeArchetype();
 
-      // ✅ 08 Emblem：依主題切換 PNG
       const emblemEl = document.getElementById("archetypeEmblem");
       if (emblemEl) {
         const src = emblemMap[currentTheme] || "";
         emblemEl.src = src;
       }
 
-      // 1) 不動你原本「原型名稱」顯示邏輯
       archTitle.textContent = r.zh;
       archKey.textContent   = r.key;
       archCore.textContent  = r.core;
 
-      // 2) ✅ 第2/3欄改走 12 組文案（四原型 × ABC）
       applyResultCopy(r.archetypeKey, r.bias);
 
       if(archPicked) archPicked.textContent = r.zh;
@@ -2120,7 +2302,7 @@ async function runCinema(){
 
     /* Dots behavior */
     const breath = $('#breath');
-    const sections = ['s1','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
+    const sections = ['s1','s1b','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
     const dots = $$('.dot');
 
     function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
@@ -2206,72 +2388,63 @@ async function runCinema(){
     let globalIntensity = 1.0;
 
     const HEARTH_KEY = 'hestia_hearth_count';
-const HEARTH_LEVEL_KEY = 'hestia_hearth_level'; // ✅ ②：記住上一次等級
-const hearthLevelEl = $('#hearthLevel');
+    const HEARTH_LEVEL_KEY = 'hestia_hearth_level';
+    const hearthLevelEl = $('#hearthLevel');
 
-let levelBoost = 0; // ✅ ③：升級瞬間火焰推升（短暫）
+    let levelBoost = 0;
 
-function getCount(){
-  return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
-}
-function setCount(n){
-  localStorage.setItem(HEARTH_KEY, String(n));
-}
+    function getCount(){
+      return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
+    }
+    function setCount(n){
+      localStorage.setItem(HEARTH_KEY, String(n));
+    }
 
-function levelFromCount(n){
-  if(n < 50) return 'Ember';
-  if(n < 150) return 'Glow';
-  if(n < 350) return 'Warmth';
-  if(n < 700) return 'Hearth';
-  return 'Flame';
-}
+    function levelFromCount(n){
+      if(n < 50) return 'Ember';
+      if(n < 150) return 'Glow';
+      if(n < 350) return 'Warmth';
+      if(n < 700) return 'Hearth';
+      return 'Flame';
+    }
 
-// ✅ ②：跨等級提示（沿用既有 toast，不新增任何 DOM）
-function showHearthToast(from, to){
-  const msg = {
-    Ember:  '火種被更多人守住了。',
-    Glow:   '微光開始聚集。',
-    Warmth: '溫度正在形成。',
-    Hearth: '爐火已穩定燃燒。',
-    Flame:  '這裡成為真正的火焰。'
-  };
+    function showHearthToast(from, to){
+      const msg = {
+        Ember:  '火種被更多人守住了。',
+        Glow:   '微光開始聚集。',
+        Warmth: '溫度正在形成。',
+        Hearth: '爐火已穩定燃燒。',
+        Flame:  '這裡成為真正的火焰。'
+      };
 
-  if(!toast) return;
-  toast.textContent = `HEARTH UPGRADED｜${to.toUpperCase()} — ${msg[to] || ''}`;
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'), 3200);
-}
+      if(!toast) return;
+      toast.textContent = `HEARTH UPGRADED｜${to.toUpperCase()} — ${msg[to] || ''}`;
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 3200);
+    }
 
-function applyLevel(){
-  const n = getCount();
-  const newLevel = levelFromCount(n);
+    function applyLevel(){
+      const n = getCount();
+      const newLevel = levelFromCount(n);
+      const prevLevel = localStorage.getItem(HEARTH_LEVEL_KEY);
 
-  // ✅ ②：比對前一次等級（第一次進站不提示）
-  const prevLevel = localStorage.getItem(HEARTH_LEVEL_KEY);
+      if(hearthLevelEl) hearthLevelEl.textContent = newLevel;
 
-  // 寫入 UI
-  if(hearthLevelEl) hearthLevelEl.textContent = newLevel;
+      if(prevLevel && prevLevel !== newLevel){
+        showHearthToast(prevLevel, newLevel);
+        levelBoost = 1.0;
+        setTimeout(()=> levelBoost = 0, 1200);
+      }
 
-  // ✅ ②：只在真的跨等級時提示一次 + ✅ ③：同時觸發火焰瞬間增強
-  if(prevLevel && prevLevel !== newLevel){
-    showHearthToast(prevLevel, newLevel);
+      localStorage.setItem(HEARTH_LEVEL_KEY, newLevel);
 
-    levelBoost = 1.0;                // 升級瞬間推升
-    setTimeout(()=> levelBoost = 0, 1200); // 1.2 秒後回復
-  }
-
-  // 存下這次等級
-  localStorage.setItem(HEARTH_LEVEL_KEY, newLevel);
-
-  // 你原本的強度 mapping（保留不動）
-  const base = (n < 50) ? 0.92 :
-               (n < 150) ? 0.98 :
-               (n < 350) ? 1.04 :
-               (n < 700) ? 1.10 : 1.16;
-  globalIntensity = base;
-}
-
-applyLevel();
+      const base = (n < 50) ? 0.92 :
+                   (n < 150) ? 0.98 :
+                   (n < 350) ? 1.04 :
+                   (n < 700) ? 1.10 : 1.16;
+      globalIntensity = base;
+    }
+    applyLevel();
 
     function addParticle(x, y, vx, vy, life, size, hue){
       particles.push({x,y,vx,vy,life,maxLife:life,size,hue});
@@ -2298,7 +2471,8 @@ applyLevel();
       if(!running) return;
 
       boost = Math.max(boost, levelBoost);
-boost *= 0.92;
+      boost *= 0.92;
+
       ctx.clearRect(0,0,W,H);
 
       const gx = W*0.5, gy = H*0.86;

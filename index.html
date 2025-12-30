@@ -855,20 +855,21 @@ body[data-precolor="white"][data-theme="mono_base"]{
     /* 05 全屏沉靜（保留全屏容器） */
     #s4{ padding:0; }
     #s4 .sanctuary-wrap{
-      width:100%;
-      height:100vh;
-      max-width:none;
-      border-radius:0;
-      border:none;
-      box-shadow:none;
-      background: transparent;
-      backdrop-filter:none;
-      padding:0 20px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-    }
+  width:100%;
+  height:100vh;   /* fallback */
+  height:100svh;  /* ✅ 更接近「可視視窗高度」，手機地址列不亂跳 */
+  max-width:none;
+  border-radius:0;
+  border:none;
+  box-shadow:none;
+  background: transparent;
+  backdrop-filter:none;
+  padding:0 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
     #s4 .sanctuary-wrap::before,
     #s4 .sanctuary-wrap::after{ display:none; }
 
@@ -2127,15 +2128,51 @@ function waitScrollSettled(stableMs=140, timeoutMs=1200){
   });
 }
 
+function easeInOutCubic(t){
+  return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+}
+
+/* ✅ 自己做 smooth scroll，避免被 position:fixed 硬切斷 */
+function smoothScrollToY(targetY, duration=520){
+  return new Promise(resolve=>{
+    const startY = window.scrollY || window.pageYOffset || 0;
+    const diff = targetY - startY;
+    const t0 = performance.now();
+
+    function step(t){
+      const p = Math.min(1, (t - t0) / duration);
+      const eased = easeInOutCubic(p);
+      window.scrollTo(0, startY + diff * eased);
+      if(p < 1) requestAnimationFrame(step);
+      else resolve(true);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+/* ✅ 把 s4 置中到視窗中心（比 block:start 更「穩」） */
+async function centerSectionOnScreen(sec){
+  if(!sec) return;
+  const r = sec.getBoundingClientRect();
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+
+  // 讓 section 的中心對齊視窗中心（s4=100vh 也能穩定）
+  const secCenterY = (window.scrollY || window.pageYOffset) + r.top + r.height/2;
+  const targetY = Math.max(0, Math.round(secCenterY - vh/2));
+
+  await smoothScrollToY(targetY, 520);
+  await waitScrollSettled(140, 900);
+}
+
 async function runCinema(){
   if(cinemaBusy) return;
   cinemaBusy = true;
 
-  // ✅ 先滑到定位，等滑動穩定後才鎖
-  s4?.scrollIntoView({behavior:'smooth', block:'start'});
-  await waitScrollSettled(160, 1400);
+  // ✅ 先「平滑」置中到 s4，再鎖（不會卡住）
+  await centerSectionOnScreen(s4);
 
-  lockScroll(true); // ✅ 只鎖一次（重點修正）
+  // ✅ 再鎖（此時已經沒有捲動慣性）
+  lockScroll(true);
 
   // reset steps
   const steps = [cinemaT1, cinemaT2, cinemaT3, cinemaT4, cinemaT5, cinemaT6].filter(Boolean);
@@ -2168,10 +2205,10 @@ async function runCinema(){
   cinemaT5?.classList.remove('show'); cinemaT5?.classList.add('hide');
   await sleep(520 * CINEMA_SLOW);
 
-  cinemaT6?.classList.add('show'); // 最後一句不淡出
+  cinemaT6?.classList.add('show');
   await sleep(680 * CINEMA_SLOW);
 
-  lockScroll(false);  // ✅ 解鎖
+  lockScroll(false);
   cinemaBusy = false;
 
   showToast('已解鎖｜繼續往下', 900);

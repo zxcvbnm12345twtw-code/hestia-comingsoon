@@ -149,66 +149,131 @@
       --sanctuary-5:#171717;
     }
 
-    body[data-precolor="red"][data-theme=""],
-    body[data-precolor="red"][data-theme="mono_base"]{
-      --accent:#B91C1C;
-      --breath-a: rgba(185,28,28,.18);
-      --breath-b: rgba(255,255,255,.06);
-    }
-    body[data-precolor="orange"][data-theme=""],
-    body[data-precolor="orange"][data-theme="mono_base"]{
-      --accent:#D9480F;
-      --breath-a: rgba(217,72,15,.18);
-      --breath-b: rgba(255,255,255,.06);
-    }
-    body[data-precolor="yellow"][data-theme=""],
-    body[data-precolor="yellow"][data-theme="mono_base"]{
-      --accent:#C8A100;
-      --breath-a: rgba(200,161,0,.16);
-      --breath-b: rgba(255,255,255,.06);
-    }
-    body[data-precolor="green"][data-theme=""],
-    body[data-precolor="green"][data-theme="mono_base"]{
-      --accent:#1F7A5A;
-      --breath-a: rgba(31,122,90,.18);
-      --breath-b: rgba(255,255,255,.06);
-    }
-    body[data-precolor="blue"][data-theme=""],
-    body[data-precolor="blue"][data-theme="mono_base"]{
-      --accent:#2B4C7E;
-      --breath-a: rgba(43,76,126,.18);
-      --breath-b: rgba(255,255,255,.06);
-    }
-    body[data-precolor="purple"][data-theme=""],
-    body[data-precolor="purple"][data-theme="mono_base"]{
-      --accent:#5B2C83;
-      --breath-a: rgba(91,44,131,.18);
-      --breath-b: rgba(255,255,255,.06);
-    }
-    body[data-precolor="khaki"][data-theme=""],
-    body[data-precolor="khaki"][data-theme="mono_base"]{
-      --accent:#A8925A;
-      --breath-a: rgba(168,146,90,.16);
-      --breath-b: rgba(255,255,255,.06);
-    }
-    body[data-precolor="black"][data-theme=""],
-    body[data-precolor="black"][data-theme="mono_base"]{
-      --accent:#ffffff;
-      --breath-a: rgba(255,255,255,.08);
-      --breath-b: rgba(255,255,255,.04);
-    }
-    body[data-precolor="gray"][data-theme=""],
-    body[data-precolor="gray"][data-theme="mono_base"]{
-      --accent:#cfcfcf;
-      --breath-a: rgba(255,255,255,.10);
-      --breath-b: rgba(255,255,255,.05);
-    }
-    body[data-precolor="white"][data-theme=""],
-    body[data-precolor="white"][data-theme="mono_base"]{
-      --accent:#f5f5f5;
-      --breath-a: rgba(255,255,255,.14);
-      --breath-b: rgba(255,255,255,.07);
-    }
+/* =========================
+   PRETONE：未選 06 主題前，直接改整體背景階（sanctuary-1~5）
+  （只在 data-theme="" / mono_base 生效）
+========================= */
+
+body[data-precolor="red"][data-theme=""],
+body[data-precolor="red"][data-theme="mono_base"]{
+  --accent:#B91C1C;
+  --sanctuary-1:#0b0506;
+  --sanctuary-2:#140708;
+  --sanctuary-3:#1e0a0b;
+  --sanctuary-4:#2a0f10;
+  --sanctuary-5:#3b1416;
+  --breath-a: rgba(185,28,28,.20);
+  --breath-b: rgba(255,255,255,.06);
+}
+
+body[data-precolor="orange"][data-theme=""],
+body[data-precolor="orange"][data-theme="mono_base"]{
+  --accent:#D9480F;
+  --sanctuary-1:#0b0604;
+  --sanctuary-2:#140a06;
+  --sanctuary-3:#1e0d07;
+  --sanctuary-4:#2a1209;
+  --sanctuary-5:#3b1a0d;
+  --breath-a: rgba(217,72,15,.20);
+  --breath-b: rgba(255,255,255,.06);
+}
+
+body[data-precolor="yellow"][data-theme=""],
+body[data-precolor="yellow"][data-theme="mono_base"]{
+  --accent:#C8A100;
+  --sanctuary-1:#080703;
+  --sanctuary-2:#111005;
+  --sanctuary-3:#1a1707;
+  --sanctuary-4:#241f0a;
+  --sanctuary-5:#332c0f;
+  --breath-a: rgba(200,161,0,.18);
+  --breath-b: rgba(255,255,255,.06);
+}
+
+body[data-precolor="green"][data-theme=""],
+body[data-precolor="green"][data-theme="mono_base"]{
+  --accent:#1F7A5A;
+  --sanctuary-1:#050a08;
+  --sanctuary-2:#08110d;
+  --sanctuary-3:#0a1913;
+  --sanctuary-4:#0e231b;
+  --sanctuary-5:#143226;
+  --breath-a: rgba(31,122,90,.20);
+  --breath-b: rgba(255,255,255,.06);
+}
+
+body[data-precolor="blue"][data-theme=""],
+body[data-precolor="blue"][data-theme="mono_base"]{
+  --accent:#2B4C7E;
+  --sanctuary-1:#05070b;
+  --sanctuary-2:#070c14;
+  --sanctuary-3:#0a101e;
+  --sanctuary-4:#0e162a;
+  --sanctuary-5:#13203b;
+  --breath-a: rgba(43,76,126,.20);
+  --breath-b: rgba(255,255,255,.06);
+}
+
+body[data-precolor="purple"][data-theme=""],
+body[data-precolor="purple"][data-theme="mono_base"]{
+  --accent:#5B2C83;
+  --sanctuary-1:#07050b;
+  --sanctuary-2:#0d0814;
+  --sanctuary-3:#140a1e;
+  --sanctuary-4:#1c0e2a;
+  --sanctuary-5:#29133b;
+  --breath-a: rgba(91,44,131,.20);
+  --breath-b: rgba(255,255,255,.06);
+}
+
+body[data-precolor="khaki"][data-theme=""],
+body[data-precolor="khaki"][data-theme="mono_base"]{
+  --accent:#A8925A;
+  --sanctuary-1:#070604;
+  --sanctuary-2:#0f0d09;
+  --sanctuary-3:#16130e;
+  --sanctuary-4:#1f1a14;
+  --sanctuary-5:#2d251d;
+  --breath-a: rgba(168,146,90,.18);
+  --breath-b: rgba(255,255,255,.06);
+}
+
+body[data-precolor="black"][data-theme=""],
+body[data-precolor="black"][data-theme="mono_base"]{
+  --accent:#ffffff;
+  --sanctuary-1:#000000;
+  --sanctuary-2:#050505;
+  --sanctuary-3:#0a0a0a;
+  --sanctuary-4:#0f0f0f;
+  --sanctuary-5:#151515;
+  --breath-a: rgba(255,255,255,.08);
+  --breath-b: rgba(255,255,255,.04);
+}
+
+body[data-precolor="gray"][data-theme=""],
+body[data-precolor="gray"][data-theme="mono_base"]{
+  --accent:#d6d6d6;
+  --sanctuary-1:#030303;
+  --sanctuary-2:#0a0a0a;
+  --sanctuary-3:#111111;
+  --sanctuary-4:#171717;
+  --sanctuary-5:#1f1f1f;
+  --breath-a: rgba(255,255,255,.10);
+  --breath-b: rgba(255,255,255,.05);
+}
+
+body[data-precolor="white"][data-theme=""],
+body[data-precolor="white"][data-theme="mono_base"]{
+  --accent:#f5f5f5;
+  --sanctuary-1:#0a0a0a;
+  --sanctuary-2:#101010;
+  --sanctuary-3:#171717;
+  --sanctuary-4:#1f1f1f;
+  --sanctuary-5:#292929;
+  --breath-a: rgba(255,255,255,.14);
+  --breath-b: rgba(255,255,255,.07);
+}
+
 
     /* =========================
        06 四種色調（ROSE EMBER 改成橘紅鳳凰系）
@@ -830,7 +895,7 @@
       text-align:center;
       opacity:0;
       transform:none;
-      transition: opacity .875s cubic-bezier(.22,.61,.36,1);
+      transition: opacity 1.25s cubic-bezier(.22,.61,.36,1);
       will-change: opacity;
     }
     .cinema-step.show{ opacity:1; }
@@ -1454,19 +1519,20 @@
         這會先替整個體驗套上一層「氣質底色」，之後你在 06 的選擇會再把它精準定型。
       </p>
 
-      <div class="pretone-grid reveal" style="--d:280ms;" id="pretoneGrid" aria-label="Pre-tone color palette">
-        <button class="pretone" type="button" data-pre="red"    data-hex="#B91C1C"><span class="chip" style="background:#B91C1C"></span><span class="nm">紅</span><span class="hx">#B91C1C</span></button>
-        <button class="pretone" type="button" data-pre="orange" data-hex="#D9480F"><span class="chip" style="background:#D9480F"></span><span class="nm">橙</span><span class="hx">#D9480F</span></button>
-        <button class="pretone" type="button" data-pre="yellow" data-hex="#C8A100"><span class="chip" style="background:#C8A100"></span><span class="nm">黃</span><span class="hx">#C8A100</span></button>
-        <button class="pretone" type="button" data-pre="green"  data-hex="#1F7A5A"><span class="chip" style="background:#1F7A5A"></span><span class="nm">綠</span><span class="hx">#1F7A5A</span></button>
-        <button class="pretone" type="button" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">藍</span><span class="hx">#2B4C7E</span></button>
-        <button class="pretone" type="button" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">紫</span><span class="hx">#5B2C83</span></button>
+<div class="pretone-grid reveal" style="--d:280ms;" id="pretoneGrid" aria-label="Pre-tone color palette">
+  <button class="pretone" type="button" data-pre="red"    data-hex="#B91C1C"><span class="chip" style="background:#B91C1C"></span><span class="nm">燼紅｜EMBER RED</span></button>
+  <button class="pretone" type="button" data-pre="orange" data-hex="#D9480F"><span class="chip" style="background:#D9480F"></span><span class="nm">熔橙｜MOLTEN ORANGE</span></button>
+  <button class="pretone" type="button" data-pre="yellow" data-hex="#C8A100"><span class="chip" style="background:#C8A100"></span><span class="nm">鎏金｜AURIC GOLD</span></button>
+  <button class="pretone" type="button" data-pre="green"  data-hex="#1F7A5A"><span class="chip" style="background:#1F7A5A"></span><span class="nm">苔息｜SAGE MOSS</span></button>
+  <button class="pretone" type="button" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">深海｜DEEP NAVY</span></button>
 
-        <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">卡其</span><span class="hx">#A8925A</span></button>
-        <button class="pretone" type="button" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">黑</span><span class="hx">#0B0C10</span></button>
-        <button class="pretone" type="button" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">灰</span><span class="hx">#3A3A3A</span></button>
-        <button class="pretone" type="button" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">白</span><span class="hx">#F5F5F5</span></button>
-      </div>
+  <button class="pretone" type="button" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">暮紫｜VIOLET VEIL</span></button>
+  <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">砂金｜SAND KHaki</span></button>
+  <button class="pretone" type="button" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">曜黑｜OBSIDIAN</span></button>
+  <button class="pretone" type="button" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">霧灰｜ASH</span></button>
+  <button class="pretone" type="button" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">象牙｜IVORY</span></button>
+</div>
+
 
       <div class="microcopy reveal" style="--d:340ms;">
         已選擇：<span id="pretonePicked" class="we-accent">—</span>
@@ -1949,7 +2015,7 @@
         document.body.removeAttribute('data-precolor');
         localStorage.removeItem(PRETONE_KEY);
       }
-      if(pretonePicked) pretonePicked.textContent = (hex || key || '—');
+      if(pretonePicked) pretonePicked.textContent = (label || '—');
       pretoneFeedback(hex, label);
       setTimeout(requestCheck, 80);
     }
@@ -1978,7 +2044,7 @@
       if(hit){
         pretoneBtns.forEach(b=>b.classList.remove('active'));
         hit.classList.add('active');
-        if(pretonePicked) pretonePicked.textContent = hit.dataset.hex || saved.toUpperCase();
+        if(pretonePicked) pretonePicked.textContent = hit.querySelector('.nm')?.textContent || '—';
       }
     })();
 
@@ -2033,14 +2099,42 @@
       }
     }
 
-    const CINEMA_SLOW = 1.25; // 0.8x 速度 => 1.25x 時間
+    const CINEMA_SLOW = 1.55; // 0.8x 速度 => 1.25x 時間
 
     async function runCinema(){
       if(cinemaBusy) return;
       cinemaBusy = true;
 
       // 進入時強制置頂該 section，避免邊界滑動造成「看起來沒鎖住」
-      s4?.scrollIntoView({behavior:'auto', block:'start'});
+      // ✅ 先自然滑到定位（不瞬移），到位後才鎖滑動
+s4?.scrollIntoView({behavior:'smooth', block:'start'});
+await waitScrollSettled(160, 1400);
+lockScroll(true);
+
+function waitScrollSettled(stableMs=140, timeoutMs=1200){
+  return new Promise(resolve=>{
+    let lastY = window.scrollY;
+    let stableFor = 0;
+    const start = performance.now();
+
+    function tick(t){
+      const y = window.scrollY;
+      const dy = Math.abs(y - lastY);
+
+      if(dy < 0.5){
+        stableFor += 16; // 約略一幀
+      }else{
+        stableFor = 0;
+        lastY = y;
+      }
+
+      if(stableFor >= stableMs) return resolve(true);
+      if(t - start > timeoutMs) return resolve(false);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
 
       lockScroll(true);
 

@@ -2699,8 +2699,13 @@ function openOverlay(){
 ===================================================== */
 
 const s4 = document.getElementById('s4');
-const overlay = document.getElementById('cinemaOverlay');
-const skipBtn = document.getElementById('cinemaSkipBtn');
+/* =====================================================
+   05 CINEMA – APPLE-LIKE OVERLAY VERSION (SINGLE / CLEAN)
+===================================================== */
+
+const s4 = document.getElementById('s4');
+const cinemaOverlay = document.getElementById('cinemaOverlay');
+const cinemaSkipBtn = document.getElementById('cinemaSkipBtn');
 
 const ocSteps = [
   document.getElementById('oc1'),
@@ -2733,16 +2738,16 @@ function lockBody(on){
 }
 
 function openOverlay(){
-  if(!overlay) return;
-  overlay.classList.add('show');
-  overlay.setAttribute('aria-hidden','false');
+  if(!cinemaOverlay) return;
+  cinemaOverlay.classList.add('show');
+  cinemaOverlay.setAttribute('aria-hidden','false');
   lockBody(true);
 }
 
 function closeOverlay(){
-  if(!overlay) return;
-  overlay.classList.remove('show');
-  overlay.setAttribute('aria-hidden','true');
+  if(!cinemaOverlay) return;
+  cinemaOverlay.classList.remove('show');
+  cinemaOverlay.setAttribute('aria-hidden','true');
   lockBody(false);
 }
 
@@ -2754,7 +2759,6 @@ async function playOverlayCinema(){
   resetOverlaySteps();
   openOverlay();
 
-  // 每段顯示時間（你原本節奏的 0.8x 版本）
   const showDur = [1200,1100,1100,1100,1200,680].map(v => v * OVERLAY_SLOW);
   const gapDur  = 520 * OVERLAY_SLOW;
 
@@ -2765,7 +2769,6 @@ async function playOverlayCinema(){
     el.classList.add('show');
     await sleep(showDur[i] || (1100*OVERLAY_SLOW));
 
-    // 最後一段不需要再 hide + gap
     if(i === ocSteps.length - 1) break;
 
     el.classList.remove('show');
@@ -2773,7 +2776,6 @@ async function playOverlayCinema(){
     await sleep(gapDur);
   }
 
-  // 收尾停一下再關
   await sleep(220 * OVERLAY_SLOW);
   closeOverlay();
   overlayBusy = false;
@@ -2790,10 +2792,9 @@ function maybeRunCinema(){
   }
 }
 
-// Skip 行為
-skipBtn?.addEventListener('click', ()=>{
+// Skip
+cinemaSkipBtn?.addEventListener('click', ()=>{
   if(!overlayBusy) return;
-  // 直接跳過：關閉 overlay、解除鎖定、標記已播放
   overlayPlayed = true;
   overlayBusy = false;
   closeOverlay();
@@ -2801,9 +2802,9 @@ skipBtn?.addEventListener('click', ()=>{
   setTimeout(requestCheck, 120);
 });
 
-// 也允許點背景關閉（可選，保守起見只在 overlayBusy 時生效）
-overlay?.addEventListener('click', (e)=>{
-  if(e.target === overlay && overlayBusy){
+// 點背景略過（只在播放中生效）
+cinemaOverlay?.addEventListener('click', (e)=>{
+  if(e.target === cinemaOverlay && overlayBusy){
     overlayPlayed = true;
     overlayBusy = false;
     closeOverlay();

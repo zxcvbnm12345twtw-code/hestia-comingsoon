@@ -1474,6 +1474,75 @@ body[data-precolor="white"][data-theme="mono_base"]{
         drop-shadow(0 0 18px rgba(191,230,218,.45))
         saturate(1.06);
     }
+    /* =========================
+   05 APPLE-LIKE OVERLAY
+========================= */
+.cinema-overlay{
+  position:fixed;
+  inset:0;
+  z-index:999; /* 比 dots/nav 大 */
+  display:none;
+  place-items:center;
+  background: linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.78));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity:0;
+  pointer-events:none;
+  transition: opacity .42s cubic-bezier(.22,.61,.36,1);
+}
+
+.cinema-overlay.show{
+  display:grid;
+  opacity:1;
+  pointer-events:auto;
+}
+
+.cinema-overlay-inner{
+  width:min(980px, 92vw);
+  height: min(560px, 78svh);
+  height: min(560px, 78vh); /* fallback */
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+  box-shadow: 0 28px 110px rgba(0,0,0,.62);
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  padding: 18px;
+}
+
+.cinema-overlay-cinema{
+  width: min(760px, 92vw);
+  height: 240px;
+}
+
+@media (max-width: 520px){
+  .cinema-overlay-inner{
+    height: min(520px, 82svh);
+    padding: 16px 14px;
+  }
+  .cinema-overlay-cinema{
+    height: 220px;
+  }
+}
+
+.cinema-skip{
+  position:absolute;
+  right:14px;
+  top:14px;
+  border-radius:999px;
+  padding:10px 14px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.22);
+  color: rgba(255,255,255,.86);
+  font-weight:800;
+  letter-spacing:.10em;
+  cursor:pointer;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+}
+.cinema-skip:active{ transform: scale(.98); }
+
   </style>
 </head>
 
@@ -1614,30 +1683,23 @@ body[data-precolor="white"][data-theme="mono_base"]{
     </div>
   </section>
 
-  <!-- ⑤ Sanctuary -->
-  <section class="s4" id="s4">
-    <div class="sanctuary-wrap">
-      <div class="cinema" id="cinema">
-        <div class="cinema-step" id="cinemaT1">
-          <h2 style="margin:0;">現在安靜下來</h2>
-        </div>
-        <div class="cinema-step" id="cinemaT2">
-          <h2 style="margin:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2>
-        </div>
-        <div class="cinema-step" id="cinemaT3">
-          <h2 style="margin:0;">你的每一次選擇</h2>
-        </div>
-        <div class="cinema-step" id="cinemaT4">
-          <h2 style="margin:0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2>
-        </div>
-        <div class="cinema-step" id="cinemaT5">
-          <h2 style="margin:0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2>
-        </div>
-        <div class="cinema-step" id="cinemaT6">
-          <h2 style="margin:0;">讓我們開始吧</h2>
-        </div>
-      </div>
+  <!-- ✅ 05 CINEMA OVERLAY (Apple-like) -->
+<div id="cinemaOverlay" class="cinema-overlay" aria-hidden="true">
+  <div class="cinema-overlay-inner" role="dialog" aria-modal="true" aria-label="HESTIA cinema sequence">
+    <div class="cinema cinema-overlay-cinema" id="cinemaOverlayStage">
+      <div class="cinema-step" id="oc1"><h2 style="margin:0;">現在安靜下來</h2></div>
+      <div class="cinema-step" id="oc2"><h2 style="margin:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2></div>
+      <div class="cinema-step" id="oc3"><h2 style="margin:0;">你的每一次選擇</h2></div>
+      <div class="cinema-step" id="oc4"><h2 style="margin:0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2></div>
+      <div class="cinema-step" id="oc5"><h2 style="margin:0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2></div>
+      <div class="cinema-step" id="oc6"><h2 style="margin:0;">讓我們開始吧</h2></div>
     </div>
+
+    <button type="button" class="cinema-skip" id="cinemaSkipBtn" aria-label="Skip">
+      SKIP
+    </button>
+  </div>
+</div>
   </section>
 
   <!-- ⑥ Aesthetic Alignment -->
@@ -2756,6 +2818,135 @@ async function runCinema(){
       }
       boost = Math.min(1.2, boost + 0.85);
     }
+    /* =====================================================
+   05 CINEMA – APPLE-LIKE OVERLAY VERSION
+   （C + D 合併版，直接貼在 <script> 最底部）
+===================================================== */
+
+/* ---------- Overlay elements ---------- */
+const overlay = document.getElementById('cinemaOverlay');
+const skipBtn = document.getElementById('cinemaSkipBtn');
+
+const oc1 = document.getElementById('oc1');
+const oc2 = document.getElementById('oc2');
+const oc3 = document.getElementById('oc3');
+const oc4 = document.getElementById('oc4');
+const oc5 = document.getElementById('oc5');
+const oc6 = document.getElementById('oc6');
+
+/* ---------- Overlay helpers ---------- */
+function resetOverlaySteps(){
+  [oc1,oc2,oc3,oc4,oc5,oc6].forEach(el=>{
+    if(!el) return;
+    el.classList.remove('show','hide');
+  });
+}
+
+function openOverlay(){
+  if(!overlay) return;
+  overlay.classList.add('show');
+  overlay.setAttribute('aria-hidden','false');
+}
+
+function closeOverlay(){
+  if(!overlay) return;
+  overlay.classList.remove('show');
+  overlay.setAttribute('aria-hidden','true');
+}
+
+/* ---------- Overlay cinema controller ---------- */
+let overlaySkip = false;
+
+async function runCinema(){
+  if(typeof cinemaBusy !== 'undefined' && cinemaBusy) return;
+  if(typeof cinemaBusy !== 'undefined') cinemaBusy = true;
+
+  overlaySkip = false;
+
+  /* D️⃣ 進入門檻（比原本更像 Apple） */
+  if(!inView(s4, 0.55, 0.40)){
+    if(typeof cinemaBusy !== 'undefined') cinemaBusy = false;
+    return;
+  }
+
+  /* 自然對齊到 s4 中心（不鎖、不頓） */
+  if(typeof centerSectionOnScreen === 'function'){
+    await centerSectionOnScreen(s4);
+  }
+
+  /* 開啟 overlay（無感鎖定） */
+  resetOverlaySteps();
+  openOverlay();
+
+  const CINEMA_SLOW = 1.25;
+
+  /* Skip / ESC */
+  const onSkip = ()=>{
+    overlaySkip = true;
+    showToast?.('已略過｜繼續往下', 900);
+  };
+  skipBtn?.addEventListener('click', onSkip, { once:true });
+
+  const onKey = (e)=>{
+    if(e.key === 'Escape') onSkip();
+  };
+  window.addEventListener('keydown', onKey);
+
+  const waitOrSkip = async (ms)=>{
+    const t = ms * CINEMA_SLOW;
+    const start = performance.now();
+    while(performance.now() - start < t){
+      if(overlaySkip) return false;
+      await sleep(16);
+    }
+    return !overlaySkip;
+  };
+
+  /* ---------- Sequence ---------- */
+  await waitOrSkip(120);
+
+  oc1?.classList.add('show');
+  if(!(await waitOrSkip(1200))) return end();
+
+  oc1?.classList.remove('show'); oc1?.classList.add('hide');
+  if(!(await waitOrSkip(520))) return end();
+
+  oc2?.classList.add('show');
+  if(!(await waitOrSkip(1100))) return end();
+
+  oc2?.classList.remove('show'); oc2?.classList.add('hide');
+  if(!(await waitOrSkip(520))) return end();
+
+  oc3?.classList.add('show');
+  if(!(await waitOrSkip(1100))) return end();
+
+  oc3?.classList.remove('show'); oc3?.classList.add('hide');
+  if(!(await waitOrSkip(520))) return end();
+
+  oc4?.classList.add('show');
+  if(!(await waitOrSkip(1100))) return end();
+
+  oc4?.classList.remove('show'); oc4?.classList.add('hide');
+  if(!(await waitOrSkip(520))) return end();
+
+  oc5?.classList.add('show');
+  if(!(await waitOrSkip(1200))) return end();
+
+  oc5?.classList.remove('show'); oc5?.classList.add('hide');
+  if(!(await waitOrSkip(520))) return end();
+
+  oc6?.classList.add('show');
+  await waitOrSkip(680);
+
+  end();
+
+  function end(){
+    window.removeEventListener('keydown', onKey);
+    closeOverlay();
+    if(typeof cinemaBusy !== 'undefined') cinemaBusy = false;
+  }
+}
+
   </script>
 </body>
 </html>

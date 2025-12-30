@@ -2101,15 +2101,7 @@ body[data-precolor="white"][data-theme="mono_base"]{
 
     const CINEMA_SLOW = 1.55; // 0.8x 速度 => 1.25x 時間
 
-    async function runCinema(){
-      if(cinemaBusy) return;
-      cinemaBusy = true;
-
-      // 進入時強制置頂該 section，避免邊界滑動造成「看起來沒鎖住」
-      // ✅ 先自然滑到定位（不瞬移），到位後才鎖滑動
-s4?.scrollIntoView({behavior:'smooth', block:'start'});
-await waitScrollSettled(160, 1400);
-lockScroll(true);
+const CINEMA_SLOW = 1.25; // 0.8x 速度 => 1.25x 時間（你原本 1.55 會更慢）
 
 function waitScrollSettled(stableMs=140, timeoutMs=1200){
   return new Promise(resolve=>{
@@ -2136,47 +2128,56 @@ function waitScrollSettled(stableMs=140, timeoutMs=1200){
   });
 }
 
-      lockScroll(true);
+async function runCinema(){
+  if(cinemaBusy) return;
+  cinemaBusy = true;
 
-      const steps = [cinemaT1, cinemaT2, cinemaT3, cinemaT4, cinemaT5, cinemaT6].filter(Boolean);
-      steps.forEach(el => el.classList.remove('show','hide'));
+  // ✅ 先滑到定位，等滑動穩定後才鎖
+  s4?.scrollIntoView({behavior:'smooth', block:'start'});
+  await waitScrollSettled(160, 1400);
 
-      await sleep(140 * CINEMA_SLOW);
+  lockScroll(true); // ✅ 只鎖一次（重點修正）
 
-      cinemaT1?.classList.add('show');
-      await sleep(1200 * CINEMA_SLOW);
-      cinemaT1?.classList.remove('show'); cinemaT1?.classList.add('hide');
-      await sleep(520 * CINEMA_SLOW);
+  // reset steps
+  const steps = [cinemaT1, cinemaT2, cinemaT3, cinemaT4, cinemaT5, cinemaT6].filter(Boolean);
+  steps.forEach(el => el.classList.remove('show','hide'));
 
-      cinemaT2?.classList.add('show');
-      await sleep(1100 * CINEMA_SLOW);
-      cinemaT2?.classList.remove('show'); cinemaT2?.classList.add('hide');
-      await sleep(520 * CINEMA_SLOW);
+  await sleep(140 * CINEMA_SLOW);
 
-      cinemaT3?.classList.add('show');
-      await sleep(1100 * CINEMA_SLOW);
-      cinemaT3?.classList.remove('show'); cinemaT3?.classList.add('hide');
-      await sleep(520 * CINEMA_SLOW);
+  cinemaT1?.classList.add('show');
+  await sleep(1200 * CINEMA_SLOW);
+  cinemaT1?.classList.remove('show'); cinemaT1?.classList.add('hide');
+  await sleep(520 * CINEMA_SLOW);
 
-      cinemaT4?.classList.add('show');
-      await sleep(1100 * CINEMA_SLOW);
-      cinemaT4?.classList.remove('show'); cinemaT4?.classList.add('hide');
-      await sleep(520 * CINEMA_SLOW);
+  cinemaT2?.classList.add('show');
+  await sleep(1100 * CINEMA_SLOW);
+  cinemaT2?.classList.remove('show'); cinemaT2?.classList.add('hide');
+  await sleep(520 * CINEMA_SLOW);
 
-      cinemaT5?.classList.add('show');
-      await sleep(1200 * CINEMA_SLOW);
-      cinemaT5?.classList.remove('show'); cinemaT5?.classList.add('hide');
-      await sleep(520 * CINEMA_SLOW);
+  cinemaT3?.classList.add('show');
+  await sleep(1100 * CINEMA_SLOW);
+  cinemaT3?.classList.remove('show'); cinemaT3?.classList.add('hide');
+  await sleep(520 * CINEMA_SLOW);
 
-      cinemaT6?.classList.add('show');   // 淡入後不淡出
-      await sleep(680 * CINEMA_SLOW);
+  cinemaT4?.classList.add('show');
+  await sleep(1100 * CINEMA_SLOW);
+  cinemaT4?.classList.remove('show'); cinemaT4?.classList.add('hide');
+  await sleep(520 * CINEMA_SLOW);
 
-      cinemaBusy = false;
-      lockScroll(false);
+  cinemaT5?.classList.add('show');
+  await sleep(1200 * CINEMA_SLOW);
+  cinemaT5?.classList.remove('show'); cinemaT5?.classList.add('hide');
+  await sleep(520 * CINEMA_SLOW);
 
-      // 解鎖後補一個提示（避免使用者以為卡住）
-      showToast('已解鎖｜繼續往下', 900);
-    }
+  cinemaT6?.classList.add('show'); // 最後一句不淡出
+  await sleep(680 * CINEMA_SLOW);
+
+  lockScroll(false);  // ✅ 解鎖
+  cinemaBusy = false;
+
+  showToast('已解鎖｜繼續往下', 900);
+}
+
 
     function maybeRunCinema(){
       if(cinemaPlayed) return;

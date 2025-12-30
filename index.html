@@ -114,7 +114,7 @@
       box-shadow: 0 0 18px rgba(255,255,255,.10);
     }
 
-    /* ✅ PRETONE 明顯反饋（你說「選色後看不到動靜」） */
+    /* ✅ PRETONE 明顯反饋 */
     .pretone-flash{
       animation: pretoneFlash .72s cubic-bezier(.22,.61,.36,1) 1;
     }
@@ -149,137 +149,134 @@
       --sanctuary-5:#171717;
     }
 
-/* =========================
-   PRETONE：未選 06 主題前，直接改整體背景階（sanctuary-1~5）
-  （只在 data-theme="" / mono_base 生效）
-========================= */
-
-body[data-precolor="red"][data-theme=""],
-body[data-precolor="red"][data-theme="mono_base"]{
-  --accent:#B91C1C;
-  --sanctuary-1:#0b0506;
-  --sanctuary-2:#140708;
-  --sanctuary-3:#1e0a0b;
-  --sanctuary-4:#2a0f10;
-  --sanctuary-5:#3b1416;
-  --breath-a: rgba(185,28,28,.20);
-  --breath-b: rgba(255,255,255,.06);
-}
-
-body[data-precolor="orange"][data-theme=""],
-body[data-precolor="orange"][data-theme="mono_base"]{
-  --accent:#D9480F;
-  --sanctuary-1:#0b0604;
-  --sanctuary-2:#140a06;
-  --sanctuary-3:#1e0d07;
-  --sanctuary-4:#2a1209;
-  --sanctuary-5:#3b1a0d;
-  --breath-a: rgba(217,72,15,.20);
-  --breath-b: rgba(255,255,255,.06);
-}
-
-body[data-precolor="yellow"][data-theme=""],
-body[data-precolor="yellow"][data-theme="mono_base"]{
-  --accent:#C8A100;
-  --sanctuary-1:#080703;
-  --sanctuary-2:#111005;
-  --sanctuary-3:#1a1707;
-  --sanctuary-4:#241f0a;
-  --sanctuary-5:#332c0f;
-  --breath-a: rgba(200,161,0,.18);
-  --breath-b: rgba(255,255,255,.06);
-}
-
-body[data-precolor="green"][data-theme=""],
-body[data-precolor="green"][data-theme="mono_base"]{
-  --accent:#1F7A5A;
-  --sanctuary-1:#050a08;
-  --sanctuary-2:#08110d;
-  --sanctuary-3:#0a1913;
-  --sanctuary-4:#0e231b;
-  --sanctuary-5:#143226;
-  --breath-a: rgba(31,122,90,.20);
-  --breath-b: rgba(255,255,255,.06);
-}
-
-body[data-precolor="blue"][data-theme=""],
-body[data-precolor="blue"][data-theme="mono_base"]{
-  --accent:#2B4C7E;
-  --sanctuary-1:#05070b;
-  --sanctuary-2:#070c14;
-  --sanctuary-3:#0a101e;
-  --sanctuary-4:#0e162a;
-  --sanctuary-5:#13203b;
-  --breath-a: rgba(43,76,126,.20);
-  --breath-b: rgba(255,255,255,.06);
-}
-
-body[data-precolor="purple"][data-theme=""],
-body[data-precolor="purple"][data-theme="mono_base"]{
-  --accent:#5B2C83;
-  --sanctuary-1:#07050b;
-  --sanctuary-2:#0d0814;
-  --sanctuary-3:#140a1e;
-  --sanctuary-4:#1c0e2a;
-  --sanctuary-5:#29133b;
-  --breath-a: rgba(91,44,131,.20);
-  --breath-b: rgba(255,255,255,.06);
-}
-
-body[data-precolor="khaki"][data-theme=""],
-body[data-precolor="khaki"][data-theme="mono_base"]{
-  --accent:#A8925A;
-  --sanctuary-1:#070604;
-  --sanctuary-2:#0f0d09;
-  --sanctuary-3:#16130e;
-  --sanctuary-4:#1f1a14;
-  --sanctuary-5:#2d251d;
-  --breath-a: rgba(168,146,90,.18);
-  --breath-b: rgba(255,255,255,.06);
-}
-
-body[data-precolor="black"][data-theme=""],
-body[data-precolor="black"][data-theme="mono_base"]{
-  --accent:#ffffff;
-  --sanctuary-1:#000000;
-  --sanctuary-2:#050505;
-  --sanctuary-3:#0a0a0a;
-  --sanctuary-4:#0f0f0f;
-  --sanctuary-5:#151515;
-  --breath-a: rgba(255,255,255,.08);
-  --breath-b: rgba(255,255,255,.04);
-}
-
-body[data-precolor="gray"][data-theme=""],
-body[data-precolor="gray"][data-theme="mono_base"]{
-  --accent:#d6d6d6;
-  --sanctuary-1:#030303;
-  --sanctuary-2:#0a0a0a;
-  --sanctuary-3:#111111;
-  --sanctuary-4:#171717;
-  --sanctuary-5:#1f1f1f;
-  --breath-a: rgba(255,255,255,.10);
-  --breath-b: rgba(255,255,255,.05);
-}
-
-body[data-precolor="white"][data-theme=""],
-body[data-precolor="white"][data-theme="mono_base"]{
-  --accent:#f5f5f5;
-  --sanctuary-1:#0a0a0a;
-  --sanctuary-2:#101010;
-  --sanctuary-3:#171717;
-  --sanctuary-4:#1f1f1f;
-  --sanctuary-5:#292929;
-  --breath-a: rgba(255,255,255,.14);
-  --breath-b: rgba(255,255,255,.07);
-}
-
-
     /* =========================
-       06 四種色調（ROSE EMBER 改成橘紅鳳凰系）
+       PRETONE：未選 06 主題前，直接改整體背景階（sanctuary-1~5）
+       （只在 data-theme="" / mono_base 生效）
     ========================== */
 
-    /* ROSE EMBER (鳳凰)  Warm / High Sat */
+    body[data-precolor="red"][data-theme=""],
+    body[data-precolor="red"][data-theme="mono_base"]{
+      --accent:#B91C1C;
+      --sanctuary-1:#0b0506;
+      --sanctuary-2:#140708;
+      --sanctuary-3:#1e0a0b;
+      --sanctuary-4:#2a0f10;
+      --sanctuary-5:#3b1416;
+      --breath-a: rgba(185,28,28,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="orange"][data-theme=""],
+    body[data-precolor="orange"][data-theme="mono_base"]{
+      --accent:#D9480F;
+      --sanctuary-1:#0b0604;
+      --sanctuary-2:#140a06;
+      --sanctuary-3:#1e0d07;
+      --sanctuary-4:#2a1209;
+      --sanctuary-5:#3b1a0d;
+      --breath-a: rgba(217,72,15,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="yellow"][data-theme=""],
+    body[data-precolor="yellow"][data-theme="mono_base"]{
+      --accent:#C8A100;
+      --sanctuary-1:#080703;
+      --sanctuary-2:#111005;
+      --sanctuary-3:#1a1707;
+      --sanctuary-4:#241f0a;
+      --sanctuary-5:#332c0f;
+      --breath-a: rgba(200,161,0,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="green"][data-theme=""],
+    body[data-precolor="green"][data-theme="mono_base"]{
+      --accent:#1F7A5A;
+      --sanctuary-1:#050a08;
+      --sanctuary-2:#08110d;
+      --sanctuary-3:#0a1913;
+      --sanctuary-4:#0e231b;
+      --sanctuary-5:#143226;
+      --breath-a: rgba(31,122,90,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="blue"][data-theme=""],
+    body[data-precolor="blue"][data-theme="mono_base"]{
+      --accent:#2B4C7E;
+      --sanctuary-1:#05070b;
+      --sanctuary-2:#070c14;
+      --sanctuary-3:#0a101e;
+      --sanctuary-4:#0e162a;
+      --sanctuary-5:#13203b;
+      --breath-a: rgba(43,76,126,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="purple"][data-theme=""],
+    body[data-precolor="purple"][data-theme="mono_base"]{
+      --accent:#5B2C83;
+      --sanctuary-1:#07050b;
+      --sanctuary-2:#0d0814;
+      --sanctuary-3:#140a1e;
+      --sanctuary-4:#1c0e2a;
+      --sanctuary-5:#29133b;
+      --breath-a: rgba(91,44,131,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="khaki"][data-theme=""],
+    body[data-precolor="khaki"][data-theme="mono_base"]{
+      --accent:#A8925A;
+      --sanctuary-1:#070604;
+      --sanctuary-2:#0f0d09;
+      --sanctuary-3:#16130e;
+      --sanctuary-4:#1f1a14;
+      --sanctuary-5:#2d251d;
+      --breath-a: rgba(168,146,90,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="black"][data-theme=""],
+    body[data-precolor="black"][data-theme="mono_base"]{
+      --accent:#ffffff;
+      --sanctuary-1:#000000;
+      --sanctuary-2:#050505;
+      --sanctuary-3:#0a0a0a;
+      --sanctuary-4:#0f0f0f;
+      --sanctuary-5:#151515;
+      --breath-a: rgba(255,255,255,.08);
+      --breath-b: rgba(255,255,255,.04);
+    }
+
+    body[data-precolor="gray"][data-theme=""],
+    body[data-precolor="gray"][data-theme="mono_base"]{
+      --accent:#d6d6d6;
+      --sanctuary-1:#030303;
+      --sanctuary-2:#0a0a0a;
+      --sanctuary-3:#111111;
+      --sanctuary-4:#171717;
+      --sanctuary-5:#1f1f1f;
+      --breath-a: rgba(255,255,255,.10);
+      --breath-b: rgba(255,255,255,.05);
+    }
+
+    body[data-precolor="white"][data-theme=""],
+    body[data-precolor="white"][data-theme="mono_base"]{
+      --accent:#f5f5f5;
+      --sanctuary-1:#0a0a0a;
+      --sanctuary-2:#101010;
+      --sanctuary-3:#171717;
+      --sanctuary-4:#1f1f1f;
+      --sanctuary-5:#292929;
+      --breath-a: rgba(255,255,255,.14);
+      --breath-b: rgba(255,255,255,.07);
+    }
+
+    /* =========================
+       06 四種色調
+    ========================== */
     body[data-theme="rose_ember"]{
       --sanctuary-1:#120a07;
       --sanctuary-2:#1e0e09;
@@ -293,7 +290,6 @@ body[data-precolor="white"][data-theme="mono_base"]{
       --accent:#ff6a2a;
     }
 
-    /* MIDNIGHT TRACKER (黑狼) Cool / High Sat */
     body[data-theme="midnight_tracker"]{
       --sanctuary-1:#06070b;
       --sanctuary-2:#0b0c10;
@@ -305,7 +301,6 @@ body[data-precolor="white"][data-theme="mono_base"]{
       --accent:#3b6cff;
     }
 
-    /* VEIL WARDEN (鹿) Warm / Low Sat */
     body[data-theme="veil_warden"]{
       --sanctuary-1:#0e0b09;
       --sanctuary-2:#1a1410;
@@ -317,7 +312,6 @@ body[data-precolor="white"][data-theme="mono_base"]{
       --accent:#d0c2b6;
     }
 
-    /* LOW TIDE KEEPER (蟒蛇) Cool / Low Sat */
     body[data-theme="low_tide_keeper"]{
       --sanctuary-1:#071010;
       --sanctuary-2:#0b1514;
@@ -395,7 +389,6 @@ body[data-precolor="white"][data-theme="mono_base"]{
     }
     .breath.transition.release{ opacity:.11; transform:scale(1); }
 
-    /* ✅ PRETONE 反饋：讓 breath 有一個「明顯但短」的升溫 */
     .breath.pretone-kick{
       animation:none;
       opacity:.16;
@@ -855,27 +848,26 @@ body[data-precolor="white"][data-theme="mono_base"]{
     /* 05 全屏沉靜（保留全屏容器） */
     #s4{ padding:0; }
     #s4 .sanctuary-wrap{
-  width:100%;
-  height:100vh;   /* fallback */
-  height:100svh;  /* ✅ 更接近「可視視窗高度」，手機地址列不亂跳 */
-  max-width:none;
-  border-radius:0;
-  border:none;
-  box-shadow:none;
-  background: transparent;
-  backdrop-filter:none;
-  padding:0 20px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-}
+      width:100%;
+      height:100vh;
+      height:100svh;
+      max-width:none;
+      border-radius:0;
+      border:none;
+      box-shadow:none;
+      background: transparent;
+      backdrop-filter:none;
+      padding:0 20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+    }
     #s4 .sanctuary-wrap::before,
     #s4 .sanctuary-wrap::after{ display:none; }
 
     /* =========================
-       05 Cinema：同位置疊放淡入淡出 + 不往下換行推版
-       ✅ 你要慢 0.8 倍：這裡把 transition 延長 (0.70s -> 0.875s)
+       05 Cinema（舊版容器保留給 overlay 用）
     ========================== */
     .cinema{
       width:min(var(--wrap), 92vw);
@@ -1413,7 +1405,7 @@ body[data-precolor="white"][data-theme="mono_base"]{
     }
 
     /* =========================
-       08 截圖友善：底部資訊固定可見（不跟 reveal 進場）
+       08 截圖友善：底部資訊固定可見
        (override)
     ========================== */
     #s7 .microcopy,
@@ -1474,75 +1466,75 @@ body[data-precolor="white"][data-theme="mono_base"]{
         drop-shadow(0 0 18px rgba(191,230,218,.45))
         saturate(1.06);
     }
+
     /* =========================
-   05 APPLE-LIKE OVERLAY
-========================= */
-.cinema-overlay{
-  position:fixed;
-  inset:0;
-  z-index:999; /* 比 dots/nav 大 */
-  display:none;
-  place-items:center;
-  background: linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.78));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  opacity:0;
-  pointer-events:none;
-  transition: opacity .42s cubic-bezier(.22,.61,.36,1);
-}
+       05 APPLE-LIKE OVERLAY
+    ========================== */
+    .cinema-overlay{
+      position:fixed;
+      inset:0;
+      z-index:999;
+      display:none;
+      place-items:center;
+      background: linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.78));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .42s cubic-bezier(.22,.61,.36,1);
+    }
 
-.cinema-overlay.show{
-  display:grid;
-  opacity:1;
-  pointer-events:auto;
-}
+    .cinema-overlay.show{
+      display:grid;
+      opacity:1;
+      pointer-events:auto;
+    }
 
-.cinema-overlay-inner{
-  width:min(980px, 92vw);
-  height: min(560px, 78svh);
-  height: min(560px, 78vh); /* fallback */
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-  box-shadow: 0 28px 110px rgba(0,0,0,.62);
-  position:relative;
-  overflow:hidden;
-  display:grid;
-  place-items:center;
-  padding: 18px;
-}
+    .cinema-overlay-inner{
+      width:min(980px, 92vw);
+      height: min(560px, 78svh);
+      height: min(560px, 78vh);
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      box-shadow: 0 28px 110px rgba(0,0,0,.62);
+      position:relative;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      padding: 18px;
+    }
 
-.cinema-overlay-cinema{
-  width: min(760px, 92vw);
-  height: 240px;
-}
+    .cinema-overlay-cinema{
+      width: min(760px, 92vw);
+      height: 240px;
+    }
 
-@media (max-width: 520px){
-  .cinema-overlay-inner{
-    height: min(520px, 82svh);
-    padding: 16px 14px;
-  }
-  .cinema-overlay-cinema{
-    height: 220px;
-  }
-}
+    @media (max-width: 520px){
+      .cinema-overlay-inner{
+        height: min(520px, 82svh);
+        padding: 16px 14px;
+      }
+      .cinema-overlay-cinema{
+        height: 220px;
+      }
+    }
 
-.cinema-skip{
-  position:absolute;
-  right:14px;
-  top:14px;
-  border-radius:999px;
-  padding:10px 14px;
-  border:1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.22);
-  color: rgba(255,255,255,.86);
-  font-weight:800;
-  letter-spacing:.10em;
-  cursor:pointer;
-  transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
-}
-.cinema-skip:active{ transform: scale(.98); }
-
+    .cinema-skip{
+      position:absolute;
+      right:14px;
+      top:14px;
+      border-radius:999px;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.86);
+      font-weight:800;
+      letter-spacing:.10em;
+      cursor:pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+    }
+    .cinema-skip:active{ transform: scale(.98); }
   </style>
 </head>
 
@@ -1576,7 +1568,6 @@ body[data-precolor="white"][data-theme="mono_base"]{
 
   <!-- PRETONE -->
   <section class="s1b" id="s1b">
-    <!-- ✅ 你要求：不要寫 1.5 的數字章節標題 -->
     <div class="secno reveal" style="--d:120ms;">TONE</div>
 
     <div class="sanctuary-wrap" id="pretoneWrap">
@@ -1589,20 +1580,19 @@ body[data-precolor="white"][data-theme="mono_base"]{
         這會先替你的HESTiA宇宙體驗套上一層「氣質底色」。
       </p>
 
-<div class="pretone-grid reveal" style="--d:280ms;" id="pretoneGrid" aria-label="Pre-tone color palette">
-  <button class="pretone" type="button" data-pre="red"    data-hex="#B91C1C"><span class="chip" style="background:#B91C1C"></span><span class="nm">燼紅｜EMBER RED</span></button>
-  <button class="pretone" type="button" data-pre="orange" data-hex="#D9480F"><span class="chip" style="background:#D9480F"></span><span class="nm">熔橙｜MOLTEN ORANGE</span></button>
-  <button class="pretone" type="button" data-pre="yellow" data-hex="#C8A100"><span class="chip" style="background:#C8A100"></span><span class="nm">鎏金｜AURIC GOLD</span></button>
-  <button class="pretone" type="button" data-pre="green"  data-hex="#1F7A5A"><span class="chip" style="background:#1F7A5A"></span><span class="nm">苔息｜SAGE MOSS</span></button>
-  <button class="pretone" type="button" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">深海｜DEEP NAVY</span></button>
+      <div class="pretone-grid reveal" style="--d:280ms;" id="pretoneGrid" aria-label="Pre-tone color palette">
+        <button class="pretone" type="button" data-pre="red"    data-hex="#B91C1C"><span class="chip" style="background:#B91C1C"></span><span class="nm">燼紅｜EMBER RED</span></button>
+        <button class="pretone" type="button" data-pre="orange" data-hex="#D9480F"><span class="chip" style="background:#D9480F"></span><span class="nm">熔橙｜MOLTEN ORANGE</span></button>
+        <button class="pretone" type="button" data-pre="yellow" data-hex="#C8A100"><span class="chip" style="background:#C8A100"></span><span class="nm">鎏金｜AURIC GOLD</span></button>
+        <button class="pretone" type="button" data-pre="green"  data-hex="#1F7A5A"><span class="chip" style="background:#1F7A5A"></span><span class="nm">苔息｜SAGE MOSS</span></button>
+        <button class="pretone" type="button" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">深海｜DEEP NAVY</span></button>
 
-  <button class="pretone" type="button" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">暮紫｜VIOLET VEIL</span></button>
-  <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">砂金｜SAND KHaki</span></button>
-  <button class="pretone" type="button" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">曜黑｜OBSIDIAN</span></button>
-  <button class="pretone" type="button" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">霧灰｜ASH</span></button>
-  <button class="pretone" type="button" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">象牙｜IVORY</span></button>
-</div>
-
+        <button class="pretone" type="button" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">暮紫｜VIOLET VEIL</span></button>
+        <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">砂金｜SAND KHaki</span></button>
+        <button class="pretone" type="button" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">曜黑｜OBSIDIAN</span></button>
+        <button class="pretone" type="button" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">霧灰｜ASH</span></button>
+        <button class="pretone" type="button" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">象牙｜IVORY</span></button>
+      </div>
 
       <div class="microcopy reveal" style="--d:340ms;">
         已選擇：<span id="pretonePicked" class="we-accent">—</span>
@@ -1683,38 +1673,36 @@ body[data-precolor="white"][data-theme="mono_base"]{
     </div>
   </section>
 
+  <!-- ⑤ SANCTUARY（05） -->
+  <section class="s4" id="s4">
+    <div class="sanctuary-wrap">
+      <div class="sanctuary-kicker">
+        <span class="kicker reveal" style="--d:180ms;">SANCTUARY</span>
+      </div>
+      <h2 class="reveal" style="--d:220ms;">SANCTUARY</h2>
+      <p class="reveal" style="--d:260ms;">
+        這一段會進入短暫的沉靜引導，完成後繼續往下探索。
+      </p>
+    </div>
+  </section>
+
   <!-- ✅ 05 CINEMA OVERLAY (Apple-like) -->
-<!-- ⑤ SANCTUARY（05） -->
-<section class="s4" id="s4">
-  <div class="sanctuary-wrap">
-    <div class="sanctuary-kicker">
-      <span class="kicker reveal" style="--d:180ms;">SANCTUARY</span>
+  <div id="cinemaOverlay" class="cinema-overlay" aria-hidden="true">
+    <div class="cinema-overlay-inner" role="dialog" aria-modal="true" aria-label="HESTIA cinema sequence">
+      <div class="cinema cinema-overlay-cinema" id="cinemaOverlayStage">
+        <div class="cinema-step" id="oc1"><h2 style="margin:0;">現在安靜下來</h2></div>
+        <div class="cinema-step" id="oc2"><h2 style="margin:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2></div>
+        <div class="cinema-step" id="oc3"><h2 style="margin:0;">你的每一次選擇</h2></div>
+        <div class="cinema-step" id="oc4"><h2 style="margin:0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2></div>
+        <div class="cinema-step" id="oc5"><h2 style="margin:0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2></div>
+        <div class="cinema-step" id="oc6"><h2 style="margin:0;">讓我們開始吧</h2></div>
+      </div>
+
+      <button type="button" class="cinema-skip" id="cinemaSkipBtn" aria-label="Skip">
+        SKIP
+      </button>
     </div>
-    <h2 class="reveal" style="--d:220ms;">SANCTUARY</h2>
-    <p class="reveal" style="--d:260ms;">
-      這一段會進入短暫的沉靜引導，完成後繼續往下探索。
-    </p>
   </div>
-</section>
-
-<!-- ✅ 05 CINEMA OVERLAY (Apple-like) -->
-<div id="cinemaOverlay" class="cinema-overlay" aria-hidden="true">
-  <div class="cinema-overlay-inner" role="dialog" aria-modal="true" aria-label="HESTIA cinema sequence">
-    <div class="cinema cinema-overlay-cinema" id="cinemaOverlayStage">
-      <div class="cinema-step" id="oc1"><h2 style="margin:0;">現在安靜下來</h2></div>
-      <div class="cinema-step" id="oc2"><h2 style="margin:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2></div>
-      <div class="cinema-step" id="oc3"><h2 style="margin:0;">你的每一次選擇</h2></div>
-      <div class="cinema-step" id="oc4"><h2 style="margin:0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2></div>
-      <div class="cinema-step" id="oc5"><h2 style="margin:0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2></div>
-      <div class="cinema-step" id="oc6"><h2 style="margin:0;">讓我們開始吧</h2></div>
-    </div>
-
-    <button type="button" class="cinema-skip" id="cinemaSkipBtn" aria-label="Skip">
-      SKIP
-    </button>
-  </div>
-</div>
-
 
   <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
@@ -1899,14 +1887,16 @@ body[data-precolor="white"][data-theme="mono_base"]{
             你的原型：<span class="we-accent" id="archPicked">—</span>
           </div>
 
-         <div class="result-watermark reveal" style="--d:620ms;">
-  <img src="HLOGO.png" alt="HESTIA watermark logo" />
-  <span>HESTIA TAIWAN®</span>
-</div>
+          <!-- ✅ 落款在上 -->
+          <div class="result-watermark reveal" style="--d:620ms;">
+            <img src="HLOGO.png" alt="HESTIA watermark logo" />
+            <span>HESTIA TAIWAN®</span>
+          </div>
 
-<div class="arch-actions reveal" style="--d:580ms;">
-  <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
-</div>
+          <!-- ✅ 按鈕在下 -->
+          <div class="arch-actions reveal" style="--d:580ms;">
+            <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2002,7 +1992,7 @@ body[data-precolor="white"][data-theme="mono_base"]{
         setTimeout(()=>flameImg.classList.add('in'), 520);
       }
 
-      maybeRunCinema();
+      maybeRunCinema(); /* ✅ 05 Overlay 觸發點 */
     }
     function requestCheck(){
       if(ticking) return;
@@ -2047,7 +2037,7 @@ body[data-precolor="white"][data-theme="mono_base"]{
     const flameFrame = $('#flameFrame');
     const flameImg   = $('#flameImg');
 
-    /* Toast (reuse) */
+    /* Toast */
     const toast = $('#toast');
     let toastTimer = null;
     function showToast(msg, ms=1100){
@@ -2059,7 +2049,7 @@ body[data-precolor="white"][data-theme="mono_base"]{
     }
 
     /* =========================
-       PRETONE（✅ 加入「選完看得到動靜」）
+       PRETONE
     ========================== */
     const PRETONE_KEY = 'hestia_pretone';
     const pretonePicked = $('#pretonePicked');
@@ -2067,18 +2057,15 @@ body[data-precolor="white"][data-theme="mono_base"]{
     const breath = $('#breath');
 
     function pretoneFeedback(hex, label){
-      // 1) 盒子閃一下（更直覺）
       if(pretoneWrap){
         pretoneWrap.classList.remove('pretone-flash');
         void pretoneWrap.offsetWidth;
         pretoneWrap.classList.add('pretone-flash');
       }
-      // 2) 背景 breath 短暫升溫（全畫面反饋）
       if(breath){
         breath.classList.add('pretone-kick');
         setTimeout(()=>breath.classList.remove('pretone-kick'), 720);
       }
-      // 3) toast 明確告知（避免「以為沒反應」）
       const t = label ? `PRE-TONE 已套用｜${label}` : `PRE-TONE 已套用｜${hex || ''}`;
       showToast(t, 980);
     }
@@ -2130,7 +2117,6 @@ body[data-precolor="white"][data-theme="mono_base"]{
       if(s2) s2.scrollIntoView({behavior:'smooth', block:'start'});
       setTimeout(requestCheck, 160);
     });
-
 
     /* =========================
        06 Aesthetic（主題色）
@@ -2186,7 +2172,6 @@ body[data-precolor="white"][data-theme="mono_base"]{
     /* =========================================================
        07/08 Archetype（原樣保留）
     ========================================================= */
-
     const Q07_INDEX_TO_ABC = { 1: "B", 2: "A", 3: "C" };
     const TIE_PRIORITY = ["B", "A", "C"];
 
@@ -2664,154 +2649,117 @@ body[data-precolor="white"][data-theme="mono_base"]{
       }
       boost = Math.min(1.2, boost + 0.85);
     }
+
     /* =====================================================
-   05 CINEMA – APPLE-LIKE OVERLAY VERSION
-   （C + D 合併版，直接貼在 <script> 最底部）
-===================================================== */
+       05 CINEMA – APPLE-LIKE OVERLAY (唯一乾淨版)
+       ✅ 修掉你原本重複貼三段造成的 JS 爆掉問題
+       ✅ Skip 會真正中止播放
+    ====================================================== */
+    const s4 = document.getElementById('s4');
+    const cinemaOverlay = document.getElementById('cinemaOverlay');
+    const cinemaSkipBtn = document.getElementById('cinemaSkipBtn');
 
-/* ---------- Overlay elements ---------- */
-const overlay = document.getElementById('cinemaOverlay');
-const skipBtn = document.getElementById('cinemaSkipBtn');
+    const ocSteps = [
+      document.getElementById('oc1'),
+      document.getElementById('oc2'),
+      document.getElementById('oc3'),
+      document.getElementById('oc4'),
+      document.getElementById('oc5'),
+      document.getElementById('oc6')
+    ].filter(Boolean);
 
-const oc1 = document.getElementById('oc1');
-const oc2 = document.getElementById('oc2');
-const oc3 = document.getElementById('oc3');
-const oc4 = document.getElementById('oc4');
-const oc5 = document.getElementById('oc5');
-const oc6 = document.getElementById('oc6');
+    let overlayPlayed = false;
+    let overlayBusy = false;
+    let overlayAbort = false;
 
-/* ---------- Overlay helpers ---------- */
-function resetOverlaySteps(){
-  [oc1,oc2,oc3,oc4,oc5,oc6].forEach(el=>{
-    if(!el) return;
-    el.classList.remove('show','hide');
-  });
-}
+    const OVERLAY_SLOW = 1.25; // 0.8x 速度 => 1.25x 時間
 
-function openOverlay(){
-  if(!overlay) return;
-  overlay.classList.add('show');
-  overlay.setAttribute('aria-hidden','false');
-}
+    function resetOverlaySteps(){
+      ocSteps.forEach(el => el.classList.remove('show','hide'));
+    }
 
-/* =====================================================
-   05 CINEMA – APPLE-LIKE OVERLAY VERSION (FINAL)
-===================================================== */
+    function lockBody(on){
+      if(on){
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+      }else{
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+      }
+    }
 
-const s4 = document.getElementById('s4');
-/* =====================================================
-   05 CINEMA – APPLE-LIKE OVERLAY VERSION (SINGLE / CLEAN)
-===================================================== */
+    function openOverlay(){
+      if(!cinemaOverlay) return;
+      cinemaOverlay.classList.add('show');
+      cinemaOverlay.setAttribute('aria-hidden','false');
+      lockBody(true);
+    }
 
-const s4 = document.getElementById('s4');
-const cinemaOverlay = document.getElementById('cinemaOverlay');
-const cinemaSkipBtn = document.getElementById('cinemaSkipBtn');
+    function closeOverlay(){
+      if(!cinemaOverlay) return;
+      cinemaOverlay.classList.remove('show');
+      cinemaOverlay.setAttribute('aria-hidden','true');
+      lockBody(false);
+    }
 
-const ocSteps = [
-  document.getElementById('oc1'),
-  document.getElementById('oc2'),
-  document.getElementById('oc3'),
-  document.getElementById('oc4'),
-  document.getElementById('oc5'),
-  document.getElementById('oc6')
-].filter(Boolean);
+    async function playOverlayCinema(){
+      if(overlayBusy || overlayPlayed) return;
+      overlayBusy = true;
+      overlayPlayed = true;
+      overlayAbort = false;
 
-let overlayPlayed = false;
-let overlayBusy = false;
+      resetOverlaySteps();
+      openOverlay();
 
-const OVERLAY_SLOW = 1.25; // ✅ 0.8x 速度 => 1.25x 時間
+      const showDur = [1200,1100,1100,1100,1200,680].map(v => v * OVERLAY_SLOW);
+      const gapDur  = 520 * OVERLAY_SLOW;
 
-function resetOverlaySteps(){
-  ocSteps.forEach(el => el.classList.remove('show','hide'));
-}
+      for(let i=0;i<ocSteps.length;i++){
+        if(overlayAbort) break;
 
-function lockBody(on){
-  if(on){
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
-  }else{
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
-  }
-}
+        const el = ocSteps[i];
+        if(!el) continue;
 
-function openOverlay(){
-  if(!cinemaOverlay) return;
-  cinemaOverlay.classList.add('show');
-  cinemaOverlay.setAttribute('aria-hidden','false');
-  lockBody(true);
-}
+        el.classList.add('show');
+        await sleep(showDur[i] || (1100*OVERLAY_SLOW));
 
-function closeOverlay(){
-  if(!cinemaOverlay) return;
-  cinemaOverlay.classList.remove('show');
-  cinemaOverlay.setAttribute('aria-hidden','true');
-  lockBody(false);
-}
+        if(overlayAbort) break;
+        if(i === ocSteps.length - 1) break;
 
-async function playOverlayCinema(){
-  if(overlayBusy || overlayPlayed) return;
-  overlayBusy = true;
-  overlayPlayed = true;
+        el.classList.remove('show');
+        el.classList.add('hide');
+        await sleep(gapDur);
+      }
 
-  resetOverlaySteps();
-  openOverlay();
+      closeOverlay();
+      overlayBusy = false;
 
-  const showDur = [1200,1100,1100,1100,1200,680].map(v => v * OVERLAY_SLOW);
-  const gapDur  = 520 * OVERLAY_SLOW;
+      showToast(overlayAbort ? '已略過｜繼續往下' : '已解鎖｜繼續往下', 900);
+      setTimeout(requestCheck, 120);
+    }
 
-  for(let i=0;i<ocSteps.length;i++){
-    const el = ocSteps[i];
-    if(!el) continue;
+    function maybeRunCinema(){
+      if(overlayPlayed || overlayBusy) return;
+      if(!s4) return;
+      if(inView(s4, 0.70, 0.25)){
+        playOverlayCinema();
+      }
+    }
 
-    el.classList.add('show');
-    await sleep(showDur[i] || (1100*OVERLAY_SLOW));
+    cinemaSkipBtn?.addEventListener('click', ()=>{
+      if(!overlayBusy) return;
+      overlayAbort = true;
+      closeOverlay();
+    });
 
-    if(i === ocSteps.length - 1) break;
-
-    el.classList.remove('show');
-    el.classList.add('hide');
-    await sleep(gapDur);
-  }
-
-  await sleep(220 * OVERLAY_SLOW);
-  closeOverlay();
-  overlayBusy = false;
-
-  showToast('已解鎖｜繼續往下', 900);
-  setTimeout(requestCheck, 120);
-}
-
-function maybeRunCinema(){
-  if(overlayPlayed || overlayBusy) return;
-  if(!s4) return;
-  if(inView(s4, 0.70, 0.25)){
-    playOverlayCinema();
-  }
-}
-
-// Skip
-cinemaSkipBtn?.addEventListener('click', ()=>{
-  if(!overlayBusy) return;
-  overlayPlayed = true;
-  overlayBusy = false;
-  closeOverlay();
-  showToast('已略過｜繼續往下', 900);
-  setTimeout(requestCheck, 120);
-});
-
-// 點背景略過（只在播放中生效）
-cinemaOverlay?.addEventListener('click', (e)=>{
-  if(e.target === cinemaOverlay && overlayBusy){
-    overlayPlayed = true;
-    overlayBusy = false;
-    closeOverlay();
-    showToast('已略過｜繼續往下', 900);
-    setTimeout(requestCheck, 120);
-  }
-});
+    cinemaOverlay?.addEventListener('click', (e)=>{
+      if(e.target === cinemaOverlay && overlayBusy){
+        overlayAbort = true;
+        closeOverlay();
+      }
+    });
 
   </script>
 </body>

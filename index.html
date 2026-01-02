@@ -1543,8 +1543,9 @@
     <button class="dot" data-target="s2"  data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
     <button class="dot" data-target="s3"  data-label="BRAND MARK" aria-label="Go to Brand Mark"></button>
     <button class="dot" data-target="s4b" data-label="BRAND TAGLINE" aria-label="Go to Brand Tagline"></button>
-    <button class="dot" data-target="s4"  data-label="SANCTUARY" aria-label="Go to Sanctuary"></button>
-    <button class="dot" data-target="s5"  data-label="AESTHETIC" aria-label="Go to Aesthetic Alignment"></button>
+   <button class="dot" data-target="s4"  data-label="SANCTUARY" aria-label="Go to Sanctuary"></button>
+<button class="dot" data-target="s4c" data-label="CINEMA" aria-label="Go to Cinema"></button>
+<button class="dot" data-target="s5"  data-label="AESTHETIC" aria-label="Go to Aesthetic Alignment"></button>
     <button class="dot" data-target="s6"  data-label="REFLECTION" aria-label="Go to Introspective Reflection"></button>
     <button class="dot" data-target="s7"  data-label="ARCHETYPE" aria-label="Go to Archetype"></button>
     <button class="dot" data-target="s8"  data-label="HEARTH" aria-label="Go to Our Flame"></button>
@@ -1698,6 +1699,31 @@
       </button>
     </div>
   </div>
+  <!-- ⑤-2 CINEMA（原本 05 的浮動視窗字幕淡入淡出） -->
+  <section class="s5" id="s4c">
+    <div class="secno reveal" style="--d:140ms;">05</div>
+
+    <div class="sanctuary-wrap">
+      <div class="sanctuary-kicker">
+        <span class="kicker reveal" style="--d:180ms;">CINEMA</span>
+      </div>
+
+      <h2 class="reveal" style="--d:220ms;">保持呼吸</h2>
+      <p class="reveal" style="--d:260ms;">
+        只看字幕，讓它慢慢帶你進入下一段。
+      </p>
+
+      <!-- ✅ 只有字幕淡入淡出（同一位置） -->
+      <div class="cinema" id="cinemaFloatStage" aria-label="Cinema floating subtitles">
+        <div class="cinema-step" id="fc1"><h2 style="margin:0;">現在安靜下來</h2></div>
+        <div class="cinema-step" id="fc2"><h2 style="margin:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2></div>
+        <div class="cinema-step" id="fc3"><h2 style="margin:0;">你的每一次選擇</h2></div>
+        <div class="cinema-step" id="fc4"><h2 style="margin:0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2></div>
+        <div class="cinema-step" id="fc5"><h2 style="margin:0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2></div>
+        <div class="cinema-step" id="fc6"><h2 style="margin:0;">讓我們開始吧</h2></div>
+      </div>
+    </div>
+  </section>
 
   <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
@@ -1988,6 +2014,8 @@
       }
 
       maybeRunCinema(); /* ✅ 05 Overlay 觸發點 */
+      maybeRunFloatCinema(); /* ✅ 05 浮動字幕（插在 06 前） */
+
     }
     function requestCheck(){
       if(ticking) return;
@@ -2413,7 +2441,7 @@
     });
 
     /* Dots behavior */
-    const sections = ['s1','s1b','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
+    const sections = ['s1','s1b','s2','s3','s4b','s4','s4c','s5','s6','s7','s8'].map(id=>document.getElementById(id));
     const dots = $$('.dot');
 
     function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
@@ -2781,6 +2809,64 @@
         }
       }, 180);
     }
+        /* =====================================================
+       05-2 CINEMA – FLOAT SUBTITLES (before 06)
+       ✅ 只有字幕淡入淡出（同一位置）
+       ✅ 不鎖滑動、不干擾 overlay
+    ====================================================== */
+    const s4c = document.getElementById('s4c');
+
+    const fcSteps = [
+      document.getElementById('fc1'),
+      document.getElementById('fc2'),
+      document.getElementById('fc3'),
+      document.getElementById('fc4'),
+      document.getElementById('fc5'),
+      document.getElementById('fc6')
+    ].filter(Boolean);
+
+    let floatPlayed = false;
+    let floatBusy = false;
+
+    function resetFloatSteps(){
+      fcSteps.forEach(el => el.classList.remove('show','hide'));
+    }
+
+    async function runFloatCinema(){
+      if(floatBusy) return;
+      floatBusy = true;
+
+      resetFloatSteps();
+
+      // 節奏：慢、乾淨，只做淡入淡出
+      const HOLD = 1650;   // 每句停留時間
+      const GAP  = 520;    // 句與句之間的空隙
+      const FADE = 1250;   // 你 CSS 的 transition: 1.25s
+
+      for(let i=0;i<fcSteps.length;i++){
+        const el = fcSteps[i];
+        if(!el) continue;
+
+        el.classList.add('show');
+        await sleep(HOLD);
+
+        el.classList.remove('show');
+        el.classList.add('hide');
+        await sleep(Math.max(GAP, FADE * 0.45));
+      }
+
+      resetFloatSteps();
+      floatBusy = false;
+    }
+
+    function maybeRunFloatCinema(){
+      if(floatPlayed || !s4c || fcSteps.length === 0) return;
+      if(inView(s4c, 0.78, 0.18)){
+        floatPlayed = true;
+        runFloatCinema();
+      }
+    }
+
   </script>
 </body>
 </html>

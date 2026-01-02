@@ -39,15 +39,11 @@
     *{ box-sizing:border-box; }
 
     html,body{
-      margin:0;padding:0;overflow-x:hidden;color:var(--text);
+      margin:0;padding:0;overflow-x:hidden;background:#000;color:var(--text);
       font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
-      background-color: var(--sanctuary-1);
     }
 
-    body{
-      transition: background-color 1.2s ease;
-      background-color: var(--sanctuary-1);
-    }
+    body{ transition: background-color 1.2s ease; }
 
     /* 初始（無 data-theme）＝無彩黑白灰，不帶任何預設底色傾向 */
     body:not([data-theme]),
@@ -68,6 +64,8 @@
     /* =========================
        PRETONE（僅在 mono_base / 空主題時生效；06 選到 data-theme 後由主題接管）
     ========================== */
+    .s1b{ background: linear-gradient(180deg,#000,var(--sanctuary-1)); }
+
     .pretone-grid{
       margin-top:16px;
       display:grid;
@@ -103,6 +101,12 @@
       font-size:13px;
       letter-spacing:.14em;
       font-weight:800;
+    }
+    .pretone .hx{
+      margin-left:auto;
+      font-size:11px;
+      letter-spacing:.10em;
+      color: rgba(255,255,255,.62);
     }
     .pretone.active{
       border-color: rgba(255,255,255,.22);
@@ -271,7 +275,7 @@
     }
 
     /* =========================
-       06 四種色調（主題接管）
+       06 四種色調
     ========================== */
     body[data-theme="rose_ember"]{
       --sanctuary-1:#120a07;
@@ -347,14 +351,12 @@
     .we-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,106,42,.16);}
     .i-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,106,42,.16);}
 
-    /* ✅ 讓 Hero 也吃到 PRETONE 背景階（整體立即變色） */
-    .s1{ background: linear-gradient(180deg, #000, var(--sanctuary-1)); }
-    .s1b{ background: linear-gradient(180deg, var(--sanctuary-1), var(--sanctuary-2)); }
-    .s2{ background: linear-gradient(180deg, var(--sanctuary-2), var(--sanctuary-3)); }
-    .s3{ background: linear-gradient(180deg, var(--sanctuary-3), var(--sanctuary-4)); }
-    .s4b{background:linear-gradient(180deg,var(--sanctuary-4),var(--sanctuary-5));}
-    .s4{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
-    .s5{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
+    .s1{background:linear-gradient(180deg,#000,#000);}
+    .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
+    .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
+    .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
+    .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
+    .s5{ background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5)); }
     .s6{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
     .s7{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
     .s8{ background: linear-gradient(180deg, var(--sanctuary-5), #000 72%, #000); }
@@ -865,7 +867,7 @@
     #s4 .sanctuary-wrap::after{ display:none; }
 
     /* =========================
-       05 Cinema：同一位置淡入淡出（overlay 內）
+       05 Cinema（舊版容器保留給 overlay 用）
     ========================== */
     .cinema{
       width:min(var(--wrap), 92vw);
@@ -962,6 +964,9 @@
       overflow-wrap:anywhere;
     }
     .manifest.center{ text-align:center; }
+
+    .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
+    .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); max-width:100%; }
 
     .align-grid{ width:100%; display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px; position:relative; z-index:2; text-align:left; }
     .mood{
@@ -1543,9 +1548,8 @@
     <button class="dot" data-target="s2"  data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
     <button class="dot" data-target="s3"  data-label="BRAND MARK" aria-label="Go to Brand Mark"></button>
     <button class="dot" data-target="s4b" data-label="BRAND TAGLINE" aria-label="Go to Brand Tagline"></button>
-   <button class="dot" data-target="s4"  data-label="SANCTUARY" aria-label="Go to Sanctuary"></button>
-<button class="dot" data-target="s4c" data-label="CINEMA" aria-label="Go to Cinema"></button>
-<button class="dot" data-target="s5"  data-label="AESTHETIC" aria-label="Go to Aesthetic Alignment"></button>
+    <button class="dot" data-target="s4"  data-label="SANCTUARY" aria-label="Go to Sanctuary"></button>
+    <button class="dot" data-target="s5"  data-label="AESTHETIC" aria-label="Go to Aesthetic Alignment"></button>
     <button class="dot" data-target="s6"  data-label="REFLECTION" aria-label="Go to Introspective Reflection"></button>
     <button class="dot" data-target="s7"  data-label="ARCHETYPE" aria-label="Go to Archetype"></button>
     <button class="dot" data-target="s8"  data-label="HEARTH" aria-label="Go to Our Flame"></button>
@@ -1573,7 +1577,7 @@
 
       <h2 class="reveal" style="--d:180ms;">先選一個你喜歡的色調吧？</h2>
       <p class="reveal" style="--d:220ms;">
-        這會先替你的 HEST<span class="i-accent">i</span>A 宇宙體驗套上一層「氣質底色」。
+        這會先替你的HESTiA宇宙體驗套上一層「氣質底色」。
       </p>
 
       <div class="pretone-grid reveal" style="--d:280ms;" id="pretoneGrid" aria-label="Pre-tone color palette">
@@ -1584,7 +1588,7 @@
         <button class="pretone" type="button" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">深海｜DEEP NAVY</span></button>
 
         <button class="pretone" type="button" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">暮紫｜VIOLET VEIL</span></button>
-        <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">砂金｜SAND KHAKI</span></button>
+        <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">砂金｜SAND KHaki</span></button>
         <button class="pretone" type="button" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">曜黑｜OBSIDIAN</span></button>
         <button class="pretone" type="button" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">霧灰｜ASH</span></button>
         <button class="pretone" type="button" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">象牙｜IVORY</span></button>
@@ -1639,7 +1643,7 @@
         <div class="bullet reveal" style="--d:440ms;">代表力量與柔韌的平衡，也象徵身體與心靈的統一。</div>
       </div>
 
-      <div class="sig reveal" style="--d:520ms;">HESTIA 的主標識，將在服裝等所有核心視覺中作為第一辨識。</div>
+      <div class="sig reveal" style="--d:520ms;">HESTIA的主標識，將在服裝等所有核心視覺中作為第一辨識。</div>
     </div>
   </section>
 
@@ -1699,31 +1703,6 @@
       </button>
     </div>
   </div>
-  <!-- ⑤-2 CINEMA（原本 05 的浮動視窗字幕淡入淡出） -->
-  <section class="s5" id="s4c">
-    <div class="secno reveal" style="--d:140ms;">05</div>
-
-    <div class="sanctuary-wrap">
-      <div class="sanctuary-kicker">
-        <span class="kicker reveal" style="--d:180ms;">CINEMA</span>
-      </div>
-
-      <h2 class="reveal" style="--d:220ms;">保持呼吸</h2>
-      <p class="reveal" style="--d:260ms;">
-        只看字幕，讓它慢慢帶你進入下一段。
-      </p>
-
-      <!-- ✅ 只有字幕淡入淡出（同一位置） -->
-      <div class="cinema" id="cinemaFloatStage" aria-label="Cinema floating subtitles">
-        <div class="cinema-step" id="fc1"><h2 style="margin:0;">現在安靜下來</h2></div>
-        <div class="cinema-step" id="fc2"><h2 style="margin:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2></div>
-        <div class="cinema-step" id="fc3"><h2 style="margin:0;">你的每一次選擇</h2></div>
-        <div class="cinema-step" id="fc4"><h2 style="margin:0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2></div>
-        <div class="cinema-step" id="fc5"><h2 style="margin:0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2></div>
-        <div class="cinema-step" id="fc6"><h2 style="margin:0;">讓我們開始吧</h2></div>
-      </div>
-    </div>
-  </section>
 
   <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
@@ -1908,14 +1887,14 @@
             你的原型：<span class="we-accent" id="archPicked">—</span>
           </div>
 
-          <!-- ✅ 08：落款在上（先出現） -->
-          <div class="result-watermark reveal" style="--d:580ms;">
+          <!-- ✅ 落款在上 -->
+          <div class="result-watermark reveal" style="--d:620ms;">
             <img src="HLOGO.png" alt="HESTIA watermark logo" />
             <span>HESTIA TAIWAN®</span>
           </div>
 
-          <!-- ✅ 08：按鈕在下（後出現） -->
-          <div class="arch-actions reveal" style="--d:620ms;">
+          <!-- ✅ 按鈕在下 -->
+          <div class="arch-actions reveal" style="--d:580ms;">
             <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
           </div>
         </div>
@@ -2014,8 +1993,6 @@
       }
 
       maybeRunCinema(); /* ✅ 05 Overlay 觸發點 */
-      maybeRunFloatCinema(); /* ✅ 05 浮動字幕（插在 06 前） */
-
     }
     function requestCheck(){
       if(ticking) return;
@@ -2089,7 +2066,7 @@
         breath.classList.add('pretone-kick');
         setTimeout(()=>breath.classList.remove('pretone-kick'), 720);
       }
-      const t = label ? `PRE-TONE 已套用｜${label}` : `PRE-TONE 已套用`;
+      const t = label ? `PRE-TONE 已套用｜${label}` : `PRE-TONE 已套用｜${hex || ''}`;
       showToast(t, 980);
     }
 
@@ -2143,7 +2120,6 @@
 
     /* =========================
        06 Aesthetic（主題色）
-       ✅ 一旦選擇 theme，theme 會完整接管（pretone 不干擾）
     ========================== */
     const moods = $$('#alignGrid .mood');
     const alignPicked = $('#alignPicked');
@@ -2398,7 +2374,7 @@
       }, 260);
     });
 
-    $('#toHearthBtn')?.addEventListener('click', ()=>{
+    $('#toHearthBtn').addEventListener('click', ()=>{
       const s8 = document.getElementById('s8');
       if(s8) s8.scrollIntoView({behavior:'smooth', block:'start'});
       setTimeout(requestCheck, 180);
@@ -2441,7 +2417,7 @@
     });
 
     /* Dots behavior */
-    const sections = ['s1','s1b','s2','s3','s4b','s4','s4c','s5','s6','s7','s8'].map(id=>document.getElementById(id));
+    const sections = ['s1','s1b','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
     const dots = $$('.dot');
 
     function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
@@ -2460,13 +2436,11 @@
       setActiveDot(best.idx);
 
       if(best.idx !== lastActive){
-        if(breath){
-          breath.classList.add('transition');
-          requestAnimationFrame(()=>{
-            breath.classList.add('release');
-            setTimeout(()=>breath.classList.remove('transition','release'), 620);
-          });
-        }
+        breath.classList.add('transition');
+        requestAnimationFrame(()=>{
+          breath.classList.add('release');
+          setTimeout(()=>breath.classList.remove('transition','release'), 620);
+        });
         lastActive = best.idx;
       }
     }
@@ -2541,7 +2515,6 @@
       localStorage.setItem(HEARTH_KEY, String(n));
     }
 
-    /* ✅ 五階 Hearth Level */
     function levelFromCount(n){
       if(n < 50) return 'Ember';
       if(n < 150) return 'Glow';
@@ -2678,9 +2651,8 @@
     }
 
     /* =====================================================
-       05 CINEMA – APPLE-LIKE OVERLAY
-       ✅ 同一位置淡入淡出，節奏更慢
-       ✅ 滑到定位後才鎖滑動（不突兀）
+       05 CINEMA – APPLE-LIKE OVERLAY (唯一乾淨版)
+       ✅ 修掉你原本重複貼三段造成的 JS 爆掉問題
        ✅ Skip 會真正中止播放
     ====================================================== */
     const s4 = document.getElementById('s4');
@@ -2699,8 +2671,6 @@
     let overlayPlayed = false;
     let overlayBusy = false;
     let overlayAbort = false;
-    let overlayArmed = false;
-    let overlayArmTimer = null;
 
     const OVERLAY_SLOW = 1.25; // 0.8x 速度 => 1.25x 時間
 
@@ -2744,7 +2714,7 @@
       openOverlay();
 
       const showDur = [1200,1100,1100,1100,1200,680].map(v => v * OVERLAY_SLOW);
-      const fadeDur = 520 * OVERLAY_SLOW;
+      const gapDur  = 520 * OVERLAY_SLOW;
 
       for(let i=0;i<ocSteps.length;i++){
         if(overlayAbort) break;
@@ -2756,116 +2726,40 @@
         await sleep(showDur[i] || (1100*OVERLAY_SLOW));
 
         if(overlayAbort) break;
-
         if(i === ocSteps.length - 1) break;
 
         el.classList.remove('show');
         el.classList.add('hide');
-        await sleep(fadeDur);
-        el.classList.remove('hide');
+        await sleep(gapDur);
       }
 
       closeOverlay();
       overlayBusy = false;
+
+      showToast(overlayAbort ? '已略過｜繼續往下' : '已解鎖｜繼續往下', 900);
+      setTimeout(requestCheck, 120);
     }
 
-    cinemaSkipBtn?.addEventListener('click', ()=>{
-      overlayAbort = true;
-      closeOverlay();
-      overlayBusy = false;
-    });
-
-    window.addEventListener('keydown', (e)=>{
-      if(!cinemaOverlay || !cinemaOverlay.classList.contains('show')) return;
-      if(e.key === 'Escape'){
-        overlayAbort = true;
-        closeOverlay();
-        overlayBusy = false;
-      }
-    });
-
-    // ✅ 滑到 s4 定位後才鎖住並播放（避免突兀）
     function maybeRunCinema(){
       if(overlayPlayed || overlayBusy) return;
       if(!s4) return;
-
-      const ok = inView(s4, 0.62, 0.38);
-      if(!ok){
-        overlayArmed = false;
-        if(overlayArmTimer) clearTimeout(overlayArmTimer);
-        overlayArmTimer = null;
-        return;
-      }
-
-      if(overlayArmed) return;
-      overlayArmed = true;
-
-      overlayArmTimer = setTimeout(()=>{
-        // 再確認一次：真的已經停在該段落區間
-        if(inView(s4, 0.62, 0.38) && !overlayPlayed && !overlayBusy){
-          playOverlayCinema();
-        }else{
-          overlayArmed = false;
-        }
-      }, 180);
-    }
-        /* =====================================================
-       05-2 CINEMA – FLOAT SUBTITLES (before 06)
-       ✅ 只有字幕淡入淡出（同一位置）
-       ✅ 不鎖滑動、不干擾 overlay
-    ====================================================== */
-    const s4c = document.getElementById('s4c');
-
-    const fcSteps = [
-      document.getElementById('fc1'),
-      document.getElementById('fc2'),
-      document.getElementById('fc3'),
-      document.getElementById('fc4'),
-      document.getElementById('fc5'),
-      document.getElementById('fc6')
-    ].filter(Boolean);
-
-    let floatPlayed = false;
-    let floatBusy = false;
-
-    function resetFloatSteps(){
-      fcSteps.forEach(el => el.classList.remove('show','hide'));
-    }
-
-    async function runFloatCinema(){
-      if(floatBusy) return;
-      floatBusy = true;
-
-      resetFloatSteps();
-
-      // 節奏：慢、乾淨，只做淡入淡出
-      const HOLD = 1650;   // 每句停留時間
-      const GAP  = 520;    // 句與句之間的空隙
-      const FADE = 1250;   // 你 CSS 的 transition: 1.25s
-
-      for(let i=0;i<fcSteps.length;i++){
-        const el = fcSteps[i];
-        if(!el) continue;
-
-        el.classList.add('show');
-        await sleep(HOLD);
-
-        el.classList.remove('show');
-        el.classList.add('hide');
-        await sleep(Math.max(GAP, FADE * 0.45));
-      }
-
-      resetFloatSteps();
-      floatBusy = false;
-    }
-
-    function maybeRunFloatCinema(){
-      if(floatPlayed || !s4c || fcSteps.length === 0) return;
-      if(inView(s4c, 0.78, 0.18)){
-        floatPlayed = true;
-        runFloatCinema();
+      if(inView(s4, 0.70, 0.25)){
+        playOverlayCinema();
       }
     }
+
+    cinemaSkipBtn?.addEventListener('click', ()=>{
+      if(!overlayBusy) return;
+      overlayAbort = true;
+      closeOverlay();
+    });
+
+    cinemaOverlay?.addEventListener('click', (e)=>{
+      if(e.target === cinemaOverlay && overlayBusy){
+        overlayAbort = true;
+        closeOverlay();
+      }
+    });
 
   </script>
 </body>

@@ -2035,35 +2035,29 @@ window.addEventListener('load', requestCheck);
 window.addEventListener('resize', requestCheck);
 requestCheck(); // 首次進場就跑一次
 
-    /* LOGO click cycle */
-    const logoFrame = $('#logoFrame');
-    const logoMark  = $('#logoMark');
-    const modes = ['primary','fabric','mono'];
-    let modeIdx = 0;
-    function popOnce(){
-      logoFrame.classList.remove('pulse');
-      logoMark.classList.remove('pop');
-      void logoFrame.offsetWidth;
-      logoFrame.classList.add('pulse');
-      logoMark.classList.add('pop');
-    }
-    function cycleMode(){
-      modeIdx = (modeIdx + 1) % modes.length;
-      logoFrame.setAttribute('data-mode', modes[modeIdx]);
-      popOnce();
-    }
-    logoFrame.addEventListener('click', cycleMode);
-    logoFrame.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        cycleMode();
-      }
-    });
+/* LOGO click cycle（修正：不要重複宣告，沿用前面已存在的 logoFrame/logoMark/flameFrame/flameImg 與旗標） */
+const modes = ['primary','fabric','mono'];
+let modeIdx = 0;
 
-    let logoRevealed = false;
-    let flameRevealed = false;
-    const flameFrame = $('#flameFrame');
-    const flameImg   = $('#flameImg');
+function popOnce(){
+  logoFrame.classList.remove('pulse');
+  logoMark.classList.remove('pop');
+  void logoFrame.offsetWidth;
+  logoFrame.classList.add('pulse');
+  logoMark.classList.add('pop');
+}
+function cycleMode(){
+  modeIdx = (modeIdx + 1) % modes.length;
+  logoFrame.setAttribute('data-mode', modes[modeIdx]);
+  popOnce();
+}
+logoFrame.addEventListener('click', cycleMode);
+logoFrame.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    cycleMode();
+  }
+});
 
     /* Toast */
     const toast = $('#toast');

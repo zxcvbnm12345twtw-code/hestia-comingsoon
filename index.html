@@ -1985,33 +1985,55 @@
       return (r.top <= topLine) && (r.bottom >= bottomLine);
     }
 
-    /* Reveal */
-    let ticking = false;
-    function rafCheck(){
-      ticking = false;
+/* =========================
+   Reveal + requestCheck（修正版）
+========================= */
 
-      $$('.reveal').forEach(el=>{
-        if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-      });
+const logoFrame = $('#logoFrame');
+const logoMark  = $('#logoMark');
+const flameFrame = $('#flameFrame');
+const flameImg   = $('#flameImg');
 
-      $$('.late[data-late]').forEach(el=>{
-        if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-      });
+let logoRevealed = false;
+let flameRevealed = false;
 
-      if(!logoRevealed && inView(logoFrame, 0.80, 0.15)){
-        logoRevealed = true;
-        logoFrame.classList.add('in');
-        setTimeout(()=>logoMark.classList.add('in'), 520);
-        setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
-      }
+let ticking = false;
 
-      if(!flameRevealed && inView(flameFrame, 0.80, 0.15)){
-        flameRevealed = true;
-        flameFrame.classList.add('in');
-        setTimeout(()=>flameImg.classList.add('in'), 520);
-      }
+function rafCheck(){
+  ticking = false;
 
-  
+  $$('.reveal').forEach(el=>{
+    if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
+  });
+
+  $$('.late[data-late]').forEach(el=>{
+    if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
+  });
+
+  if(logoFrame && logoMark && !logoRevealed && inView(logoFrame, 0.80, 0.15)){
+    logoRevealed = true;
+    logoFrame.classList.add('in');
+    setTimeout(()=>logoMark.classList.add('in'), 520);
+    setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
+  }
+
+  if(flameFrame && flameImg && !flameRevealed && inView(flameFrame, 0.80, 0.15)){
+    flameRevealed = true;
+    flameFrame.classList.add('in');
+    setTimeout(()=>flameImg.classList.add('in'), 520);
+  }
+}
+
+function requestCheck(){
+  if(ticking) return;
+  ticking = true;
+  requestAnimationFrame(rafCheck);
+}
+
+window.addEventListener('scroll', requestCheck, { passive:true });
+window.addEventListener('load', requestCheck);
+window.addEventListener('resize', requestCheck);
+requestCheck(); // 首次進場就跑一次
 
     /* LOGO click cycle */
     const logoFrame = $('#logoFrame');

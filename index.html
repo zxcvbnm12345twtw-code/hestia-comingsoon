@@ -1535,6 +1535,37 @@
       transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
     }
     .cinema-skip:active{ transform: scale(.98); }
+    
+    /* ✅ 05A 全屏沉靜引導頁（同 #s4 的全屏規格） */
+#s4a{ padding:0; }
+#s4a .guide-wrap{
+  width:100%;
+  height:100vh;
+  height:100svh;
+  max-width:none;
+  border-radius:0;
+  border:none;
+  box-shadow:none;
+  background: transparent;
+  backdrop-filter:none;
+  padding: 0 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+/* 引導文字舞台：維持全屏但文字區不要像 overlay 那樣有框 */
+#s4a .guide-cinema{
+  width: min(760px, 92vw);
+  height: 220px;
+}
+
+/* SKIP 按鈕（沿用 ghost-btn，不需要 overlay 的 cinema-skip） */
+#guideSkipBtn{
+  min-width: 120px;
+}
+
   </style>
 </head>
 
@@ -1674,35 +1705,23 @@
   </section>
 
   <!-- ⑤ SANCTUARY（05） -->
-  <section class="s4" id="s4">
-    <div class="sanctuary-wrap">
-      <div class="sanctuary-kicker">
-        <span class="kicker reveal" style="--d:180ms;">SANCTUARY</span>
-      </div>
-      <h2 class="reveal" style="--d:220ms;">SANCTUARY</h2>
-      <p class="reveal" style="--d:260ms;">
-        這一段會進入短暫的沉靜引導，完成後繼續往下探索。
-      </p>
+<section class="s4" id="s4">
+  <div class="sanctuary-wrap">
+    <div class="sanctuary-kicker">
+      <span class="kicker reveal" style="--d:180ms;">SANCTUARY</span>
     </div>
-  </section>
+    <h2 class="reveal" style="--d:220ms;">SANCTUARY</h2>
+    <p class="reveal" style="--d:260ms;">
+      這一段會進入短暫的沉靜引導，完成後繼續往下探索。
+    </p>
 
-  <!-- ✅ 05 CINEMA OVERLAY (Apple-like) -->
-  <div id="cinemaOverlay" class="cinema-overlay" aria-hidden="true">
-    <div class="cinema-overlay-inner" role="dialog" aria-modal="true" aria-label="HESTIA cinema sequence">
-      <div class="cinema cinema-overlay-cinema" id="cinemaOverlayStage">
-        <div class="cinema-step" id="oc1"><h2 style="margin:0;">現在安靜下來</h2></div>
-        <div class="cinema-step" id="oc2"><h2 style="margin:0;">讓我帶領你進入 HEST<span class="i-accent">i</span>A 宇宙</h2></div>
-        <div class="cinema-step" id="oc3"><h2 style="margin:0;">你的每一次選擇</h2></div>
-        <div class="cinema-step" id="oc4"><h2 style="margin:0;">都是和 HEST<span class="i-accent">i</span>A 宇宙的共感</h2></div>
-        <div class="cinema-step" id="oc5"><h2 style="margin:0;">你將在測驗最後成為 HEST<span class="i-accent">i</span>A 宇宙的一個角色</h2></div>
-        <div class="cinema-step" id="oc6"><h2 style="margin:0;">讓我們開始吧</h2></div>
-      </div>
-
-      <button type="button" class="cinema-skip" id="cinemaSkipBtn" aria-label="Skip">
-        SKIP
-      </button>
+    <!-- ✅ 新增：進入引導按鈕 -->
+    <div class="arch-actions reveal" style="--d:320ms;">
+      <button class="ghost-btn" id="enterGuideBtn" type="button">進入引導</button>
     </div>
   </div>
+</section>
+
 
   <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
@@ -1992,20 +2011,7 @@
         setTimeout(()=>flameImg.classList.add('in'), 520);
       }
 
-      maybeRunCinema(); /* ✅ 05 Overlay 觸發點 */
-    }
-    function requestCheck(){
-      if(ticking) return;
-      ticking = true;
-      requestAnimationFrame(rafCheck);
-    }
-    window.addEventListener('scroll', requestCheck, {passive:true});
-    window.addEventListener('resize', requestCheck);
-    window.addEventListener('load', ()=>{
-      requestCheck();
-      setTimeout(requestCheck, 120);
-      setTimeout(requestCheck, 420);
-    });
+  
 
     /* LOGO click cycle */
     const logoFrame = $('#logoFrame');
@@ -2650,116 +2656,85 @@
       boost = Math.min(1.2, boost + 0.85);
     }
 
-    /* =====================================================
-       05 CINEMA – APPLE-LIKE OVERLAY (唯一乾淨版)
-       ✅ 修掉你原本重複貼三段造成的 JS 爆掉問題
-       ✅ Skip 會真正中止播放
-    ====================================================== */
-    const s4 = document.getElementById('s4');
-    const cinemaOverlay = document.getElementById('cinemaOverlay');
-    const cinemaSkipBtn = document.getElementById('cinemaSkipBtn');
+/* =========================
+   05A FULLSCREEN GUIDE (no overlay)
+========================= */
+const enterGuideBtn = document.getElementById('enterGuideBtn');
+const guideSkipBtn  = document.getElementById('guideSkipBtn');
+const s4a = document.getElementById('s4a');
 
-    const ocSteps = [
-      document.getElementById('oc1'),
-      document.getElementById('oc2'),
-      document.getElementById('oc3'),
-      document.getElementById('oc4'),
-      document.getElementById('oc5'),
-      document.getElementById('oc6')
-    ].filter(Boolean);
+const gcSteps = [
+  document.getElementById('gc1'),
+  document.getElementById('gc2'),
+  document.getElementById('gc3'),
+  document.getElementById('gc4'),
+  document.getElementById('gc5'),
+  document.getElementById('gc6'),
+].filter(Boolean);
 
-    let overlayPlayed = false;
-    let overlayBusy = false;
-    let overlayAbort = false;
+let guideBusy = false;
+let guideAbort = false;
 
-    const OVERLAY_SLOW = 1.25; // 0.8x 速度 => 1.25x 時間
+function resetGuideSteps(){
+  gcSteps.forEach(el => el.classList.remove('show','hide'));
+}
 
-    function resetOverlaySteps(){
-      ocSteps.forEach(el => el.classList.remove('show','hide'));
-    }
+async function playFullscreenGuide(){
+  if(guideBusy) return;
+  guideBusy = true;
+  guideAbort = false;
 
-    function lockBody(on){
-      if(on){
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        document.body.style.touchAction = 'none';
-      }else{
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        document.body.style.touchAction = '';
-      }
-    }
+  resetGuideSteps();
 
-    function openOverlay(){
-      if(!cinemaOverlay) return;
-      cinemaOverlay.classList.add('show');
-      cinemaOverlay.setAttribute('aria-hidden','false');
-      lockBody(true);
-    }
+  // 確保畫面在 guide 頁
+  if(s4a) s4a.scrollIntoView({ behavior:'smooth', block:'start' });
+  setTimeout(requestCheck, 160);
 
-    function closeOverlay(){
-      if(!cinemaOverlay) return;
-      cinemaOverlay.classList.remove('show');
-      cinemaOverlay.setAttribute('aria-hidden','true');
-      lockBody(false);
-    }
+  // 給 scroll 一點時間
+  await sleep(520);
 
-    async function playOverlayCinema(){
-      if(overlayBusy || overlayPlayed) return;
-      overlayBusy = true;
-      overlayPlayed = true;
-      overlayAbort = false;
+  const slow = 1.15; // 你可調：1.0 = 原速；越大越慢
+  const showDur = [1200,1100,1100,1100,1200,680].map(v => v * slow);
+  const gapDur  = 520 * slow;
 
-      resetOverlaySteps();
-      openOverlay();
+  for(let i=0;i<gcSteps.length;i++){
+    if(guideAbort) break;
+    const el = gcSteps[i];
+    if(!el) continue;
 
-      const showDur = [1200,1100,1100,1100,1200,680].map(v => v * OVERLAY_SLOW);
-      const gapDur  = 520 * OVERLAY_SLOW;
+    el.classList.add('show');
+    await sleep(showDur[i] || (1100*slow));
 
-      for(let i=0;i<ocSteps.length;i++){
-        if(overlayAbort) break;
+    if(guideAbort) break;
+    if(i === gcSteps.length - 1) break;
 
-        const el = ocSteps[i];
-        if(!el) continue;
+    el.classList.remove('show');
+    el.classList.add('hide');
+    await sleep(gapDur);
+  }
 
-        el.classList.add('show');
-        await sleep(showDur[i] || (1100*OVERLAY_SLOW));
+  guideBusy = false;
 
-        if(overlayAbort) break;
-        if(i === ocSteps.length - 1) break;
+  // 播完（或 skip）→ 往下到 s5
+  const s5 = document.getElementById('s5');
+  if(s5) s5.scrollIntoView({ behavior:'smooth', block:'start' });
+  setTimeout(requestCheck, 180);
 
-        el.classList.remove('show');
-        el.classList.add('hide');
-        await sleep(gapDur);
-      }
+  showToast(guideAbort ? '已略過｜繼續往下' : '已完成｜繼續往下', 900);
+}
 
-      closeOverlay();
-      overlayBusy = false;
+enterGuideBtn?.addEventListener('click', playFullscreenGuide);
 
-      showToast(overlayAbort ? '已略過｜繼續往下' : '已解鎖｜繼續往下', 900);
-      setTimeout(requestCheck, 120);
-    }
-
-    function maybeRunCinema(){
-      if(overlayPlayed || overlayBusy) return;
-      if(!s4) return;
-      if(inView(s4, 0.70, 0.25)){
-        playOverlayCinema();
-      }
-    }
-
-    cinemaSkipBtn?.addEventListener('click', ()=>{
-      if(!overlayBusy) return;
-      overlayAbort = true;
-      closeOverlay();
-    });
-
-    cinemaOverlay?.addEventListener('click', (e)=>{
-      if(e.target === cinemaOverlay && overlayBusy){
-        overlayAbort = true;
-        closeOverlay();
-      }
-    });
+guideSkipBtn?.addEventListener('click', ()=>{
+  if(!guideBusy) {
+    // 若使用者直接在 s4a 按 skip（還沒播放），也直接往下
+    const s5 = document.getElementById('s5');
+    if(s5) s5.scrollIntoView({ behavior:'smooth', block:'start' });
+    setTimeout(requestCheck, 180);
+    return;
+  }
+  guideAbort = true;
+});
 
   </script>
 </body>

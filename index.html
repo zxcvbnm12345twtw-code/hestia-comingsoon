@@ -356,6 +356,7 @@
     .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
     .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
     .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
+    #s4a{background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-4)) !important;}
     .s5{ background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5)); }
     .s6{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
     .s7{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
@@ -1560,6 +1561,21 @@
   width: min(760px, 92vw);
   height: 220px;
 }
+/* ✅ GUIDE 文字：更大、更粗、更有存在感（不影響其他頁） */
+#s4a .cinema-step p{
+  margin:0;
+  font-size: clamp(22px, 5.6vw, 34px);
+  font-weight: 850;
+  letter-spacing: .06em;
+  line-height: 1.28;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 10px 36px rgba(0,0,0,.50);
+}
+
+/* ✅ GUIDE 文字淡入淡出節奏：更慢 */
+#s4a .cinema-step{
+  transition: opacity 1.85s cubic-bezier(.22,.61,.36,1);
+}
 
 /* SKIP 按鈕（沿用 ghost-btn，不需要 overlay 的 cinema-skip） */
 #guideSkipBtn{
@@ -1728,34 +1744,14 @@
       <span class="kicker reveal" style="--d:180ms;">SANCTUARY GUIDE</span>
     </div>
 
-    <!-- 引導文字（沿用 cinema-step 的淡入淡出規則） -->
+    <!-- 引導文字：自動播放（使用者可自由滑動，不鎖、不跳轉） -->
     <div class="cinema guide-cinema" aria-live="polite">
-      <div class="cinema-step" id="gc1">
-        <p>現在安靜下來</p>
-      </div>
-      <div class="cinema-step" id="gc2">
-        <p>讓我帶領你進入 HESTiA 宇宙</p>
-      </div>
-      <div class="cinema-step" id="gc3">
-        <p>接下來的每一個選擇</p>
-      </div>
-      <div class="cinema-step" id="gc4">
-        <p>都是你與我們共感的瞬間</p>
-      </div>
-      <div class="cinema-step" id="gc5">
-        <p>你的每一個選擇</p>
-      </div>
-      <div class="cinema-step" id="gc6">
-        <p>或許都會成為 HESTiA 的一部分</p>
-      </div>
-    </div>
-
-    <div class="arch-actions" style="margin-top:18px;">
-      <button class="ghost-btn" id="guideSkipBtn" type="button">略過引導</button>
-    </div>
-
-    <div class="microcopy" style="margin-top:12px;">
-      你可以略過，但這段會讓後面的選擇更準。
+      <div class="cinema-step" id="gc1"><p>現在安靜下來</p></div>
+      <div class="cinema-step" id="gc2"><p>讓我帶領你進入 HESTiA 宇宙</p></div>
+      <div class="cinema-step" id="gc3"><p>接下來的每一個選擇</p></div>
+      <div class="cinema-step" id="gc4"><p>都是你與我們共感的瞬間</p></div>
+      <div class="cinema-step" id="gc5"><p>你的每一個選擇</p></div>
+      <div class="cinema-step" id="gc6"><p>或許都會成為 HESTiA 的一部分</p></div>
     </div>
   </div>
 </section>
@@ -2711,10 +2707,9 @@ logoFrame.addEventListener('keydown', (e)=>{
     }
 
 /* =========================
-   05A FULLSCREEN GUIDE (no overlay)
+   05A GUIDE — auto play, slower, no skip, no auto-jump
+   使用者可自由滑動：不鎖、不要求點擊、不自動跳到 06
 ========================= */
-const enterGuideBtn = document.getElementById('enterGuideBtn');
-const guideSkipBtn  = document.getElementById('guideSkipBtn');
 const s4a = document.getElementById('s4a');
 
 const gcSteps = [
@@ -2727,29 +2722,24 @@ const gcSteps = [
 ].filter(Boolean);
 
 let guideBusy = false;
+let guidePlayed = false;
 let guideAbort = false;
 
 function resetGuideSteps(){
   gcSteps.forEach(el => el.classList.remove('show','hide'));
 }
 
-async function playFullscreenGuide(){
-  if(guideBusy) return;
+async function playGuideAuto(){
+  if(guideBusy || guidePlayed || !s4a) return;
   guideBusy = true;
   guideAbort = false;
 
   resetGuideSteps();
 
-  // 確保畫面在 guide 頁
-  if(s4a) s4a.scrollIntoView({ behavior:'smooth', block:'start' });
-  setTimeout(requestCheck, 160);
-
-  // 給 scroll 一點時間
-  await sleep(520);
-
-  const slow = 1.15; // 你可調：1.0 = 原速；越大越慢
-  const showDur = [1200,1100,1100,1100,1200,680].map(v => v * slow);
-  const gapDur  = 520 * slow;
+  // ✅ 更慢節奏（你要更慢就把 slow 再加大）
+  const slow = 1.55;
+  const showDur = [1500,1350,1350,1350,1500,900].map(v => v * slow);
+  const gapDur  = 560 * slow;
 
   for(let i=0;i<gcSteps.length;i++){
     if(guideAbort) break;
@@ -2757,7 +2747,7 @@ async function playFullscreenGuide(){
     if(!el) continue;
 
     el.classList.add('show');
-    await sleep(showDur[i] || (1100*slow));
+    await sleep(showDur[i] || (1400*slow));
 
     if(guideAbort) break;
     if(i === gcSteps.length - 1) break;
@@ -2768,27 +2758,31 @@ async function playFullscreenGuide(){
   }
 
   guideBusy = false;
+  guidePlayed = true;
 
-  // 播完（或 skip）→ 往下到 s5
-  const s5 = document.getElementById('s5');
-  if(s5) s5.scrollIntoView({ behavior:'smooth', block:'start' });
-  setTimeout(requestCheck, 180);
-
-  showToast(guideAbort ? '已略過｜繼續往下' : '已完成｜繼續往下', 900);
+  // ✅ 不自動跳轉到 s5 / s6，讓使用者自由滑動
 }
 
-enterGuideBtn?.addEventListener('click', playFullscreenGuide);
+function guideInView(){
+  return inView(s4a, 0.78, 0.18);
+}
 
-guideSkipBtn?.addEventListener('click', ()=>{
-  if(!guideBusy) {
-    // 若使用者直接在 s4a 按 skip（還沒播放），也直接往下
-    const s5 = document.getElementById('s5');
-    if(s5) s5.scrollIntoView({ behavior:'smooth', block:'start' });
-    setTimeout(requestCheck, 180);
-    return;
+// 進入視窗就自動播放一次
+function guideWatcher(){
+  if(!s4a) return;
+  if(guideInView()){
+    playGuideAuto();
+  }else{
+    // 若使用者滑走，允許中止播放（不影響後續自由瀏覽）
+    guideAbort = true;
   }
-  guideAbort = true;
-});
+}
+
+window.addEventListener('scroll', guideWatcher, { passive:true });
+window.addEventListener('load', guideWatcher);
+window.addEventListener('resize', guideWatcher);
+setTimeout(guideWatcher, 120);
+
 
   </script>
 </body>

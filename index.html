@@ -1762,9 +1762,9 @@
 
     <div class="sanctuary-wrap">
       <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">AESTHETIC ALIGNMENT</span></div>
-      <h2 class="reveal" style="--d:220ms;">你偏好的沉靜色調</h2>
+      <h2 class="reveal" style="--d:220ms;">你偏好的「穿著色調」</h2>
       <p class="reveal" style="--d:260ms;">
-        不是投票，也不做排名；只是讓你的選擇更貼近你想長期維持的狀態。
+        透過喜歡的色彩調性，找到屬於你在 HESTiA 宇宙的角色連結。
       </p>
 
       <div class="align-grid" id="alignGrid" aria-label="Aesthetic alignment choices">
@@ -1773,7 +1773,7 @@
           <div class="row">
             <div>
               <div class="title">ROSE EMBER</div>
-              <p class="desc">像鳳凰讓光出場：色彩不急著收斂，反而是讓能量擴散；在被看見與被回應中，越分享越被點燃。</p>
+              <p class="desc">像鳳凰讓光出場：色彩溫暖明亮；在被看見與被回應中，越分享越被點燃。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#ff6a2a;"></span>
@@ -1784,16 +1784,16 @@
         </div>
 
         <div class="mood reveal" style="--d:380ms;" role="button" tabindex="0"
-             data-theme="midnight_tracker" data-value="MIDNIGHT TRACKER" data-animal="BLACK WOLF">
+             data-theme="midnight_tracker" data-value="GLACIAL STRIKER" data-animal="BLACK WOLF">
           <div class="row">
             <div>
-              <div class="title">MIDNIGHT TRACKER</div>
-              <p class="desc">像黑狼在夜裡定向：色彩用來標記邊界與目標，主動切入、好惡分明；不延長過程，能很快完成判斷與推進。</p>
+              <div class="title">GLACIAL STRIKER</div>
+              <p class="desc">像翠鳥在高空定向：冷色主導但彩度極高；雖有著冰山的外表，同時也有強烈的內在。</p>
             </div>
             <div class="sw" aria-hidden="true">
-              <span class="dot-swatch" style="background:#3b6cff;"></span>
-              <span class="dot-swatch" style="background:#9aa6d6;"></span>
-              <span class="dot-swatch" style="background:#0b0c10;"></span>
+              <span class="dot-swatch" style="background:#00b4ff;"></span>
+              <span class="dot-swatch" style="background:#00e5c4;"></span>
+              <span class="dot-swatch" style="background:#0a1a2f;"></span>
             </div>
           </div>
         </div>
@@ -1803,7 +1803,7 @@
           <div class="row">
             <div>
               <div class="title">VEIL WARDEN</div>
-              <p class="desc">像鹿踩著溫馴穿過晨霧：色彩避開視覺刺激，讓節奏是日常狀態。不追求高峰，而踏實且穩定。</p>
+              <p class="desc">像鹿踩著溫馴穿過晨霧：色彩是避開視覺刺激，不追求高峰，但溫暖且踏實。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#b8a89a;"></span>
@@ -1818,7 +1818,7 @@
           <div class="row">
             <div>
               <div class="title">LOW TIDE KEEPER</div>
-              <p class="desc">像蟒蛇把呼吸藏進陰影：色彩刻意被壓低，可能為了隱藏，也可能為了保留。只是安靜觀察、冷靜伏擊。</p>
+              <p class="desc">像蟒蛇把色彩藏進陰影：冷色與低彩度，不願張揚。只是安靜觀察，你不犯我；我不犯你。</p>
             </div>
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#b8c7c0;"></span>
@@ -2344,8 +2344,8 @@ logoFrame.addEventListener('keydown', (e)=>{
       if(currentAlign === 'VEIL WARDEN'){
         return { key:'VEIL WARDEN', zh:'霧幕守望者', coreBase:'你偏好低刺激、可持續的溫柔秩序；越規律，越能讓狀態長期在線。' };
       }
-      if(currentAlign === 'MIDNIGHT TRACKER'){
-        return { key:'MIDNIGHT TRACKER', zh:'午夜追跡者', coreBase:'你重視精準與推進感；越清楚目標，越能把自己帶到結果。' };
+      if(currentAlign === 'GLACIAL STRIKER'){
+        return { key:'GLACIAL STRIKER', zh:'午夜追跡者', coreBase:'你重視精準與推進感；越清楚目標，越能把自己帶到結果。' };
       }
       if(currentAlign === 'LOW TIDE KEEPER'){
         return { key:'LOW TIDE KEEPER', zh:'低伏掌控者', coreBase:'你擅長把能量收起來；看似安靜，其實一直在觀察與校準時機。' };

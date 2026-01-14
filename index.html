@@ -1975,16 +1975,25 @@
           把你的光點，投入火焰！不用搶先，只要行動。
         </p>
 
-        <form id="notify"
+               <form id="notify"
               action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
               method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
 
+          <!-- Email -->
           <input id="email" type="email" name="entry.345729382" placeholder="輸入你的Email搶先收到最新消息" required />
 
-          <input type="hidden" id="f_alignment" name="entry.324440347" value="">
-          <input type="hidden" id="f_archetype"  name="entry.1640422124" value="">
-          <input type="hidden" id="f_theme"      name="entry.1471764886" value="">
-          <input type="hidden" id="f_alt"        name="entry.999999999" value="">
+          <!-- PRE-TONE -->
+          <input type="hidden" id="f_pretone" name="entry.204433983" value="">
+
+          <!-- 06偏好色調 -->
+          <input type="hidden" id="f_06" name="entry.324440347" value="">
+
+          <!-- 07-01 ～ 07-05 -->
+          <input type="hidden" id="f_0701" name="entry.1640422124" value="">
+          <input type="hidden" id="f_0702" name="entry.1471764886" value="">
+          <input type="hidden" id="f_0703" name="entry.2009680739" value="">
+          <input type="hidden" id="f_0704" name="entry.1968121576" value="">
+          <input type="hidden" id="f_0705" name="entry.558120237" value="">
 
           <button id="tendBtn" type="submit">加入火焰</button>
         </form>
@@ -2018,79 +2027,79 @@
       return (r.top <= topLine) && (r.bottom >= bottomLine);
     }
 
-/* =========================
-   Reveal + requestCheck（修正版）
-========================= */
+    /* =========================
+       Reveal + requestCheck（修正版）
+    ========================= */
 
-const logoFrame = $('#logoFrame');
-const logoMark  = $('#logoMark');
-const flameFrame = $('#flameFrame');
-const flameImg   = $('#flameImg');
+    const logoFrame = $('#logoFrame');
+    const logoMark  = $('#logoMark');
+    const flameFrame = $('#flameFrame');
+    const flameImg   = $('#flameImg');
 
-let logoRevealed = false;
-let flameRevealed = false;
+    let logoRevealed = false;
+    let flameRevealed = false;
 
-let ticking = false;
+    let ticking = false;
 
-function rafCheck(){
-  ticking = false;
+    function rafCheck(){
+      ticking = false;
 
-  $$('.reveal').forEach(el=>{
-    if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-  });
+      $$('.reveal').forEach(el=>{
+        if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
+      });
 
-  $$('.late[data-late]').forEach(el=>{
-    if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-  });
+      $$('.late[data-late]').forEach(el=>{
+        if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
+      });
 
-  if(logoFrame && logoMark && !logoRevealed && inView(logoFrame, 0.80, 0.15)){
-    logoRevealed = true;
-    logoFrame.classList.add('in');
-    setTimeout(()=>logoMark.classList.add('in'), 520);
-    setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
-  }
+      if(logoFrame && logoMark && !logoRevealed && inView(logoFrame, 0.80, 0.15)){
+        logoRevealed = true;
+        logoFrame.classList.add('in');
+        setTimeout(()=>logoMark.classList.add('in'), 520);
+        setTimeout(()=>logoFrame.classList.add('sheen'), 1200);
+      }
 
-  if(flameFrame && flameImg && !flameRevealed && inView(flameFrame, 0.80, 0.15)){
-    flameRevealed = true;
-    flameFrame.classList.add('in');
-    setTimeout(()=>flameImg.classList.add('in'), 520);
-  }
-}
+      if(flameFrame && flameImg && !flameRevealed && inView(flameFrame, 0.80, 0.15)){
+        flameRevealed = true;
+        flameFrame.classList.add('in');
+        setTimeout(()=>flameImg.classList.add('in'), 520);
+      }
+    }
 
-function requestCheck(){
-  if(ticking) return;
-  ticking = true;
-  requestAnimationFrame(rafCheck);
-}
+    function requestCheck(){
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(rafCheck);
+    }
 
-window.addEventListener('scroll', requestCheck, { passive:true });
-window.addEventListener('load', requestCheck);
-window.addEventListener('resize', requestCheck);
-requestCheck(); // 首次進場就跑一次
+    window.addEventListener('scroll', requestCheck, { passive:true });
+    window.addEventListener('load', requestCheck);
+    window.addEventListener('resize', requestCheck);
+    requestCheck(); // 首次進場就跑一次
 
-/* LOGO click cycle（修正：不要重複宣告，沿用前面已存在的 logoFrame/logoMark/flameFrame/flameImg 與旗標） */
-const modes = ['primary','fabric','mono'];
-let modeIdx = 0;
+    /* LOGO click cycle（修正：不要重複宣告，沿用前面已存在的 logoFrame/logoMark/flameFrame/flameImg 與旗標） */
+    const modes = ['primary','fabric','mono'];
+    let modeIdx = 0;
 
-function popOnce(){
-  logoFrame.classList.remove('pulse');
-  logoMark.classList.remove('pop');
-  void logoFrame.offsetWidth;
-  logoFrame.classList.add('pulse');
-  logoMark.classList.add('pop');
-}
-function cycleMode(){
-  modeIdx = (modeIdx + 1) % modes.length;
-  logoFrame.setAttribute('data-mode', modes[modeIdx]);
-  popOnce();
-}
-logoFrame.addEventListener('click', cycleMode);
-logoFrame.addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter' || e.key === ' '){
-    e.preventDefault();
-    cycleMode();
-  }
-});
+    function popOnce(){
+      logoFrame.classList.remove('pulse');
+      logoMark.classList.remove('pop');
+      void logoFrame.offsetWidth;
+      logoFrame.classList.add('pulse');
+      logoMark.classList.add('pop');
+    }
+    function cycleMode(){
+      modeIdx = (modeIdx + 1) % modes.length;
+      logoFrame.setAttribute('data-mode', modes[modeIdx]);
+      popOnce();
+    }
+    logoFrame.addEventListener('click', cycleMode);
+    logoFrame.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        cycleMode();
+      }
+    });
 
     /* Toast */
     const toast = $('#toast');
@@ -2105,7 +2114,7 @@ logoFrame.addEventListener('keydown', (e)=>{
 
     /* =========================
        PRETONE
-    ========================== */
+    ========================= */
     const PRETONE_KEY = 'hestia_pretone';
     const pretonePicked = $('#pretonePicked');
     const pretoneWrap = $('#pretoneWrap');
@@ -2175,7 +2184,7 @@ logoFrame.addEventListener('keydown', (e)=>{
 
     /* =========================
        06 Aesthetic（主題色）
-    ========================== */
+    ========================= */
     const moods = $$('#alignGrid .mood');
     const alignPicked = $('#alignPicked');
     const alignPicked2 = $('#alignPicked2');
@@ -2435,7 +2444,9 @@ logoFrame.addEventListener('keydown', (e)=>{
       setTimeout(requestCheck, 180);
     });
 
-    /* Form */
+    /* =========================
+       Form（已依你重新定義的 entry 對應完成取代）
+    ========================= */
     const iframe = $('#hidden_iframe');
     let submittedAt = 0;
 
@@ -2447,14 +2458,27 @@ logoFrame.addEventListener('keydown', (e)=>{
         return false;
       }
 
-      const align = currentAlign || '—';
-      const theme = currentTheme || '';
-      const arch  = (archPicked && archPicked.textContent && archPicked.textContent !== '—') ? archPicked.textContent : '';
+      // PRE-TONE：送出 RED / ORANGE ...（大寫）
+      const pretone = (localStorage.getItem('hestia_pretone') || '').toUpperCase();
 
-      $('#f_alignment').value = align;
-      $('#f_theme').value = theme;
-      $('#f_archetype').value = arch;
-      $('#f_alt').value = answers.q5 || '';
+      // 06偏好色調：這裡填入目前 06 選到的 theme key（rose_ember / midnight_tracker / ...）
+      const v06 = currentTheme || '';
+
+      // 07-01～07-05：依你最新定義的題序
+      const v0701 = answers.q1 || '';
+      const v0702 = answers.q2 || '';
+      const v0703 = answers.q3 || '';
+      const v0704 = answers.q4 || '';
+      const v0705 = answers.q5 || '';
+
+      $('#f_pretone').value = pretone;
+      $('#f_06').value      = v06;
+
+      $('#f_0701').value = v0701;
+      $('#f_0702').value = v0702;
+      $('#f_0703').value = v0703;
+      $('#f_0704').value = v0704;
+      $('#f_0705').value = v0705;
 
       submittedAt = Date.now();
 

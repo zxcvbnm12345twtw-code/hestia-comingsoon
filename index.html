@@ -2391,28 +2391,42 @@
       });
       setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 700);
     }
+// 07-01 ~ 07-03：選項序號 → 後台回填值
+const Q07_01_03_INDEX_TO_VALUE = { 1: "B", 2: "A", 3: "C" };
+opts.forEach(o=>{
+  const act = ()=>{
+    const q = o.dataset.q;
+    const a = o.dataset.a;
 
-    opts.forEach(o=>{
-      const act = ()=>{
-        const q = o.dataset.q;
-        const a = o.dataset.a;
+    // 先算這個選項在該題中的序號（1/2/3...）
+    const idx = (q !== "q5") ? getOptionIndexWithinQuestion(o) : null;
 
-        answers[q] = a;
-        if(q !== "q5"){
-          answerIdx[q] = getOptionIndexWithinQuestion(o);
-        }
+    // 07-01 ~ 07-03：強制改成 1->B, 2->A, 3->C
+    if(q === "q1" || q === "q2" || q === "q3"){
+      answers[q] = Q07_01_03_INDEX_TO_VALUE[idx] || '';
+    }else{
+      // 07-04、07-05：維持原樣（用 data-a）
+      answers[q] = a;
+    }
 
-        setOptState(q, o);
-        updateUnlock();
-      };
-      o.addEventListener('click', act);
-      o.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter' || e.key === ' '){
-          e.preventDefault();
-          act();
-        }
-      });
-    });
+    // answerIdx 照舊（你後面 derive07BiasFromIndexes 仍然用得到）
+    if(q !== "q5"){
+      answerIdx[q] = idx;
+    }
+
+    setOptState(q, o);
+    updateUnlock();
+  };
+
+  o.addEventListener('click', act);
+  o.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      act();
+    }
+  });
+});
+
 
     unlockBtn.addEventListener('click', ()=>{
       const r = computeArchetype();

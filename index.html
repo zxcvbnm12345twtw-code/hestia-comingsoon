@@ -2406,10 +2406,9 @@ opts.forEach(o=>{
     if(q === "q1" || q === "q2" || q === "q3"){
       answers[q] = Q07_01_03_INDEX_TO_VALUE[idx] || '';
     }
-else if(q === "q4"){
+    // 07-04：1->A, 2->B（其餘選項保留 data-a，避免破壞既有設計）
+    else if(q === "q4"){
   answers[q] = Q0704_INDEX_TO_VALUE[idx] || '';
-}
-
     }
     // 07-05：不動，維持 data-a
     else{

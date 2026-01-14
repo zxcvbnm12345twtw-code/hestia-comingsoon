@@ -2393,23 +2393,29 @@
     }
 // 07-01 ~ 07-03：選項序號 → 後台回填值
 const Q07_01_03_INDEX_TO_VALUE = { 1: "B", 2: "A", 3: "C" };
+// 07-04：選項序號 → 後台回填值（你指定：1->A, 2->B）
+const Q0704_INDEX_TO_VALUE = { 1: "A", 2: "B", 3: "C" };    
 opts.forEach(o=>{
   const act = ()=>{
     const q = o.dataset.q;
     const a = o.dataset.a;
 
-    // 先算這個選項在該題中的序號（1/2/3...）
     const idx = (q !== "q5") ? getOptionIndexWithinQuestion(o) : null;
 
-    // 07-01 ~ 07-03：強制改成 1->B, 2->A, 3->C
+    // 07-01 ~ 07-03：1->B, 2->A, 3->C
     if(q === "q1" || q === "q2" || q === "q3"){
       answers[q] = Q07_01_03_INDEX_TO_VALUE[idx] || '';
-    }else{
-      // 07-04、07-05：維持原樣（用 data-a）
+    }
+else if(q === "q4"){
+  answers[q] = Q0704_INDEX_TO_VALUE[idx] || '';
+}
+
+    }
+    // 07-05：不動，維持 data-a
+    else{
       answers[q] = a;
     }
 
-    // answerIdx 照舊（你後面 derive07BiasFromIndexes 仍然用得到）
     if(q !== "q5"){
       answerIdx[q] = idx;
     }
@@ -2426,6 +2432,7 @@ opts.forEach(o=>{
     }
   });
 });
+
 
 
     unlockBtn.addEventListener('click', ()=>{

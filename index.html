@@ -1581,100 +1581,160 @@
 #guideSkipBtn{
   min-width: 120px;
 }
-<style>
-  /* ========== UI ONLY: Visual Skin Layer ========== */
-  :root{
-    --ui-bg0: #07080b;
-    --ui-bg1: #0b0f16;
-    --ui-glow: rgba(255, 120, 160, .18);
-    --ui-glow2: rgba(140, 210, 255, .10);
-    --ui-line: rgba(255,255,255,.08);
-    --ui-text: rgba(255,255,255,.92);
-    --ui-muted: rgba(255,255,255,.72);
-    --ui-card: rgba(255,255,255,.06);
-    --ui-card2: rgba(255,255,255,.03);
-    --ui-blur: 18px;
-    --ui-radius: 18px;
-  }
 
-  /* page background */
-  body{
-    background:
-      radial-gradient(1200px 520px at 15% 10%, var(--ui-glow), transparent 60%),
-      radial-gradient(900px 420px at 85% 18%, var(--ui-glow2), transparent 62%),
-      radial-gradient(700px 360px at 50% 95%, rgba(255,255,255,.05), transparent 60%),
-      linear-gradient(180deg, var(--ui-bg0), var(--ui-bg1));
-    color: var(--ui-text);
-  }
+  </style>
+  <style>
+/* ===========================
+   UI-ONLY GLOBAL SKIN (NO UX)
+   =========================== */
 
-  /* subtle grain (no JS) */
-  body::before{
-    content:"";
-    position:fixed; inset:0;
-    pointer-events:none;
-    background-image:
-      radial-gradient(circle at 20% 30%, rgba(255,255,255,.045) 0 1px, transparent 2px),
-      radial-gradient(circle at 70% 60%, rgba(255,255,255,.035) 0 1px, transparent 2px);
-    background-size: 140px 140px, 180px 180px;
-    mix-blend-mode: overlay;
-    opacity:.35;
-    filter: blur(.2px);
-    z-index:0;
-  }
+:root{
+  --ui-bg0:#07080b;
+  --ui-bg1:#0b0f16;
 
-  /* UI container feel (apply to your main wrapper if you have one) */
-  .ui-skin,
-  .nr-wrap,
-  .guide-wrap,
-  .wrap,
-  .container{
-    position:relative;
-    z-index:1;
-  }
+  --ui-glowA: rgba(255,120,160,.18);
+  --ui-glowB: rgba(140,210,255,.10);
+  --ui-glowC: rgba(255,255,255,.06);
 
-  /* glass card look */
-  .ui-card,
-  .nr-wrap,
-  .guide-wrap{
-    background: linear-gradient(180deg, var(--ui-card), var(--ui-card2));
-    border: 1px solid var(--ui-line);
-    backdrop-filter: blur(var(--ui-blur));
-    -webkit-backdrop-filter: blur(var(--ui-blur));
-    border-radius: var(--ui-radius);
-    box-shadow:
-      0 18px 40px rgba(0,0,0,.45),
-      inset 0 1px 0 rgba(255,255,255,.06);
-  }
+  --ui-line: rgba(255,255,255,.09);
+  --ui-text: rgba(255,255,255,.92);
+  --ui-muted: rgba(255,255,255,.74);
 
-  /* buttons */
-  button, .btn, .cta, a.btn{
+  --ui-cardA: rgba(255,255,255,.07);
+  --ui-cardB: rgba(255,255,255,.035);
+
+  --ui-blur: 18px;
+  --ui-radius: 18px;
+}
+
+/* Base */
+html, body{ height:100%; }
+body{
+  background:
+    radial-gradient(1200px 520px at 15% 10%, var(--ui-glowA), transparent 60%),
+    radial-gradient(900px 420px at 85% 18%, var(--ui-glowB), transparent 62%),
+    radial-gradient(700px 360px at 50% 95%, var(--ui-glowC), transparent 60%),
+    linear-gradient(180deg, var(--ui-bg0), var(--ui-bg1));
+  color: var(--ui-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle grain overlay (CSS only) */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.05) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,.04) 0 1px, transparent 2px);
+  background-size: 140px 140px, 180px 180px;
+  mix-blend-mode: overlay;
+  opacity:.33;
+  filter: blur(.25px);
+  z-index:0;
+}
+
+/* Ensure content stays above overlays */
+body > *{
+  position: relative;
+  z-index: 1;
+}
+
+/* Typography rhythm */
+h1,h2,h3,h4{ letter-spacing:.02em; }
+p, li, small{ color: var(--ui-muted); }
+
+/* Links */
+a{
+  color: var(--ui-text);
+  text-underline-offset: 3px;
+}
+a:hover{
+  text-decoration-color: rgba(255,255,255,.45);
+}
+
+/* Glass surfaces (apply broadly but safely) */
+:is(section, article, aside, .card, .panel, .box, .nr-wrap, .guide-wrap){
+  border-radius: var(--ui-radius);
+}
+
+/* Optional: If your site has obvious “blocks” you want to glassify,
+   uncomment the following rule. It’s still UI-only but more aggressive. */
+/*
+:is(.card,.panel,.box,.nr-wrap,.guide-wrap,.neo-ritual,.guide-wrap){
+  background: linear-gradient(180deg, var(--ui-cardA), var(--ui-cardB));
+  border: 1px solid var(--ui-line);
+  backdrop-filter: blur(var(--ui-blur));
+  -webkit-backdrop-filter: blur(var(--ui-blur));
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+*/
+
+/* Buttons / CTAs */
+button,
+input[type="button"],
+input[type="submit"],
+.btn, .cta, a.btn{
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: var(--ui-text);
+  padding: .68em 1.05em;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+  box-shadow: 0 10px 22px rgba(0,0,0,.35);
+}
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+.btn:hover, .cta:hover, a.btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.09);
+  border-color: rgba(255,255,255,.22);
+  box-shadow: 0 14px 26px rgba(0,0,0,.42);
+}
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+.btn:active, .cta:active, a.btn:active{
+  transform: translateY(0);
+}
+
+/* Inputs */
+input, textarea, select{
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  color: var(--ui-text);
+  outline: none;
+}
+input:focus, textarea:focus, select:focus{
+  border-color: rgba(255,255,255,.24);
+  box-shadow: 0 0 0 3px rgba(255,120,160,.12);
+}
+
+/* Dividers */
+hr{
+  border:0;
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+  opacity:.85;
+}
+
+/* Scrollbar (optional, UI only) */
+@media (pointer:fine){
+  ::-webkit-scrollbar{ width: 10px; height:10px; }
+  ::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.12);
     border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
-    color: var(--ui-text);
-    transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    border: 2px solid rgba(0,0,0,.25);
   }
-  button:hover, .btn:hover, .cta:hover, a.btn:hover{
-    transform: translateY(-1px);
-    background: rgba(255,255,255,.09);
-    border-color: rgba(255,255,255,.22);
-  }
-  button:active, .btn:active, .cta:active, a.btn:active{
-    transform: translateY(0);
-  }
-
-  /* text rhythm */
-  h1,h2,h3{ letter-spacing:.02em; }
-  p{ color: var(--ui-muted); }
-
-  /* soft divider */
-  hr{
-    border:0;
-    height:1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
-    opacity:.8;
-  }
+  ::-webkit-scrollbar-thumb:hover{ background: rgba(255,255,255,.18); }
+}
 </style>
+
 </head>
 
 <body data-theme="">
@@ -2921,21 +2981,5 @@ setTimeout(guideWatcher, 120);
 
 
   </script>
-  <div class="ui-atmo" aria-hidden="true"></div>
-
-<style>
-  .ui-atmo{
-    position:fixed; inset:-20vh -20vw;
-    pointer-events:none;
-    z-index:0;
-    background:
-      radial-gradient(900px 520px at 22% 24%, rgba(255, 120, 160, .12), transparent 60%),
-      radial-gradient(880px 520px at 78% 32%, rgba(120, 210, 255, .10), transparent 62%),
-      radial-gradient(900px 520px at 50% 110%, rgba(255,255,255,.05), transparent 60%);
-    filter: blur(8px);
-    opacity:.9;
-  }
-</style>
-
 </body>
 </html>

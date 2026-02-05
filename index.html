@@ -2729,24 +2729,78 @@ opts.forEach(o=>{
     setTimeout(requestCheck, 60);
     setTimeout(()=>{ requestCheck(); requestAnimationFrame(extraTick); }, 260);
 
-    /* =========================
-       Collective Hearth (Canvas 2D)
-    ========================== */
-    const canvas = $('#flameCanvas');
-    const ctx = canvas.getContext('2d', { alpha:true });
-    let W=0,H=0, dpr=1;
+/* =========================
+   Collective Hearth (Canvas 2D) — SAFE FALLBACK (won't crash)
+========================== */
+const canvas = $('#flameCanvas');
+let ctx = null;
+if (canvas) ctx = canvas.getContext('2d', { alpha:true });
 
-    function resizeCanvas(){
-      const rect = canvas.getBoundingClientRect();
-      dpr = Math.min(2, window.devicePixelRatio || 1);
-      W = Math.floor(rect.width * dpr);
-      H = Math.floor(rect.height * dpr);
-      canvas.width = W;
-      canvas.height = H;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('load', resizeCanvas);
-    resizeCanvas();
+let W=0, H=0, dpr=1;
+function resizeCanvas(){
+  if(!canvas || !ctx) return;
+  const rect = canvas.getBoundingClientRect();
+  dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  W = Math.max(1, Math.floor(rect.width));
+  H = Math.max(1, Math.floor(rect.height));
+  canvas.width = Math.floor(W * dpr);
+  canvas.height = Math.floor(H * dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', resizeCanvas, {passive:true});
+resizeCanvas();
+
+function getCount(){
+  const v = parseInt(localStorage.getItem('hestia_hearth_count') || '0', 10);
+  return Number.isFinite(v) ? v : 0;
+}
+function setCount(v){
+  localStorage.setItem('hestia_hearth_count', String(Math.max(0, v|0)));
+}
+function applyLevel(){
+  const el = document.getElementById('hearthLevel');
+  if(!el) return;
+  const n = getCount();
+  const lvl = n >= 50 ? 5 : n >= 30 ? 4 : n >= 15 ? 3 : n >= 5 ? 2 : 1;
+  el.textContent = String(lvl);
+}
+applyLevel();
+
+function castSparkFromElement(btn){
+  if(!ctx || !canvas) return;
+  // 簡單畫一個「火光點」當作視覺回饋（不追求你原本那套物理）
+  resizeCanvas();
+  const x = W * 0.5;
+  const y = H * 0.62;
+
+  const t0 = performance.now();
+  function tick(t){
+    const p = Math.min(1, (t - t0) / 600);
+    ctx.clearRect(0,0,W,H);
+
+    // 背景柔光
+    const r = 22 + p*38;
+    const g = ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0, 'rgba(255,255,255,.20)');
+    g.addColorStop(0.35, 'rgba(255,106,42,.18)');
+    g.addColorStop(1, 'rgba(255,106,42,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fill();
+
+    // 上升的小光點
+    ctx.fillStyle = 'rgba(255,255,255,.75)';
+    ctx.beginPath();
+    ctx.arc(x, y - p*70, 3 + (1-p)*2, 0, Math.PI*2);
+    ctx.fill();
+
+    if(p < 1) requestAnimationFrame(tick);
+    else ctx.clearRect(0,0,W,H);
+  }
+  requestAnimationFrame(tick);
+}
+
 
     const particles = [];
     let running = true;

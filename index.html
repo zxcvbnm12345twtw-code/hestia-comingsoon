@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <!-- Favicon -->
   <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
   <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
   <link rel="apple-touch-icon" href="/favicon.png" />
 
-  <title>HESTIA TAIWAN｜喚醒內在色溫</title>
+  <title>HESTIA TAIWAN｜健身休閒服飾</title>
   <meta name="description" content="HESTIA 健身時尚品牌，融合時尚與力量優雅，讓每個人穿出屬於自己的火焰。Own Your Flame.">
   <meta name="keywords" content="Hestia, 健身, 健身時尚服飾, 運動休閒服飾, 台灣品牌">
   <meta property="og:title" content="HESTIA TAIWAN｜健身時尚品牌">
@@ -15,332 +16,1670 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200..900&display=swap">
-
   <style>
-    /* =========================================
-       THEME ENGINE: INNER COLOR TEMPERATURE
-       (移植自參考範例的 HSL 系統)
-       ========================================= */
-    :root {
-      /* 預設色溫 (Cool/Neutral) */
-      --hue-core: 210; 
-      --sat-core: 80%;
-      --light-core: 50%;
+    :root{
+      --accent:#E67690;
+      --text: rgba(255,255,255,.86);
+      --muted: rgba(255,255,255,.70);
+      --hair: rgba(255,255,255,.12);
+      --hair2: rgba(255,255,255,.08);
 
-      /* 衍生色系 */
-      --color-ether-primary: hsl(var(--hue-core), var(--sat-core), 96%);
-      --color-ether-secondary: hsl(var(--hue-core), 40%, 70%);
-      --color-ether-glow: hsl(var(--hue-core), 100%, 70%);
-      --color-void: hsl(var(--hue-core), 30%, 5%); /* 深色背景 */
+      --sanctuary-1:#130b0f;
+      --sanctuary-2:#2a111a;
+      --sanctuary-3:#3b1824;
+      --sanctuary-4:#4b1e2d;
+      --sanctuary-5:#6a3045;
 
-      /* 玻璃擬態參數 */
-      --glass-bg: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-blur: 20px;
-      --glass-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      --breath-a: rgba(230,118,144,.22);
+      --breath-b: rgba(120,80,120,.13);
 
-      /* 呼吸節奏 */
-      --breath-cycle: 8s;
-
-      /* UI 變數映射到舊結構 */
-      --text: var(--color-ether-primary);
-      --muted: var(--color-ether-secondary);
-      --accent: var(--color-ether-glow);
-      
       --wrap: 760px;
-      --font-primary: "Inter", -apple-system, sans-serif;
     }
 
-    * { box-sizing: border-box; }
+    *{ box-sizing:border-box; }
 
-    html, body {
-      margin: 0; padding: 0; overflow-x: hidden;
-      background: var(--color-void);
-      color: var(--text);
-      font-family: var(--font-primary);
-      height: 100%;
+    html,body{
+      margin:0;padding:0;overflow-x:hidden;background:#000;color:var(--text);
+      font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
     }
 
-    body {
-      transition: background-color 1.5s cubic-bezier(0.25, 1, 0.5, 1), color 1s ease;
+    body{ transition: background-color 1.2s ease; }
+
+    /* 初始（無 data-theme）＝無彩黑白灰，不帶任何預設底色傾向 */
+    body:not([data-theme]),
+    body[data-theme=""],
+    body[data-theme="mono_base"]{
+      --sanctuary-1:#000000;
+      --sanctuary-2:#070707;
+      --sanctuary-3:#0d0d0d;
+      --sanctuary-4:#121212;
+      --sanctuary-5:#171717;
+
+      --breath-a: rgba(255,255,255,.10);
+      --breath-b: rgba(255,255,255,.06);
+
+      --accent:#ffffff;
     }
 
-    /* =========================================
-       DYNAMIC COLOR MAPPING (將原本的 HEX 改為 HSL 驅動)
-       ========================================= */
+    /* =========================
+       PRETONE（僅在 mono_base / 空主題時生效；06 選到 data-theme 後由主題接管）
+    ========================== */
+    .s1b{ background: linear-gradient(180deg,#000,var(--sanctuary-1)); }
+
+    .pretone-grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    @media (min-width: 760px){
+      .pretone-grid{ grid-template-columns: repeat(5, minmax(0,1fr)); }
+    }
+
+    .pretone{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.86);
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+    .pretone:active{ transform: scale(.99); }
+    .pretone .chip{
+      width:14px;height:14px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.04);
+      flex:0 0 auto;
+    }
+    .pretone .nm{
+      font-size:13px;
+      letter-spacing:.14em;
+      font-weight:800;
+    }
+    .pretone .hx{
+      margin-left:auto;
+      font-size:11px;
+      letter-spacing:.10em;
+      color: rgba(255,255,255,.62);
+    }
+    .pretone.active{
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 0 18px rgba(255,255,255,.10);
+    }
+
+    /* ✅ PRETONE 明顯反饋 */
+    .pretone-flash{
+      animation: pretoneFlash .72s cubic-bezier(.22,.61,.36,1) 1;
+    }
+    @keyframes pretoneFlash{
+      0%{
+        transform: translateY(0) scale(1);
+        box-shadow: 0 22px 72px rgba(0,0,0,.46);
+        filter: saturate(1);
+      }
+      40%{
+        transform: translateY(-1px) scale(1.01);
+        box-shadow:
+          0 26px 92px rgba(0,0,0,.58),
+          0 0 34px rgba(255,255,255,.10),
+          0 0 34px color-mix(in srgb, var(--accent) 55%, transparent);
+        filter: saturate(1.06);
+      }
+      100%{
+        transform: translateY(0) scale(1);
+        box-shadow: 0 22px 72px rgba(0,0,0,.46);
+        filter: saturate(1);
+      }
+    }
+
+    /* 只在「尚未選 06 主題」時，讓 PRETONE 介入 */
+    body[data-precolor][data-theme=""],
+    body[data-precolor][data-theme="mono_base"]{
+      --sanctuary-1:#000000;
+      --sanctuary-2:#070707;
+      --sanctuary-3:#0d0d0d;
+      --sanctuary-4:#121212;
+      --sanctuary-5:#171717;
+    }
+
+    /* =========================
+       PRETONE：未選 06 主題前，直接改整體背景階（sanctuary-1~5）
+       （只在 data-theme="" / mono_base 生效）
+    ========================== */
+
+    body[data-precolor="red"][data-theme=""],
+    body[data-precolor="red"][data-theme="mono_base"]{
+      --accent:#B91C1C;
+      --sanctuary-1:#0b0506;
+      --sanctuary-2:#140708;
+      --sanctuary-3:#1e0a0b;
+      --sanctuary-4:#2a0f10;
+      --sanctuary-5:#3b1416;
+      --breath-a: rgba(185,28,28,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="orange"][data-theme=""],
+    body[data-precolor="orange"][data-theme="mono_base"]{
+      --accent:#D9480F;
+      --sanctuary-1:#0b0604;
+      --sanctuary-2:#140a06;
+      --sanctuary-3:#1e0d07;
+      --sanctuary-4:#2a1209;
+      --sanctuary-5:#3b1a0d;
+      --breath-a: rgba(217,72,15,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="yellow"][data-theme=""],
+    body[data-precolor="yellow"][data-theme="mono_base"]{
+      --accent:#C8A100;
+      --sanctuary-1:#080703;
+      --sanctuary-2:#111005;
+      --sanctuary-3:#1a1707;
+      --sanctuary-4:#241f0a;
+      --sanctuary-5:#332c0f;
+      --breath-a: rgba(200,161,0,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="green"][data-theme=""],
+    body[data-precolor="green"][data-theme="mono_base"]{
+      --accent:#1F7A5A;
+      --sanctuary-1:#050a08;
+      --sanctuary-2:#08110d;
+      --sanctuary-3:#0a1913;
+      --sanctuary-4:#0e231b;
+      --sanctuary-5:#143226;
+      --breath-a: rgba(31,122,90,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="blue"][data-theme=""],
+    body[data-precolor="blue"][data-theme="mono_base"]{
+      --accent:#2B4C7E;
+      --sanctuary-1:#05070b;
+      --sanctuary-2:#070c14;
+      --sanctuary-3:#0a101e;
+      --sanctuary-4:#0e162a;
+      --sanctuary-5:#13203b;
+      --breath-a: rgba(43,76,126,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="purple"][data-theme=""],
+    body[data-precolor="purple"][data-theme="mono_base"]{
+      --accent:#5B2C83;
+      --sanctuary-1:#07050b;
+      --sanctuary-2:#0d0814;
+      --sanctuary-3:#140a1e;
+      --sanctuary-4:#1c0e2a;
+      --sanctuary-5:#29133b;
+      --breath-a: rgba(91,44,131,.20);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="khaki"][data-theme=""],
+    body[data-precolor="khaki"][data-theme="mono_base"]{
+      --accent:#A8925A;
+      --sanctuary-1:#070604;
+      --sanctuary-2:#0f0d09;
+      --sanctuary-3:#16130e;
+      --sanctuary-4:#1f1a14;
+      --sanctuary-5:#2d251d;
+      --breath-a: rgba(168,146,90,.18);
+      --breath-b: rgba(255,255,255,.06);
+    }
+
+    body[data-precolor="black"][data-theme=""],
+    body[data-precolor="black"][data-theme="mono_base"]{
+      --accent:#ffffff;
+      --sanctuary-1:#000000;
+      --sanctuary-2:#050505;
+      --sanctuary-3:#0a0a0a;
+      --sanctuary-4:#0f0f0f;
+      --sanctuary-5:#151515;
+      --breath-a: rgba(255,255,255,.08);
+      --breath-b: rgba(255,255,255,.04);
+    }
+
+    body[data-precolor="gray"][data-theme=""],
+    body[data-precolor="gray"][data-theme="mono_base"]{
+      --accent:#d6d6d6;
+      --sanctuary-1:#030303;
+      --sanctuary-2:#0a0a0a;
+      --sanctuary-3:#111111;
+      --sanctuary-4:#171717;
+      --sanctuary-5:#1f1f1f;
+      --breath-a: rgba(255,255,255,.10);
+      --breath-b: rgba(255,255,255,.05);
+    }
+
+    body[data-precolor="white"][data-theme=""],
+    body[data-precolor="white"][data-theme="mono_base"]{
+      --accent:#f5f5f5;
+      --sanctuary-1:#0a0a0a;
+      --sanctuary-2:#101010;
+      --sanctuary-3:#171717;
+      --sanctuary-4:#1f1f1f;
+      --sanctuary-5:#292929;
+      --breath-a: rgba(255,255,255,.14);
+      --breath-b: rgba(255,255,255,.07);
+    }
+
+    /* =========================
+       06 四種色調
+    ========================== */
+    body[data-theme="rose_ember"]{
+      --sanctuary-1:#120a07;
+      --sanctuary-2:#1e0e09;
+      --sanctuary-3:#2a120b;
+      --sanctuary-4:#3a160c;
+      --sanctuary-5:#5a2410;
+
+      --breath-a: rgba(255,120,55,.24);
+      --breath-b: rgba(255,175,90,.14);
+
+      --accent:#ff6a2a;
+    }
+
+    body[data-theme="midnight_tracker"]{
+      --sanctuary-1:#06070b;
+      --sanctuary-2:#0b0c10;
+      --sanctuary-3:#10142a;
+      --sanctuary-4:#161b3a;
+      --sanctuary-5:#1c2348;
+      --breath-a: rgba(59,108,255,.18);
+      --breath-b: rgba(154,166,214,.12);
+      --accent:#3b6cff;
+    }
+
+    body[data-theme="veil_warden"]{
+      --sanctuary-1:#0e0b09;
+      --sanctuary-2:#1a1410;
+      --sanctuary-3:#221a15;
+      --sanctuary-4:#2a211b;
+      --sanctuary-5:#3a2f27;
+      --breath-a: rgba(208,194,182,.18);
+      --breath-b: rgba(184,168,154,.12);
+      --accent:#d0c2b6;
+    }
+
+    body[data-theme="low_tide_keeper"]{
+      --sanctuary-1:#071010;
+      --sanctuary-2:#0b1514;
+      --sanctuary-3:#0f1c1a;
+      --sanctuary-4:#142423;
+      --sanctuary-5:#1b3331;
+      --breath-a: rgba(143,191,175,.20);
+      --breath-b: rgba(184,199,192,.12);
+      --accent:#8fbfaf;
+    }
+
+    section{
+      min-height:100vh;
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      padding:60px 20px;
+      text-align:center;
+      position:relative;
+      z-index:1;
+      scroll-margin-top: 8px;
+      width:100%;
+    }
+
+    h1,h2{margin:0 0 18px;color:#fff;}
+    h1{font-size:clamp(32px,5vw,52px);}
+    h2{font-size:clamp(24px,4vw,40px);}
+
+    p{
+      max-width:var(--wrap);
+      font-size:clamp(16px,2vw,20px);
+      line-height:1.72;
+      margin:0 auto;
+      color:var(--text);
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+
+    .we-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,106,42,.16);}
+    .i-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,106,42,.16);}
+
+    .s1{background:linear-gradient(180deg,#000,#000);}
+    .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
+    .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
+    .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
+    .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
+    #s4a{background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-4)) !important;}
+    .s5{ background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5)); }
+    .s6{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
+    .s7{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
+    .s8{ background: linear-gradient(180deg, var(--sanctuary-5), #000 72%, #000); }
+
+    .breath{
+      position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
+      background:
+        radial-gradient(120% 120% at 50% 115%, var(--breath-a) 0%, rgba(230,118,144,0) 70%),
+        radial-gradient(140% 100% at 50% -10%, var(--breath-b) 0%, rgba(120,80,120,0) 72%);
+      animation:breathPulse 9s ease-in-out infinite alternate,breathDrift 28s ease-in-out infinite alternate;
+      transform-origin: 50% 60%;
+      will-change: transform, opacity, background-position;
+      transition: opacity .8s ease;
+    }
+    @keyframes breathPulse{
+      0%{opacity:.09;transform:scale(1);}
+      50%{opacity:.14;transform:scale(1.02);}
+      100%{opacity:.09;transform:scale(1);}
+    }
+    @keyframes breathDrift{
+      0%{background-position:50% 115%,50% -10%;}
+      100%{background-position:48% 105%,52% 0%;}
+    }
+    .breath.transition{
+      animation:none;
+      opacity:.12;
+      transform:scale(.985);
+      filter:saturate(1.02);
+      transition:transform .58s cubic-bezier(.22,.61,.36,1), opacity .58s cubic-bezier(.22,.61,.36,1);
+    }
+    .breath.transition.release{ opacity:.11; transform:scale(1); }
+
+    .breath.pretone-kick{
+      animation:none;
+      opacity:.16;
+      filter:saturate(1.18) contrast(1.04);
+      transform:scale(1.01);
+      transition: transform .62s cubic-bezier(.22,.61,.36,1), opacity .62s cubic-bezier(.22,.61,.36,1), filter .62s cubic-bezier(.22,.61,.36,1);
+    }
+
+    .grain{
+      position:fixed;inset:0;pointer-events:none;z-index:1;
+      opacity:.055;mix-blend-mode:overlay;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      background-size:240px 240px;
+      transform:translateZ(0);
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(60px);
+      transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);
+      will-change: opacity, transform;
+      transition-delay: var(--d, 0ms);
+    }
+    .reveal.in{opacity:1;transform:none;}
+
+    .late{
+      opacity:0;
+      transform:translateY(8px);
+      transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);
+      will-change: opacity, transform;
+      transition-delay: var(--d, 0ms);
+    }
+    .late.in{opacity:1;transform:none;}
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;justify-content:center;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      font-size:11px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.68);
+    }
+
+    .secno{
+      font-size:11px;
+      letter-spacing:.42em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.48);
+      margin-bottom:10px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+    }
+    .secno::before,.secno::after{
+      content:"";
+      width:34px;height:1px;
+      background:rgba(255,255,255,.10);
+    }
+
+    .hair-underline{
+      display:inline-block;
+      padding-bottom:2px;
+      background-image: linear-gradient(transparent calc(100% - 1px), rgba(255,255,255,.22) 1px);
+      background-repeat:no-repeat;
+      background-size:100% 100%;
+    }
+
+    /* Hero */
+    .brand{
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+      margin-bottom:10px;position:relative;z-index:2;width:100%;
+    }
+    .wordmark{
+      display:block;margin:0 auto;width:clamp(260px,60vw,560px);
+      filter:drop-shadow(0 10px 28px rgba(0,0,0,.52));
+      max-width:92vw;
+    }
+    .submark{
+      margin-top:-5px;
+      letter-spacing:.36em;
+      font-size:clamp(16px,2.2vw,30px);
+      font-weight:450;
+      opacity:.9;
+      color:rgba(255,255,255,.86);
+    }
+    .tagline{
+      margin-top:10px;
+      font-weight:300;
+      letter-spacing:.14em;
+      font-size:clamp(14px,1.8vw,18px);
+      color:rgba(255,255,255,.75);
+      text-shadow:0 0 10px rgba(255,106,42,.16);
+      animation:breatheText 7s ease-in-out infinite;
+      position:relative;z-index:2;
+      padding:0 10px;
+      max-width:92vw;
+      overflow-wrap:anywhere;
+    }
+    @keyframes breatheText{ 0%,100%{opacity:.55;} 50%{opacity:.95;} }
+
+    .arrow{
+      font-size:22px;margin-top:14px;opacity:.72;
+      animation:floatY 3.6s ease-in-out infinite;
+      position:relative;z-index:2;
+      color:rgba(255,255,255,.75);
+      display:block;
+      width:100%;
+      text-align:center;
+    }
+    @keyframes floatY{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
+
+    @media (max-width: 640px){
+      .s1{ padding: 0 20px; }
+      .s1 .brand{
+        position:absolute;top:50%;left:50%;
+        transform:translate(-50%,-58%);
+        margin:0;width:100%;
+      }
+      .s1 .tagline,
+      .s1 .arrow{
+        position:absolute;
+        left:50%;
+        transform:translateX(-50%);
+        margin:0;
+        width:max-content;
+        max-width:92vw;
+        text-align:center;
+      }
+      .s1 .tagline{ bottom: calc(28vh - 10px); }
+      .s1 .arrow{ bottom: calc(28vh - 33px - 10px); }
+      .s1 .arrow{ animation: breatheText 7s ease-in-out infinite, floatYKeepCenter 3.6s ease-in-out infinite; }
+      @keyframes floatYKeepCenter{
+        0%,100%{ transform:translateX(-50%) translateY(0); }
+        50%    { transform:translateX(-50%) translateY(8px); }
+      }
+    }
+
+    .who-title{
+      font-size:clamp(36px,7vw,64px);
+      line-height:1.08;
+      letter-spacing:.04em;
+      font-weight:700;
+      max-width:92vw;
+      overflow-wrap:anywhere;
+    }
+
+    /* Dots */
+    .dots{
+      position:fixed;
+      right:8px;
+      top:50%;
+      transform:translateY(-50%);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      z-index:40;
+      pointer-events:auto;
+    }
+    .dot{
+      width:5px;height:5px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.62);
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+      outline:none;
+      appearance:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease, opacity .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      opacity:.60;
+      position:relative;
+    }
+    .dot.active{
+      opacity:1;
+      background:#fff;
+      border-color:#fff;
+      box-shadow: 0 0 10px rgba(255,255,255,.55), 0 0 22px rgba(255,255,255,.28);
+      animation: dotBreath 2.2s ease-in-out infinite;
+    }
+    @keyframes dotBreath{
+      0%,100%{ box-shadow: 0 0 8px rgba(255,255,255,.38), 0 0 16px rgba(255,255,255,.18); transform: scale(1); }
+      50%{     box-shadow: 0 0 12px rgba(255,255,255,.62), 0 0 26px rgba(255,255,255,.26); transform: scale(1.08); }
+    }
+    .dot:active{ transform: scale(1.15); }
+    .dot::after{
+      content: attr(data-label);
+      position:absolute;
+      right: 14px;
+      top:50%;
+      transform: translateY(-50%);
+      padding:6px 8px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.55);
+      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+      color: rgba(255,255,255,.84);
+      font-size:11px;
+      letter-spacing:.12em;
+      white-space:nowrap;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      transform-origin: 100% 50%;
+    }
+    .dot:hover::after,
+    .dot:focus-visible::after,
+    .dot.showtip::after{
+      opacity:1;
+      transform: translateY(-50%) translateX(-2px);
+    }
+    .dots.hint .dot{
+      box-shadow: 0 0 0 rgba(255,255,255,0);
+      animation: hintPulse 1.2s ease-in-out 1;
+    }
+    @keyframes hintPulse{
+      0%{ opacity:.55; }
+      40%{ opacity:1; box-shadow: 0 0 10px rgba(255,255,255,.22); }
+      100%{opacity:.60; box-shadow: 0 0 0 rgba(255,255,255,0); }
+    }
+    @media (max-width: 640px){
+      .dot{ width:6px;height:6px; }
+      .dot::after{ font-size:10px; padding:6px 8px; right:16px; }
+    }
+
+    /* WHO card */
+    .info-card{
+      width:min(var(--wrap), 92vw);
+      margin-top:18px;
+      padding:18px 16px;
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      backdrop-filter: blur(6px);
+      position:relative;
+      z-index:2;
+    }
+    .info-card .mini{ margin-bottom:10px; display:flex; justify-content:center; }
+
+    .frame-size{
+      width:min(220px, 72vw);
+      aspect-ratio: 1 / 1;
+    }
+
+    /* Primary Mark */
+    .s3{ padding-top:70px; padding-bottom:70px; }
+    .s3 .stack{
+      width:min(var(--wrap), 92vw);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:16px;
+      text-align:center;
+      position:relative;
+      z-index:2;
+    }
+
+    .logo-frame{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 62%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
+      backdrop-filter: blur(7px);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      position:relative;
+      clip-path: circle(0% at 50% 50%);
+      transition: clip-path 2.35s cubic-bezier(.22,.61,.36,1),
+                  transform .35s ease,
+                  box-shadow .45s ease,
+                  border-color .45s ease,
+                  background .55s ease;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transform: translateY(0) scale(1);
+    }
+    .logo-frame.in{ clip-path: circle(120% at 50% 50%); }
+    .logo-frame::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: linear-gradient(90deg, rgba(255,255,255,0) 35%, rgba(255,255,255,.07) 50%, rgba(255,255,255,0) 65%);
+      transform: translateX(-35%) rotate(12deg);
+      opacity:0;
+      pointer-events:none;
+    }
+    .logo-frame.sheen::before{ opacity:1; animation: sheenSweep 2.8s cubic-bezier(.22,.61,.36,1) 1 both; }
+    @keyframes sheenSweep{ 0%{ transform: translateX(-35%) rotate(12deg);} 100%{ transform: translateX(35%) rotate(12deg);} }
+
+    .logo-frame:hover{
+      border-color: rgba(255,255,255,.16);
+      box-shadow:
+        0 24px 82px rgba(0,0,0,.55),
+        0 0 26px rgba(255,106,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      transform: translateY(-1px) scale(1.01);
+    }
+    .logo-frame:active{ transform: translateY(0) scale(.985); }
+
+    .logo-frame[data-mode="fabric"]{
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 62%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)),
+        repeating-linear-gradient(135deg, rgba(255,255,255,.02) 0 2px, rgba(0,0,0,0) 2px 6px);
+    }
+    .logo-frame[data-mode="mono"]{
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,0) 62%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+    }
+
+    .corner-hint{
+      position:absolute; inset:10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.06);
+      pointer-events:none;
+      opacity:0;
+      transition: opacity .55s ease;
+      z-index:1;
+    }
+    .corner-hint::before,
+    .corner-hint::after{
+      content:"";
+      position:absolute;
+      width:10px;height:10px;
+      border:1px solid rgba(255,255,255,.18);
+      opacity:.35;
+      border-right:none;border-bottom:none;
+      border-radius:2px;
+    }
+    .corner-hint::before{ left:10px; top:10px; }
+    .corner-hint::after{ right:10px; bottom:10px; transform: rotate(180deg); }
+    .logo-frame.in .corner-hint{ opacity:.9; }
+    .logo-frame.hint .corner-hint{ animation: hintGlow 1.35s ease-in-out 1; }
+    @keyframes hintGlow{ 0%{opacity:.25;} 45%{opacity:1;} 100%{opacity:.9;} }
+
+    .logo-mark{
+      width: clamp(120px, 26vw, 210px);
+      opacity:0;
+      transform: translateY(10px) scale(.94);
+      transition: opacity 1.9s ease, transform 2.2s ease, filter 2.4s ease;
+      transition-delay: .42s;
+      filter: drop-shadow(0 14px 30px rgba(0,0,0,.62));
+      will-change: opacity, transform, filter;
+      position:relative;
+      z-index:2;
+      max-width:100%;
+    }
+    .logo-mark.in{ opacity:1; transform: translateY(0) scale(1); }
+    .logo-frame[data-mode="mono"] .logo-mark{
+      filter: grayscale(1) contrast(1.1) brightness(1.05) drop-shadow(0 14px 30px rgba(0,0,0,.62));
+    }
+
+    .logo-frame.pulse{ animation: stagePulse .62s cubic-bezier(.22,.61,.36,1) both; }
+    @keyframes stagePulse{
+      0%{ transform: translateY(0) scale(1); }
+      35%{ transform: translateY(-1px) scale(1.02); }
+      100%{ transform: translateY(0) scale(1); }
+    }
+    .logo-mark.pop{ animation: markPop .62s cubic-bezier(.22,.61,.36,1) both; }
+    @keyframes markPop{
+      0%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
+      40%{ filter: drop-shadow(0 0 18px rgba(255,106,42,.18)); transform: translateY(-1px) scale(1.03); }
+      100%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
+    }
+
+    .s3 .label{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.62);
+      margin-top:2px;
+    }
+
+    .s3 .bullets{
+      width:min(var(--wrap), 92vw);
+      margin-top:2px;
+      display:grid;
+      gap:10px;
+      text-align:left;
+    }
+    .s3 .bullet{
+      position:relative;
+      padding-left:14px;
+      color:rgba(255,255,255,.84);
+      line-height:1.7;
+      font-size:clamp(15px, 2.4vw, 18px);
+      overflow-wrap:anywhere;
+    }
+    .s3 .bullet::before{
+      content:"";
+      position:absolute;left:0;top:.72em;
+      width:6px;height:6px;border-radius:50%;
+      background:rgba(255,255,255,.80);
+      box-shadow:0 0 0 3px rgba(255,255,255,.10);
+    }
+    .s3 .sig{
+      width:min(var(--wrap), 92vw);
+      margin-top:10px;
+      padding-top:14px;
+      border-top:1px solid rgba(255,255,255,.10);
+      color:rgba(255,255,255,.66);
+      font-size:13px;
+      letter-spacing:.10em;
+      text-align:left;
+      overflow-wrap:anywhere;
+    }
+
+    /* Sanctuary wrap */
+    .sanctuary-wrap{
+      position:relative;
+      width:min(var(--wrap), 92vw);
+      padding:22px 18px 18px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
+      backdrop-filter: blur(7px);
+      overflow:hidden;
+      z-index:2;
+      margin:0 auto;
+    }
+    .sanctuary-wrap::before{
+      content:"";
+      position:absolute;inset:0;
+      background:
+        radial-gradient(18px 18px at 16% 22%, rgba(255,255,255,.06), rgba(255,255,255,0) 70%),
+        radial-gradient(22px 22px at 82% 68%, rgba(255,255,255,.05), rgba(255,255,255,0) 72%),
+        linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 72%, rgba(255,255,255,.05));
+      opacity:.55;
+      pointer-events:none;
+    }
+    .sanctuary-wrap::after{
+      content:"";
+      position:absolute;inset:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      pointer-events:none;
+      opacity:.85;
+    }
+    .sanctuary-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
+
+    /* 05 全屏沉靜（保留全屏容器） */
+    #s4{ padding:0; }
+    #s4 .sanctuary-wrap{
+      width:100%;
+      height:100vh;
+      height:100svh;
+      max-width:none;
+      border-radius:0;
+      border:none;
+      box-shadow:none;
+      background: transparent;
+      backdrop-filter:none;
+      padding:0 20px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+    }
+    #s4 .sanctuary-wrap::before,
+    #s4 .sanctuary-wrap::after{ display:none; }
+
+    /* =========================
+       05 Cinema（舊版容器保留給 overlay 用）
+    ========================== */
+    .cinema{
+      width:min(var(--wrap), 92vw);
+      position:relative;
+      height: 220px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      z-index:2;
+    }
+    .cinema-step{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      opacity:0;
+      transform:none;
+      transition: opacity 1.25s cubic-bezier(.22,.61,.36,1);
+      will-change: opacity;
+    }
+    .cinema-step.show{ opacity:1; }
+    .cinema-step.hide{ opacity:0; }
+
+    /* FLAME MARK (page) */
+    .flame-stage{
+      position:relative;
+      width:min(var(--wrap), 92vw);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      z-index:2;
+    }
+    .flame-frame{
+      border-radius:18px;
+      background:
+        radial-gradient(120% 120% at 50% 30%, rgba(255,255,255,.06), rgba(255,255,255,0) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:
+        0 16px 54px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter: blur(6px);
+      overflow:hidden;
+      position:relative;
+      display:grid;
+      place-items:center;
+      clip-path: circle(0% at 50% 48%);
+      transition: clip-path 2.1s cubic-bezier(.22,.61,.36,1);
+      will-change: clip-path;
+      width:min(220px, 72vw);
+      aspect-ratio:1/1;
+    }
+    .flame-frame.in{ clip-path: circle(120% at 50% 48%); }
+    .flame-frame .corner-hint{ opacity:0; }
+    .flame-frame.in .corner-hint{ opacity:.9; }
+    .flame-img{
+      width: clamp(120px, 26vw, 210px);
+      margin:0;
+      opacity:0;
+      transform: translateY(10px) scale(.94);
+      transition: opacity 1.9s ease, transform 2.2s ease, filter 2.4s ease;
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.66));
+      will-change: opacity, transform, filter;
+      position:relative;
+      z-index:2;
+      max-width:100%;
+    }
+    .flame-img.in{
+      opacity:1;
+      transform: translateY(0) scale(1);
+      animation: flameBreath 8.8s ease-in-out infinite alternate;
+    }
+    @keyframes flameBreath{
+      0%{ filter: drop-shadow(0 0 14px rgba(255,106,42,.14)); }
+      100%{ filter: drop-shadow(0 0 26px rgba(255,106,42,.22)); }
+    }
+    .manifest{
+      width:min(var(--wrap), 92vw);
+      margin-top:0;
+      padding:18px 16px;
+      border-radius:18px;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,.015) 60%),
+                  linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 62px rgba(0,0,0,.46);
+      backdrop-filter: blur(6px);
+      position:relative;
+      z-index:2;
+      text-align:left;
+      overflow-wrap:anywhere;
+    }
+    .manifest.center{ text-align:center; }
+
+    .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
+    .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); max-width:100%; }
+
+    .align-grid{ width:100%; display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px; position:relative; z-index:2; text-align:left; }
+    .mood{
+      width:100%;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow: 0 18px 60px rgba(0,0,0,.40);
+      overflow:hidden;
+      text-align:left;
+      position:relative;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
+      padding:14px 14px 12px;
+      max-width:100%;
+    }
+    .mood:active{ transform: scale(.99); }
+    .mood.dim{ opacity:.42; }
+    .mood.active{
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 18px 80px rgba(0,0,0,.55), 0 0 28px rgba(255,106,42,.10);
+      transform: translateY(-1px);
+    }
+    .mood .row{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+    .mood .title{ font-size:14px; letter-spacing:.20em; text-transform:uppercase; color:rgba(255,255,255,.72); margin:0 0 6px; }
+    .mood .desc{ margin:0; color:rgba(255,255,255,.82); font-size:clamp(15px, 3.8vw, 17px); line-height:1.55; max-width:100%; overflow-wrap:anywhere; }
+    .mood .sw{ display:flex; gap:8px; align-items:center; justify-content:flex-end; margin-left:auto; padding-top:4px; }
+    .dot-swatch{ width:10px;height:10px;border-radius:50%; border:1px solid rgba(255,255,255,.18); box-shadow: 0 0 0 3px rgba(255,255,255,.04); flex:0 0 auto; }
+
+    .quiz{ width:100%; margin-top:14px; display:grid; gap:14px; position:relative; z-index:2; text-align:left; }
+    .q{
+      width:100%;
+      padding:16px 14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      box-shadow: 0 18px 60px rgba(0,0,0,.40);
+      backdrop-filter: blur(6px);
+      max-width:100%;
+    }
+    .q h3{ margin:0 0 12px; font-size:14px; letter-spacing:.12em; color:rgba(255,255,255,.80); font-weight:650; overflow-wrap:anywhere; }
+    .opts{ display:grid; gap:10px; }
+    .opt{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: rgba(255,255,255,.86);
+      font-size:clamp(15px, 3.8vw, 17px);
+      line-height:1.45;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .22s ease, opacity .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+      position:relative;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      max-width:100%;
+    }
+    .opt:active{ transform: scale(.99); }
+    .opt.dim{ opacity:.42; }
+    .opt.active{
+      opacity:1;
+      border-color: rgba(255,255,255,.20);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 0 18px rgba(255,106,42,.12);
+    }
+
+    .quiz-actions{ display:flex; justify-content:center; margin-top:6px; gap:10px; flex-direction:column; align-items:center; }
+    .unlock-hint{
+      font-size:12px;
+      letter-spacing:.10em;
+      color:rgba(255,255,255,.62);
+      text-align:center;
+      padding:0 6px;
+    }
+
+    .ghost-btn{
+      padding:12px 18px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.88);
+      font-weight:800;
+      letter-spacing:.10em;
+      cursor:pointer;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease, box-shadow .22s ease;
+      max-width:92vw;
+    }
+    .ghost-btn:active{ transform: scale(.99); }
+    .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
+
+    .ghost-btn.ready{
+      border-color: rgba(255,255,255,.26);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 0 18px rgba(255,106,42,.14);
+      animation: unlockPulse 1.2s ease-in-out infinite;
+    }
+    @keyframes unlockPulse{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(-1px); }
+    }
+
+    .result-page{
+      width:min(var(--wrap), 92vw);
+      margin:0 auto;
+      padding:22px 18px 18px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
+      backdrop-filter: blur(7px);
+      overflow:hidden;
+      z-index:2;
+      text-align:left;
+      position:relative;
+    }
+    .result-page::after{
+      content:"";
+      position:absolute;inset:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      pointer-events:none;
+      opacity:.85;
+    }
+    .rp-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
+    .arch-title{ margin:6px 0 4px; font-size:clamp(22px, 5vw, 32px); font-weight:850; letter-spacing:.06em; color:#fff; position:relative; z-index:2; overflow-wrap:anywhere; }
+    .arch-sub{ margin:0 0 12px; font-size:13px; letter-spacing:.20em; text-transform:uppercase; color:rgba(255,255,255,.66); position:relative; z-index:2; overflow-wrap:anywhere; }
+
+    .result-shell{ position:relative; z-index:2; display:grid; gap:12px; }
+    .arch-grid{ display:grid; gap:10px; position:relative; z-index:2; }
+    .arch-card{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      padding:14px 14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.30);
+      overflow-wrap:anywhere;
+    }
+    .arch-card .t{ margin:0 0 6px; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.62); }
+    .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); }
+
+    .arch-actions{ margin-top:10px; display:flex; justify-content:center; position:relative; z-index:2; }
+
+    .arch-emblem{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin:0;
+      position:relative;
+      z-index:2;
+    }
+    .emblem-slot{
+      width:min(260px, 78vw);
+      aspect-ratio: 1 / 1;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 18px 60px rgba(0,0,0,.30);
+      display:grid;
+      place-items:center;
+      color: rgba(255,255,255,.62);
+      font-size:12px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      user-select:none;
+    }
+
+    .result-watermark{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.10);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      position:relative;
+      z-index:2;
+      opacity:.48;
+      user-select:none;
+    }
+    .result-watermark img{
+      width:16px;
+      height:16px;
+      object-fit:contain;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,.35));
+    }
+    .result-watermark span{
+      font-size:11px;
+      letter-spacing:.18em;
+      color:rgba(255,255,255,.70);
+      text-transform:uppercase;
+    }
+
+    @media (min-width: 980px){
+      .result-page{
+        width:min(1120px, 92vw);
+        aspect-ratio: 16 / 9;
+        padding:18px 18px 16px;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+      }
+      .result-shell{
+        grid-template-columns: 320px 1fr;
+        align-items:stretch;
+        gap:14px;
+      }
+      .arch-emblem{
+        justify-content:flex-start;
+      }
+      .emblem-slot{
+        width: 300px;
+        aspect-ratio: 1 / 1;
+      }
+      .arch-grid{
+        grid-template-columns: 1fr 1fr;
+        gap:10px;
+      }
+      .arch-card{
+        padding:12px 12px;
+      }
+      .arch-card:nth-child(1){ grid-column: 1 / 3; }
+      .arch-title{ margin-top:0; }
+      .arch-sub{ margin-bottom:8px; }
+      .arch-actions{ margin-top:8px; }
+      .result-watermark{ margin-top:10px; padding-top:10px; }
+    }
+
+    .hearth-wrap{
+      width:min(var(--wrap), 92vw);
+      margin:0 auto;
+      padding:22px 18px 18px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+      box-shadow: 0 22px 72px rgba(0,0,0,.46);
+      backdrop-filter: blur(7px);
+      overflow:hidden;
+      z-index:2;
+      position:relative;
+      text-align:center;
+    }
+    .hearth-wrap::after{
+      content:"";
+      position:absolute;inset:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.06);
+      pointer-events:none;
+      opacity:.85;
+    }
+    .hearth-top{ position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .hearth-canvas{
+      width:min(520px, 86vw);
+      height:240px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      overflow:hidden;
+      display:block;
+    }
+    @media (max-width: 420px){
+      .hearth-canvas{ height:220px; }
+    }
+    .hearth-level{ font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.66); margin-top:-2px; }
+    .microcopy{ margin-top:10px; font-size:12px; letter-spacing:.10em; color:rgba(255,255,255,.62); position:relative; z-index:2; padding:0 6px; overflow-wrap:anywhere; }
+
+    form{
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      position:relative;
+      z-index:2;
+      width:100%;
+    }
+    input[type="email"]{
+      padding:12px 20px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.16);
+      min-width:min(320px, 82vw);
+      font-size:16px;color:#222;background:#fff;outline:none;
+      max-width:100%;
+    }
+    button{
+      padding:12px 22px;border:none;border-radius:12px;
+      font-weight:800;font-size:16px;color:#fff;background:var(--accent);
+      cursor:pointer;transition:background .42s, transform .22s ease;
+      letter-spacing:.08em;
+      max-width:92vw;
+    }
+    button:hover{filter: brightness(.96);}
+    button:active{ transform: scale(.99); }
+
+    .links{
+      display:flex;
+      gap:18px;
+      justify-content:center;
+      margin-top:14px;
+      position:relative;
+      z-index:2;
+      flex-wrap:wrap;
+      padding:0 6px;
+    }
+    .links a{
+      color:rgba(255,255,255,.86);
+      text-decoration:none;
+      border-bottom:1px solid rgba(255,255,255,.22);
+      padding-bottom:2px;
+      white-space:nowrap;
+    }
+    .footer-mark{
+      margin-top:18px;
+      font-size:11px;
+      letter-spacing:.18em;
+      color:rgba(255,255,255,.40);
+      position:relative;
+      z-index:2;
+      user-select:none;
+    }
+
+    .toast{
+      position:fixed;left:50%;bottom:28px;transform:translateX(-50%);
+      background:rgba(0,0,0,.74);
+      padding:12px 18px;border-radius:12px;
+      font-size:14px;box-shadow:0 10px 40px rgba(0,0,0,.45);
+      opacity:0;pointer-events:none;transition:opacity .28s ease;
+      z-index:99;
+      color:rgba(255,255,255,.88);
+      max-width:92vw;
+      text-align:center;
+    }
+    .toast.show{opacity:1;}
+
+    @media (prefers-reduced-motion: reduce){
+      .breath, .grain, .dot.active, .flame-img.in{ animation:none !important; }
+      .reveal, .late, .logo-frame, .flame-frame, .mood, .opt{ transition:none !important; }
+      .cinema-step{ transition:none !important; opacity:1 !important; transform:none !important; }
+      .ghost-btn.ready{ animation:none !important; }
+    }
+
+    /* 你的 override CSS（保留原樣） */
+    #s7{ padding: 42px 16px; }
+    #s7 .result-page{ padding: 16px 14px 14px; border-radius: 20px; }
+    #s7 .rp-kicker{ margin-bottom: 8px; }
+    #s7 .emblem-slot{ width: min(210px, 70vw); aspect-ratio: 1 / 1; border-radius: 16px; font-size: 11px; letter-spacing: .18em; }
+    #s7 .arch-title{ margin: 6px 0 2px; font-size: clamp(20px, 4.6vw, 30px); }
+    #s7 .arch-sub{ margin: 0 0 10px; font-size: 12px; letter-spacing: .18em; }
+    #s7 .arch-card{ padding: 12px 12px; border-radius: 14px; }
+    #s7 .arch-card .t{ margin: 0 0 6px; font-size: 11px; letter-spacing: .18em; }
+    #s7 .arch-card .v{ font-size: 14px; line-height: 1.55; }
+    #s7 .microcopy{ margin-top: 10px; }
+    #s7 .arch-actions{ margin-top: 10px; }
+    #s7 .result-watermark{ margin-top: 10px; padding-top: 10px; }
+
+    @media (min-width: 900px), (min-aspect-ratio: 16/9){
+      #s7{ padding: 26px 18px; }
+      #s7 .result-page{
+        width: min(1080px, 92vw);
+        max-height: calc(100vh - 56px);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        grid-template-rows: auto auto 1fr auto auto;
+        column-gap: 16px;
+        align-items: start;
+      }
+      #s7 .rp-kicker{ grid-column: 1 / -1; }
+      #s7 .arch-emblem{ grid-column: 1; grid-row: 2 / span 3; margin: 0; }
+      #s7 .arch-title{ grid-column: 2; }
+      #s7 .arch-sub{ grid-column: 2; }
+      #s7 .arch-grid{ grid-column: 2; gap: 10px; }
+      #s7 .microcopy{ grid-column: 1 / -1; }
+      #s7 .arch-actions{ grid-column: 1 / -1; }
+      #s7 .result-watermark{ grid-column: 1 / -1; }
+    }
+
+    :root{
+      --card-bg: rgba(255,255,255,.035);
+      --card-border: rgba(255,255,255,.10);
+      --card-shadow: 0 14px 44px rgba(0,0,0,.34);
+      --card-inset: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .sanctuary-wrap,
+    .info-card,
+    .mood,
+    .q,
+    .result-page,
+    .arch-card,
+    .hearth-wrap{
+      background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,.018));
+      border-color: var(--card-border);
+      box-shadow: var(--card-shadow), var(--card-inset);
+    }
+
+    #s7 .result-page,
+    #s8 .hearth-wrap{
+      box-shadow: 0 12px 40px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    body:not([data-theme]),
+    body[data-theme=""],
+    body[data-theme="mono_base"]{
+      --mono-glow-cool: rgba(190,210,255,.22);
+      --mono-glow-warm: rgba(255,214,200,.16);
+      --mono-glow-white: rgba(255,255,255,.22);
+    }
+
+    body:not([data-theme]) .we-accent,
+    body[data-theme=""] .we-accent,
+    body[data-theme="mono_base"] .we-accent,
+    body:not([data-theme]) .i-accent,
+    body[data-theme=""] .i-accent,
+    body[data-theme="mono_base"] .i-accent{
+      color: rgba(255,255,255,.96);
+      text-shadow:
+        0 0 18px var(--mono-glow-white),
+        0 0 22px var(--mono-glow-cool),
+        0 0 26px var(--mono-glow-warm);
+    }
+
+    #unlockBtn[disabled]{
+      opacity:.62;
+      background: rgba(255,255,255,.03);
+      border-color: rgba(255,255,255,.12);
+      box-shadow: none;
+    }
+
+    /* =========================
+       08 截圖友善：底部資訊固定可見
+       (override)
+    ========================== */
+    #s7 .microcopy,
+    #s7 .arch-actions,
+    #s7 .result-watermark{
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    #s7 .arch-title,
+    #s7 .arch-sub{
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #s7 .arch-sub{
+      letter-spacing: .28em;
+      opacity: .72;
+    }
+
+    #s7 .emblem-slot{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: transparent;
+    }
+
+    #s7 .emblem-img{
+      width: 72%;
+      max-width: 220px;
+      height: auto;
+      display:block;
+      filter: saturate(1.05) contrast(1.05);
+    }
+
+    body[data-theme="rose_ember"] #archetypeEmblem{
+      filter:
+        drop-shadow(0 14px 38px rgba(122,43,18,.55))
+        drop-shadow(0 0 18px rgba(255,210,184,.45))
+        saturate(1.12);
+    }
+    body[data-theme="midnight_tracker"] #archetypeEmblem{
+      filter:
+        drop-shadow(0 14px 38px rgba(10,19,53,.60))
+        drop-shadow(0 0 18px rgba(175,194,255,.45))
+        saturate(1.08);
+    }
+    body[data-theme="veil_warden"] #archetypeEmblem{
+      filter:
+        drop-shadow(0 14px 34px rgba(74,58,48,.48))
+        drop-shadow(0 0 16px rgba(242,230,214,.42))
+        saturate(1.03);
+    }
+    body[data-theme="low_tide_keeper"] #archetypeEmblem{
+      filter:
+        drop-shadow(0 14px 36px rgba(11,36,32,.55))
+        drop-shadow(0 0 18px rgba(191,230,218,.45))
+        saturate(1.06);
+    }
+
+    /* =========================
+       05 APPLE-LIKE OVERLAY
+    ========================== */
+    .cinema-overlay{
+      position:fixed;
+      inset:0;
+      z-index:999;
+      display:none;
+      place-items:center;
+      background: linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.78));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .42s cubic-bezier(.22,.61,.36,1);
+    }
+
+    .cinema-overlay.show{
+      display:grid;
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .cinema-overlay-inner{
+      width:min(980px, 92vw);
+      height: min(560px, 78svh);
+      height: min(560px, 78vh);
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      box-shadow: 0 28px 110px rgba(0,0,0,.62);
+      position:relative;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      padding: 18px;
+    }
+
+    .cinema-overlay-cinema{
+      width: min(760px, 92vw);
+      height: 240px;
+    }
+
+    @media (max-width: 520px){
+      .cinema-overlay-inner{
+        height: min(520px, 82svh);
+        padding: 16px 14px;
+      }
+      .cinema-overlay-cinema{
+        height: 220px;
+      }
+    }
+
+    .cinema-skip{
+      position:absolute;
+      right:14px;
+      top:14px;
+      border-radius:999px;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.86);
+      font-weight:800;
+      letter-spacing:.10em;
+      cursor:pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
+    }
+    .cinema-skip:active{ transform: scale(.98); }
     
-    /* 預設狀態 */
-    body:not([data-precolor]), body[data-precolor="black"] { --hue-core: 220; --sat-core: 0%; }
-    
-    /* Pre-tone 對應 */
-    body[data-precolor="red"]    { --hue-core: 350; --sat-core: 90%; }
-    body[data-precolor="orange"] { --hue-core: 25;  --sat-core: 95%; }
-    body[data-precolor="yellow"] { --hue-core: 45;  --sat-core: 90%; }
-    body[data-precolor="green"]  { --hue-core: 150; --sat-core: 60%; }
-    body[data-precolor="blue"]   { --hue-core: 210; --sat-core: 80%; }
-    body[data-precolor="purple"] { --hue-core: 270; --sat-core: 70%; }
-    body[data-precolor="khaki"]  { --hue-core: 40;  --sat-core: 30%; }
-    body[data-precolor="gray"]   { --hue-core: 210; --sat-core: 10%; }
-    body[data-precolor="white"]  { --hue-core: 210; --sat-core: 5%; --light-core: 90%; }
+    /* ✅ 05A 全屏沉靜引導頁（同 #s4 的全屏規格） */
+#s4a{ padding:0; }
+#s4a .guide-wrap{
+  width:100%;
+  height:100vh;
+  height:100svh;
+  max-width:none;
+  border-radius:0;
+  border:none;
+  box-shadow:none;
+  background: transparent;
+  backdrop-filter:none;
+  padding: 0 20px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
 
-    /* 06 Theme 對應 */
-    body[data-theme="rose_ember"]       { --hue-core: 15;  --sat-core: 90%; }
-    body[data-theme="midnight_tracker"] { --hue-core: 225; --sat-core: 85%; }
-    body[data-theme="veil_warden"]      { --hue-core: 30;  --sat-core: 20%; }
-    body[data-theme="low_tide_keeper"]  { --hue-core: 170; --sat-core: 40%; }
+/* 引導文字舞台：維持全屏但文字區不要像 overlay 那樣有框 */
+#s4a .guide-cinema{
+  width: min(760px, 92vw);
+  height: 220px;
+}
+/* ✅ GUIDE 文字：更大、更粗、更有存在感（不影響其他頁） */
+#s4a .cinema-step p{
+  margin:0;
+  font-size: clamp(22px, 5.6vw, 34px);
+  font-weight: 850;
+  letter-spacing: .06em;
+  line-height: 1.28;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 10px 36px rgba(0,0,0,.50);
+}
 
-    /* =========================================
-       BACKGROUND SYSTEM (Reference Style)
-       ========================================= */
-    #ambient-core {
-      position: fixed; inset: 0; width: 100vw; height: 100vh;
-      z-index: -2; background: var(--color-void);
-      overflow: hidden; pointer-events: none;
-    }
-    
-    .aurora-blob {
-      position: absolute; border-radius: 50%;
-      filter: blur(80px); opacity: 0.5;
-      mix-blend-mode: screen;
-      animation: drift 25s infinite alternate ease-in-out;
-      will-change: transform;
-    }
-    
-    .blob-1 {
-      top: -10%; left: -10%; width: 60vw; height: 60vw;
-      background: radial-gradient(circle, var(--color-ether-glow), transparent 70%);
-    }
-    .blob-2 {
-      bottom: -10%; right: -20%; width: 70vw; height: 70vw;
-      background: radial-gradient(circle, hsl(calc(var(--hue-core) + 30), 70%, 40%), transparent 70%);
-      animation-delay: -5s; animation-duration: 30s;
-    }
-    .blob-3 {
-      top: 40%; left: 40%; width: 50vw; height: 50vw;
-      background: radial-gradient(circle, hsl(calc(var(--hue-core) - 30), 80%, 45%), transparent 70%);
-      animation-delay: -10s; opacity: 0.3;
-    }
+/* ✅ GUIDE 文字淡入淡出節奏：更慢 */
+#s4a .cinema-step{
+  transition: opacity 1.85s cubic-bezier(.22,.61,.36,1);
+}
 
-    @keyframes drift {
-      0% { transform: translate(0,0) scale(1) rotate(0deg); }
-      50% { transform: translate(10%, 5%) scale(1.1) rotate(5deg); }
-      100% { transform: translate(-5%, -10%) scale(0.95) rotate(-5deg); }
-    }
+/* SKIP 按鈕（沿用 ghost-btn，不需要 overlay 的 cinema-skip） */
+#guideSkipBtn{
+  min-width: 120px;
+}
+<style>
+  /* ========== UI ONLY: Visual Skin Layer ========== */
+  :root{
+    --ui-bg0: #07080b;
+    --ui-bg1: #0b0f16;
+    --ui-glow: rgba(255, 120, 160, .18);
+    --ui-glow2: rgba(140, 210, 255, .10);
+    --ui-line: rgba(255,255,255,.08);
+    --ui-text: rgba(255,255,255,.92);
+    --ui-muted: rgba(255,255,255,.72);
+    --ui-card: rgba(255,255,255,.06);
+    --ui-card2: rgba(255,255,255,.03);
+    --ui-blur: 18px;
+    --ui-radius: 18px;
+  }
 
-    .noise-overlay {
-      position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: 0.05;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-      mix-blend-mode: overlay;
-    }
+  /* page background */
+  body{
+    background:
+      radial-gradient(1200px 520px at 15% 10%, var(--ui-glow), transparent 60%),
+      radial-gradient(900px 420px at 85% 18%, var(--ui-glow2), transparent 62%),
+      radial-gradient(700px 360px at 50% 95%, rgba(255,255,255,.05), transparent 60%),
+      linear-gradient(180deg, var(--ui-bg0), var(--ui-bg1));
+    color: var(--ui-text);
+  }
 
-    .flashlight-mask {
-      position: fixed; inset: 0; pointer-events: none; z-index: 50;
-      background: radial-gradient(circle 300px at var(--x, 50%) var(--y, 50%), transparent 0%, rgba(0,0,0,0.4) 100%);
-      opacity: 0.6;
-    }
+  /* subtle grain (no JS) */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,.045) 0 1px, transparent 2px),
+      radial-gradient(circle at 70% 60%, rgba(255,255,255,.035) 0 1px, transparent 2px);
+    background-size: 140px 140px, 180px 180px;
+    mix-blend-mode: overlay;
+    opacity:.35;
+    filter: blur(.2px);
+    z-index:0;
+  }
 
-    /* =========================================
-       GLASSMORPHISM COMPONENTS
-       (取代原本的 .sanctuary-wrap 等樣式)
-       ========================================= */
-    .sanctuary-wrap, .info-card, .mood, .q, .result-page, .arch-card, .hearth-wrap, .pretone, .cinema-overlay-inner {
-      background: var(--glass-bg) !important;
-      backdrop-filter: blur(var(--glass-blur)) !important;
-      -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
-      border: 1px solid var(--glass-border) !important;
-      box-shadow: var(--glass-shadow) !important;
-      border-radius: 24px !important;
-      transition: all 0.4s ease;
-      position: relative;
-      overflow: hidden;
-    }
+  /* UI container feel (apply to your main wrapper if you have one) */
+  .ui-skin,
+  .nr-wrap,
+  .guide-wrap,
+  .wrap,
+  .container{
+    position:relative;
+    z-index:1;
+  }
 
-    /* Hover Glow Effect */
-    .mood:hover, .opt:hover, .pretone:hover, .logo-frame:hover {
-      border-color: color-mix(in srgb, var(--color-ether-glow) 50%, transparent) !important;
-      box-shadow: 0 0 25px color-mix(in srgb, var(--color-ether-glow) 20%, transparent) !important;
-      transform: translateY(-2px);
-    }
+  /* glass card look */
+  .ui-card,
+  .nr-wrap,
+  .guide-wrap{
+    background: linear-gradient(180deg, var(--ui-card), var(--ui-card2));
+    border: 1px solid var(--ui-line);
+    backdrop-filter: blur(var(--ui-blur));
+    -webkit-backdrop-filter: blur(var(--ui-blur));
+    border-radius: var(--ui-radius);
+    box-shadow:
+      0 18px 40px rgba(0,0,0,.45),
+      inset 0 1px 0 rgba(255,255,255,.06);
+  }
 
-    /* 掃光特效 */
-    .sanctuary-wrap::before, .glass-card::before {
-      content: ""; position: absolute; inset: 0; left: -150%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-      transform: skewX(-25deg); transition: left 0.8s ease; pointer-events: none;
-    }
-    .sanctuary-wrap:hover::before { left: 150%; }
+  /* buttons */
+  button, .btn, .cta, a.btn{
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    color: var(--ui-text);
+    transition: transform .18s ease, background .18s ease, border-color .18s ease;
+  }
+  button:hover, .btn:hover, .cta:hover, a.btn:hover{
+    transform: translateY(-1px);
+    background: rgba(255,255,255,.09);
+    border-color: rgba(255,255,255,.22);
+  }
+  button:active, .btn:active, .cta:active, a.btn:active{
+    transform: translateY(0);
+  }
 
-    /* =========================================
-       TYPOGRAPHY & LAYOUT
-       ========================================= */
-    section {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      padding: 80px 20px; text-align: center; position: relative; z-index: 2;
-    }
+  /* text rhythm */
+  h1,h2,h3{ letter-spacing:.02em; }
+  p{ color: var(--ui-muted); }
 
-    h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; color: #fff; }
-    h1 { font-size: clamp(40px, 6vw, 64px); text-shadow: 0 0 30px var(--color-ether-glow); }
-    h2 { font-size: clamp(24px, 4vw, 36px); margin-bottom: 24px; }
-    p { color: var(--color-ether-secondary); line-height: 1.7; font-size: 16px; max-width: 600px; }
-
-    .kicker {
-      font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--color-ether-glow);
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 8px 16px; border-radius: 99px;
-      background: rgba(255,255,255,0.02);
-      margin-bottom: 20px; display: inline-block;
-    }
-
-    .secno {
-      font-size: 10px; letter-spacing: 0.4em; color: var(--muted);
-      opacity: 0.6; margin-bottom: 30px; display: block;
-    }
-
-    /* =========================================
-       INTERACTIVE ELEMENTS
-       ========================================= */
-    /* Dots Navigation - Updated Style */
-    .dots {
-      position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
-      z-index: 50; display: flex; flex-direction: column; gap: 16px;
-    }
-    .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.3); background: transparent;
-      padding: 0; cursor: pointer; transition: all 0.3s;
-    }
-    .dot.active {
-      background: var(--color-ether-glow);
-      border-color: var(--color-ether-glow);
-      box-shadow: 0 0 15px var(--color-ether-glow);
-      transform: scale(1.5);
-    }
-    /* Tooltip styling */
-    .dot::after {
-      content: attr(data-label); position: absolute; right: 20px; top: 50%;
-      transform: translateY(-50%) translateX(10px); opacity: 0;
-      background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px;
-      color: #fff; font-size: 10px; letter-spacing: 0.1em;
-      pointer-events: none; transition: 0.3s; white-space: nowrap;
-    }
-    .dot:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
-
-    /* Buttons */
-    .ghost-btn, button[type="submit"] {
-      padding: 14px 32px; border-radius: 99px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.05);
-      color: #fff; font-weight: 600; letter-spacing: 0.1em;
-      cursor: pointer; transition: all 0.3s;
-      text-transform: uppercase; font-size: 14px;
-      position: relative; overflow: hidden;
-    }
-    .ghost-btn:hover, button[type="submit"]:hover {
-      background: var(--color-ether-glow);
-      color: #000; border-color: var(--color-ether-glow);
-      box-shadow: 0 0 30px var(--color-ether-glow);
-    }
-    .ghost-btn[disabled] { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-
-    /* Inputs */
-    input[type="email"] {
-      background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
-      color: #fff; padding: 14px 20px; border-radius: 12px; width: 320px;
-      font-family: inherit; transition: 0.3s; outline: none;
-    }
-    input[type="email"]:focus {
-      border-color: var(--color-ether-glow);
-      box-shadow: 0 0 15px rgba(255,255,255,0.1);
-    }
-
-    /* Pre-tone Grid */
-    .pretone-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
-      margin-top: 20px; width: 100%;
-    }
-    @media (max-width: 600px) { .pretone-grid { grid-template-columns: repeat(2, 1fr); } }
-    
-    .pretone {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px; cursor: pointer; color: rgba(255,255,255,0.8);
-    }
-    .pretone .chip {
-      width: 12px; height: 12px; border-radius: 50%;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.2);
-    }
-    .pretone.active {
-      background: rgba(255,255,255,0.1) !important;
-      border-color: var(--color-ether-glow) !important;
-    }
-
-    /* Logo & Flame Frame - Circle Aesthetic */
-    .logo-frame, .flame-frame {
-      width: 200px; height: 200px;
-      display: grid; place-items: center;
-      border-radius: 50% !important; /* 強制圓形 */
-      border: 1px solid rgba(255,255,255,0.1) !important;
-      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%) !important;
-      margin-bottom: 30px;
-    }
-    .logo-mark, .flame-img {
-      filter: drop-shadow(0 0 20px var(--color-ether-glow));
-      animation: breathe-cycle 6s infinite ease-in-out;
-    }
-
-    @keyframes breathe-cycle {
-      0%, 100% { transform: scale(1); opacity: 0.8; filter: drop-shadow(0 0 10px var(--color-ether-glow)); }
-      50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 25px var(--color-ether-glow)); }
-    }
-
-    /* Quiz Options */
-    .opt {
-      background: rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px; padding: 16px; margin-bottom: 8px;
-      cursor: pointer; transition: 0.3s;
-    }
-    .opt.active {
-      background: rgba(255,255,255,0.1);
-      border-color: var(--color-ether-glow);
-      box-shadow: 0 0 15px rgba(255,255,255,0.05);
-    }
-
-    /* Footer */
-    .footer-mark {
-      opacity: 0.3; letter-spacing: 0.2em; font-size: 10px; margin-top: 40px;
-    }
-    .links a { border-bottom: 1px solid rgba(255,255,255,0.2); transition: 0.3s; }
-    .links a:hover { color: var(--color-ether-glow); border-color: var(--color-ether-glow); }
-
-    /* Reveal Animation */
-    .reveal { opacity: 0; transform: translateY(30px); transition: all 1s ease; }
-    .reveal.in { opacity: 1; transform: translateY(0); }
-
-    /* Overwrite specific section backgrounds to be transparent so blobs show */
-    .s1, .s2, .s3, .s4, .s4b, .s5, .s6, .s7, .s8 { background: transparent !important; }
-
-    /* Canvas Adjustment */
-    #flameCanvas {
-      filter: contrast(1.2) brightness(1.1); /* 增強粒子亮度 */
-    }
-  </style>
+  /* soft divider */
+  hr{
+    border:0;
+    height:1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+    opacity:.8;
+  }
+</style>
 </head>
 
-<body data-precolor="black">
-
-  <div id="ambient-core" aria-hidden="true">
-    <div class="aurora-blob blob-1"></div>
-    <div class="aurora-blob blob-2"></div>
-    <div class="aurora-blob blob-3"></div>
-    <div class="noise-overlay"></div>
-  </div>
-
-  <div class="flashlight-mask" id="cursor-light"></div>
+<body data-theme="">
+  <div class="breath" id="breath" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
 
   <nav class="dots" id="dotsNav" aria-label="Section navigation">
     <button class="dot" data-target="s1"  data-label="HERO" aria-label="Go to Hero"></button>
@@ -355,100 +1694,105 @@
     <button class="dot" data-target="s8"  data-label="HEARTH" aria-label="Go to Our Flame"></button>
   </nav>
 
+  <!-- ① Hero -->
   <section class="s1" id="s1">
     <div class="brand">
-      <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" style="width: 300px; filter: drop-shadow(0 0 20px var(--color-ether-glow));" />
-      <div class="submark" style="letter-spacing: 0.5em; font-size: 14px; opacity: 0.7;">TAIWAN</div>
+      <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
+      <div class="submark">TAIWAN</div>
     </div>
 
-    <div class="tagline" style="font-size: 18px; margin-top: 30px; color: var(--color-ether-glow);">
-      即將到來，搶先進入 HEST<span class="i-accent">i</span>A 宇宙
-    </div>
-    <div class="arrow" style="margin-top: 40px; animation: drift 2s infinite ease-in-out;">↓</div>
+    <div class="tagline">即將到來，搶先進入 HEST<span class="i-accent">i</span>A 宇宙</div>
+    <div class="arrow">↓</div>
   </section>
 
+  <!-- PRETONE -->
   <section class="s1b" id="s1b">
-    <div class="secno reveal">TONE</div>
+    <div class="secno reveal" style="--d:120ms;">TONE</div>
 
     <div class="sanctuary-wrap" id="pretoneWrap">
       <div class="sanctuary-kicker">
-        <span class="kicker reveal in">INNER TEMPERATURE</span>
+        <span class="kicker reveal in">PRE-TONE</span>
       </div>
 
-      <h2 class="reveal">先選一個你喜歡的色調</h2>
-      <p class="reveal">
-        這將決定 HESTiA 宇宙在你眼中的第一道光譜。
+      <h2 class="reveal" style="--d:180ms;">先選一個你喜歡的色調吧？</h2>
+      <p class="reveal" style="--d:220ms;">
+        這會先替你的HESTiA宇宙體驗套上一層底色。
       </p>
 
-      <div class="pretone-grid reveal" id="pretoneGrid" aria-label="Pre-tone color palette">
-        <div class="pretone" data-pre="red"    data-hex="#B91C1C"><span class="chip" style="background:#B91C1C"></span><span class="nm">燼紅</span></div>
-        <div class="pretone" data-pre="orange" data-hex="#D9480F"><span class="chip" style="background:#D9480F"></span><span class="nm">熔橙</span></div>
-        <div class="pretone" data-pre="yellow" data-hex="#C8A100"><span class="chip" style="background:#C8A100"></span><span class="nm">鎏金</span></div>
-        <div class="pretone" data-pre="green"  data-hex="#1F7A5A"><span class="chip" style="background:#1F7A5A"></span><span class="nm">苔息</span></div>
-        <div class="pretone" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">深海</span></div>
+      <div class="pretone-grid reveal" style="--d:280ms;" id="pretoneGrid" aria-label="Pre-tone color palette">
+        <button class="pretone" type="button" data-pre="red"    data-hex="#B91C1C"><span class="chip" style="background:#B91C1C"></span><span class="nm">燼紅｜EMBER RED</span></button>
+        <button class="pretone" type="button" data-pre="orange" data-hex="#D9480F"><span class="chip" style="background:#D9480F"></span><span class="nm">熔橙｜MOLTEN ORANGE</span></button>
+        <button class="pretone" type="button" data-pre="yellow" data-hex="#C8A100"><span class="chip" style="background:#C8A100"></span><span class="nm">鎏金｜AURIC GOLD</span></button>
+        <button class="pretone" type="button" data-pre="green"  data-hex="#1F7A5A"><span class="chip" style="background:#1F7A5A"></span><span class="nm">苔息｜SAGE MOSS</span></button>
+        <button class="pretone" type="button" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">深海｜DEEP NAVY</span></button>
 
-        <div class="pretone" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">暮紫</span></div>
-        <div class="pretone" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">砂金</span></div>
-        <div class="pretone" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">曜黑</span></div>
-        <div class="pretone" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">霧灰</span></div>
-        <div class="pretone" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">象牙</span></div>
+        <button class="pretone" type="button" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">暮紫｜VIOLET VEIL</span></button>
+        <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">砂金｜SAND KHaki</span></button>
+        <button class="pretone" type="button" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">曜黑｜OBSIDIAN</span></button>
+        <button class="pretone" type="button" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">霧灰｜ASH</span></button>
+        <button class="pretone" type="button" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">象牙｜IVORY</span></button>
       </div>
 
-      <div class="microcopy reveal" style="margin-top: 20px;">
+      <div class="microcopy reveal" style="--d:340ms;">
         已選擇：<span id="pretonePicked" class="we-accent">—</span>
       </div>
 
-      <div class="arch-actions reveal">
-        <button class="ghost-btn" id="toWhoBtn" type="button">繼續探索</button>
+      <div class="arch-actions reveal" style="--d:380ms;">
+        <button class="ghost-btn" id="toWhoBtn" type="button">繼續</button>
       </div>
     </div>
   </section>
 
+  <!-- ② WHO WE ARE -->
   <section class="s2" id="s2">
-    <div class="secno reveal">02</div>
-    <h2 class="reveal who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
+    <div class="secno reveal" style="--d:120ms;">02</div>
+    <h2 class="reveal in who-title" style="--d:160ms;">WHO <span class="we-accent">WE</span> ARE?</h2>
 
-    <div class="info-card reveal">
-      <div class="mini"><span class="kicker">WHY HESTiA?</span></div>
+    <div class="info-card">
+      <div class="mini"><span class="kicker reveal in">WHY HESTiA?</span></div>
       <p class="late" data-late>HESTiA 的名字來自希臘神話中守護火爐的女神，</p>
       <p class="late" data-late>象徵<span class="hair-underline">歸屬</span>、<span class="hair-underline">溫暖</span>與內在之火。</p>
       <p class="late" data-late>我們相信，每個人心中都有一簇火焰，</p>
       <p class="late" data-late>等待被看見、被擁抱、被點燃。</p>
     </div>
 
-    <div class="info-card reveal" style="margin-top:20px;">
-      <div class="mini"><span class="kicker">WHAT WE DO</span></div>
+    <div class="info-card" style="margin-top:12px;">
+      <div class="mini"><span class="kicker reveal in">WHAT WE DO</span></div>
       <p class="late" data-late>HESTiA 是一個健身與生活並行的服裝品牌。</p>
       <p class="late" data-late>不管在生活與訓練之間，都能展現符合自己的自信與品味。</p>
     </div>
   </section>
 
+  <!-- ③ BRAND MARK -->
   <section class="s3" id="s3">
     <div class="stack">
-      <div class="secno reveal">03</div>
+      <div class="secno reveal" style="--d:140ms;">03</div>
 
       <div class="logo-frame frame-size" id="logoFrame" role="button" aria-label="Interact with brand mark" tabindex="0" data-mode="primary">
         <div class="corner-hint" aria-hidden="true"></div>
         <img class="logo-mark" id="logoMark" src="HLOGO.png" alt="HESTIA mark" />
       </div>
 
-      <div class="label reveal">BRAND MARK</div>
-      <h2 class="reveal">品牌識別</h2>
+      <div class="label reveal" style="--d:220ms;">BRAND MARK</div>
+      <h2 class="reveal" style="--d:260ms;">品牌識別</h2>
 
       <div class="bullets">
-        <div class="bullet reveal">LOGO 靈感來自「火焰燃燒的線條」，帶出<span class="hair-underline">力量</span>與<span class="hair-underline">節制</span>的平衡。</div>
-        <div class="bullet reveal">拱型外型呼應爐灶女神的意象，象徵<span class="hair-underline">歸屬</span>、<span class="hair-underline">溫暖</span>與內在之火。</div>
-        <div class="bullet reveal">代表力量與柔韌的平衡，也象徵身體與心靈的統一。</div>
+        <div class="bullet reveal" style="--d:320ms;">LOGO 靈感來自「火焰燃燒的線條」，帶出<span class="hair-underline">力量</span>與<span class="hair-underline">節制</span>的平衡。</div>
+        <div class="bullet reveal" style="--d:380ms;">拱型外型呼應爐灶女神的意象，象徵<span class="hair-underline">歸屬</span>、<span class="hair-underline">溫暖</span>與內在之火。</div>
+        <div class="bullet reveal" style="--d:440ms;">代表力量與柔韌的平衡，也象徵身體與心靈的統一。</div>
       </div>
+
+      <div class="sig reveal" style="--d:520ms;">HESTiA的主標識，將在服裝等所有核心視覺中作為第一辨識。</div>
     </div>
   </section>
 
+  <!-- ④ BRAND TAGLINE -->
   <section class="s4b" id="s4b">
-    <div class="secno reveal">04</div>
+    <div class="secno reveal" style="--d:140ms;">04</div>
 
     <div class="flame-stage">
       <div style="display:flex;justify-content:center;margin-bottom:4px;">
-        <span class="kicker reveal">FLAME MARK</span>
+        <span class="kicker reveal" style="--d:180ms;">FLAME MARK</span>
       </div>
 
       <div class="flame-frame" id="flameFrame" aria-label="Flame Mark reveal">
@@ -456,9 +1800,9 @@
         <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" />
       </div>
 
-      <h2 class="reveal">標語的符號</h2>
+      <h2 class="reveal" style="--d:260ms;">標語的符號</h2>
 
-      <div class="manifest center flame-copy reveal">
+      <div class="manifest center flame-copy reveal" style="--d:320ms;">
         <p class="late" data-late>這不只是口號，而是一種信念。</p>
         <p class="late" data-late>標籤又如何？那是與生俱來的特色。</p>
         <p class="late" data-late>HESTIA 透過品牌標語「Own Your Flame」</p>
@@ -468,48 +1812,55 @@
     </div>
   </section>
 
-  <section class="s4" id="s4">
-    <div class="sanctuary-wrap">
-      <div class="sanctuary-kicker">
-        <span class="kicker reveal">SANCTUARY</span>
-      </div>
-      <h2 class="reveal">SANCTUARY</h2>
-      <p class="reveal">
-        下面將是一段短暫的沉靜引導，繼續滑動往下探索。
-      </p>
+ <section class="s4" id="s4">
+  <div class="sanctuary-wrap">
+    <div class="sanctuary-kicker">
+      <span class="kicker reveal" style="--d:180ms;">SANCTUARY</span>
     </div>
-  </section>
+    <h2 class="reveal" style="--d:220ms;">SANCTUARY</h2>
+    <p class="reveal" style="--d:260ms;">
+      下面將是一段短暫的沉靜引導，繼續滑動往下探索。
+    </p>
+  </div>
+</section>
 
-  <section class="s4" id="s4a" aria-label="Sanctuary Guide">
-    <div class="guide-wrap">
-      <div class="sanctuary-kicker">
-        <span class="kicker reveal">SANCTUARY GUIDE</span>
-      </div>
 
-      <div class="cinema guide-cinema" aria-live="polite">
-        <div class="cinema-step" id="gc1"><p>現在安靜下來</p></div>
-        <div class="cinema-step" id="gc2"><p>讓我帶領你進入 HESTiA 宇宙</p></div>
-        <div class="cinema-step" id="gc3"><p>接下來的每一個選擇</p></div>
-        <div class="cinema-step" id="gc4"><p>都是你與我們共感的瞬間</p></div>
-        <div class="cinema-step" id="gc5"><p>你的每一個答案</p></div>
-        <div class="cinema-step" id="gc6"><p>將影響 HESTiA 首波上市系列配色</p></div>
-        <div class="cinema-step" id="gc7"><p>向下滑動開始吧！</p></div>
-      </div>
+<section class="s4" id="s4a" aria-label="Sanctuary Guide">
+  <div class="guide-wrap">
+    <div class="sanctuary-kicker">
+      <span class="kicker reveal" style="--d:180ms;">SANCTUARY GUIDE</span>
     </div>
-  </section>
 
+    <!-- 引導文字：自動播放（使用者可自由滑動，不鎖、不跳轉） -->
+    <div class="cinema guide-cinema" aria-live="polite">
+      <div class="cinema-step" id="gc1"><p>現在安靜下來</p></div>
+      <div class="cinema-step" id="gc2"><p>讓我帶領你進入 HESTiA 宇宙</p></div>
+      <div class="cinema-step" id="gc3"><p>接下來的每一個選擇</p></div>
+      <div class="cinema-step" id="gc4"><p>都是你與我們共感的瞬間</p></div>
+      <div class="cinema-step" id="gc5"><p>你的每一個答案</p></div>
+      <div class="cinema-step" id="gc6"><p>將影響 HESTiA 首波上市系列配色</p></div>
+
+      <!-- ✅ 新增：最後一句 -->
+      <div class="cinema-step" id="gc7"><p>向下滑動開始吧！</p></div>
+    </div>
+  </div>
+</section>
+
+
+
+  <!-- ⑥ Aesthetic Alignment -->
   <section class="s5" id="s5">
-    <div class="secno reveal">06</div>
+    <div class="secno reveal" style="--d:140ms;">06</div>
 
     <div class="sanctuary-wrap">
-      <div class="sanctuary-kicker"><span class="kicker reveal">AESTHETIC ALIGNMENT</span></div>
-      <h2 class="reveal">你偏好的「穿著色調」</h2>
-      <p class="reveal">
+      <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">AESTHETIC ALIGNMENT</span></div>
+      <h2 class="reveal" style="--d:220ms;">你偏好的「穿著色調」</h2>
+      <p class="reveal" style="--d:260ms;">
         依照描述選擇符合自己偏好的穿著色彩。
       </p>
 
       <div class="align-grid" id="alignGrid" aria-label="Aesthetic alignment choices">
-        <div class="mood reveal" role="button" tabindex="0"
+        <div class="mood reveal" style="--d:320ms;" role="button" tabindex="0"
              data-theme="rose_ember" data-value="ROSE EMBER" data-animal="PHOENIX">
           <div class="row">
             <div>
@@ -519,11 +1870,12 @@
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#F24B1E;"></span>
               <span class="dot-swatch" style="background:#ff9150;"></span>
+              <span class="dot-swatch" style="background:#1e0e09;"></span>
             </div>
           </div>
         </div>
 
-        <div class="mood reveal" role="button" tabindex="0"
+        <div class="mood reveal" style="--d:380ms;" role="button" tabindex="0"
              data-theme="midnight_tracker" data-value="GLACIAL STRIKER" data-animal="BLACK WOLF">
           <div class="row">
             <div>
@@ -533,11 +1885,12 @@
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#00b4ff;"></span>
               <span class="dot-swatch" style="background:#00e5c4;"></span>
+              <span class="dot-swatch" style="background:#0a1a2f;"></span>
             </div>
           </div>
         </div>
 
-        <div class="mood reveal" role="button" tabindex="0"
+        <div class="mood reveal" style="--d:440ms;" role="button" tabindex="0"
              data-theme="veil_warden" data-value="VEIL WARDEN" data-animal="DEER">
           <div class="row">
             <div>
@@ -547,11 +1900,12 @@
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#b8a89a;"></span>
               <span class="dot-swatch" style="background:#d0c2b6;"></span>
+              <span class="dot-swatch" style="background:#2a2320;"></span>
             </div>
           </div>
         </div>
 
-        <div class="mood reveal" role="button" tabindex="0"
+        <div class="mood reveal" style="--d:440ms;" role="button" tabindex="0"
              data-theme="low_tide_keeper" data-value="LOW TIDE KEEPER" data-animal="PYTHON">
           <div class="row">
             <div>
@@ -561,29 +1915,31 @@
             <div class="sw" aria-hidden="true">
               <span class="dot-swatch" style="background:#0F2E2B;"></span>
               <span class="dot-swatch" style="background:#2F4F4B;"></span>
+              <span class="dot-swatch" style="background:#0B1413;"></span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="microcopy reveal" style="margin-top:20px;">
+      <div class="microcopy reveal" style="--d:560ms;">
         已選擇：<span id="alignPicked" class="we-accent">—</span>
       </div>
     </div>
   </section>
 
+  <!-- ⑦ Introspective Reflection -->
   <section class="s6" id="s6">
-    <div class="secno reveal">07</div>
+    <div class="secno reveal" style="--d:140ms;">07</div>
 
     <div class="sanctuary-wrap">
-      <div class="sanctuary-kicker"><span class="kicker reveal">INTROSPECTIVE REFLECTION</span></div>
-      <h2 class="reveal">你的節奏與生活方式</h2>
-      <p class="reveal">
+      <div class="sanctuary-kicker"><span class="kicker reveal" style="--d:180ms;">INTROSPECTIVE REFLECTION</span></div>
+      <h2 class="reveal" style="--d:220ms;">你的節奏與生活方式</h2>
+      <p class="reveal" style="--d:260ms;">
         用直覺選，哪些是你最常回到的那種狀態？
       </p>
 
       <div class="quiz" id="quiz">
-        <div class="q reveal" data-q="q1">
+        <div class="q reveal" style="--d:320ms;" data-q="q1">
           <h3>當你開始想動起來，你更接近哪種狀態？</h3>
           <div class="opts">
             <div class="opt" role="button" tabindex="0" data-q="q1" data-a="A">先把四周的聲音調低，慢慢把注意力收回自己。</div>
@@ -592,7 +1948,7 @@
           </div>
         </div>
 
-        <div class="q reveal" data-q="q2">
+        <div class="q reveal" style="--d:380ms;" data-q="q2">
           <h3>生活中，你希望穿著帶給你的是？</h3>
           <div class="opts">
             <div class="opt" role="button" tabindex="0" data-q="q2" data-a="A">簡單、穩定，安全牌的穿搭，可以每天不需要多想。</div>
@@ -601,7 +1957,7 @@
           </div>
         </div>
 
-        <div class="q reveal" data-q="q3">
+        <div class="q reveal" style="--d:440ms;" data-q="q3">
           <h3>完成一段訓練後，你最想留下的是？</h3>
           <div class="opts">
             <div class="opt" role="button" tabindex="0" data-q="q3" data-a="A">一種安定與歸屬：像每天按部就班的完成感。</div>
@@ -610,7 +1966,7 @@
           </div>
         </div>
 
-        <div class="q reveal" data-q="q4">
+        <div class="q reveal" style="--d:500ms;" data-q="q4">
           <h3>在日常生活裡，你更常用哪種方式維持狀態？</h3>
           <div class="opts">
             <div class="opt" role="button" tabindex="0" data-q="q4" data-a="B">我需要變化與刺激：新鮮感會讓我更想出門、更想動。</div>
@@ -619,7 +1975,7 @@
           </div>
         </div>
 
-        <div class="q reveal" data-q="q5">
+        <div class="q reveal" style="--d:560ms;" data-q="q5">
           <h3>如果可以嘗試成為另一種個性，你會選？</h3>
           <div class="opts">
             <div class="opt" role="button" tabindex="0" data-q="q5" data-a="PHOENIX">想更華麗、張揚，讓能量被看見也樂於分享。</div>
@@ -629,7 +1985,7 @@
           </div>
         </div>
 
-        <div class="quiz-actions reveal">
+        <div class="quiz-actions reveal" style="--d:600ms;">
           <div class="unlock-hint" id="unlockHint">完成前四題後，按鈕會點亮。</div>
           <button class="ghost-btn" id="unlockBtn" type="button" disabled>解鎖我的原型</button>
         </div>
@@ -637,49 +1993,52 @@
     </div>
   </section>
 
+  <!-- ⑧ Archetype Result -->
   <section class="s7" id="s7">
-    <div class="secno reveal">08</div>
+    <div class="secno reveal" style="--d:140ms;">08</div>
 
     <div class="result-page" id="resultPage" aria-live="polite">
-      <div class="rp-kicker"><span class="kicker reveal">YOUR ARCHETYPE</span></div>
+      <div class="rp-kicker"><span class="kicker reveal" style="--d:180ms;">YOUR ARCHETYPE</span></div>
 
       <div class="result-shell">
-        <div class="arch-emblem reveal">
+        <div class="arch-emblem reveal" style="--d:220ms;">
           <div class="emblem-slot">
             <img id="archetypeEmblem" class="emblem-img" src="" alt="HESTIA Archetype Emblem">
           </div>
         </div>
 
         <div>
-          <div class="arch-title reveal" id="archTitle">—</div>
-          <div class="arch-sub reveal" id="archKey">—</div>
+          <div class="arch-title reveal" style="--d:260ms;" id="archTitle">—</div>
+          <div class="arch-sub reveal" style="--d:300ms;" id="archKey">—</div>
 
           <div class="arch-grid">
-            <div class="arch-card reveal">
+            <div class="arch-card reveal" style="--d:360ms;">
               <div class="t">CORE STATE</div>
               <p class="v" id="archCore">—</p>
             </div>
-            <div class="arch-card reveal">
+            <div class="arch-card reveal" style="--d:420ms;">
               <div class="t">TRAINING + LIFE RHYTHM</div>
               <p class="v" id="archRhythm">—</p>
             </div>
-            <div class="arch-card reveal">
+            <div class="arch-card reveal" style="--d:480ms;">
               <div class="t">STYLE + COLOR DIRECTION</div>
               <p class="v" id="archStyle">—</p>
             </div>
           </div>
 
-          <div class="microcopy reveal" style="text-align:center; margin-top:20px;">
+          <div class="microcopy reveal" style="--d:540ms;text-align:center;">
             你選的色調：<span class="we-accent" id="alignPicked2">—</span>｜
             你的原型：<span class="we-accent" id="archPicked">—</span>
           </div>
 
-          <div class="result-watermark reveal">
+          <!-- ✅ 落款在上 -->
+          <div class="result-watermark reveal" style="--d:620ms;">
             <img src="HLOGO.png" alt="HESTIA watermark logo" />
             <span>HESTIA TAIWAN®</span>
           </div>
 
-          <div class="arch-actions reveal">
+          <!-- ✅ 按鈕在下 -->
+          <div class="arch-actions reveal" style="--d:580ms;">
             <button class="ghost-btn" id="toHearthBtn" type="button">把光點投入火焰</button>
           </div>
         </div>
@@ -687,34 +2046,41 @@
     </div>
   </section>
 
+  <!-- ⑨ Our Flame -->
   <section class="s8" id="s8">
-    <div class="secno reveal">09</div>
+    <div class="secno reveal" style="--d:140ms;">09</div>
 
     <div class="hearth-wrap">
       <div class="hearth-top">
         <div style="display:flex;justify-content:center;margin-bottom:2px;position:relative;z-index:2;">
-          <span class="kicker reveal">COLLECTIVE HEARTH</span>
+          <span class="kicker reveal" style="--d:200ms;">COLLECTIVE HEARTH</span>
         </div>
 
         <canvas class="hearth-canvas" id="flameCanvas" aria-label="Hestia Our Flame"></canvas>
 
-        <div class="hearth-level reveal">
+        <div class="hearth-level reveal" style="--d:260ms;">
           HEARTH LEVEL：<span id="hearthLevel" class="we-accent">—</span>
         </div>
 
-        <h2 class="reveal" style="margin-bottom:6px;">共焰｜OUR FLAME</h2>
-        <p class="reveal" style="max-width:680px;">
+        <h2 class="reveal" style="--d:300ms;margin-bottom:6px;">共焰｜OUR FLAME</h2>
+        <p class="reveal" style="--d:340ms;max-width:680px;">
           把你的光點，投入火焰！不用搶先，只要行動。
         </p>
 
-        <form id="notify"
+               <form id="notify"
               action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
               method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
 
+          <!-- Email -->
           <input id="email" type="email" name="entry.345729382" placeholder="輸入你的Email搶先收到最新消息" required />
 
+          <!-- PRE-TONE -->
           <input type="hidden" id="f_pretone" name="entry.204433983" value="">
+
+          <!-- 06偏好色調 -->
           <input type="hidden" id="f_06" name="entry.324440347" value="">
+
+          <!-- 07-01 ～ 07-05 -->
           <input type="hidden" id="f_0701" name="entry.1640422124" value="">
           <input type="hidden" id="f_0702" name="entry.1471764886" value="">
           <input type="hidden" id="f_0703" name="entry.2009680739" value="">
@@ -726,7 +2092,7 @@
 
         <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-        <div class="links reveal">
+        <div class="links reveal" style="--d:420ms;">
           <a href="https://www.instagram.com/hestia.taiwan/" target="_blank" rel="noopener">Instagram</a>
           <a href="https://lin.ee/kjso8Ba" target="_blank" rel="noopener">LINE 官方帳號</a>
         </div>
@@ -742,15 +2108,6 @@
     const $ = (s, r=document) => r.querySelector(s);
     const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
-    // Flashlight Effect (Desktop)
-    const mask = document.getElementById("cursor-light");
-    if (mask && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.addEventListener("mousemove", (e) => {
-        mask.style.setProperty("--x", `${e.clientX}px`);
-        mask.style.setProperty("--y", `${e.clientY}px`);
-      }, { passive: true });
-    }
-
     function sleep(ms){ return new Promise(res => setTimeout(res, ms)); }
 
     function inView(el, topRatio=0.78, bottomRatio=0.18){
@@ -763,8 +2120,9 @@
     }
 
     /* =========================
-       Reveal + requestCheck
-       ========================= */
+       Reveal + requestCheck（修正版）
+    ========================= */
+
     const logoFrame = $('#logoFrame');
     const logoMark  = $('#logoMark');
     const flameFrame = $('#flameFrame');
@@ -772,13 +2130,16 @@
 
     let logoRevealed = false;
     let flameRevealed = false;
+
     let ticking = false;
 
     function rafCheck(){
       ticking = false;
+
       $$('.reveal').forEach(el=>{
         if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
       });
+
       $$('.late[data-late]').forEach(el=>{
         if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
       });
@@ -806,11 +2167,12 @@
     window.addEventListener('scroll', requestCheck, { passive:true });
     window.addEventListener('load', requestCheck);
     window.addEventListener('resize', requestCheck);
-    requestCheck();
+    requestCheck(); // 首次進場就跑一次
 
-    /* LOGO click cycle */
+    /* LOGO click cycle（修正：不要重複宣告，沿用前面已存在的 logoFrame/logoMark/flameFrame/flameImg 與旗標） */
     const modes = ['primary','fabric','mono'];
     let modeIdx = 0;
+
     function popOnce(){
       logoFrame.classList.remove('pulse');
       logoMark.classList.remove('pop');
@@ -825,7 +2187,10 @@
     }
     logoFrame.addEventListener('click', cycleMode);
     logoFrame.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); cycleMode(); }
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        cycleMode();
+      }
     });
 
     /* Toast */
@@ -841,7 +2206,7 @@
 
     /* =========================
        PRETONE
-       ========================= */
+    ========================= */
     const PRETONE_KEY = 'hestia_pretone';
     const pretonePicked = $('#pretonePicked');
     const pretoneWrap = $('#pretoneWrap');
@@ -866,7 +2231,7 @@
       if(key){
         document.body.setAttribute('data-precolor', key);
         localStorage.setItem(PRETONE_KEY, key);
-      } else {
+      }else{
         document.body.removeAttribute('data-precolor');
         localStorage.removeItem(PRETONE_KEY);
       }
@@ -877,7 +2242,9 @@
 
     function initPreTone(){
       const saved = localStorage.getItem(PRETONE_KEY) || '';
-      if(saved) document.body.setAttribute('data-precolor', saved);
+      if(saved){
+        document.body.setAttribute('data-precolor', saved);
+      }
     }
     initPreTone();
 
@@ -908,8 +2275,8 @@
     });
 
     /* =========================
-       06 Aesthetic
-       ========================= */
+       06 Aesthetic（主題色）
+    ========================= */
     const moods = $$('#alignGrid .mood');
     const alignPicked = $('#alignPicked');
     const alignPicked2 = $('#alignPicked2');
@@ -942,20 +2309,25 @@
       setTimeout(()=>{ moods.forEach(m=>m.classList.remove('dim')); }, 900);
     }
 
-    function initTheme(){ setTheme('', '', ''); }
+    function initTheme(){
+      setTheme('', '', '');
+    }
     initTheme();
 
     moods.forEach(m=>{
       const act = ()=> setTheme(m.dataset.theme, m.dataset.value, m.dataset.animal);
       m.addEventListener('click', act);
       m.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); act(); }
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          act();
+        }
       });
     });
 
     /* =========================================================
-       07/08 Archetype Logic
-       ========================================================= */
+       07/08 Archetype（原樣保留）
+    ========================================================= */
     const Q07_INDEX_TO_ABC = { 1: "B", 2: "A", 3: "C" };
     const TIE_PRIORITY = ["B", "A", "C"];
 
@@ -985,7 +2357,7 @@
 
     const RESULT_COPY = {
       "PHOENIX_A": {
-        rhythm: "你適合在狀態到位時「順勢推進」的節奏。訓練與生活不必過度規劃，抓住能量高點行動，反而能帶來最大成長。",
+        rhythm: "你適合在狀態到位時「順勢推進」的節奏。訓練與生活不必過度規劃，抓住能量高點行動，反而能帶來最大成長。你不怕變動，行動本身就是你的校準方式。",
         style: "你會自然被高對比、明確色彩吸引。偏好能量感強的配色與俐落輪廓，穿著對你而言是一種宣告，而不是背景。"
       },
       "PHOENIX_B": {
@@ -996,6 +2368,7 @@
         rhythm: "你需要在推進與休息之間留白。訓練與生活應保留彈性，避免一次燃燒過多，讓狀態能長期維持。",
         style: "你會選擇讓穿著成為保護層，而非視覺焦點。幫助你保留狀態，而不是對外表達。"
       },
+
       "PANTHER_A": {
         rhythm: "你適合主動掌控節奏，設定目標後直接推進。訓練與生活對你而言是執行系統，清楚、果斷、不拖延。",
         style: "你偏好高對比與強輪廓能呼應你的主權感，穿著對你而言是行動的一部分，能快速進入狀態、直接推進。"
@@ -1008,6 +2381,7 @@
         rhythm: "你需要清楚界線來維持狀態。訓練與生活都不適合過度干擾，保留空間反而讓你更強。",
         style: "你會傾向低曝光、低彩度的色系。穿著不必吸睛，反而更在意要耐看、耐穿。"
       },
+
       "DEER_A": {
         rhythm: "你適合在感覺對的時候行動。訓練與生活應保留變化，讓身體與情緒帶路，而不是被計畫綁住。",
         style: "你會被自然對比與流動感吸引。穿著色彩需要有呼吸感，而非過度複雜。"
@@ -1020,6 +2394,7 @@
         rhythm: "你需要高度配合當下狀態。訓練與生活不宜勉強，調整本身就是前進的一部分。",
         style: "你會選擇視覺存在感溫和的穿著，可以讓你自在舒服地停留在自己的狀態裡。"
       },
+
       "PYTHON_A": {
         rhythm: "你適合在鎖定方向後持續加壓。訓練與生活一旦有了目的，就能長時間推進。",
         style: "你偏好存在感強但不花俏的設計。穿著應該讓視覺感覺集中收斂，也不需要變化太多。"
@@ -1046,15 +2421,17 @@
 
     const unlockBtn = $('#unlockBtn');
     const unlockHint = $('#unlockHint');
+
     const archPicked  = $('#archPicked');
     const archTitle = $('#archTitle');
-    const archKey    = $('#archKey');
-    const archCore   = $('#archCore');
+    const archKey   = $('#archKey');
+    const archCore  = $('#archCore');
     const archRhythm= $('#archRhythm');
     const archStyle = $('#archStyle');
 
     const answers = { q1:null, q2:null, q3:null, q4:null, q5:null };
     const answerIdx = { q1:null, q2:null, q3:null, q4:null };
+
     const opts = $$('.opt');
 
     function getOptionIndexWithinQuestion(optEl){
@@ -1085,10 +2462,16 @@
     }
 
     function updateUnlock(){
-      const reqOk = ["q1","q2","q3","q4"].every(k => Boolean(answerIdx[k])) && Boolean(answers.q5);
+      const reqOk =
+        ["q1","q2","q3","q4"].every(k => Boolean(answerIdx[k])) &&
+        Boolean(answers.q5);
+
       unlockBtn.disabled = !reqOk;
       unlockBtn.classList.toggle('ready', reqOk);
-      if(unlockHint) unlockHint.textContent = reqOk ? '已完成。點擊「解鎖我的原型」。' : '完成前四題後，按鈕會點亮。';
+
+      if(unlockHint){
+        unlockHint.textContent = reqOk ? '已完成。點擊「解鎖我的原型」。' : '完成前四題後，按鈕會點亮。';
+      }
     }
 
     function setOptState(q, chosenEl){
@@ -1100,42 +2483,64 @@
       });
       setTimeout(()=>{ group.forEach(o=>o.classList.remove('dim')); }, 700);
     }
+// 07-01 ~ 07-03：選項序號 → 後台回填值
+const Q07_01_03_INDEX_TO_VALUE = { 1: "B", 2: "A", 3: "C" };
+// 07-04：選項序號 → 後台回填值（你指定：1->A, 2->B）
+const Q0704_INDEX_TO_VALUE = { 1: "A", 2: "B", 3: "C" };    
+opts.forEach(o=>{
+  const act = ()=>{
+    const q = o.dataset.q;
+    const a = o.dataset.a;
 
-    const Q07_01_03_INDEX_TO_VALUE = { 1: "B", 2: "A", 3: "C" };
-    const Q0704_INDEX_TO_VALUE = { 1: "A", 2: "B", 3: "C" };    
-    opts.forEach(o=>{
-      const act = ()=>{
-        const q = o.dataset.q;
-        const a = o.dataset.a;
-        const idx = (q !== "q5") ? getOptionIndexWithinQuestion(o) : null;
+    const idx = (q !== "q5") ? getOptionIndexWithinQuestion(o) : null;
 
-        if(q === "q1" || q === "q2" || q === "q3"){
-          answers[q] = Q07_01_03_INDEX_TO_VALUE[idx] || '';
-        } else if(q === "q4"){
-          answers[q] = Q0704_INDEX_TO_VALUE[idx] || '';
-        } else {
-          answers[q] = a;
-        }
+    // 07-01 ~ 07-03：1->B, 2->A, 3->C
+    if(q === "q1" || q === "q2" || q === "q3"){
+      answers[q] = Q07_01_03_INDEX_TO_VALUE[idx] || '';
+    }
+    // 07-04：1->A, 2->B（其餘選項保留 data-a，避免破壞既有設計）
+    else if(q === "q4"){
+  answers[q] = Q0704_INDEX_TO_VALUE[idx] || '';
+    }
+    // 07-05：不動，維持 data-a
+    else{
+      answers[q] = a;
+    }
 
-        if(q !== "q5") answerIdx[q] = idx;
-        setOptState(q, o);
-        updateUnlock();
-      };
-      o.addEventListener('click', act);
-      o.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); act(); }
-      });
-    });
+    if(q !== "q5"){
+      answerIdx[q] = idx;
+    }
+
+    setOptState(q, o);
+    updateUnlock();
+  };
+
+  o.addEventListener('click', act);
+  o.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      act();
+    }
+  });
+});
+
+
 
     unlockBtn.addEventListener('click', ()=>{
       const r = computeArchetype();
+
       const emblemEl = document.getElementById("archetypeEmblem");
-      if (emblemEl) emblemEl.src = emblemMap[currentTheme] || "";
+      if (emblemEl) {
+        const src = emblemMap[currentTheme] || "";
+        emblemEl.src = src;
+      }
 
       archTitle.textContent = r.zh;
       archKey.textContent   = r.key;
       archCore.textContent  = r.core;
+
       applyResultCopy(r.archetypeKey, r.bias);
+
       if(archPicked) archPicked.textContent = r.zh;
 
       setTimeout(()=>{
@@ -1152,8 +2557,8 @@
     });
 
     /* =========================
-       Form Submission
-       ========================= */
+       Form（已依你重新定義的 entry 對應完成取代）
+    ========================= */
     const iframe = $('#hidden_iframe');
     let submittedAt = 0;
 
@@ -1165,21 +2570,34 @@
         return false;
       }
 
+      // PRE-TONE：送出 RED / ORANGE ...（大寫）
       const pretone = (localStorage.getItem('hestia_pretone') || '').toUpperCase();
+
+      // 06偏好色調：這裡填入目前 06 選到的 theme key（rose_ember / midnight_tracker / ...）
       const v06 = currentTheme || '';
-      
+
+      // 07-01～07-05：依你最新定義的題序
+      const v0701 = answers.q1 || '';
+      const v0702 = answers.q2 || '';
+      const v0703 = answers.q3 || '';
+      const v0704 = answers.q4 || '';
+      const v0705 = answers.q5 || '';
+
       $('#f_pretone').value = pretone;
       $('#f_06').value      = v06;
-      $('#f_0701').value = answers.q1 || '';
-      $('#f_0702').value = answers.q2 || '';
-      $('#f_0703').value = answers.q3 || '';
-      $('#f_0704').value = answers.q4 || '';
-      $('#f_0705').value = answers.q5 || '';
+
+      $('#f_0701').value = v0701;
+      $('#f_0702').value = v0702;
+      $('#f_0703').value = v0703;
+      $('#f_0704').value = v0704;
+      $('#f_0705').value = v0705;
 
       submittedAt = Date.now();
+
       castSparkFromElement($('#tendBtn'));
       setCount(getCount()+1);
       applyLevel();
+
       return true;
     }
 
@@ -1189,9 +2607,8 @@
       showToast('訂閱成功！我們將在第一時間通知你最新消息。', 2600);
     });
 
-    /* Dots Logic */
-    const sectionIds = ['s1','s1b','s2','s3','s4b','s4','s5','s6','s7','s8'];
-    const sections = sectionIds.map(id=>document.getElementById(id));
+    /* Dots behavior */
+    const sections = ['s1','s1b','s2','s3','s4b','s4','s5','s6','s7','s8'].map(id=>document.getElementById(id));
     const dots = $$('.dot');
 
     function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
@@ -1208,6 +2625,7 @@
         if(score < best.score) best = {idx, score};
       });
       setActiveDot(best.idx);
+
       if(best.idx !== lastActive){
         breath.classList.add('transition');
         requestAnimationFrame(()=>{
@@ -1224,11 +2642,16 @@
         const target = document.getElementById(id);
         if(!target) return;
         target.scrollIntoView({behavior:'smooth', block:'start'});
+        setTimeout(requestCheck, 120);
+        setTimeout(requestCheck, 520);
       }, {passive:true});
     });
 
     const dotsNav = $('#dotsNav');
+    let hinted = false;
     function onFirstScroll(){
+      if(hinted) return;
+      hinted = true;
       dotsNav.classList.add('hint');
       setTimeout(()=>dotsNav.classList.remove('hint'), 1200);
       window.removeEventListener('scroll', onFirstScroll, {passive:true});
@@ -1243,9 +2666,12 @@
     });
     window.addEventListener('resize', ()=>requestAnimationFrame(extraTick));
 
+    setTimeout(requestCheck, 60);
+    setTimeout(()=>{ requestCheck(); requestAnimationFrame(extraTick); }, 260);
+
     /* =========================
-       Collective Hearth (Canvas)
-       ========================= */
+       Collective Hearth (Canvas 2D)
+    ========================== */
     const canvas = $('#flameCanvas');
     const ctx = canvas.getContext('2d', { alpha:true });
     let W=0,H=0, dpr=1;
@@ -1255,7 +2681,8 @@
       dpr = Math.min(2, window.devicePixelRatio || 1);
       W = Math.floor(rect.width * dpr);
       H = Math.floor(rect.height * dpr);
-      canvas.width = W; canvas.height = H;
+      canvas.width = W;
+      canvas.height = H;
     }
     window.addEventListener('resize', resizeCanvas);
     window.addEventListener('load', resizeCanvas);
@@ -1269,10 +2696,15 @@
     const HEARTH_KEY = 'hestia_hearth_count';
     const HEARTH_LEVEL_KEY = 'hestia_hearth_level';
     const hearthLevelEl = $('#hearthLevel');
+
     let levelBoost = 0;
 
-    function getCount(){ return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10); }
-    function setCount(n){ localStorage.setItem(HEARTH_KEY, String(n)); }
+    function getCount(){
+      return parseInt(localStorage.getItem(HEARTH_KEY) || '37', 10);
+    }
+    function setCount(n){
+      localStorage.setItem(HEARTH_KEY, String(n));
+    }
 
     function levelFromCount(n){
       if(n < 50) return 'Ember';
@@ -1297,14 +2729,21 @@
       const n = getCount();
       const newLevel = levelFromCount(n);
       const prevLevel = localStorage.getItem(HEARTH_LEVEL_KEY);
+
       if(hearthLevelEl) hearthLevelEl.textContent = newLevel;
+
       if(prevLevel && prevLevel !== newLevel){
         showHearthToast(prevLevel, newLevel);
         levelBoost = 1.0;
         setTimeout(()=> levelBoost = 0, 1200);
       }
+
       localStorage.setItem(HEARTH_LEVEL_KEY, newLevel);
-      const base = (n < 50) ? 0.92 : (n < 150) ? 0.98 : (n < 350) ? 1.04 : (n < 700) ? 1.10 : 1.16;
+
+      const base = (n < 50) ? 0.92 :
+                   (n < 150) ? 0.98 :
+                   (n < 350) ? 1.04 :
+                   (n < 700) ? 1.10 : 1.16;
       globalIntensity = base;
     }
     applyLevel();
@@ -1316,7 +2755,8 @@
     function spawnBase(){
       const baseX = W * 0.5;
       const baseY = H * 0.82;
-      for(let i=0;i<6;i++){
+      const n = 6;
+      for(let i=0;i<n;i++){
         const spread = (0.20 + Math.random()*0.18) * W * 0.12;
         const x = baseX + (Math.random()*2-1) * spread;
         const y = baseY + (Math.random()*2-1) * (H*0.006);
@@ -1324,15 +2764,17 @@
         const vy = -(H*0.0012 + Math.random() * H*0.0016);
         const life = 56 + Math.random()*42;
         const size = (1.4 + Math.random()*2.4) * dpr;
-        const hue = 18 + Math.random()*28; // Original Orange Hue
+        const hue = 18 + Math.random()*28;
         addParticle(x,y,vx,vy,life,size,hue);
       }
     }
 
     function draw(){
       if(!running) return;
+
       boost = Math.max(boost, levelBoost);
       boost *= 0.92;
+
       ctx.clearRect(0,0,W,H);
 
       const gx = W*0.5, gy = H*0.86;
@@ -1349,7 +2791,10 @@
       for(let i=particles.length-1;i>=0;i--){
         const p = particles[i];
         p.life -= 1;
-        if(p.life <= 0){ particles.splice(i,1); continue; }
+        if(p.life <= 0){
+          particles.splice(i,1);
+          continue;
+        }
 
         const t = 1 - p.life/p.maxLife;
         const cx = W*0.5;
@@ -1367,7 +2812,10 @@
         ctx.arc(p.x, p.y, size, 0, Math.PI*2);
         ctx.fill();
       }
-      if(particles.length > 520) particles.splice(0, particles.length-520);
+
+      const cap = 520;
+      if(particles.length > cap) particles.splice(0, particles.length-cap);
+
       requestAnimationFrame(draw);
     }
     requestAnimationFrame(draw);
@@ -1378,10 +2826,12 @@
       const c = canvas.getBoundingClientRect();
       const startX = (r.left + r.width*0.5 - c.left) * dpr;
       const startY = (r.top + r.height*0.5 - c.top) * dpr;
+
       const targetX = W*0.5;
       const targetY = H*0.80;
 
-      for(let i=0;i<32;i++){
+      const sparks = 32;
+      for(let i=0;i<sparks;i++){
         const dx = (targetX - startX);
         const dy = (targetY - startY);
         const vx = dx * (0.008 + Math.random()*0.004) + (Math.random()*2-1)*W*0.0006;
@@ -1391,56 +2841,101 @@
       boost = Math.min(1.2, boost + 0.85);
     }
 
-    /* Sanctuary Guide Logic */
-    const s4a = document.getElementById('s4a');
-    const gcSteps = [
-      document.getElementById('gc1'), document.getElementById('gc2'),
-      document.getElementById('gc3'), document.getElementById('gc4'),
-      document.getElementById('gc5'), document.getElementById('gc6'),
-      document.getElementById('gc7')
-    ].filter(Boolean);
+/* =========================
+   05A GUIDE — auto play, slower, no skip, no auto-jump
+   使用者可自由滑動：不鎖、不要求點擊、不自動跳到 06
+========================= */
+const s4a = document.getElementById('s4a');
 
-    let guideBusy = false, guidePlayed = false, guideAbort = false;
+const gcSteps = [
+  document.getElementById('gc1'),
+  document.getElementById('gc2'),
+  document.getElementById('gc3'),
+  document.getElementById('gc4'),
+  document.getElementById('gc5'),
+  document.getElementById('gc6'),
+  document.getElementById('gc7'),
+].filter(Boolean);
 
-    function resetGuideSteps(){
-      gcSteps.forEach(el => el.classList.remove('show','hide'));
-    }
+let guideBusy = false;
+let guidePlayed = false;
+let guideAbort = false;
 
-    async function playGuideAuto(){
-      if(guideBusy || guidePlayed || !s4a) return;
-      guideBusy = true; guideAbort = false;
-      resetGuideSteps();
+function resetGuideSteps(){
+  gcSteps.forEach(el => el.classList.remove('show','hide'));
+}
 
-      const slow = 1.55;
-      const showDur = [1500,1350,1350,1350,1500,900].map(v => v * slow);
-      const gapDur  = 560 * slow;
+async function playGuideAuto(){
+  if(guideBusy || guidePlayed || !s4a) return;
+  guideBusy = true;
+  guideAbort = false;
 
-      for(let i=0;i<gcSteps.length;i++){
-        if(guideAbort) break;
-        const el = gcSteps[i];
-        if(!el) continue;
-        el.classList.add('show');
-        await sleep(showDur[i] || (1400*slow));
-        if(guideAbort) break;
-        if(i === gcSteps.length - 1) break;
-        el.classList.remove('show');
-        el.classList.add('hide');
-        await sleep(gapDur);
-      }
-      guideBusy = false; guidePlayed = true;
-    }
+  resetGuideSteps();
 
-    function guideInView(){ return inView(s4a, 0.78, 0.18); }
+  // ✅ 更慢節奏（你要更慢就把 slow 再加大）
+  const slow = 1.55;
+  const showDur = [1500,1350,1350,1350,1500,900].map(v => v * slow);
+  const gapDur  = 560 * slow;
 
-    function guideWatcher(){
-      if(!s4a) return;
-      if(guideInView()){ playGuideAuto(); } else { guideAbort = true; }
-    }
+  for(let i=0;i<gcSteps.length;i++){
+    if(guideAbort) break;
+    const el = gcSteps[i];
+    if(!el) continue;
 
-    window.addEventListener('scroll', guideWatcher, { passive:true });
-    window.addEventListener('load', guideWatcher);
-    window.addEventListener('resize', guideWatcher);
-    setTimeout(guideWatcher, 120);
+    el.classList.add('show');
+    await sleep(showDur[i] || (1400*slow));
+
+    if(guideAbort) break;
+    if(i === gcSteps.length - 1) break;
+
+    el.classList.remove('show');
+    el.classList.add('hide');
+    await sleep(gapDur);
+  }
+
+  guideBusy = false;
+  guidePlayed = true;
+
+  // ✅ 不自動跳轉到 s5 / s6，讓使用者自由滑動
+}
+
+function guideInView(){
+  return inView(s4a, 0.78, 0.18);
+}
+
+// 進入視窗就自動播放一次
+function guideWatcher(){
+  if(!s4a) return;
+  if(guideInView()){
+    playGuideAuto();
+  }else{
+    // 若使用者滑走，允許中止播放（不影響後續自由瀏覽）
+    guideAbort = true;
+  }
+}
+
+window.addEventListener('scroll', guideWatcher, { passive:true });
+window.addEventListener('load', guideWatcher);
+window.addEventListener('resize', guideWatcher);
+setTimeout(guideWatcher, 120);
+
+
   </script>
+  <div class="ui-atmo" aria-hidden="true"></div>
+
+<style>
+  .ui-atmo{
+    position:fixed; inset:-20vh -20vw;
+    pointer-events:none;
+    z-index:0;
+    background:
+      radial-gradient(900px 520px at 22% 24%, rgba(255, 120, 160, .12), transparent 60%),
+      radial-gradient(880px 520px at 78% 32%, rgba(120, 210, 255, .10), transparent 62%),
+      radial-gradient(900px 520px at 50% 110%, rgba(255,255,255,.05), transparent 60%);
+    filter: blur(8px);
+    opacity:.9;
+  }
+</style>
+
 </body>
 </html>

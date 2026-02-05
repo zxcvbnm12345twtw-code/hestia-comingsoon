@@ -9,6 +9,7 @@
   <!--
   HESTIA — Tone-on-Tone 首發色投票
   6 色 Tone-on-Tone 色票組（Background / Core / Highlight）
+  （順序：紅 → 橙 → 綠 → 藍 → 紫 → 咖）
 
   - IGNITION（點燃紅）
     Background: hsl(8 32% 12%)  #281715
@@ -20,15 +21,15 @@
     Core:       hsl(28 92% 54%)  #F6831E
     Highlight:  hsl(28 100% 68%)  #FFA85C
 
-  - AIRFLOW（氣流藍）
-    Background: hsl(205 30% 12%)  #152028
-    Core:       hsl(205 88% 54%)  #229BF1
-    Highlight:  hsl(205 100% 68%)  #5CBBFF
-
   - GROUND（著地綠）
     Background: hsl(132 28% 11%)  #142417
     Core:       hsl(132 78% 46%)  #1AD13E
     Highlight:  hsl(132 95% 64%)  #4CFA6F
+
+  - AIRFLOW（氣流藍）
+    Background: hsl(205 30% 12%)  #152028
+    Core:       hsl(205 88% 54%)  #229BF1
+    Highlight:  hsl(205 100% 68%)  #5CBBFF
 
   - PULSE（脈動紫）
     Background: hsl(275 30% 12%)  #201528
@@ -36,9 +37,57 @@
     Highlight:  hsl(275 100% 68%)  #BB5CFF
 
   - FORGE（鍛造咖）
-    Background: hsl(28 26% 10%)  #201913
-    Core:       hsl(28 70% 32%)  #8B4E18
-    Highlight:  hsl(28 92% 52%)  #F57D14
+    Background: hsl(28 18% 10%)  #1E1915
+    Core:       hsl(28 66% 28%)  #774418
+    Highlight:  hsl(28 92% 46%)  #E16E09
+
+  ============================
+  「每個 Email 只能投一次」建議後台（Apps Script Web App）
+  ============================
+  // Google Apps Script（建議做「每個 email 只能投一次」的後台機制）
+  // 1) 建立 Google Sheet：欄位建議 A=timestamp, B=email, C=color
+  // 2) Extensions → Apps Script，貼上本程式碼
+  // 3) Deploy → New deployment → Web app
+  //    - Execute as: Me
+  //    - Who has access: Anyone
+  // 4) 得到 Web App URL，填入 HTML 內 UNIQUE_CHECK_ENDPOINT / VOTE_ENDPOINT
+
+  const SHEET_NAME = 'votes';
+
+  function doPost(e) {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sh = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+
+    const action = (e.parameter.action || '').toLowerCase();
+    const email  = (e.parameter.email  || '').trim().toLowerCase();
+    const color  = (e.parameter.color  || '').trim();
+
+    if (!email) return _json({ ok:false, reason:'missing_email' });
+
+    // 建立 email 索引（讀 B 欄）
+    const lastRow = sh.getLastRow();
+    const emails = lastRow >= 2 ? sh.getRange(2, 2, lastRow-1, 1).getValues().flat().map(x=>String(x||'').toLowerCase()) : [];
+
+    const exists = emails.includes(email);
+
+    if (action === 'check') {
+      return _json({ ok:true, exists });
+    }
+
+    if (action === 'vote') {
+      if (exists) return _json({ ok:false, reason:'already_voted' });
+
+      sh.appendRow([new Date(), email, color]);
+      return _json({ ok:true, saved:true });
+    }
+
+    return _json({ ok:false, reason:'unknown_action' });
+  }
+
+  function _json(obj){
+    return ContentService.createTextOutput(JSON.stringify(obj))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   -->
 
   <style>
@@ -198,10 +247,7 @@
       padding: calc(18px + var(--safeTop)) calc(18px + var(--safeRight)) calc(18px + var(--safeBottom)) calc(18px + var(--safeLeft));
       z-index:10;
     }
-    .monolith {
-      width: min(520px, 92vw);
-      text-align:center;
-    }
+    .monolith { width: min(520px, 92vw); text-align:center; }
 
     .mark-wrap {
       margin: 0 auto;
@@ -221,12 +267,9 @@
       border: 1px solid rgba(255,255,255,.10);
       box-shadow: 0 18px 56px rgba(0,0,0,.55);
       overflow:hidden;
-      cursor:pointer;
       transform: translateZ(0);
-      transition: transform 500ms var(--ease);
       position:relative;
     }
-    .mark-wrap:active{ transform: scale(.985); }
     .mark {
       position:absolute; inset:0;
       display:flex;
@@ -289,9 +332,10 @@
       color: var(--uiText);
       font-weight: 780;
       cursor:pointer;
-      transition: transform 180ms var(--ease);
+      transition: transform 180ms var(--ease), opacity 220ms var(--ease);
       white-space: nowrap;
     }
+    .gate button:disabled{ opacity:.55; cursor:not-allowed; }
     .gate button:active{ transform: scale(.985); }
     .gate .warn {
       width:100%;
@@ -348,6 +392,7 @@
       transform: translateZ(0);
     }
 
+    /* Motifs (same as v3) */
     .stall[data-motif="magma"]::before {
       background:
         radial-gradient(900px 520px at 28% 22%, color-mix(in oklab, var(--tone-core), white 14%) 0%, transparent 55%),
@@ -434,6 +479,19 @@
     }
     .chargeSquare:active{ transform: scale(.992); }
 
+    .sqBoost {
+      position:absolute; inset:-30%;
+      background:
+        radial-gradient(closest-side,
+          color-mix(in oklab, var(--tone-core), white 18%) 0%,
+          transparent 62%);
+      opacity:0;
+      filter: blur(22px);
+      mix-blend-mode: screen;
+      pointer-events:none;
+      transform: scale(.9);
+    }
+
     .sqAura {
       position:absolute; inset:-10%;
       background:
@@ -471,6 +529,9 @@
     }
 
     .chargeSquare.is-holding .sqAura{ opacity:.95; }
+    .chargeSquare.is-holding .sqBoost{ opacity:.75; animation: boost 420ms var(--ease) infinite alternate; }
+    @keyframes boost{ to{ transform: scale(1.05); opacity:.92; } }
+
     .chargeSquare.is-holding .sqParticles{ opacity:.9; animation: twinkle 420ms linear infinite; }
     @keyframes twinkle{ 50%{ opacity:.55; } }
 
@@ -603,6 +664,7 @@
     .content .subEn{ margin:0 0 10px; font-size: 12px; letter-spacing:.12em; text-transform: uppercase; color: var(--uiTextMuted); }
     .content p{ margin:0 0 12px; font-size: 14px; line-height:1.7; color: var(--uiTextMuted); }
 
+    /* 卡片移到上面 + 放大（你要的） */
     .cardPreview {
       width: 100%;
       aspect-ratio: 16/10;
@@ -610,11 +672,13 @@
       border: 1px solid rgba(255,255,255,.14);
       overflow:hidden;
       background: rgba(0,0,0,.18);
-      margin: 6px 0 12px;
+      margin: 4px 0 12px;
+      transform: scale(1.06);
+      transform-origin: top center;
     }
     .cardPreview canvas{ width:100%; height:100%; display:block; }
 
-    .actions{ display:flex; gap:10px; align-items:stretch; flex-wrap: wrap; margin-bottom: 10px; }
+    .actions{ display:flex; gap:10px; align-items:stretch; flex-wrap: wrap; margin: 12px 0 10px; }
     .btn {
       appearance:none;
       border: 1px solid rgba(255,255,255,.14);
@@ -694,7 +758,7 @@
 
     <section class="stage" id="monolithStage" aria-label="The Monolith">
       <div class="monolith">
-        <div class="mark-wrap fade-in" id="enterPrism" role="button" tabindex="0" aria-label="Ignite the Season">
+        <div class="mark-wrap fade-in" id="enterPrism" aria-label="Prism mark">
           <div class="radar" aria-hidden="true"></div>
           <div class="mark" aria-hidden="true">
             <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -740,6 +804,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
+                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
                 <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
                   <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
                   <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
@@ -755,6 +820,8 @@
             <div class="sqProgress" aria-hidden="true">
               <div class="sqFill" data-sq-fill></div>
             </div>
+
+            <div class="sqBoost" aria-hidden="true"></div>
           </div>
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
@@ -781,6 +848,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
+                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
                 <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
                   <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
                   <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
@@ -796,47 +864,8 @@
             <div class="sqProgress" aria-hidden="true">
               <div class="sqFill" data-sq-fill></div>
             </div>
-          </div>
 
-          <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
-        </div>
-      </section>
-
-      <section class="stall" data-key="airflow" data-en="AIRFLOW" data-zh="氣流藍"
-        data-hue="205" data-sat="88" data-lum="54" data-motif="mist" aria-label="AIRFLOW">
-        <div class="product">
-          <div class="opt">
-            <span class="opt-en">Option C</span>
-            <span class="opt-zh">呼吸 / 控制感</span>
-          </div>
-
-          <h1 class="colorName">
-            <span class="en">AIRFLOW</span>
-            <span class="zh">氣流藍</span>
-          </h1>
-
-          <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
-            <div class="sqAura" aria-hidden="true"></div>
-            <div class="sqRipple" aria-hidden="true"></div>
-            <div class="sqParticles" aria-hidden="true"></div>
-
-            <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
-              </div>
-            </div>
-
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
-            </div>
+            <div class="sqBoost" aria-hidden="true"></div>
           </div>
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
@@ -847,7 +876,7 @@
         data-hue="132" data-sat="78" data-lum="46" data-motif="moss" aria-label="GROUND">
         <div class="product">
           <div class="opt">
-            <span class="opt-en">Option D</span>
+            <span class="opt-en">Option C</span>
             <span class="opt-zh">穩定 / 長期累積</span>
           </div>
 
@@ -863,6 +892,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
+                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
                 <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
                   <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
                   <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
@@ -878,6 +908,52 @@
             <div class="sqProgress" aria-hidden="true">
               <div class="sqFill" data-sq-fill></div>
             </div>
+
+            <div class="sqBoost" aria-hidden="true"></div>
+          </div>
+
+          <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
+        </div>
+      </section>
+
+      <section class="stall" data-key="airflow" data-en="AIRFLOW" data-zh="氣流藍"
+        data-hue="205" data-sat="88" data-lum="54" data-motif="mist" aria-label="AIRFLOW">
+        <div class="product">
+          <div class="opt">
+            <span class="opt-en">Option D</span>
+            <span class="opt-zh">呼吸 / 控制感</span>
+          </div>
+
+          <h1 class="colorName">
+            <span class="en">AIRFLOW</span>
+            <span class="zh">氣流藍</span>
+          </h1>
+
+          <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
+            <div class="sqAura" aria-hidden="true"></div>
+            <div class="sqRipple" aria-hidden="true"></div>
+            <div class="sqParticles" aria-hidden="true"></div>
+
+            <div class="sqInner" aria-hidden="true">
+              <div class="flameMark" aria-hidden="true">
+                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
+                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
+                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
+                </svg>
+              </div>
+            </div>
+
+            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="ringTrack" cx="60" cy="60" r="44"/>
+              <circle class="ringProg" cx="60" cy="60" r="44"/>
+            </svg>
+
+            <div class="sqProgress" aria-hidden="true">
+              <div class="sqFill" data-sq-fill></div>
+            </div>
+
+            <div class="sqBoost" aria-hidden="true"></div>
           </div>
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
@@ -904,6 +980,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
+                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
                 <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
                   <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
                   <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
@@ -919,6 +996,8 @@
             <div class="sqProgress" aria-hidden="true">
               <div class="sqFill" data-sq-fill></div>
             </div>
+
+            <div class="sqBoost" aria-hidden="true"></div>
           </div>
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
@@ -926,7 +1005,7 @@
       </section>
 
       <section class="stall" data-key="forge" data-en="FORGE" data-zh="鍛造咖"
-        data-hue="28" data-sat="70" data-lum="32" data-motif="forge" aria-label="FORGE">
+        data-hue="28" data-sat="66" data-lum="28" data-motif="forge" aria-label="FORGE">
         <div class="product">
           <div class="opt">
             <span class="opt-en">Option F</span>
@@ -945,6 +1024,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
+                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
                 <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
                   <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
                   <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
@@ -960,6 +1040,8 @@
             <div class="sqProgress" aria-hidden="true">
               <div class="sqFill" data-sq-fill></div>
             </div>
+
+            <div class="sqBoost" aria-hidden="true"></div>
           </div>
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
@@ -988,8 +1070,9 @@
           <div class="heat" id="heat"></div>
 
           <div class="tiny">
-            ※ 表單串接：請在 JS 內填入 Google Form 的 action URL 與 entry 欄位 ID。<br/>
-            ※ 會一併送出：Email + 目前投票色（key / 英文 / 中文）。
+            ※ 會一併送出：Email + 目前投票色（key / 英文 / 中文）。<br/>
+            ※ 若要做到「每個 Email 只能投一次」，請依註解使用 Apps Script Web App（最上方有完整程式碼）。<br/>
+            ※ 前端也會以 localStorage 做一次性保護（同裝置）。
           </div>
         </div>
       </div>
@@ -999,13 +1082,23 @@
   </div>
 
   <script>
+    // ====== Google Form（保留路徑；不具備「阻擋重複 email」能力）======
     const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/XXXXXXXXXXXX/formResponse";
     const ENTRY_EMAIL = "entry.1111111111";
     const ENTRY_COLOR = "entry.2222222222";
 
-    const WORLDS = [{'key': 'ignition', 'en': 'IGNITION', 'zh': '點燃紅', 'h': 8, 'sat': 92, 'lum': 54, 'core_hex': '#F63B1E', 'hi_hex': '#FF725C'}, {'key': 'momentum', 'en': 'MOMENTUM', 'zh': '動能橙', 'h': 28, 'sat': 92, 'lum': 54, 'core_hex': '#F6831E', 'hi_hex': '#FFA85C'}, {'key': 'airflow', 'en': 'AIRFLOW', 'zh': '氣流藍', 'h': 205, 'sat': 88, 'lum': 54, 'core_hex': '#229BF1', 'hi_hex': '#5CBBFF'}, {'key': 'ground', 'en': 'GROUND', 'zh': '著地綠', 'h': 132, 'sat': 78, 'lum': 46, 'core_hex': '#1AD13E', 'hi_hex': '#4CFA6F'}, {'key': 'pulse', 'en': 'PULSE', 'zh': '脈動紫', 'h': 275, 'sat': 86, 'lum': 52, 'core_hex': '#961BEE', 'hi_hex': '#BB5CFF'}, {'key': 'forge', 'en': 'FORGE', 'zh': '鍛造咖', 'h': 28, 'sat': 70, 'lum': 32, 'core_hex': '#8B4E18', 'hi_hex': '#F57D14'}];
+    // ====== Apps Script Web App（可做到「每個 email 只能投一次」）======
+    // 若你部署了 Apps Script Web App，填入下列 URL：
+    // - UNIQUE_CHECK_ENDPOINT：用於 gate 檢查 email 是否已投過（action=check）
+    // - VOTE_ENDPOINT：用於投票提交（action=vote）
+    // 若不填，系統會退回只用 localStorage + Google Form 的模式（較弱）
+    const UNIQUE_CHECK_ENDPOINT = ""; // e.g. https://script.google.com/macros/s/XXXXX/exec
+    const VOTE_ENDPOINT = "";         // e.g. https://script.google.com/macros/s/XXXXX/exec
 
-    let liveCounts = { ignition:58, momentum:41, airflow:36, ground:29, pulse:21, forge:18 };
+    const WORLDS = [{"key": "ignition", "en": "IGNITION", "zh": "點燃紅", "h": 8, "sat": 92, "lum": 54, "core_hex": "#F63B1E", "hi_hex": "#FF725C"}, {"key": "momentum", "en": "MOMENTUM", "zh": "動能橙", "h": 28, "sat": 92, "lum": 54, "core_hex": "#F6831E", "hi_hex": "#FFA85C"}, {"key": "ground", "en": "GROUND", "zh": "著地綠", "h": 132, "sat": 78, "lum": 46, "core_hex": "#1AD13E", "hi_hex": "#4CFA6F"}, {"key": "airflow", "en": "AIRFLOW", "zh": "氣流藍", "h": 205, "sat": 88, "lum": 54, "core_hex": "#229BF1", "hi_hex": "#5CBBFF"}, {"key": "pulse", "en": "PULSE", "zh": "脈動紫", "h": 275, "sat": 86, "lum": 52, "core_hex": "#961BEE", "hi_hex": "#BB5CFF"}, {"key": "forge", "en": "FORGE", "zh": "鍛造咖", "h": 28, "sat": 66, "lum": 28, "core_hex": "#774418", "hi_hex": "#E16E09"}];
+
+    // demo heatmap counts（你可改成後台回傳）
+    let liveCounts = { ignition:58, momentum:41, ground:29, airflow:36, pulse:21, forge:18 };
 
     const $ = (s, el=document) => el.querySelector(s);
     const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
@@ -1024,17 +1117,17 @@
     }
 
     function vib(ms=18){ if(navigator.vibrate) navigator.vibrate(ms); }
-
     function getWorld(key){ return WORLDS.find(w=>w.key===key) || WORLDS[0]; }
 
-    let toneAnim = null;
+    // ====== 「真正漸變」的 Tone Transition（h/s/l 插值）======
+    let toneRaf = null;
     const toneState = { h: WORLDS[0].h, s: WORLDS[0].sat, l: WORLDS[0].lum };
 
     function setToneInstant(h,s,l){
       const root=document.documentElement;
-      root.style.setProperty("--hue", h);
-      root.style.setProperty("--sat", s + "%");
-      root.style.setProperty("--lum", l + "%");
+      root.style.setProperty("--hue", String(h));
+      root.style.setProperty("--sat", String(s) + "%");
+      root.style.setProperty("--lum", String(l) + "%");
 
       const L = relativeLuminance(hslToRgb(h,s,l));
       const lightUI = L > 0.42;
@@ -1045,33 +1138,35 @@
 
     function lerp(a,b,t){ return a+(b-a)*t; }
     function lerpHue(a,b,t){
-      let d = ((b - a + 540) % 360) - 180;
+      let d = ((b - a + 540) % 360) - 180; // shortest path
       return (a + d * t + 360) % 360;
     }
+    function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
 
-    function animateTone(toH,toS,toL, dur=520){
+    function animateTone(toH,toS,toL, dur=720){
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         toneState.h=toH; toneState.s=toS; toneState.l=toL;
         setToneInstant(toH,toS,toL);
         return;
       }
-      if (toneAnim) cancelAnimationFrame(toneAnim);
-      const from={...toneState};
+      if (toneRaf) cancelAnimationFrame(toneRaf);
+      const fromH=toneState.h, fromS=toneState.s, fromL=toneState.l;
       const t0 = performance.now();
+
       const step=(t)=>{
-        const p = clamp((t-tT:=t-t0)/dur, 0, 1);
-        const e = 1 - Math.pow(1-p, 3);
-        const h = lerpHue(from.h, toH, e);
-        const s = lerp(from.s, toS, e);
-        const l = lerp(from.l, toL, e);
+        const p = clamp((t - t0)/dur, 0, 1);
+        const e = easeOutCubic(p);
+        const h = lerpHue(fromH, toH, e);
+        const s = lerp(fromS, toS, e);
+        const l = lerp(fromL, toL, e);
         setToneInstant(h,s,l);
-        if (p<1) toneAnim = requestAnimationFrame(step);
+        if (p < 1) toneRaf = requestAnimationFrame(step);
         else {
-          toneAnim=null;
+          toneRaf = null;
           toneState.h=toH; toneState.s=toS; toneState.l=toL;
         }
       };
-      toneAnim = requestAnimationFrame(step);
+      toneRaf = requestAnimationFrame(step);
     }
 
     function showToast(msg){
@@ -1084,8 +1179,24 @@
 
     window.addEventListener("contextmenu",(e)=>e.preventDefault(),{capture:true});
 
-    let userEmail = "";
+    // ====== One-email-one-vote（前端 localStorage 保護）======
+    const LS_EMAIL_KEY = "HESTIA_PRISM_EMAIL";
+    const LS_VOTED_KEY = "HESTIA_PRISM_VOTED"; // stores sha256(email) if possible; fallback plain
 
+    async function sha256(str){
+      try {
+        const buf = new TextEncoder().encode(str);
+        const digest = await crypto.subtle.digest("SHA-256", buf);
+        const arr = Array.from(new Uint8Array(digest));
+        return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
+      } catch(e) {
+        return btoa(unescape(encodeURIComponent(str))).slice(0,64);
+      }
+    }
+
+    function validEmail(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+
+    let userEmail = "";
     const gateEmail = $("#gateEmail");
     const gateBtn = $("#gateBtn");
     const gateWarn = $("#gateWarn");
@@ -1096,10 +1207,6 @@
     const activeChip = $("#activeColorChip");
     const activeName = $("#activeColorName");
 
-    function validEmail(s){
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
-    }
-
     function openSpectrum(){
       spectrum.classList.add("is-open");
       monolithStage.style.opacity="0";
@@ -1109,8 +1216,19 @@
       activeChip.style.transform="translateY(0)";
     }
 
-    gateBtn.addEventListener("click", ()=> {
-      const v=(gateEmail.value||"").trim();
+    async function backendCheckAlreadyVoted(email){
+      if(!UNIQUE_CHECK_ENDPOINT) return null; // no backend
+      const u = new URL(UNIQUE_CHECK_ENDPOINT);
+      u.searchParams.set("action","check");
+      u.searchParams.set("email", email);
+      const res = await fetch(u.toString(), { method:"POST" });
+      const data = await res.json();
+      if(!data || !data.ok) return null;
+      return !!data.exists;
+    }
+
+    async function gateEnter(){
+      const v=(gateEmail.value||"").trim().toLowerCase();
       if(!validEmail(v)){
         gateWarn.classList.add("on");
         vib(10);
@@ -1119,39 +1237,72 @@
         return;
       }
       gateWarn.classList.remove("on");
+
+      // local check
+      const hash = await sha256(v);
+      const votedHash = localStorage.getItem(LS_VOTED_KEY);
+      if(votedHash && votedHash === hash){
+        showToast("此 Email 已參與過投票。");
+        vib(18);
+        return;
+      }
+
+      // optional backend check
+      try {
+        gateBtn.disabled = true;
+        gateBtn.textContent = "檢查中…";
+        const exists = await backendCheckAlreadyVoted(v);
+        if(exists === true){
+          showToast("此 Email 已參與過投票。");
+          vib(18);
+          return;
+        }
+      } catch(e) {
+        console.warn(e);
+        // backend failed: allow proceed but still local-protect
+      } finally {
+        gateBtn.disabled = false;
+        gateBtn.textContent = "進入投票";
+      }
+
       userEmail = v;
+      localStorage.setItem(LS_EMAIL_KEY, v);
       openSpectrum();
       showToast("已解鎖投票。");
       vib(18);
-    });
+    }
 
-    gateEmail.addEventListener("keydown",(e)=>{
-      if(e.key==="Enter") gateBtn.click();
-    });
+    gateBtn.addEventListener("click", gateEnter);
+    gateEmail.addEventListener("keydown",(e)=>{ if(e.key==="Enter") gateEnter(); });
 
-    $("#enterPrism").addEventListener("click", ()=> {
-      showToast("請先輸入 Email，再進入投票。");
-      gateEmail.focus();
-    });
+    // restore email if exists
+    const savedEmail = localStorage.getItem(LS_EMAIL_KEY);
+    if(savedEmail) gateEmail.value = savedEmail;
 
-    let monolithIdx=0;
-    let monolithTimer=null;
+    // ====== 首頻柔和漸變：紅→橙→綠→藍→紫→咖 ======
+    let monolithIdx = 0;
+    let monolithTimer = null;
 
     function startMonolithCycle(){
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      monolithTimer=setInterval(()=>{
-        monolithIdx=(monolithIdx+1)%WORLDS.length;
-        const w=WORLDS[monolithIdx];
-        animateTone(w.h, w.sat, w.lum, 680);
-      }, 1400);
+      const order = WORLDS; // already in requested order
+      // start from current tone
+      animateTone(order[0].h, order[0].sat, order[0].lum, 900);
+      monolithTimer = setInterval(()=>{
+        if (spectrum.classList.contains("is-open")) return; // stop cycling when inside vote
+        monolithIdx = (monolithIdx + 1) % order.length;
+        const w = order[monolithIdx];
+        animateTone(w.h, w.sat, w.lum, 1200); // softer
+      }, 1700);
     }
 
+    // ====== Spectrum active color update ======
     let activeKey = WORLDS[0].key;
     function applyActive(key){
       const w=getWorld(key);
       activeKey=key;
       activeName.textContent = w.en;
-      animateTone(w.h, w.sat, w.lum, 520);
+      animateTone(w.h, w.sat, w.lum, 720);
     }
 
     const stalls = $$(".stall");
@@ -1163,6 +1314,7 @@
     }, { root: spectrum, threshold:[0.55,0.65,0.75] });
     stalls.forEach(st=>io.observe(st));
 
+    // ====== Vote / submit ======
     const bloom=$("#bloom");
     const confirm=$("#confirm");
 
@@ -1199,11 +1351,51 @@
       });
     }
 
-    async function submitVote(key){
+    async function postToAppsScriptVote(email, color){
+      if(!VOTE_ENDPOINT) return null;
+      const u = new URL(VOTE_ENDPOINT);
+      u.searchParams.set("action","vote");
+      u.searchParams.set("email", email);
+      u.searchParams.set("color", color);
+      const res = await fetch(u.toString(), { method:"POST" });
+      const data = await res.json();
+      return data;
+    }
+
+    async function submitVoteOnce(key){
+      const email = (userEmail||"").trim().toLowerCase();
+      if(!email) throw new Error("missing_email");
+
+      const hash = await sha256(email);
+      const votedHash = localStorage.getItem(LS_VOTED_KEY);
+      if(votedHash && votedHash === hash) {
+        const err = new Error("already_voted_local");
+        err.code="already_voted";
+        throw err;
+      }
+
       const w=getWorld(key);
       const colorValue = `${w.key}|${w.en}|${w.zh}`;
-      liveCounts[key] = (liveCounts[key]||0)+1;
-      await postToGoogleForm({ email: userEmail, color: colorValue });
+
+      // 1) Try backend (strong)
+      if(VOTE_ENDPOINT){
+        const data = await postToAppsScriptVote(email, colorValue);
+        if(data && data.ok && data.saved){
+          localStorage.setItem(LS_VOTED_KEY, hash);
+          return;
+        }
+        if(data && data.reason === "already_voted"){
+          localStorage.setItem(LS_VOTED_KEY, hash);
+          const err = new Error("already_voted_backend");
+          err.code="already_voted";
+          throw err;
+        }
+        // fallback to google form
+      }
+
+      // 2) Always keep Google Form path (weak, cannot block duplicates)
+      await postToGoogleForm({ email, color: colorValue });
+      localStorage.setItem(LS_VOTED_KEY, hash);
     }
 
     function startHold(square){
@@ -1227,11 +1419,13 @@
         vib(28);
         pulseBloom();
         try {
-          await submitVote(key);
+          await submitVoteOnce(key);
+          liveCounts[key] = (liveCounts[key]||0)+1;
           setTimeout(()=>showConfirm(key), 420);
         } catch(e) {
           console.warn(e);
-          showToast("送出失敗，請稍後再試。");
+          if(e.code==="already_voted") showToast("此 Email 已投過票。");
+          else showToast("送出失敗，請稍後再試。");
         }
         resetHold();
       }, 1000);
@@ -1277,6 +1471,7 @@
       });
     });
 
+    // ====== Heatmap + Founder Card (same logic) ======
     function buildHeatmap(){
       const heat=$("#heat");
       heat.innerHTML="";

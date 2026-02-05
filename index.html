@@ -197,15 +197,20 @@
       transform:translateZ(0);
     }
 
-    /* Reveal */
+    /* ======= 重要：淡入動畫復原（強化權重，避免被平台CSS蓋掉） ======= */
     .reveal,.late{
-      opacity:0;
-      transform:translateY(18px);
-      transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);
+      opacity:0 !important;
+      transform:translateY(18px) !important;
+      transition:
+        opacity .9s cubic-bezier(.22,.61,.36,1),
+        transform .9s cubic-bezier(.22,.61,.36,1) !important;
       will-change: opacity, transform;
       transition-delay: var(--d, 0ms);
     }
-    .reveal.in,.late.in{opacity:1;transform:none;}
+    .reveal.in,.late.in{
+      opacity:1 !important;
+      transform:none !important;
+    }
 
     /* UI atoms */
     .kicker{
@@ -636,7 +641,9 @@
       50%{ transform: translateY(-1px); }
     }
 
-    /* Vote */
+    /* =========================
+       Vote（避免長按反白 / callout）
+    ========================== */
     .vote-grid{
       margin-top:16px;
       display:grid;
@@ -647,6 +654,14 @@
     @media (min-width: 760px){
       .vote-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
+
+    .vote, .vote *{
+      -webkit-user-select:none !important;
+      user-select:none !important;
+      -webkit-touch-callout:none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+
     .vote{
       display:grid;
       grid-template-columns: 16px 1fr;
@@ -660,7 +675,6 @@
       background: rgba(0,0,0,.18);
       color: rgba(255,255,255,.90);
       cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
       transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
       position:relative;
       overflow:hidden;
@@ -867,11 +881,11 @@
   <section class="s1" id="s1">
     <div class="brand">
       <img class="wordmark reveal" src="wordmark.png" alt="HESTIA wordmark" />
-      <div class="submark">TAIWAN</div>
+      <div class="submark reveal" style="--d:120ms;">TAIWAN</div>
     </div>
 
-    <div class="tagline">即將到來，搶先進入 HEST<span class="i-accent">i</span>A 宇宙</div>
-    <div class="arrow">↓</div>
+    <div class="tagline reveal" style="--d:220ms;">即將到來，搶先進入 HEST<span class="i-accent">i</span>A 宇宙</div>
+    <div class="arrow reveal" style="--d:300ms;">↓</div>
   </section>
 
   <!-- ② WHO WE ARE -->
@@ -1053,11 +1067,16 @@
     }
 
     /* =========================
-       Reveal (IntersectionObserver)
+       Reveal (IntersectionObserver) - 復原淡入
     ========================= */
     (function initReveal(){
       const revealEls = Array.from(document.querySelectorAll('.reveal, .late[data-late]'));
       if(!revealEls.length) return;
+
+      // 若平台有把 opacity/transform 改掉，這裡強制回到初始，再交給 IO 加 .in
+      revealEls.forEach(el=>{
+        el.classList.remove('in');
+      });
 
       const io = new IntersectionObserver((entries)=>{
         entries.forEach(e=>{
@@ -1102,7 +1121,7 @@
     })();
 
     /* =========================
-       COLOR VOTE (HOLD 1s)
+       COLOR VOTE (HOLD 1s) + 防止反白/長按選取
     ========================= */
     const VOTE_KEY = 'hestia_vote_color';
     const votePicked = $('#votePicked');
@@ -1130,7 +1149,6 @@
         b.classList.toggle('voted', b === btn);
       });
 
-      // keep glow color for voted button
       btn.style.setProperty('--hold-color', hex || '#fff');
 
       if(votePicked) votePicked.textContent = label || '—';
@@ -1198,14 +1216,24 @@
       }
 
       voteBtns.forEach(btn=>{
+        // 1) 阻止長按造成文字反白（iOS/Android/桌面都兼容）
+        btn.addEventListener('contextmenu', (e)=>e.preventDefault());
+        btn.addEventListener('selectstart', (e)=>e.preventDefault());
+        btn.addEventListener('dragstart', (e)=>e.preventDefault());
+
+        // 2) pointerdown 用 non-passive 才能確實 preventDefault
         btn.addEventListener('pointerdown', (e)=>{
           e.preventDefault();
           cancelHold();
           startHold(btn);
-        });
-        btn.addEventListener('pointerup', cancelHold);
-        btn.addEventListener('pointercancel', cancelHold);
-        btn.addEventListener('pointerleave', cancelHold);
+        }, {passive:false});
+
+        btn.addEventListener('pointerup', cancelHold, {passive:true});
+        btn.addEventListener('pointercancel', cancelHold, {passive:true});
+        btn.addEventListener('pointerleave', cancelHold, {passive:true});
+
+        // 3) 兼容某些 WebView 只觸發 touch 事件
+        btn.addEventListener('touchstart', (e)=>e.preventDefault(), {passive:false});
       });
 
       voteDoneBtn?.addEventListener('click', ()=>{
@@ -1251,7 +1279,6 @@
        Form submit stub (safe)
     ========================= */
     function submitGForm(event){
-      // keep safe: allow submit, show toast after a beat
       setTimeout(()=>showToast('已送出！我們會在第一時間通知你。', 1600), 120);
       return true;
     }
@@ -1277,7 +1304,6 @@
       resize();
       window.addEventListener('resize', resize);
 
-      // fake hearth level from vote
       function updateLevel(){
         const v = localStorage.getItem(VOTE_KEY);
         const map = { ember_red: 74, molten_orange: 82, moon_blue: 68, slate_gray: 61, obsidian_black: 66, ivory_white: 59 };
@@ -1285,13 +1311,11 @@
         if(lvl) lvl.textContent = String(n);
       }
       updateLevel();
-      window.addEventListener('storage', updateLevel);
 
       function draw(){
         t += 0.012;
         ctx.clearRect(0,0,w,h);
 
-        // background haze
         ctx.globalAlpha = 0.12;
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
@@ -1300,7 +1324,6 @@
         ctx.arc(cx, cy, r, 0, Math.PI*2);
         ctx.fill();
 
-        // particles
         ctx.globalAlpha = 0.18;
         for(let i=0;i<46;i++){
           const p = (i/46)*Math.PI*2 + t*0.35;

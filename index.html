@@ -24,16 +24,21 @@
       --hair: rgba(255,255,255,.12);
       --hair2: rgba(255,255,255,.08);
 
-      --sanctuary-1:#130b0f;
-      --sanctuary-2:#2a111a;
-      --sanctuary-3:#3b1824;
-      --sanctuary-4:#4b1e2d;
-      --sanctuary-5:#6a3045;
+      --sanctuary-1:#000000;
+      --sanctuary-2:#070707;
+      --sanctuary-3:#0d0d0d;
+      --sanctuary-4:#121212;
+      --sanctuary-5:#171717;
 
-      --breath-a: rgba(230,118,144,.22);
-      --breath-b: rgba(120,80,120,.13);
+      --breath-a: rgba(255,255,255,.10);
+      --breath-b: rgba(255,255,255,.06);
 
       --wrap: 760px;
+
+      --card-bg: rgba(255,255,255,.035);
+      --card-border: rgba(255,255,255,.10);
+      --card-shadow: 0 14px 44px rgba(0,0,0,.34);
+      --card-inset: inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     *{ box-sizing:border-box; }
@@ -42,240 +47,10 @@
       margin:0;padding:0;overflow-x:hidden;background:#000;color:var(--text);
       font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
     }
-
     body{ transition: background-color 1.2s ease; }
 
-    /* 初始（無 data-theme）＝無彩黑白灰，不帶任何預設底色傾向 */
-    body:not([data-theme]),
-    body[data-theme=""],
-    body[data-theme="mono_base"]{
-      --sanctuary-1:#000000;
-      --sanctuary-2:#070707;
-      --sanctuary-3:#0d0d0d;
-      --sanctuary-4:#121212;
-      --sanctuary-5:#171717;
-
-      --breath-a: rgba(255,255,255,.10);
-      --breath-b: rgba(255,255,255,.06);
-
-      --accent:#ffffff;
-    }
-
     /* =========================
-       PRETONE（僅在 mono_base / 空主題時生效；06 選到 data-theme 後由主題接管）
-    ========================== */
-    .s1b{ background: linear-gradient(180deg,#000,var(--sanctuary-1)); }
-
-    .pretone-grid{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:10px;
-    }
-    @media (min-width: 760px){
-      .pretone-grid{ grid-template-columns: repeat(5, minmax(0,1fr)); }
-    }
-
-    .pretone{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      color: rgba(255,255,255,.86);
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
-    }
-    .pretone:active{ transform: scale(.99); }
-    .pretone .chip{
-      width:14px;height:14px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 0 0 3px rgba(255,255,255,.04);
-      flex:0 0 auto;
-    }
-    .pretone .nm{
-      font-size:13px;
-      letter-spacing:.14em;
-      font-weight:800;
-    }
-    .pretone .hx{
-      margin-left:auto;
-      font-size:11px;
-      letter-spacing:.10em;
-      color: rgba(255,255,255,.62);
-    }
-    .pretone.active{
-      border-color: rgba(255,255,255,.22);
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 0 18px rgba(255,255,255,.10);
-    }
-
-    /* ✅ PRETONE 明顯反饋 */
-    .pretone-flash{
-      animation: pretoneFlash .72s cubic-bezier(.22,.61,.36,1) 1;
-    }
-    @keyframes pretoneFlash{
-      0%{
-        transform: translateY(0) scale(1);
-        box-shadow: 0 22px 72px rgba(0,0,0,.46);
-        filter: saturate(1);
-      }
-      40%{
-        transform: translateY(-1px) scale(1.01);
-        box-shadow:
-          0 26px 92px rgba(0,0,0,.58),
-          0 0 34px rgba(255,255,255,.10),
-          0 0 34px color-mix(in srgb, var(--accent) 55%, transparent);
-        filter: saturate(1.06);
-      }
-      100%{
-        transform: translateY(0) scale(1);
-        box-shadow: 0 22px 72px rgba(0,0,0,.46);
-        filter: saturate(1);
-      }
-    }
-
-    /* 只在「尚未選 06 主題」時，讓 PRETONE 介入 */
-    body[data-precolor][data-theme=""],
-    body[data-precolor][data-theme="mono_base"]{
-      --sanctuary-1:#000000;
-      --sanctuary-2:#070707;
-      --sanctuary-3:#0d0d0d;
-      --sanctuary-4:#121212;
-      --sanctuary-5:#171717;
-    }
-
-    /* =========================
-       PRETONE：未選 06 主題前，直接改整體背景階（sanctuary-1~5）
-       （只在 data-theme="" / mono_base 生效）
-    ========================== */
-
-    body[data-precolor="red"][data-theme=""],
-    body[data-precolor="red"][data-theme="mono_base"]{
-      --accent:#B91C1C;
-      --sanctuary-1:#0b0506;
-      --sanctuary-2:#140708;
-      --sanctuary-3:#1e0a0b;
-      --sanctuary-4:#2a0f10;
-      --sanctuary-5:#3b1416;
-      --breath-a: rgba(185,28,28,.20);
-      --breath-b: rgba(255,255,255,.06);
-    }
-
-    body[data-precolor="orange"][data-theme=""],
-    body[data-precolor="orange"][data-theme="mono_base"]{
-      --accent:#D9480F;
-      --sanctuary-1:#0b0604;
-      --sanctuary-2:#140a06;
-      --sanctuary-3:#1e0d07;
-      --sanctuary-4:#2a1209;
-      --sanctuary-5:#3b1a0d;
-      --breath-a: rgba(217,72,15,.20);
-      --breath-b: rgba(255,255,255,.06);
-    }
-
-    body[data-precolor="yellow"][data-theme=""],
-    body[data-precolor="yellow"][data-theme="mono_base"]{
-      --accent:#C8A100;
-      --sanctuary-1:#080703;
-      --sanctuary-2:#111005;
-      --sanctuary-3:#1a1707;
-      --sanctuary-4:#241f0a;
-      --sanctuary-5:#332c0f;
-      --breath-a: rgba(200,161,0,.18);
-      --breath-b: rgba(255,255,255,.06);
-    }
-
-    body[data-precolor="green"][data-theme=""],
-    body[data-precolor="green"][data-theme="mono_base"]{
-      --accent:#1F7A5A;
-      --sanctuary-1:#050a08;
-      --sanctuary-2:#08110d;
-      --sanctuary-3:#0a1913;
-      --sanctuary-4:#0e231b;
-      --sanctuary-5:#143226;
-      --breath-a: rgba(31,122,90,.20);
-      --breath-b: rgba(255,255,255,.06);
-    }
-
-    body[data-precolor="blue"][data-theme=""],
-    body[data-precolor="blue"][data-theme="mono_base"]{
-      --accent:#2B4C7E;
-      --sanctuary-1:#05070b;
-      --sanctuary-2:#070c14;
-      --sanctuary-3:#0a101e;
-      --sanctuary-4:#0e162a;
-      --sanctuary-5:#13203b;
-      --breath-a: rgba(43,76,126,.20);
-      --breath-b: rgba(255,255,255,.06);
-    }
-
-    body[data-precolor="purple"][data-theme=""],
-    body[data-precolor="purple"][data-theme="mono_base"]{
-      --accent:#5B2C83;
-      --sanctuary-1:#07050b;
-      --sanctuary-2:#0d0814;
-      --sanctuary-3:#140a1e;
-      --sanctuary-4:#1c0e2a;
-      --sanctuary-5:#29133b;
-      --breath-a: rgba(91,44,131,.20);
-      --breath-b: rgba(255,255,255,.06);
-    }
-
-    body[data-precolor="khaki"][data-theme=""],
-    body[data-precolor="khaki"][data-theme="mono_base"]{
-      --accent:#A8925A;
-      --sanctuary-1:#070604;
-      --sanctuary-2:#0f0d09;
-      --sanctuary-3:#16130e;
-      --sanctuary-4:#1f1a14;
-      --sanctuary-5:#2d251d;
-      --breath-a: rgba(168,146,90,.18);
-      --breath-b: rgba(255,255,255,.06);
-    }
-
-    body[data-precolor="black"][data-theme=""],
-    body[data-precolor="black"][data-theme="mono_base"]{
-      --accent:#ffffff;
-      --sanctuary-1:#000000;
-      --sanctuary-2:#050505;
-      --sanctuary-3:#0a0a0a;
-      --sanctuary-4:#0f0f0f;
-      --sanctuary-5:#151515;
-      --breath-a: rgba(255,255,255,.08);
-      --breath-b: rgba(255,255,255,.04);
-    }
-
-    body[data-precolor="gray"][data-theme=""],
-    body[data-precolor="gray"][data-theme="mono_base"]{
-      --accent:#d6d6d6;
-      --sanctuary-1:#030303;
-      --sanctuary-2:#0a0a0a;
-      --sanctuary-3:#111111;
-      --sanctuary-4:#171717;
-      --sanctuary-5:#1f1f1f;
-      --breath-a: rgba(255,255,255,.10);
-      --breath-b: rgba(255,255,255,.05);
-    }
-
-    body[data-precolor="white"][data-theme=""],
-    body[data-precolor="white"][data-theme="mono_base"]{
-      --accent:#f5f5f5;
-      --sanctuary-1:#0a0a0a;
-      --sanctuary-2:#101010;
-      --sanctuary-3:#171717;
-      --sanctuary-4:#1f1f1f;
-      --sanctuary-5:#292929;
-      --breath-a: rgba(255,255,255,.14);
-      --breath-b: rgba(255,255,255,.07);
-    }
-
-    /* =========================
-       06 四種色調
+       THEMES (06)
     ========================== */
     body[data-theme="rose_ember"]{
       --sanctuary-1:#120a07;
@@ -283,13 +58,10 @@
       --sanctuary-3:#2a120b;
       --sanctuary-4:#3a160c;
       --sanctuary-5:#5a2410;
-
       --breath-a: rgba(255,120,55,.24);
       --breath-b: rgba(255,175,90,.14);
-
       --accent:#ff6a2a;
     }
-
     body[data-theme="midnight_tracker"]{
       --sanctuary-1:#06070b;
       --sanctuary-2:#0b0c10;
@@ -300,7 +72,6 @@
       --breath-b: rgba(154,166,214,.12);
       --accent:#3b6cff;
     }
-
     body[data-theme="veil_warden"]{
       --sanctuary-1:#0e0b09;
       --sanctuary-2:#1a1410;
@@ -311,7 +82,6 @@
       --breath-b: rgba(184,168,154,.12);
       --accent:#d0c2b6;
     }
-
     body[data-theme="low_tide_keeper"]{
       --sanctuary-1:#071010;
       --sanctuary-2:#0b1514;
@@ -321,6 +91,43 @@
       --breath-a: rgba(143,191,175,.20);
       --breath-b: rgba(184,199,192,.12);
       --accent:#8fbfaf;
+    }
+
+    /* =========================
+       COLOR VOTE background override
+    ========================== */
+    body[data-vote]{
+      transition: background-color 1.2s ease;
+    }
+    body[data-vote="ember_red"]{
+      --accent:#B91C1C;
+      --sanctuary-1:#0b0506; --sanctuary-2:#140708; --sanctuary-3:#1e0a0b; --sanctuary-4:#2a0f10; --sanctuary-5:#3b1416;
+      --breath-a: rgba(185,28,28,.20); --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-vote="moon_blue"]{
+      --accent:#2B4C7E;
+      --sanctuary-1:#05070b; --sanctuary-2:#070c14; --sanctuary-3:#0a101e; --sanctuary-4:#0e162a; --sanctuary-5:#13203b;
+      --breath-a: rgba(43,76,126,.20); --breath-b: rgba(255,255,255,.06);
+    }
+    body[data-vote="slate_gray"]{
+      --accent:#d6d6d6;
+      --sanctuary-1:#030303; --sanctuary-2:#0a0a0a; --sanctuary-3:#111111; --sanctuary-4:#171717; --sanctuary-5:#1f1f1f;
+      --breath-a: rgba(255,255,255,.10); --breath-b: rgba(255,255,255,.05);
+    }
+    body[data-vote="obsidian_black"]{
+      --accent:#ffffff;
+      --sanctuary-1:#000000; --sanctuary-2:#050505; --sanctuary-3:#0a0a0a; --sanctuary-4:#0f0f0f; --sanctuary-5:#151515;
+      --breath-a: rgba(255,255,255,.08); --breath-b: rgba(255,255,255,.04);
+    }
+    body[data-vote="ivory_white"]{
+      --accent:#f5f5f5;
+      --sanctuary-1:#0a0a0a; --sanctuary-2:#101010; --sanctuary-3:#171717; --sanctuary-4:#1f1f1f; --sanctuary-5:#292929;
+      --breath-a: rgba(255,255,255,.14); --breath-b: rgba(255,255,255,.07);
+    }
+    body[data-vote="molten_orange"]{
+      --accent:#D9480F;
+      --sanctuary-1:#0b0604; --sanctuary-2:#140a06; --sanctuary-3:#1e0d07; --sanctuary-4:#2a1209; --sanctuary-5:#3b1a0d;
+      --breath-a: rgba(217,72,15,.20); --breath-b: rgba(255,255,255,.06);
     }
 
     section{
@@ -348,20 +155,20 @@
       word-break:break-word;
     }
 
-    .we-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,106,42,.16);}
-    .i-accent{color:var(--accent);text-shadow:0 0 22px rgba(255,106,42,.16);}
+    .we-accent,.i-accent{
+      color: rgba(255,255,255,.96);
+      text-shadow: 0 0 18px rgba(255,255,255,.22), 0 0 22px rgba(190,210,255,.22), 0 0 26px rgba(255,214,200,.16);
+    }
 
+    /* Sections */
     .s1{background:linear-gradient(180deg,#000,#000);}
     .s2{background:linear-gradient(180deg,#000,var(--sanctuary-1));}
     .s3{background:linear-gradient(180deg,var(--sanctuary-1),var(--sanctuary-2));}
     .s4b{background:linear-gradient(180deg,var(--sanctuary-2),var(--sanctuary-3));}
-    .s4{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
-    #s4a{background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-4)) !important;}
-    .s5{ background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5)); }
-    .s6{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
-    .s7{ background: linear-gradient(180deg, var(--sanctuary-5), var(--sanctuary-5)); }
-    .s8{ background: linear-gradient(180deg, var(--sanctuary-5), #000 72%, #000); }
+    .s5{background:linear-gradient(180deg,var(--sanctuary-3),var(--sanctuary-4));}
+    .s8{background:linear-gradient(180deg,var(--sanctuary-4), #000 72%, #000);}
 
+    /* Breath + Grain */
     .breath{
       position:fixed;inset:0;pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:.11;
       background:
@@ -381,22 +188,6 @@
       0%{background-position:50% 115%,50% -10%;}
       100%{background-position:48% 105%,52% 0%;}
     }
-    .breath.transition{
-      animation:none;
-      opacity:.12;
-      transform:scale(.985);
-      filter:saturate(1.02);
-      transition:transform .58s cubic-bezier(.22,.61,.36,1), opacity .58s cubic-bezier(.22,.61,.36,1);
-    }
-    .breath.transition.release{ opacity:.11; transform:scale(1); }
-
-    .breath.pretone-kick{
-      animation:none;
-      opacity:.16;
-      filter:saturate(1.18) contrast(1.04);
-      transform:scale(1.01);
-      transition: transform .62s cubic-bezier(.22,.61,.36,1), opacity .62s cubic-bezier(.22,.61,.36,1), filter .62s cubic-bezier(.22,.61,.36,1);
-    }
 
     .grain{
       position:fixed;inset:0;pointer-events:none;z-index:1;
@@ -406,24 +197,17 @@
       transform:translateZ(0);
     }
 
-    .reveal{
+    /* Reveal */
+    .reveal,.late{
       opacity:0;
-      transform:translateY(60px);
+      transform:translateY(18px);
       transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);
       will-change: opacity, transform;
       transition-delay: var(--d, 0ms);
     }
-    .reveal.in{opacity:1;transform:none;}
+    .reveal.in,.late.in{opacity:1;transform:none;}
 
-    .late{
-      opacity:0;
-      transform:translateY(8px);
-      transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);
-      will-change: opacity, transform;
-      transition-delay: var(--d, 0ms);
-    }
-    .late.in{opacity:1;transform:none;}
-
+    /* UI atoms */
     .kicker{
       display:inline-flex;
       align-items:center;justify-content:center;
@@ -437,7 +221,6 @@
       text-transform:uppercase;
       color:rgba(255,255,255,.68);
     }
-
     .secno{
       font-size:11px;
       letter-spacing:.42em;
@@ -454,13 +237,86 @@
       width:34px;height:1px;
       background:rgba(255,255,255,.10);
     }
-
     .hair-underline{
       display:inline-block;
       padding-bottom:2px;
       background-image: linear-gradient(transparent calc(100% - 1px), rgba(255,255,255,.22) 1px);
       background-repeat:no-repeat;
       background-size:100% 100%;
+    }
+
+    /* Dots */
+    .dots{
+      position:fixed;
+      right:8px;
+      top:50%;
+      transform:translateY(-50%);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      z-index:40;
+      pointer-events:auto;
+    }
+    .dot{
+      width:6px;height:6px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.62);
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+      outline:none;
+      appearance:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease, opacity .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      opacity:.60;
+      position:relative;
+    }
+    .dot.active{
+      opacity:1;
+      background:#fff;
+      border-color:#fff;
+      box-shadow: 0 0 10px rgba(255,255,255,.55), 0 0 22px rgba(255,255,255,.28);
+      animation: dotBreath 2.2s ease-in-out infinite;
+    }
+    @keyframes dotBreath{
+      0%,100%{ box-shadow: 0 0 8px rgba(255,255,255,.38), 0 0 16px rgba(255,255,255,.18); transform: scale(1); }
+      50%{     box-shadow: 0 0 12px rgba(255,255,255,.62), 0 0 26px rgba(255,255,255,.26); transform: scale(1.08); }
+    }
+    .dot:active{ transform: scale(1.15); }
+    .dot::after{
+      content: attr(data-label);
+      position:absolute;
+      right: 14px;
+      top:50%;
+      transform: translateY(-50%);
+      padding:6px 8px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.55);
+      box-shadow: 0 12px 40px rgba(0,0,0,.45);
+      color: rgba(255,255,255,.84);
+      font-size:11px;
+      letter-spacing:.12em;
+      white-space:nowrap;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .18s ease, transform .18s ease;
+      transform-origin: 100% 50%;
+    }
+    .dot:hover::after,
+    .dot:focus-visible::after{
+      opacity:1;
+      transform: translateY(-50%) translateX(-2px);
+    }
+
+    /* Cards */
+    .info-card,
+    .mood,
+    .q,
+    .hearth-wrap{
+      background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,.018));
+      border:1px solid var(--card-border);
+      box-shadow: var(--card-shadow), var(--card-inset);
+      backdrop-filter: blur(6px);
     }
 
     /* Hero */
@@ -495,7 +351,6 @@
       overflow-wrap:anywhere;
     }
     @keyframes breatheText{ 0%,100%{opacity:.55;} 50%{opacity:.95;} }
-
     .arrow{
       font-size:22px;margin-top:14px;opacity:.72;
       animation:floatY 3.6s ease-in-out infinite;
@@ -542,104 +397,17 @@
       overflow-wrap:anywhere;
     }
 
-    /* Dots */
-    .dots{
-      position:fixed;
-      right:8px;
-      top:50%;
-      transform:translateY(-50%);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      z-index:40;
-      pointer-events:auto;
-    }
-    .dot{
-      width:5px;height:5px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.62);
-      background:transparent;
-      padding:0;
-      cursor:pointer;
-      outline:none;
-      appearance:none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .18s ease, opacity .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
-      opacity:.60;
-      position:relative;
-    }
-    .dot.active{
-      opacity:1;
-      background:#fff;
-      border-color:#fff;
-      box-shadow: 0 0 10px rgba(255,255,255,.55), 0 0 22px rgba(255,255,255,.28);
-      animation: dotBreath 2.2s ease-in-out infinite;
-    }
-    @keyframes dotBreath{
-      0%,100%{ box-shadow: 0 0 8px rgba(255,255,255,.38), 0 0 16px rgba(255,255,255,.18); transform: scale(1); }
-      50%{     box-shadow: 0 0 12px rgba(255,255,255,.62), 0 0 26px rgba(255,255,255,.26); transform: scale(1.08); }
-    }
-    .dot:active{ transform: scale(1.15); }
-    .dot::after{
-      content: attr(data-label);
-      position:absolute;
-      right: 14px;
-      top:50%;
-      transform: translateY(-50%);
-      padding:6px 8px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.55);
-      box-shadow: 0 12px 40px rgba(0,0,0,.45);
-      color: rgba(255,255,255,.84);
-      font-size:11px;
-      letter-spacing:.12em;
-      white-space:nowrap;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .18s ease, transform .18s ease;
-      transform-origin: 100% 50%;
-    }
-    .dot:hover::after,
-    .dot:focus-visible::after,
-    .dot.showtip::after{
-      opacity:1;
-      transform: translateY(-50%) translateX(-2px);
-    }
-    .dots.hint .dot{
-      box-shadow: 0 0 0 rgba(255,255,255,0);
-      animation: hintPulse 1.2s ease-in-out 1;
-    }
-    @keyframes hintPulse{
-      0%{ opacity:.55; }
-      40%{ opacity:1; box-shadow: 0 0 10px rgba(255,255,255,.22); }
-      100%{opacity:.60; box-shadow: 0 0 0 rgba(255,255,255,0); }
-    }
-    @media (max-width: 640px){
-      .dot{ width:6px;height:6px; }
-      .dot::after{ font-size:10px; padding:6px 8px; right:16px; }
-    }
-
-    /* WHO card */
     .info-card{
       width:min(var(--wrap), 92vw);
       margin-top:18px;
       padding:18px 16px;
       border-radius:18px;
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 18px 60px rgba(0,0,0,.45);
-      backdrop-filter: blur(6px);
       position:relative;
       z-index:2;
     }
     .info-card .mini{ margin-bottom:10px; display:flex; justify-content:center; }
 
-    .frame-size{
-      width:min(220px, 72vw);
-      aspect-ratio: 1 / 1;
-    }
-
-    /* Primary Mark */
+    /* Brand mark (s3) */
     .s3{ padding-top:70px; padding-bottom:70px; }
     .s3 .stack{
       width:min(var(--wrap), 92vw);
@@ -651,6 +419,7 @@
       position:relative;
       z-index:2;
     }
+    .frame-size{ width:min(220px, 72vw); aspect-ratio: 1 / 1; }
 
     .logo-frame{
       border-radius:18px;
@@ -676,18 +445,6 @@
       transform: translateY(0) scale(1);
     }
     .logo-frame.in{ clip-path: circle(120% at 50% 50%); }
-    .logo-frame::before{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background: linear-gradient(90deg, rgba(255,255,255,0) 35%, rgba(255,255,255,.07) 50%, rgba(255,255,255,0) 65%);
-      transform: translateX(-35%) rotate(12deg);
-      opacity:0;
-      pointer-events:none;
-    }
-    .logo-frame.sheen::before{ opacity:1; animation: sheenSweep 2.8s cubic-bezier(.22,.61,.36,1) 1 both; }
-    @keyframes sheenSweep{ 0%{ transform: translateX(-35%) rotate(12deg);} 100%{ transform: translateX(35%) rotate(12deg);} }
-
     .logo-frame:hover{
       border-color: rgba(255,255,255,.16);
       box-shadow:
@@ -697,18 +454,6 @@
       transform: translateY(-1px) scale(1.01);
     }
     .logo-frame:active{ transform: translateY(0) scale(.985); }
-
-    .logo-frame[data-mode="fabric"]{
-      background:
-        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 62%),
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)),
-        repeating-linear-gradient(135deg, rgba(255,255,255,.02) 0 2px, rgba(0,0,0,0) 2px 6px);
-    }
-    .logo-frame[data-mode="mono"]{
-      background:
-        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,0) 62%),
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-    }
 
     .corner-hint{
       position:absolute; inset:10px;
@@ -732,8 +477,6 @@
     .corner-hint::before{ left:10px; top:10px; }
     .corner-hint::after{ right:10px; bottom:10px; transform: rotate(180deg); }
     .logo-frame.in .corner-hint{ opacity:.9; }
-    .logo-frame.hint .corner-hint{ animation: hintGlow 1.35s ease-in-out 1; }
-    @keyframes hintGlow{ 0%{opacity:.25;} 45%{opacity:1;} 100%{opacity:.9;} }
 
     .logo-mark{
       width: clamp(120px, 26vw, 210px);
@@ -748,22 +491,6 @@
       max-width:100%;
     }
     .logo-mark.in{ opacity:1; transform: translateY(0) scale(1); }
-    .logo-frame[data-mode="mono"] .logo-mark{
-      filter: grayscale(1) contrast(1.1) brightness(1.05) drop-shadow(0 14px 30px rgba(0,0,0,.62));
-    }
-
-    .logo-frame.pulse{ animation: stagePulse .62s cubic-bezier(.22,.61,.36,1) both; }
-    @keyframes stagePulse{
-      0%{ transform: translateY(0) scale(1); }
-      35%{ transform: translateY(-1px) scale(1.02); }
-      100%{ transform: translateY(0) scale(1); }
-    }
-    .logo-mark.pop{ animation: markPop .62s cubic-bezier(.22,.61,.36,1) both; }
-    @keyframes markPop{
-      0%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
-      40%{ filter: drop-shadow(0 0 18px rgba(255,106,42,.18)); transform: translateY(-1px) scale(1.03); }
-      100%{ filter: drop-shadow(0 14px 30px rgba(0,0,0,.62)); transform: translateY(0) scale(1); }
-    }
 
     .s3 .label{
       display:inline-flex;
@@ -810,92 +537,7 @@
       overflow-wrap:anywhere;
     }
 
-    /* Sanctuary wrap */
-    .sanctuary-wrap{
-      position:relative;
-      width:min(var(--wrap), 92vw);
-      padding:22px 18px 18px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      box-shadow: 0 22px 72px rgba(0,0,0,.46);
-      backdrop-filter: blur(7px);
-      overflow:hidden;
-      z-index:2;
-      margin:0 auto;
-    }
-    .sanctuary-wrap::before{
-      content:"";
-      position:absolute;inset:0;
-      background:
-        radial-gradient(18px 18px at 16% 22%, rgba(255,255,255,.06), rgba(255,255,255,0) 70%),
-        radial-gradient(22px 22px at 82% 68%, rgba(255,255,255,.05), rgba(255,255,255,0) 72%),
-        linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 72%, rgba(255,255,255,.05));
-      opacity:.55;
-      pointer-events:none;
-    }
-    .sanctuary-wrap::after{
-      content:"";
-      position:absolute;inset:14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.06);
-      pointer-events:none;
-      opacity:.85;
-    }
-    .sanctuary-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
-
-    /* 05 全屏沉靜（保留全屏容器） */
-    #s4{ padding:0; }
-    #s4 .sanctuary-wrap{
-      width:100%;
-      height:100vh;
-      height:100svh;
-      max-width:none;
-      border-radius:0;
-      border:none;
-      box-shadow:none;
-      background: transparent;
-      backdrop-filter:none;
-      padding:0 20px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-    }
-    #s4 .sanctuary-wrap::before,
-    #s4 .sanctuary-wrap::after{ display:none; }
-
-    /* =========================
-       05 Cinema（舊版容器保留給 overlay 用）
-    ========================== */
-    .cinema{
-      width:min(var(--wrap), 92vw);
-      position:relative;
-      height: 220px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      z-index:2;
-    }
-    .cinema-step{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      opacity:0;
-      transform:none;
-      transition: opacity 1.25s cubic-bezier(.22,.61,.36,1);
-      will-change: opacity;
-    }
-    .cinema-step.show{ opacity:1; }
-    .cinema-step.hide{ opacity:0; }
-
-    /* FLAME MARK (page) */
+    /* Flame mark / Tagline (s4b) */
     .flame-stage{
       position:relative;
       width:min(var(--wrap), 92vw);
@@ -928,6 +570,7 @@
     .flame-frame.in{ clip-path: circle(120% at 50% 48%); }
     .flame-frame .corner-hint{ opacity:0; }
     .flame-frame.in .corner-hint{ opacity:.9; }
+
     .flame-img{
       width: clamp(120px, 26vw, 210px);
       margin:0;
@@ -949,14 +592,15 @@
       0%{ filter: drop-shadow(0 0 14px rgba(255,106,42,.14)); }
       100%{ filter: drop-shadow(0 0 26px rgba(255,106,42,.22)); }
     }
+
     .manifest{
       width:min(var(--wrap), 92vw);
       margin-top:0;
       padding:18px 16px;
       border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
       background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.05), rgba(255,255,255,.015) 60%),
                   linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.10);
       box-shadow: 0 18px 62px rgba(0,0,0,.46);
       backdrop-filter: blur(6px);
       position:relative;
@@ -966,88 +610,7 @@
     }
     .manifest.center{ text-align:center; }
 
-    .sanctuary-sub{ max-width:100%; line-height:1.62; margin:14px auto 0; position:relative; z-index:2; }
-    .sanctuary-sub p{ font-size:clamp(15px,3.8vw,18px); color:rgba(255,255,255,.82); max-width:100%; }
-
-    .align-grid{ width:100%; display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px; position:relative; z-index:2; text-align:left; }
-    .mood{
-      width:100%;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      box-shadow: 0 18px 60px rgba(0,0,0,.40);
-      overflow:hidden;
-      text-align:left;
-      position:relative;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
-      padding:14px 14px 12px;
-      max-width:100%;
-    }
-    .mood:active{ transform: scale(.99); }
-    .mood.dim{ opacity:.42; }
-    .mood.active{
-      border-color: rgba(255,255,255,.18);
-      box-shadow: 0 18px 80px rgba(0,0,0,.55), 0 0 28px rgba(255,106,42,.10);
-      transform: translateY(-1px);
-    }
-    .mood .row{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap; }
-    .mood .title{ font-size:14px; letter-spacing:.20em; text-transform:uppercase; color:rgba(255,255,255,.72); margin:0 0 6px; }
-    .mood .desc{ margin:0; color:rgba(255,255,255,.82); font-size:clamp(15px, 3.8vw, 17px); line-height:1.55; max-width:100%; overflow-wrap:anywhere; }
-    .mood .sw{ display:flex; gap:8px; align-items:center; justify-content:flex-end; margin-left:auto; padding-top:4px; }
-    .dot-swatch{ width:10px;height:10px;border-radius:50%; border:1px solid rgba(255,255,255,.18); box-shadow: 0 0 0 3px rgba(255,255,255,.04); flex:0 0 auto; }
-
-    .quiz{ width:100%; margin-top:14px; display:grid; gap:14px; position:relative; z-index:2; text-align:left; }
-    .q{
-      width:100%;
-      padding:16px 14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-      box-shadow: 0 18px 60px rgba(0,0,0,.40);
-      backdrop-filter: blur(6px);
-      max-width:100%;
-    }
-    .q h3{ margin:0 0 12px; font-size:14px; letter-spacing:.12em; color:rgba(255,255,255,.80); font-weight:650; overflow-wrap:anywhere; }
-    .opts{ display:grid; gap:10px; }
-    .opt{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.20);
-      color: rgba(255,255,255,.86);
-      font-size:clamp(15px, 3.8vw, 17px);
-      line-height:1.45;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .22s ease, opacity .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
-      position:relative;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-      max-width:100%;
-    }
-    .opt:active{ transform: scale(.99); }
-    .opt.dim{ opacity:.42; }
-    .opt.active{
-      opacity:1;
-      border-color: rgba(255,255,255,.20);
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 0 18px rgba(255,106,42,.12);
-    }
-
-    .quiz-actions{ display:flex; justify-content:center; margin-top:6px; gap:10px; flex-direction:column; align-items:center; }
-    .unlock-hint{
-      font-size:12px;
-      letter-spacing:.10em;
-      color:rgba(255,255,255,.62);
-      text-align:center;
-      padding:0 6px;
-    }
-
+    /* Buttons */
     .ghost-btn{
       padding:12px 18px;
       border-radius:12px;
@@ -1062,7 +625,6 @@
     }
     .ghost-btn:active{ transform: scale(.99); }
     .ghost-btn[disabled]{ opacity:.45; cursor:not-allowed; }
-
     .ghost-btn.ready{
       border-color: rgba(255,255,255,.26);
       background: rgba(255,255,255,.06);
@@ -1074,148 +636,116 @@
       50%{ transform: translateY(-1px); }
     }
 
-    .result-page{
+    /* Vote */
+    .vote-grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
       width:min(var(--wrap), 92vw);
-      margin:0 auto;
-      padding:22px 18px 18px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      box-shadow: 0 22px 72px rgba(0,0,0,.46);
-      backdrop-filter: blur(7px);
-      overflow:hidden;
-      z-index:2;
-      text-align:left;
-      position:relative;
     }
-    .result-page::after{
-      content:"";
-      position:absolute;inset:14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.06);
-      pointer-events:none;
-      opacity:.85;
+    @media (min-width: 760px){
+      .vote-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
-    .rp-kicker{ display:flex; justify-content:center; margin-bottom:10px; position:relative; z-index:2; }
-    .arch-title{ margin:6px 0 4px; font-size:clamp(22px, 5vw, 32px); font-weight:850; letter-spacing:.06em; color:#fff; position:relative; z-index:2; overflow-wrap:anywhere; }
-    .arch-sub{ margin:0 0 12px; font-size:13px; letter-spacing:.20em; text-transform:uppercase; color:rgba(255,255,255,.66); position:relative; z-index:2; overflow-wrap:anywhere; }
-
-    .result-shell{ position:relative; z-index:2; display:grid; gap:12px; }
-    .arch-grid{ display:grid; gap:10px; position:relative; z-index:2; }
-    .arch-card{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
+    .vote{
+      display:grid;
+      grid-template-columns: 16px 1fr;
+      grid-template-rows: auto;
+      grid-column-gap:10px;
+      align-items:center;
+      width:100%;
       padding:14px 14px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.30);
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.90);
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
+      position:relative;
+      overflow:hidden;
+      transform: translateZ(0);
+      user-select:none;
+    }
+    .vote:active{ transform: scale(.99); }
+    .vote .chip{
+      width:14px;height:14px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.04);
+    }
+    .vote .nm{
+      font-size:13px;
+      letter-spacing:.16em;
+      font-weight:900;
+      text-align:left;
+    }
+
+    /* Hold fill + pop */
+    .vote::before{
+      content:"";
+      position:absolute; inset:0;
+      background: radial-gradient(120% 120% at 30% 20%, color-mix(in srgb, var(--hold-color,#fff) 55%, transparent), transparent 70%),
+                  linear-gradient(90deg, color-mix(in srgb, var(--hold-color,#fff) 70%, transparent), transparent);
+      opacity:0;
+      transition: opacity .18s ease;
+      pointer-events:none;
+    }
+    .vote::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(90deg,
+        color-mix(in srgb, var(--hold-color,#fff) 70%, transparent),
+        color-mix(in srgb, var(--hold-color,#fff) 35%, transparent)
+      );
+      transform: scaleX(var(--hold, 0));
+      transform-origin:left;
+      opacity:0;
+      transition: opacity .12s ease;
+      pointer-events:none;
+    }
+    .vote.holding{
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 0 26px color-mix(in srgb, var(--hold-color,#fff) 22%, transparent);
+      transform: translateY(-1px) scale(1.01);
+    }
+    .vote.holding::before{ opacity:.75; }
+    .vote.holding::after{ opacity:.35; }
+
+    .vote.voted{
+      border-color: rgba(255,255,255,.28);
+      background: rgba(255,255,255,.07);
+      box-shadow: 0 0 36px color-mix(in srgb, var(--hold-color,#fff) 28%, transparent);
+    }
+    .vote.voted.pop{
+      animation: votePop .42s cubic-bezier(.22,.61,.36,1) 1 both;
+    }
+    @keyframes votePop{
+      0%{ transform: scale(1.00); }
+      55%{ transform: scale(1.05); }
+      100%{ transform: scale(1.00); }
+    }
+
+    .microcopy{
+      margin-top:12px;
+      font-size:12px;
+      letter-spacing:.10em;
+      color:rgba(255,255,255,.62);
+      position:relative;
+      z-index:2;
+      padding:0 6px;
       overflow-wrap:anywhere;
     }
-    .arch-card .t{ margin:0 0 6px; font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.62); }
-    .arch-card .v{ margin:0; font-size:15px; line-height:1.7; color:rgba(255,255,255,.84); }
+    .arch-actions{ display:flex; justify-content:center; margin-top:10px; }
 
-    .arch-actions{ margin-top:10px; display:flex; justify-content:center; position:relative; z-index:2; }
-
-    .arch-emblem{
-      width:100%;
-      display:flex;
-      justify-content:center;
-      margin:0;
-      position:relative;
-      z-index:2;
-    }
-    .emblem-slot{
-      width:min(260px, 78vw);
-      aspect-ratio: 1 / 1;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      box-shadow: 0 18px 60px rgba(0,0,0,.30);
-      display:grid;
-      place-items:center;
-      color: rgba(255,255,255,.62);
-      font-size:12px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      user-select:none;
-    }
-
-    .result-watermark{
-      margin-top:12px;
-      padding-top:12px;
-      border-top:1px solid rgba(255,255,255,.10);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      position:relative;
-      z-index:2;
-      opacity:.48;
-      user-select:none;
-    }
-    .result-watermark img{
-      width:16px;
-      height:16px;
-      object-fit:contain;
-      filter: drop-shadow(0 8px 20px rgba(0,0,0,.35));
-    }
-    .result-watermark span{
-      font-size:11px;
-      letter-spacing:.18em;
-      color:rgba(255,255,255,.70);
-      text-transform:uppercase;
-    }
-
-    @media (min-width: 980px){
-      .result-page{
-        width:min(1120px, 92vw);
-        aspect-ratio: 16 / 9;
-        padding:18px 18px 16px;
-        display:flex;
-        flex-direction:column;
-        justify-content:space-between;
-      }
-      .result-shell{
-        grid-template-columns: 320px 1fr;
-        align-items:stretch;
-        gap:14px;
-      }
-      .arch-emblem{
-        justify-content:flex-start;
-      }
-      .emblem-slot{
-        width: 300px;
-        aspect-ratio: 1 / 1;
-      }
-      .arch-grid{
-        grid-template-columns: 1fr 1fr;
-        gap:10px;
-      }
-      .arch-card{
-        padding:12px 12px;
-      }
-      .arch-card:nth-child(1){ grid-column: 1 / 3; }
-      .arch-title{ margin-top:0; }
-      .arch-sub{ margin-bottom:8px; }
-      .arch-actions{ margin-top:8px; }
-      .result-watermark{ margin-top:10px; padding-top:10px; }
-    }
-
+    /* Hearth */
     .hearth-wrap{
       width:min(var(--wrap), 92vw);
       margin:0 auto;
       padding:22px 18px 18px;
       border-radius:22px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(140% 120% at 50% 0%, rgba(255,255,255,.055), rgba(255,255,255,.015) 60%),
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      box-shadow: 0 22px 72px rgba(0,0,0,.46);
-      backdrop-filter: blur(7px);
-      overflow:hidden;
-      z-index:2;
       position:relative;
+      z-index:2;
       text-align:center;
     }
     .hearth-wrap::after{
@@ -1240,8 +770,10 @@
     @media (max-width: 420px){
       .hearth-canvas{ height:220px; }
     }
-    .hearth-level{ font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.66); margin-top:-2px; }
-    .microcopy{ margin-top:10px; font-size:12px; letter-spacing:.10em; color:rgba(255,255,255,.62); position:relative; z-index:2; padding:0 6px; overflow-wrap:anywhere; }
+    .hearth-level{
+      font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+      color:rgba(255,255,255,.66); margin-top:-2px;
+    }
 
     form{
       margin-top:18px;
@@ -1260,15 +792,15 @@
       font-size:16px;color:#222;background:#fff;outline:none;
       max-width:100%;
     }
-    button{
+    button#tendBtn{
       padding:12px 22px;border:none;border-radius:12px;
       font-weight:800;font-size:16px;color:#fff;background:var(--accent);
       cursor:pointer;transition:background .42s, transform .22s ease;
       letter-spacing:.08em;
       max-width:92vw;
     }
-    button:hover{filter: brightness(.96);}
-    button:active{ transform: scale(.99); }
+    button#tendBtn:hover{filter: brightness(.96);}
+    button#tendBtn:active{ transform: scale(.99); }
 
     .links{
       display:flex;
@@ -1312,365 +844,9 @@
 
     @media (prefers-reduced-motion: reduce){
       .breath, .grain, .dot.active, .flame-img.in{ animation:none !important; }
-      .reveal, .late, .logo-frame, .flame-frame, .mood, .opt{ transition:none !important; }
-      .cinema-step{ transition:none !important; opacity:1 !important; transform:none !important; }
+      .reveal, .late, .logo-frame, .flame-frame, .vote{ transition:none !important; }
       .ghost-btn.ready{ animation:none !important; }
     }
-
-    /* 你的 override CSS（保留原樣） */
-    #s7{ padding: 42px 16px; }
-    #s7 .result-page{ padding: 16px 14px 14px; border-radius: 20px; }
-    #s7 .rp-kicker{ margin-bottom: 8px; }
-    #s7 .emblem-slot{ width: min(210px, 70vw); aspect-ratio: 1 / 1; border-radius: 16px; font-size: 11px; letter-spacing: .18em; }
-    #s7 .arch-title{ margin: 6px 0 2px; font-size: clamp(20px, 4.6vw, 30px); }
-    #s7 .arch-sub{ margin: 0 0 10px; font-size: 12px; letter-spacing: .18em; }
-    #s7 .arch-card{ padding: 12px 12px; border-radius: 14px; }
-    #s7 .arch-card .t{ margin: 0 0 6px; font-size: 11px; letter-spacing: .18em; }
-    #s7 .arch-card .v{ font-size: 14px; line-height: 1.55; }
-    #s7 .microcopy{ margin-top: 10px; }
-    #s7 .arch-actions{ margin-top: 10px; }
-    #s7 .result-watermark{ margin-top: 10px; padding-top: 10px; }
-
-    @media (min-width: 900px), (min-aspect-ratio: 16/9){
-      #s7{ padding: 26px 18px; }
-      #s7 .result-page{
-        width: min(1080px, 92vw);
-        max-height: calc(100vh - 56px);
-        overflow: hidden;
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        grid-template-rows: auto auto 1fr auto auto;
-        column-gap: 16px;
-        align-items: start;
-      }
-      #s7 .rp-kicker{ grid-column: 1 / -1; }
-      #s7 .arch-emblem{ grid-column: 1; grid-row: 2 / span 3; margin: 0; }
-      #s7 .arch-title{ grid-column: 2; }
-      #s7 .arch-sub{ grid-column: 2; }
-      #s7 .arch-grid{ grid-column: 2; gap: 10px; }
-      #s7 .microcopy{ grid-column: 1 / -1; }
-      #s7 .arch-actions{ grid-column: 1 / -1; }
-      #s7 .result-watermark{ grid-column: 1 / -1; }
-    }
-
-    :root{
-      --card-bg: rgba(255,255,255,.035);
-      --card-border: rgba(255,255,255,.10);
-      --card-shadow: 0 14px 44px rgba(0,0,0,.34);
-      --card-inset: inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    .sanctuary-wrap,
-    .info-card,
-    .mood,
-    .q,
-    .result-page,
-    .arch-card,
-    .hearth-wrap{
-      background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,.018));
-      border-color: var(--card-border);
-      box-shadow: var(--card-shadow), var(--card-inset);
-    }
-
-    #s7 .result-page,
-    #s8 .hearth-wrap{
-      box-shadow: 0 12px 40px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.06);
-    }
-
-    body:not([data-theme]),
-    body[data-theme=""],
-    body[data-theme="mono_base"]{
-      --mono-glow-cool: rgba(190,210,255,.22);
-      --mono-glow-warm: rgba(255,214,200,.16);
-      --mono-glow-white: rgba(255,255,255,.22);
-    }
-
-    body:not([data-theme]) .we-accent,
-    body[data-theme=""] .we-accent,
-    body[data-theme="mono_base"] .we-accent,
-    body:not([data-theme]) .i-accent,
-    body[data-theme=""] .i-accent,
-    body[data-theme="mono_base"] .i-accent{
-      color: rgba(255,255,255,.96);
-      text-shadow:
-        0 0 18px var(--mono-glow-white),
-        0 0 22px var(--mono-glow-cool),
-        0 0 26px var(--mono-glow-warm);
-    }
-
-    #unlockBtn[disabled]{
-      opacity:.62;
-      background: rgba(255,255,255,.03);
-      border-color: rgba(255,255,255,.12);
-      box-shadow: none;
-    }
-
-    /* =========================
-       08 截圖友善：底部資訊固定可見
-       (override)
-    ========================== */
-    #s7 .microcopy,
-    #s7 .arch-actions,
-    #s7 .result-watermark{
-      opacity: 1 !important;
-      transform: none !important;
-      transition: none !important;
-    }
-
-    #s7 .arch-title,
-    #s7 .arch-sub{
-      text-align: center;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    #s7 .arch-sub{
-      letter-spacing: .28em;
-      opacity: .72;
-    }
-
-    #s7 .emblem-slot{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: transparent;
-    }
-
-    #s7 .emblem-img{
-      width: 72%;
-      max-width: 220px;
-      height: auto;
-      display:block;
-      filter: saturate(1.05) contrast(1.05);
-    }
-
-    body[data-theme="rose_ember"] #archetypeEmblem{
-      filter:
-        drop-shadow(0 14px 38px rgba(122,43,18,.55))
-        drop-shadow(0 0 18px rgba(255,210,184,.45))
-        saturate(1.12);
-    }
-    body[data-theme="midnight_tracker"] #archetypeEmblem{
-      filter:
-        drop-shadow(0 14px 38px rgba(10,19,53,.60))
-        drop-shadow(0 0 18px rgba(175,194,255,.45))
-        saturate(1.08);
-    }
-    body[data-theme="veil_warden"] #archetypeEmblem{
-      filter:
-        drop-shadow(0 14px 34px rgba(74,58,48,.48))
-        drop-shadow(0 0 16px rgba(242,230,214,.42))
-        saturate(1.03);
-    }
-    body[data-theme="low_tide_keeper"] #archetypeEmblem{
-      filter:
-        drop-shadow(0 14px 36px rgba(11,36,32,.55))
-        drop-shadow(0 0 18px rgba(191,230,218,.45))
-        saturate(1.06);
-    }
-
-    /* =========================
-       05 APPLE-LIKE OVERLAY
-    ========================== */
-    .cinema-overlay{
-      position:fixed;
-      inset:0;
-      z-index:999;
-      display:none;
-      place-items:center;
-      background: linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.78));
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      opacity:0;
-      pointer-events:none;
-      transition: opacity .42s cubic-bezier(.22,.61,.36,1);
-    }
-
-    .cinema-overlay.show{
-      display:grid;
-      opacity:1;
-      pointer-events:auto;
-    }
-
-    .cinema-overlay-inner{
-      width:min(980px, 92vw);
-      height: min(560px, 78svh);
-      height: min(560px, 78vh);
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-      box-shadow: 0 28px 110px rgba(0,0,0,.62);
-      position:relative;
-      overflow:hidden;
-      display:grid;
-      place-items:center;
-      padding: 18px;
-    }
-
-    .cinema-overlay-cinema{
-      width: min(760px, 92vw);
-      height: 240px;
-    }
-
-    @media (max-width: 520px){
-      .cinema-overlay-inner{
-        height: min(520px, 82svh);
-        padding: 16px 14px;
-      }
-      .cinema-overlay-cinema{
-        height: 220px;
-      }
-    }
-
-    .cinema-skip{
-      position:absolute;
-      right:14px;
-      top:14px;
-      border-radius:999px;
-      padding:10px 14px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.22);
-      color: rgba(255,255,255,.86);
-      font-weight:800;
-      letter-spacing:.10em;
-      cursor:pointer;
-      transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
-    }
-    .cinema-skip:active{ transform: scale(.98); }
-    
-    /* ✅ 05A 全屏沉靜引導頁（同 #s4 的全屏規格） */
-#s4a{ padding:0; }
-#s4a .guide-wrap{
-  width:100%;
-  height:100vh;
-  height:100svh;
-  max-width:none;
-  border-radius:0;
-  border:none;
-  box-shadow:none;
-  background: transparent;
-  backdrop-filter:none;
-  padding: 0 20px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-}
-
-/* 引導文字舞台：維持全屏但文字區不要像 overlay 那樣有框 */
-#s4a .guide-cinema{
-  width: min(760px, 92vw);
-  height: 220px;
-}
-/* ✅ GUIDE 文字：更大、更粗、更有存在感（不影響其他頁） */
-#s4a .cinema-step p{
-  margin:0;
-  font-size: clamp(22px, 5.6vw, 34px);
-  font-weight: 850;
-  letter-spacing: .06em;
-  line-height: 1.28;
-  color: rgba(255,255,255,.92);
-  text-shadow: 0 10px 36px rgba(0,0,0,.50);
-}
-
-/* ✅ GUIDE 文字淡入淡出節奏：更慢 */
-#s4a .cinema-step{
-  transition: opacity 1.85s cubic-bezier(.22,.61,.36,1);
-}
-
-/* SKIP 按鈕（沿用 ghost-btn，不需要 overlay 的 cinema-skip） */
-#guideSkipBtn{
-  min-width: 120px;
-}
-/* =========================
-   COLOR VOTE
-========================= */
-.vote-grid{
-  margin-top:16px;
-  display:grid;
-  grid-template-columns: 1fr;
-  gap:10px;
-}
-@media (min-width: 760px){
-  .vote-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-}
-
-.vote{
-  display:grid;
-  grid-template-columns: 16px 1fr;
-  grid-template-rows: auto auto;
-  grid-column-gap:10px;
-  grid-row-gap:4px;
-  align-items:center;
-  width:100%;
-  padding:14px 14px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.18);
-  color: rgba(255,255,255,.90);
-  cursor:pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
-}
-.vote:active{ transform: scale(.99); }
-
-.vote .chip{
-  width:14px;height:14px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow: 0 0 0 3px rgba(255,255,255,.04);
-  grid-row: 1 / span 2;
-}
-.vote .nm{
-  font-size:13px;
-  letter-spacing:.16em;
-  font-weight:900;
-}
-.vote .desc{
-  font-size:12px;
-  letter-spacing:.10em;
-  color: rgba(255,255,255,.66);
-}
-
-.vote.active{
-  border-color: rgba(255,255,255,.22);
-  background: rgba(255,255,255,.06);
-  box-shadow: 0 0 22px rgba(255,255,255,.10), 0 0 36px color-mix(in srgb, var(--accent) 45%, transparent);
-}
-
-/* 投票後的氛圍渲染：用 data-vote 讓整站背景階與呼吸光跟著變 */
-body[data-vote]{
-  transition: background-color 1.2s ease;
-}
-body[data-vote="ember_red"]{
-  --accent:#B91C1C;
-  --sanctuary-1:#0b0506; --sanctuary-2:#140708; --sanctuary-3:#1e0a0b; --sanctuary-4:#2a0f10; --sanctuary-5:#3b1416;
-  --breath-a: rgba(185,28,28,.20); --breath-b: rgba(255,255,255,.06);
-}
-body[data-vote="moon_blue"]{
-  --accent:#2B4C7E;
-  --sanctuary-1:#05070b; --sanctuary-2:#070c14; --sanctuary-3:#0a101e; --sanctuary-4:#0e162a; --sanctuary-5:#13203b;
-  --breath-a: rgba(43,76,126,.20); --breath-b: rgba(255,255,255,.06);
-}
-body[data-vote="slate_gray"]{
-  --accent:#d6d6d6;
-  --sanctuary-1:#030303; --sanctuary-2:#0a0a0a; --sanctuary-3:#111111; --sanctuary-4:#171717; --sanctuary-5:#1f1f1f;
-  --breath-a: rgba(255,255,255,.10); --breath-b: rgba(255,255,255,.05);
-}
-body[data-vote="obsidian_black"]{
-  --accent:#ffffff;
-  --sanctuary-1:#000000; --sanctuary-2:#050505; --sanctuary-3:#0a0a0a; --sanctuary-4:#0f0f0f; --sanctuary-5:#151515;
-  --breath-a: rgba(255,255,255,.08); --breath-b: rgba(255,255,255,.04);
-}
-body[data-vote="ivory_white"]{
-  --accent:#f5f5f5;
-  --sanctuary-1:#0a0a0a; --sanctuary-2:#101010; --sanctuary-3:#171717; --sanctuary-4:#1f1f1f; --sanctuary-5:#292929;
-  --breath-a: rgba(255,255,255,.14); --breath-b: rgba(255,255,255,.07);
-}
-body[data-vote="molten_orange"]{
-  --accent:#D9480F;
-  --sanctuary-1:#0b0604; --sanctuary-2:#140a06; --sanctuary-3:#1e0d07; --sanctuary-4:#2a1209; --sanctuary-5:#3b1a0d;
-  --breath-a: rgba(217,72,15,.20); --breath-b: rgba(255,255,255,.06);
-}
-
   </style>
 </head>
 
@@ -1678,22 +854,19 @@ body[data-vote="molten_orange"]{
   <div class="breath" id="breath" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
- <nav class="dots" id="dotsNav" aria-label="Section navigation">
-  <button class="dot" data-target="s1"  data-label="HERO" aria-label="Go to Hero"></button>
-  <button class="dot" data-target="s1b" data-label="TONE" aria-label="Go to Tone"></button>
-  <button class="dot" data-target="s2"  data-label="WHO WE ARE" aria-label="Go to Who We Are"></button>
-  <button class="dot" data-target="s3"  data-label="BRAND MARK" aria-label="Go to Brand Mark"></button>
-  <button class="dot" data-target="s4b" data-label="TAGLINE" aria-label="Go to Brand Tagline"></button>
-  <button class="dot" data-target="s4"  data-label="SANCTUARY" aria-label="Go to Sanctuary"></button>
-  <button class="dot" data-target="s4a" data-label="GUIDE" aria-label="Go to Sanctuary Guide"></button>
-  <button class="dot" data-target="s5"  data-label="COLOR VOTE" aria-label="Go to Color Vote"></button>
-</nav>
-
+  <nav class="dots" id="dotsNav" aria-label="Section navigation">
+    <button class="dot" data-target="s1"  data-label="HERO" aria-label="Go to Hero"></button>
+    <button class="dot" data-target="s2"  data-label="WHO" aria-label="Go to Who"></button>
+    <button class="dot" data-target="s3"  data-label="MARK" aria-label="Go to Brand Mark"></button>
+    <button class="dot" data-target="s4b" data-label="TAGLINE" aria-label="Go to Tagline"></button>
+    <button class="dot" data-target="s5"  data-label="VOTE" aria-label="Go to Vote"></button>
+    <button class="dot" data-target="s8"  data-label="HEARTH" aria-label="Go to Hearth"></button>
+  </nav>
 
   <!-- ① Hero -->
   <section class="s1" id="s1">
     <div class="brand">
-      <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA wordmark" />
+      <img class="wordmark reveal" src="wordmark.png" alt="HESTIA wordmark" />
       <div class="submark">TAIWAN</div>
     </div>
 
@@ -1701,61 +874,23 @@ body[data-vote="molten_orange"]{
     <div class="arrow">↓</div>
   </section>
 
-  <!-- PRETONE -->
-  <section class="s1b" id="s1b">
-    <div class="secno reveal" style="--d:120ms;">TONE</div>
-
-    <div class="sanctuary-wrap" id="pretoneWrap">
-      <div class="sanctuary-kicker">
-        <span class="kicker reveal in">PRE-TONE</span>
-      </div>
-
-      <h2 class="reveal" style="--d:180ms;">先選一個你喜歡的色調吧？</h2>
-      <p class="reveal" style="--d:220ms;">
-        這會先替你的HESTiA宇宙體驗套上一層底色。
-      </p>
-
-      <div class="pretone-grid reveal" style="--d:280ms;" id="pretoneGrid" aria-label="Pre-tone color palette">
-        <button class="pretone" type="button" data-pre="red"    data-hex="#B91C1C"><span class="chip" style="background:#B91C1C"></span><span class="nm">燼紅｜EMBER RED</span></button>
-        <button class="pretone" type="button" data-pre="orange" data-hex="#D9480F"><span class="chip" style="background:#D9480F"></span><span class="nm">熔橙｜MOLTEN ORANGE</span></button>
-        <button class="pretone" type="button" data-pre="yellow" data-hex="#C8A100"><span class="chip" style="background:#C8A100"></span><span class="nm">鎏金｜AURIC GOLD</span></button>
-        <button class="pretone" type="button" data-pre="green"  data-hex="#1F7A5A"><span class="chip" style="background:#1F7A5A"></span><span class="nm">苔息｜SAGE MOSS</span></button>
-        <button class="pretone" type="button" data-pre="blue"   data-hex="#2B4C7E"><span class="chip" style="background:#2B4C7E"></span><span class="nm">深海｜DEEP NAVY</span></button>
-
-        <button class="pretone" type="button" data-pre="purple" data-hex="#5B2C83"><span class="chip" style="background:#5B2C83"></span><span class="nm">暮紫｜VIOLET VEIL</span></button>
-        <button class="pretone" type="button" data-pre="khaki"  data-hex="#A8925A"><span class="chip" style="background:#A8925A"></span><span class="nm">砂金｜SAND KHaki</span></button>
-        <button class="pretone" type="button" data-pre="black"  data-hex="#0B0C10"><span class="chip" style="background:#0B0C10"></span><span class="nm">曜黑｜OBSIDIAN</span></button>
-        <button class="pretone" type="button" data-pre="gray"   data-hex="#3A3A3A"><span class="chip" style="background:#3A3A3A"></span><span class="nm">霧灰｜ASH</span></button>
-        <button class="pretone" type="button" data-pre="white"  data-hex="#F5F5F5"><span class="chip" style="background:#F5F5F5"></span><span class="nm">象牙｜IVORY</span></button>
-      </div>
-
-      <div class="microcopy reveal" style="--d:340ms;">
-        已選擇：<span id="pretonePicked" class="we-accent">—</span>
-      </div>
-
-      <div class="arch-actions reveal" style="--d:380ms;">
-        <button class="ghost-btn" id="toWhoBtn" type="button">繼續</button>
-      </div>
-    </div>
-  </section>
-
   <!-- ② WHO WE ARE -->
   <section class="s2" id="s2">
     <div class="secno reveal" style="--d:120ms;">02</div>
-    <h2 class="reveal in who-title" style="--d:160ms;">WHO <span class="we-accent">WE</span> ARE?</h2>
+    <h2 class="reveal who-title" style="--d:160ms;">WHO <span class="we-accent">WE</span> ARE?</h2>
 
     <div class="info-card">
-      <div class="mini"><span class="kicker reveal in">WHY HESTiA?</span></div>
-      <p class="late" data-late>HESTiA 的名字來自希臘神話中守護火爐的女神，</p>
-      <p class="late" data-late>象徵<span class="hair-underline">歸屬</span>、<span class="hair-underline">溫暖</span>與內在之火。</p>
-      <p class="late" data-late>我們相信，每個人心中都有一簇火焰，</p>
-      <p class="late" data-late>等待被看見、被擁抱、被點燃。</p>
+      <div class="mini"><span class="kicker reveal" style="--d:220ms;">WHY HESTiA?</span></div>
+      <p class="late" data-late style="--d:280ms;">HESTiA 的名字來自希臘神話中守護火爐的女神，</p>
+      <p class="late" data-late style="--d:320ms;">象徵<span class="hair-underline">歸屬</span>、<span class="hair-underline">溫暖</span>與內在之火。</p>
+      <p class="late" data-late style="--d:360ms;">我們相信，每個人心中都有一簇火焰，</p>
+      <p class="late" data-late style="--d:400ms;">等待被看見、被擁抱、被點燃。</p>
     </div>
 
     <div class="info-card" style="margin-top:12px;">
-      <div class="mini"><span class="kicker reveal in">WHAT WE DO</span></div>
-      <p class="late" data-late>HESTiA 是一個健身與生活並行的服裝品牌。</p>
-      <p class="late" data-late>不管在生活與訓練之間，都能展現符合自己的自信與品味。</p>
+      <div class="mini"><span class="kicker reveal" style="--d:220ms;">WHAT WE DO</span></div>
+      <p class="late" data-late style="--d:280ms;">HESTiA 是一個健身與生活並行的服裝品牌。</p>
+      <p class="late" data-late style="--d:320ms;">不管在生活與訓練之間，都能展現符合自己的自信與品味。</p>
     </div>
   </section>
 
@@ -1764,7 +899,7 @@ body[data-vote="molten_orange"]{
     <div class="stack">
       <div class="secno reveal" style="--d:140ms;">03</div>
 
-      <div class="logo-frame frame-size" id="logoFrame" role="button" aria-label="Interact with brand mark" tabindex="0" data-mode="primary">
+      <div class="logo-frame frame-size reveal" id="logoFrame" role="button" aria-label="Interact with brand mark" tabindex="0">
         <div class="corner-hint" aria-hidden="true"></div>
         <img class="logo-mark" id="logoMark" src="HLOGO.png" alt="HESTIA mark" />
       </div>
@@ -1791,127 +926,64 @@ body[data-vote="molten_orange"]{
         <span class="kicker reveal" style="--d:180ms;">FLAME MARK</span>
       </div>
 
-      <div class="flame-frame" id="flameFrame" aria-label="Flame Mark reveal">
+      <div class="flame-frame reveal" id="flameFrame" aria-label="Flame Mark reveal">
         <div class="corner-hint" aria-hidden="true"></div>
         <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" />
       </div>
 
-      <h2 class="reveal" style="--d:260ms;">標語的符號</h2>
+      <h2 class="reveal" style="--d:260ms;">標語的信念</h2>
 
-      <div class="manifest center flame-copy reveal" style="--d:320ms;">
-        <p class="late" data-late>這不只是口號，而是一種信念。</p>
-        <p class="late" data-late>標籤又如何？那是與生俱來的特色。</p>
-        <p class="late" data-late>HESTIA 透過品牌標語「Own Your Flame」</p>
-        <p class="late" data-late>無論性別、身形、背景，這些火焰屬於你自己。</p>
-        <p class="late" data-late>不用變成誰，你只需要更像你！</p>
+      <div class="manifest center reveal" style="--d:320ms;">
+        <p class="late" data-late style="--d:360ms;">這不只是口號，而是一種信念。</p>
+        <p class="late" data-late style="--d:400ms;">標籤又如何？那是與生俱來的特色。</p>
+        <p class="late" data-late style="--d:440ms;">HESTIA 透過品牌標語「Own Your Flame」</p>
+        <p class="late" data-late style="--d:480ms;">無論性別、身形、背景，這些火焰屬於你自己。</p>
+        <p class="late" data-late style="--d:520ms;">不用變成誰，你只需要更像你！</p>
       </div>
     </div>
   </section>
 
- <section class="s4" id="s4">
-  <div class="sanctuary-wrap">
-    <div class="sanctuary-kicker">
-      <span class="kicker reveal" style="--d:180ms;">SANCTUARY</span>
+  <!-- ⑤ COLOR VOTE -->
+  <section class="s5" id="s5">
+    <div class="secno reveal" style="--d:140ms;">05</div>
+
+    <div style="width:min(var(--wrap), 92vw); position:relative; z-index:2;">
+      <div style="display:flex;justify-content:center;margin-bottom:10px;">
+        <span class="kicker reveal" style="--d:180ms;">COLOR VOTE</span>
+      </div>
+
+      <h2 class="reveal" style="--d:220ms;">你希望首波系列是什麼色系？</h2>
+
+      <div class="vote-grid reveal" style="--d:300ms;" id="voteGrid" aria-label="Color vote palette">
+        <button class="vote" type="button" data-vote="ember_red" data-hex="#B91C1C">
+          <span class="chip" style="background:#B91C1C"></span><span class="nm">餘燼紅</span>
+        </button>
+        <button class="vote" type="button" data-vote="molten_orange" data-hex="#D9480F">
+          <span class="chip" style="background:#D9480F"></span><span class="nm">熔橙</span>
+        </button>
+        <button class="vote" type="button" data-vote="moon_blue" data-hex="#2B4C7E">
+          <span class="chip" style="background:#2B4C7E"></span><span class="nm">月光藍</span>
+        </button>
+        <button class="vote" type="button" data-vote="slate_gray" data-hex="#3A3A3A">
+          <span class="chip" style="background:#3A3A3A"></span><span class="nm">石板灰</span>
+        </button>
+        <button class="vote" type="button" data-vote="obsidian_black" data-hex="#0B0C10">
+          <span class="chip" style="background:#0B0C10"></span><span class="nm">曜黑</span>
+        </button>
+        <button class="vote" type="button" data-vote="ivory_white" data-hex="#F5F5F5">
+          <span class="chip" style="background:#F5F5F5"></span><span class="nm">象牙白</span>
+        </button>
+      </div>
+
+      <div class="microcopy reveal" style="--d:360ms;">
+        長按 1 秒完成投票：<span id="votePicked" class="we-accent">—</span>
+      </div>
+
+      <div class="arch-actions reveal" style="--d:420ms;">
+        <button class="ghost-btn" id="voteDoneBtn" type="button" disabled>完成投票</button>
+      </div>
     </div>
-    <h2 class="reveal" style="--d:220ms;">SANCTUARY</h2>
-    <p class="reveal" style="--d:260ms;">
-      下面將是一段短暫的沉靜引導，繼續滑動往下探索。
-    </p>
-  </div>
-</section>
-
-
-<section class="s4" id="s4a" aria-label="Sanctuary Guide">
-  <div class="guide-wrap">
-    <div class="sanctuary-kicker">
-      <span class="kicker reveal" style="--d:180ms;">SANCTUARY GUIDE</span>
-    </div>
-
-    <!-- 引導文字：自動播放（使用者可自由滑動，不鎖、不跳轉） -->
-    <div class="cinema guide-cinema" aria-live="polite">
-      <div class="cinema-step" id="gc1"><p>現在安靜下來</p></div>
-      <div class="cinema-step" id="gc2"><p>讓我帶領你進入 HESTiA 宇宙</p></div>
-      <div class="cinema-step" id="gc3"><p>接下來的每一個選擇</p></div>
-      <div class="cinema-step" id="gc4"><p>都是你與我們共感的瞬間</p></div>
-      <div class="cinema-step" id="gc5"><p>你的每一個答案</p></div>
-      <div class="cinema-step" id="gc6"><p>將影響 HESTiA 首波上市系列配色</p></div>
-
-      <!-- ✅ 新增：最後一句 -->
-      <div class="cinema-step" id="gc7"><p>向下滑動開始吧！</p></div>
-    </div>
-  </div>
-</section>
-
-
-
-<!-- ⑤ COLOR VOTE -->
-<section class="s5" id="s5">
-  <div class="secno reveal" style="--d:140ms;">05</div>
-
-  <div class="sanctuary-wrap" id="voteWrap">
-    <div class="sanctuary-kicker">
-      <span class="kicker reveal" style="--d:180ms;">COLOR VOTE</span>
-    </div>
-
-    <h2 class="reveal" style="--d:220ms;">你希望 HESTIA 首波系列是什麼色系？</h2>
-    <p class="reveal" style="--d:260ms;">
-      選一個你最想穿上身的「心境」。點選後，整個氛圍會緩慢染上你選的顏色。
-    </p>
-
-    <div class="vote-grid reveal" style="--d:320ms;" id="voteGrid" aria-label="Color vote palette">
-      <button class="vote" type="button" data-vote="ember_red" data-hex="#B91C1C">
-        <span class="chip" style="background:#B91C1C"></span>
-        <span class="nm">餘燼紅</span>
-        <span class="desc">暖心能量｜把狀態點亮</span>
-      </button>
-
-      <button class="vote" type="button" data-vote="moon_blue" data-hex="#2B4C7E">
-        <span class="chip" style="background:#2B4C7E"></span>
-        <span class="nm">月光藍</span>
-        <span class="desc">深度專注｜冷靜上場</span>
-      </button>
-
-      <button class="vote" type="button" data-vote="slate_gray" data-hex="#3A3A3A">
-        <span class="chip" style="background:#3A3A3A"></span>
-        <span class="nm">石板灰</span>
-        <span class="desc">內在平穩｜耐看耐穿</span>
-      </button>
-
-      <button class="vote" type="button" data-vote="obsidian_black" data-hex="#0B0C10">
-        <span class="chip" style="background:#0B0C10"></span>
-        <span class="nm">曜黑</span>
-        <span class="desc">主權感｜乾淨俐落</span>
-      </button>
-
-      <button class="vote" type="button" data-vote="ivory_white" data-hex="#F5F5F5">
-        <span class="chip" style="background:#F5F5F5"></span>
-        <span class="nm">象牙白</span>
-        <span class="desc">留白呼吸｜清爽高級</span>
-      </button>
-
-      <button class="vote" type="button" data-vote="molten_orange" data-hex="#D9480F">
-        <span class="chip" style="background:#D9480F"></span>
-        <span class="nm">熔橙</span>
-        <span class="desc">爆發力｜訓練更有火</span>
-      </button>
-    </div>
-
-    <div class="microcopy reveal" style="--d:380ms;">
-      你的投票：<span id="votePicked" class="we-accent">—</span>
-    </div>
-
-    <div class="arch-actions reveal" style="--d:420ms;">
-      <button class="ghost-btn" id="voteDoneBtn" type="button" disabled>完成投票</button>
-    </div>
-
-    <div class="microcopy reveal" style="--d:460ms;">
-      小提醒：你選的結果會被記住（下次打開還是同一個色系）。
-    </div>
-  </div>
-</section>
-
-
- 
+  </section>
 
   <!-- ⑨ Our Flame -->
   <section class="s8" id="s8">
@@ -1923,7 +995,7 @@ body[data-vote="molten_orange"]{
           <span class="kicker reveal" style="--d:200ms;">COLLECTIVE HEARTH</span>
         </div>
 
-        <canvas class="hearth-canvas" id="flameCanvas" aria-label="Hestia Our Flame"></canvas>
+        <canvas class="hearth-canvas reveal" style="--d:230ms;" id="flameCanvas" aria-label="Hestia Our Flame"></canvas>
 
         <div class="hearth-level reveal" style="--d:260ms;">
           HEARTH LEVEL：<span id="hearthLevel" class="we-accent">—</span>
@@ -1934,20 +1006,14 @@ body[data-vote="molten_orange"]{
           把你的光點，投入火焰！不用搶先，只要行動。
         </p>
 
-               <form id="notify"
+        <form id="notify"
               action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse"
               method="POST" target="hidden_iframe" autocomplete="off" onsubmit="return submitGForm(event)">
 
-          <!-- Email -->
           <input id="email" type="email" name="entry.345729382" placeholder="輸入你的Email搶先收到最新消息" required />
 
-          <!-- PRE-TONE -->
-          <input type="hidden" id="f_pretone" name="entry.204433983" value="">
-
-          <!-- 06偏好色調 -->
+          <!-- 06 / 07 placeholders (keep for later) -->
           <input type="hidden" id="f_06" name="entry.324440347" value="">
-
-          <!-- 07-01 ～ 07-05 -->
           <input type="hidden" id="f_0701" name="entry.1640422124" value="">
           <input type="hidden" id="f_0702" name="entry.1471764886" value="">
           <input type="hidden" id="f_0703" name="entry.2009680739" value="">
@@ -1971,197 +1037,285 @@ body[data-vote="molten_orange"]{
 
   <div class="toast" id="toast">訂閱成功！我們將在第一時間通知你最新消息。</div>
 
-<script>
-  const $ = (s, r=document) => r.querySelector(s);
-  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  <script>
+    const $ = (s, r=document) => r.querySelector(s);
+    const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 
-  function inView(el, topRatio=0.78, bottomRatio=0.18){
-    if(!el) return false;
-    const r = el.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    const topLine = vh * topRatio;
-    const bottomLine = vh * bottomRatio;
-    return (r.top <= topLine) && (r.bottom >= bottomLine);
-  }
-
-  /* Toast（沿用你原本樣式；若你把 #toast 刪了，這裡就動態生一個） */
-  let toast = $('#toast');
-  if(!toast){
-    toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.id = 'toast';
-    toast.textContent = '';
-    document.body.appendChild(toast);
-  }
-  let toastTimer=null;
-  function showToast(msg, ms=1200){
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(()=>toast.classList.remove('show'), ms);
-  }
-
-  /* Reveal */
-  let ticking=false;
-  function rafCheck(){
-    ticking=false;
-    $$('.reveal').forEach(el=>{
-      if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-    });
-    $$('.late[data-late]').forEach(el=>{
-      if(!el.classList.contains('in') && inView(el, 0.86, 0.05)) el.classList.add('in');
-    });
-  }
-  function requestCheck(){
-    if(ticking) return;
-    ticking=true;
-    requestAnimationFrame(rafCheck);
-  }
-  window.addEventListener('scroll', requestCheck, {passive:true});
-  window.addEventListener('load', requestCheck);
-  window.addEventListener('resize', requestCheck);
-  requestCheck();
-
-  /* =========================
-     PRETONE（保留你原本概念，精簡版）
-  ========================= */
-  const PRETONE_KEY = 'hestia_pretone';
-  const pretonePicked = $('#pretonePicked');
-  const pretoneBtns = $$('#pretoneGrid .pretone');
-
-  function setPreTone(preKey, label){
-    const key = preKey || '';
-    if(key){
-      document.body.setAttribute('data-precolor', key);
-      localStorage.setItem(PRETONE_KEY, key);
-    }else{
-      document.body.removeAttribute('data-precolor');
-      localStorage.removeItem(PRETONE_KEY);
-    }
-    if(pretonePicked) pretonePicked.textContent = label || '—';
-    showToast(`PRE-TONE 已套用｜${label || ''}`, 980);
-    setTimeout(requestCheck, 80);
-  }
-
-  (function initPreTone(){
-    const saved = localStorage.getItem(PRETONE_KEY) || '';
-    if(saved) document.body.setAttribute('data-precolor', saved);
-
-    if(saved && pretoneBtns.length){
-      const hit = pretoneBtns.find(b=>b.dataset.pre === saved);
-      if(hit){
-        pretoneBtns.forEach(b=>b.classList.remove('active'));
-        hit.classList.add('active');
-        if(pretonePicked) pretonePicked.textContent = hit.querySelector('.nm')?.textContent || '—';
-      }
+    /* Toast */
+    let toast = $('#toast');
+    let toastTimer=null;
+    function showToast(msg, ms=1200){
+      if(!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>toast.classList.remove('show'), ms);
     }
 
-    pretoneBtns.forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        pretoneBtns.forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        setPreTone(btn.dataset.pre, btn.querySelector('.nm')?.textContent || '');
+    /* =========================
+       Reveal (IntersectionObserver)
+    ========================= */
+    (function initReveal(){
+      const revealEls = Array.from(document.querySelectorAll('.reveal, .late[data-late]'));
+      if(!revealEls.length) return;
+
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { root:null, threshold:0.12, rootMargin:"0px 0px -10% 0px" });
+
+      revealEls.forEach(el=>io.observe(el));
+    })();
+
+    /* =========================
+       Logo / Flame staged reveal helper
+    ========================= */
+    (function stageMedia(){
+      const logoFrame = $('#logoFrame');
+      const logoMark  = $('#logoMark');
+      const flameFrame = $('#flameFrame');
+      const flameImg = $('#flameImg');
+
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(!e.isIntersecting) return;
+          const el = e.target;
+          if(el === logoFrame){
+            logoFrame.classList.add('in');
+            logoMark?.classList.add('in');
+            io.unobserve(el);
+          }
+          if(el === flameFrame){
+            flameFrame.classList.add('in');
+            flameImg?.classList.add('in');
+            io.unobserve(el);
+          }
+        });
+      }, { threshold:0.2, rootMargin:"0px 0px -12% 0px" });
+
+      if(logoFrame) io.observe(logoFrame);
+      if(flameFrame) io.observe(flameFrame);
+    })();
+
+    /* =========================
+       COLOR VOTE (HOLD 1s)
+    ========================= */
+    const VOTE_KEY = 'hestia_vote_color';
+    const votePicked = $('#votePicked');
+    const voteBtns = $$('#voteGrid .vote');
+    const voteDoneBtn = $('#voteDoneBtn');
+
+    let holdTimer = null;
+    let holdRAF = null;
+    let holdStart = 0;
+    let holdingBtn = null;
+
+    function setHold(btn, v){ btn.style.setProperty('--hold', String(v)); }
+    function clearHold(btn){
+      btn.classList.remove('holding');
+      btn.style.removeProperty('--hold');
+      btn.style.removeProperty('--hold-color');
+    }
+
+    function applyVote(key, hex, label, btn){
+      document.body.setAttribute('data-vote', key);
+      localStorage.setItem(VOTE_KEY, key);
+
+      voteBtns.forEach(b=>{
+        b.classList.remove('voted','pop');
+        b.classList.toggle('voted', b === btn);
       });
-    });
-  })();
 
-  $('#toWhoBtn')?.addEventListener('click', ()=>{
-    $('#s2')?.scrollIntoView({behavior:'smooth', block:'start'});
-    setTimeout(requestCheck, 160);
-  });
+      // keep glow color for voted button
+      btn.style.setProperty('--hold-color', hex || '#fff');
 
-  /* =========================
-     COLOR VOTE（新增）
-  ========================= */
-  const VOTE_KEY = 'hestia_vote_color';
-  const votePicked = $('#votePicked');
-  const voteBtns = $$('#voteGrid .vote');
-  const voteDoneBtn = $('#voteDoneBtn');
+      if(votePicked) votePicked.textContent = label || '—';
+      if(voteDoneBtn){
+        voteDoneBtn.disabled = false;
+        voteDoneBtn.classList.add('ready');
+      }
 
-  function setVote(key, hex, label){
-    document.body.setAttribute('data-vote', key);
-    localStorage.setItem(VOTE_KEY, key);
+      btn.classList.add('pop');
+      setTimeout(()=>btn.classList.remove('pop'), 520);
 
-    voteBtns.forEach(b=>{
-      b.classList.toggle('active', b.dataset.vote === key);
-    });
-
-    if(votePicked) votePicked.textContent = label || '—';
-    if(voteDoneBtn){
-      voteDoneBtn.disabled = false;
-      voteDoneBtn.classList.add('ready');
+      showToast(`投票成功｜${label}`, 1100);
     }
 
-    // 視覺反饋：背景慢慢染色（你 body 本來就有 transition）
-    showToast(`投票成功｜${label}`, 1100);
-    setTimeout(requestCheck, 80);
-  }
+    function startHold(btn){
+      holdingBtn = btn;
+      holdStart = performance.now();
 
-  (function initVote(){
-    const saved = localStorage.getItem(VOTE_KEY) || '';
-    if(saved){
-      document.body.setAttribute('data-vote', saved);
-      const hit = voteBtns.find(b=>b.dataset.vote === saved);
-      if(hit){
-        voteBtns.forEach(b=>b.classList.toggle('active', b===hit));
-        if(votePicked) votePicked.textContent = hit.querySelector('.nm')?.textContent || '—';
-        if(voteDoneBtn){
-          voteDoneBtn.disabled = false;
-          voteDoneBtn.classList.add('ready');
+      btn.style.setProperty('--hold-color', btn.dataset.hex || '#fff');
+      btn.classList.add('holding');
+      setHold(btn, 0);
+
+      const tick = (now)=>{
+        const t = Math.min(1, (now - holdStart) / 1000);
+        setHold(btn, t);
+        if(t < 1) holdRAF = requestAnimationFrame(tick);
+      };
+      holdRAF = requestAnimationFrame(tick);
+
+      holdTimer = setTimeout(()=>{
+        clearTimeout(holdTimer); holdTimer=null;
+        cancelAnimationFrame(holdRAF); holdRAF=null;
+
+        const key = btn.dataset.vote;
+        const hex = btn.dataset.hex;
+        const label = btn.querySelector('.nm')?.textContent || '';
+        clearHold(btn);
+        applyVote(key, hex, label, btn);
+        holdingBtn = null;
+      }, 1000);
+    }
+
+    function cancelHold(){
+      if(!holdingBtn) return;
+      clearTimeout(holdTimer); holdTimer=null;
+      cancelAnimationFrame(holdRAF); holdRAF=null;
+      clearHold(holdingBtn);
+      holdingBtn = null;
+    }
+
+    (function initVote(){
+      const saved = localStorage.getItem(VOTE_KEY) || '';
+      if(saved){
+        document.body.setAttribute('data-vote', saved);
+        const hit = voteBtns.find(b=>b.dataset.vote === saved);
+        if(hit){
+          hit.classList.add('voted');
+          hit.style.setProperty('--hold-color', hit.dataset.hex || '#fff');
+          if(votePicked) votePicked.textContent = hit.querySelector('.nm')?.textContent || '—';
+          if(voteDoneBtn){
+            voteDoneBtn.disabled = false;
+            voteDoneBtn.classList.add('ready');
+          }
         }
       }
+
+      voteBtns.forEach(btn=>{
+        btn.addEventListener('pointerdown', (e)=>{
+          e.preventDefault();
+          cancelHold();
+          startHold(btn);
+        });
+        btn.addEventListener('pointerup', cancelHold);
+        btn.addEventListener('pointercancel', cancelHold);
+        btn.addEventListener('pointerleave', cancelHold);
+      });
+
+      voteDoneBtn?.addEventListener('click', ()=>{
+        $('#s8')?.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    })();
+
+    /* =========================
+       Dots + active section
+    ========================= */
+    const sections = ['s1','s2','s3','s4b','s5','s8']
+      .map(id=>document.getElementById(id))
+      .filter(Boolean);
+
+    const dots = $$('.dot');
+    function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
+
+    function updateActiveDot(){
+      const vh = window.innerHeight;
+      let best = {idx:0, score:999999};
+      sections.forEach((sec, idx)=>{
+        const r = sec.getBoundingClientRect();
+        const center = r.top + r.height/2;
+        const score = Math.abs(center - vh/2);
+        if(score < best.score) best = {idx, score};
+      });
+      setActiveDot(best.idx);
     }
 
-    voteBtns.forEach(btn=>{
+    dots.forEach(btn=>{
       btn.addEventListener('click', ()=>{
-        setVote(
-          btn.dataset.vote,
-          btn.dataset.hex,
-          btn.querySelector('.nm')?.textContent || ''
-        );
-      });
+        const id = btn.getAttribute('data-target');
+        document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+        setTimeout(()=>requestAnimationFrame(updateActiveDot), 220);
+      }, {passive:true});
     });
 
-    voteDoneBtn?.addEventListener('click', ()=>{
-      showToast('已完成投票！你的一票會影響首波配色。', 1800);
-    });
-  })();
+    window.addEventListener('scroll', ()=>requestAnimationFrame(updateActiveDot), {passive:true});
+    window.addEventListener('load', ()=>requestAnimationFrame(updateActiveDot));
+    window.addEventListener('resize', ()=>requestAnimationFrame(updateActiveDot));
 
-  /* =========================
-     Dots（更新 sections 列表）
-  ========================= */
-  const sections = ['s1','s1b','s2','s3','s4b','s4','s4a','s5']
-    .map(id=>document.getElementById(id))
-    .filter(Boolean);
+    /* =========================
+       Form submit stub (safe)
+    ========================= */
+    function submitGForm(event){
+      // keep safe: allow submit, show toast after a beat
+      setTimeout(()=>showToast('已送出！我們會在第一時間通知你。', 1600), 120);
+      return true;
+    }
 
-  const dots = $$('.dot');
-  function setActiveDot(idx){ dots.forEach((d,i)=>d.classList.toggle('active', i===idx)); }
+    /* =========================
+       Canvas simple ambient (safe placeholder)
+    ========================= */
+    (function initCanvas(){
+      const c = document.getElementById('flameCanvas');
+      const lvl = document.getElementById('hearthLevel');
+      if(!c) return;
 
-  function updateActiveDot(){
-    const vh = window.innerHeight;
-    let best = {idx:0, score:999999};
-    sections.forEach((sec, idx)=>{
-      const r = sec.getBoundingClientRect();
-      const center = r.top + r.height/2;
-      const score = Math.abs(center - vh/2);
-      if(score < best.score) best = {idx, score};
-    });
-    setActiveDot(best.idx);
-  }
+      const ctx = c.getContext('2d');
+      let w=0,h=0, t=0;
 
-  dots.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const id = btn.getAttribute('data-target');
-      document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
-      setTimeout(requestCheck, 120);
-      setTimeout(()=>requestAnimationFrame(updateActiveDot), 220);
-    }, {passive:true});
-  });
+      function resize(){
+        const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        const rect = c.getBoundingClientRect();
+        w = Math.floor(rect.width * dpr);
+        h = Math.floor(rect.height * dpr);
+        c.width = w; c.height = h;
+      }
+      resize();
+      window.addEventListener('resize', resize);
 
-  window.addEventListener('scroll', ()=>requestAnimationFrame(updateActiveDot), {passive:true});
-  window.addEventListener('load', ()=>requestAnimationFrame(updateActiveDot));
-  window.addEventListener('resize', ()=>requestAnimationFrame(updateActiveDot));
-</script>
+      // fake hearth level from vote
+      function updateLevel(){
+        const v = localStorage.getItem(VOTE_KEY);
+        const map = { ember_red: 74, molten_orange: 82, moon_blue: 68, slate_gray: 61, obsidian_black: 66, ivory_white: 59 };
+        const n = map[v] ?? 62;
+        if(lvl) lvl.textContent = String(n);
+      }
+      updateLevel();
+      window.addEventListener('storage', updateLevel);
 
+      function draw(){
+        t += 0.012;
+        ctx.clearRect(0,0,w,h);
+
+        // background haze
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        const cx = w*0.5, cy = h*0.62;
+        const r = Math.min(w,h)*0.36*(1+0.03*Math.sin(t*1.3));
+        ctx.arc(cx, cy, r, 0, Math.PI*2);
+        ctx.fill();
+
+        // particles
+        ctx.globalAlpha = 0.18;
+        for(let i=0;i<46;i++){
+          const p = (i/46)*Math.PI*2 + t*0.35;
+          const rr = r*(0.12 + 0.78*((i%7)/7));
+          const x = cx + Math.cos(p)*rr;
+          const y = cy + Math.sin(p*1.2)*rr*0.55;
+          const sz = (w+h)*0.00055*(1+0.6*Math.sin(t+i));
+          ctx.fillRect(x, y, sz, sz);
+        }
+
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
+  </script>
 </body>
 </html>

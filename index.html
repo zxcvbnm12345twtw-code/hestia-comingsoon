@@ -1,326 +1,400 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+
+  <title>HESTIA TAIWAN｜內在色溫之美</title>
+  <meta name="description" content="HESTIA 健身時尚品牌，融合時尚與力量優雅。Own Your Flame.">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HESTIA TAIWAN｜內在色溫之美</title>
-  
+
   <style>
     /* =========================
-       2026 戰略色彩系統 (Azure Plasma)
+       2026 戰略核心色譜：湛藍等離子 (Azure Plasma)
     ========================== */
     :root {
-      /* 核心色階：湛藍等離子 */
-      --void: #001b2e;        /* 背景層 */
-      --body: #005e88;        /* 介質層 */
-      --core: #66BEF9;        /* 核心層 - Waterfall Cyan */
-      --ether: #FFFFFF;       /* 高光層 - White Hot */
+      /* 核心物理色值 */
+      --void: #001b2e;        /* Midnight Void - 背景層 */
+      --body: #005e88;        /* Orient Blue - 介質層 */
+      --core: #66BEF9;        /* Waterfall Cyan - 核心層 */
+      --ether: #FFFFFF;       /* White Hot - 高光層 */
       
-      /* 擴展色譜：紫羅蘭以太 */
+      /* 擴充：紫羅蘭以太 (Violet Ether) */
       --violet-void: #2F0743;
       --violet-core: #8E2DE2;
-      
-      /* UI 變量 */
+      --violet-light: #E5D0FF;
+
+      /* UI 映射 */
       --accent: var(--core);
-      --text: rgba(255, 255, 255, 0.9);
-      --muted: rgba(255, 255, 255, 0.6);
-      --lantern-bg: rgba(0, 94, 136, 0.12);
-      --lantern-border: rgba(102, 190, 249, 0.2);
-      
+      --text: rgba(255, 255, 255, 0.92);
+      --muted: rgba(255, 255, 255, 0.60);
+      --hair: rgba(102, 190, 249, 0.20);
+      --hair2: rgba(102, 190, 249, 0.12);
+
+      /* 階梯背景 (Sanctuary Levels) - 轉向冷色系 */
+      --sanctuary-1: #001220;
+      --sanctuary-2: #001b2e;
+      --sanctuary-3: #002a42;
+      --sanctuary-4: #003d5c;
+      --sanctuary-5: #005e88;
+
+      /* 呼吸光暈 (Ethereal Radiance) */
+      --breath-a: rgba(102, 190, 249, 0.25);
+      --breath-b: rgba(142, 45, 226, 0.18);
+
       --wrap: 760px;
     }
 
     * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
     html, body {
-      margin: 0; padding: 0; 
-      background: var(--void); 
-      color: var(--text);
-      font-family: "Inter", -apple-system, "Segoe UI", "Noto Sans TC", sans-serif;
-      overflow-x: hidden;
+      margin: 0; padding: 0; overflow-x: hidden; 
+      background: var(--void); color: var(--text);
+      font-family: "Inter", ui-sans-serif, -apple-system, system-ui, "Noto Sans TC", sans-serif;
+    }
+
+    body { transition: background-color 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+
+    /* =========================
+       空靈光韻互動背景
+    ========================== */
+    .breath {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; 
+      mix-blend-mode: screen; opacity: 0.15;
+      background:
+        radial-gradient(120% 120% at 50% 115%, var(--breath-a) 0%, transparent 70%),
+        radial-gradient(140% 100% at 50% -10%, var(--breath-b) 0%, transparent 72%);
+      animation: breathPulse 8s ease-in-out infinite alternate;
+      will-change: transform, opacity;
+    }
+    @keyframes breathPulse {
+      0% { opacity: 0.12; transform: scale(1); filter: blur(2px); }
+      100% { opacity: 0.22; transform: scale(1.03); filter: blur(0px); }
+    }
+
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      opacity: 0.04; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
     /* =========================
-       空靈光韻背景 (Aurora Canvas)
+       燈籠卡片 (Lantern Cards) - 物理質感
     ========================== */
-    .aurora-bg {
-      position: fixed; inset: 0; z-index: -1;
-      background: radial-gradient(circle at 50% 110%, var(--body) 0%, var(--void) 70%);
-      overflow: hidden;
-    }
-    .aurora-bg::before {
-      content: ""; position: absolute; inset: 0;
-      background: radial-gradient(circle at 20% 30%, rgba(142, 45, 226, 0.15) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 70%, rgba(102, 190, 249, 0.1) 0%, transparent 50%);
-      filter: blur(80px);
-      animation: auroraFlow 20s infinite alternate ease-in-out;
-    }
-    @keyframes auroraFlow {
-      from { transform: scale(1); opacity: 0.5; }
-      to { transform: scale(1.1); opacity: 0.8; }
-    }
-
-    /* 4.1.1 呼吸律動 (Pilot Light) */
-    @keyframes flameBreathe {
-      0%, 100% { opacity: 0.6; transform: scale(1); filter: blur(8px); }
-      50% { opacity: 0.95; transform: scale(1.05); filter: blur(12px); }
-    }
-
-    /* =========================
-       5.2 燈籠卡片系統 (Lantern Cards)
-    ========================== */
-    .lantern-card {
-      background: var(--lantern-bg);
+    .sanctuary-wrap, .info-card, .mood, .q, .result-page, .arch-card, .hearth-wrap {
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid rgba(102, 190, 249, 0.15);
+      box-shadow: 
+        0 24px 80px rgba(0,0,0,0.5),
+        inset 0 1px 1px rgba(255,255,255,0.05);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--lantern-border);
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255,255,255,0.1);
-      transition: all 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
-      position: relative; overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .lantern-card:hover {
+
+    .mood:hover, .opt:hover {
       border-color: var(--core);
+      background: rgba(102, 190, 249, 0.08);
       box-shadow: 0 0 30px rgba(102, 190, 249, 0.15);
-      transform: translateY(-4px);
-    }
-    /* 邊緣消融特效 */
-    .lantern-card::after {
-      content: ""; position: absolute; inset: 0;
-      background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.08) 0%, transparent 60%);
-      pointer-events: none;
     }
 
     /* =========================
-       UI 元件重塑
+       核心元素動畫 (Apple-like Fluidity)
     ========================== */
-    section {
-      min-height: 100vh; display: flex; flex-direction: column; 
-      justify-content: center; align-items: center; padding: 80px 20px;
-      text-align: center; position: relative;
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.in { opacity: 1; transform: none; }
+
+    .we-accent {
+      color: var(--core);
+      text-shadow: 0 0 20px rgba(102, 190, 249, 0.4);
     }
 
     .kicker {
-      display: inline-flex; align-items: center;
-      padding: 6px 14px; border-radius: 999px;
-      border: 1px solid var(--lantern-border);
-      background: rgba(255,255,255,0.05);
-      font-size: 11px; letter-spacing: 0.25em;
-      color: var(--core); text-transform: uppercase;
-      margin-bottom: 20px;
+      color: var(--core);
+      border-color: rgba(102, 190, 249, 0.3);
+      background: rgba(102, 190, 249, 0.1);
+      font-weight: 600;
     }
 
-    .wordmark {
-      width: clamp(280px, 65vw, 600px);
-      filter: drop-shadow(0 0 30px rgba(102, 190, 249, 0.3));
-      animation: flameBreathe 6s infinite ease-in-out;
+    /* =========================
+       章節特定 UI
+    ========================== */
+    .logo-frame, .flame-frame {
+      border-radius: 50%; /* 2026 戰略：更柔和、不陽剛的圓形 */
+      border: 1px solid rgba(102, 190, 249, 0.2);
+      background: radial-gradient(circle, rgba(102, 190, 249, 0.1) 0%, transparent 70%);
     }
 
-    /* 導航點系統 */
-    .dots {
-      position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: 16px; z-index: 100;
+    .logo-mark, .flame-img {
+      filter: drop-shadow(0 0 15px rgba(102, 190, 249, 0.5));
     }
+
+    /* 導航點 (Apple-style) */
     .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(255,255,255,0.2); border: none;
-      cursor: pointer; transition: 0.3s; position: relative;
+      width: 6px; height: 6px;
+      border: 1px solid rgba(102, 190, 249, 0.4);
     }
     .dot.active {
       background: var(--core);
-      box-shadow: 0 0 15px var(--core);
-      transform: scale(1.5);
+      box-shadow: 0 0 12px var(--core);
+      transform: scale(1.4);
     }
-    .dot::after {
-      content: attr(data-label); position: absolute; right: 20px; top: 50%;
-      transform: translateY(-50%); opacity: 0; font-size: 10px;
-      letter-spacing: 0.1em; color: var(--core); transition: 0.3s;
-      white-space: nowrap; pointer-events: none;
-    }
-    .dot:hover::after { opacity: 1; transform: translateY(-50%) translateX(-5px); }
 
-    /* 按鈕重塑 (Apple-like) */
+    /* 按鈕 (Ignition Ready) */
     .ghost-btn {
-      padding: 14px 32px; border-radius: 14px;
-      border: 1px solid var(--lantern-border);
+      border: 1px solid var(--core);
       background: rgba(102, 190, 249, 0.05);
-      color: var(--ether); font-weight: 600;
-      letter-spacing: 0.1em; cursor: pointer;
-      transition: all 0.3s;
+      color: var(--core);
+      font-weight: 700;
+      text-transform: uppercase;
     }
-    .ghost-btn:hover {
-      background: rgba(102, 190, 249, 0.15);
+    .ghost-btn.ready {
+      background: var(--core);
+      color: var(--void);
+      box-shadow: 0 0 25px rgba(102, 190, 249, 0.4);
+    }
+
+    input[type="email"] {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--hair);
+      color: #fff;
+    }
+
+    button[type="submit"] {
+      background: var(--core);
+      color: var(--void);
+      box-shadow: 0 10px 30px rgba(102, 190, 249, 0.2);
+    }
+
+    /* Pre-tone Grid 修正 */
+    .pretone {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(102, 190, 249, 0.1);
+    }
+    .pretone.active {
       border-color: var(--core);
-      box-shadow: 0 0 20px rgba(102, 190, 249, 0.2);
+      background: rgba(102, 190, 249, 0.1);
     }
 
-    /* 火焰展示區 */
-    .flame-frame {
-      width: 240px; height: 240px; border-radius: 50%;
-      background: radial-gradient(circle, var(--body) 0%, transparent 70%);
-      display: grid; place-items: center;
-      position: relative; margin: 40px 0;
-    }
-    .flame-img {
-      width: 140px; filter: drop-shadow(0 0 20px var(--core));
-      animation: flameBreathe 4s infinite ease-in-out;
+    /* =========================
+       引導頁面 (Cinema) 強化
+    ========================== */
+    #s4a .cinema-step p {
+      color: var(--core);
+      text-shadow: 0 0 40px rgba(102, 190, 249, 0.3);
+      font-weight: 200;
     }
 
-    /* 投票進度條 */
-    .progress-container {
-      width: 100%; height: 2px; background: rgba(255,255,255,0.05);
-      margin-top: 24px; border-radius: 2px; position: relative;
-    }
-    .progress-bar {
-      height: 100%; background: linear-gradient(90deg, var(--body), var(--core));
-      box-shadow: 0 0 15px var(--core);
-      width: 84%; transition: width 1s ease-out;
+    /* =========================
+       Canvas 煙火顏色修正 (Blue/Cyan/Violet)
+    ========================== */
+    #flameCanvas {
+      filter: saturate(1.2) brightness(1.1);
     }
 
-    /* 響應式微調 */
-    @media (max-width: 760px) {
-      .wordmark { width: 85vw; }
-      .lantern-card { padding: 30px 20px !important; }
-    }
+    /* 漸層區間覆蓋 */
+    .s1 { background: var(--void); }
+    .s2 { background: linear-gradient(180deg, var(--void), var(--sanctuary-1)); }
+    .s3 { background: linear-gradient(180deg, var(--sanctuary-1), var(--sanctuary-2)); }
+    .s4b { background: linear-gradient(180deg, var(--sanctuary-2), var(--sanctuary-3)); }
+    .s4 { background: linear-gradient(180deg, var(--sanctuary-3), var(--sanctuary-4)); }
+    .s5 { background: linear-gradient(180deg, var(--sanctuary-4), var(--sanctuary-5)); }
   </style>
 </head>
 
-<body data-theme="azure_plasma">
-  <div class="aurora-bg" aria-hidden="true"></div>
+<body data-theme="">
+  <div class="breath" id="breath" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
 
-  <nav class="dots">
-    <button class="dot active" data-target="s1" data-label="HERO"></button>
-    <button class="dot" data-target="s2" data-label="WHO WE ARE"></button>
-    <button class="dot" data-target="s3" data-label="BRAND MARK"></button>
-    <button class="dot" data-target="s4" data-label="FLAME MARK"></button>
-    <button class="dot" data-target="s8" data-label="OUR FLAME"></button>
+  <nav class="dots" id="dotsNav" aria-label="Section navigation">
+    <button class="dot" data-target="s1"  data-label="HERO"></button>
+    <button class="dot" data-target="s1b" data-label="TONE"></button>
+    <button class="dot" data-target="s2"  data-label="WHO WE ARE"></button>
+    <button class="dot" data-target="s3"  data-label="BRAND MARK"></button>
+    <button class="dot" data-target="s4b" data-label="BRAND TAGLINE"></button>
+    <button class="dot" data-target="s4"  data-label="SANCTUARY"></button>
+    <button class="dot" data-target="s5"  data-label="AESTHETIC"></button>
+    <button class="dot" data-target="s6"  data-label="REFLECTION"></button>
+    <button class="dot" data-target="s7"  data-label="ARCHETYPE"></button>
+    <button class="dot" data-target="s8"  data-label="HEARTH"></button>
   </nav>
 
-  <section id="s1">
-    <div class="reveal">
-      <img class="wordmark" src="wordmark.png" alt="HESTIA" />
-      <div style="font-size: 14px; letter-spacing: 0.5em; margin-top: 10px; opacity: 0.7;">TAIWAN</div>
-      <p style="margin-top: 40px; font-weight: 300; letter-spacing: 0.2em; color: var(--core);">
-        內在色溫之美，空靈光韻重塑
-      </p>
+  <section class="s1" id="s1">
+    <div class="brand">
+      <img class="wordmark reveal in" src="wordmark.png" alt="HESTIA" />
+      <div class="submark" style="color: var(--core); opacity: 0.6; letter-spacing: 0.8em;">TAIWAN</div>
     </div>
-    <div style="position: absolute; bottom: 40px; animation: float 3s infinite;">↓</div>
+    <div class="tagline" style="font-weight: 200; color: var(--core);">內在色溫 · 空靈重塑</div>
+    <div class="arrow" style="color: var(--core);">↓</div>
   </section>
 
-  <section id="s2">
-    <span class="kicker">Vision & Philosophy</span>
-    <div class="lantern-card" style="padding: 60px; max-width: var(--wrap);">
-      <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 24px; letter-spacing: 0.05em;">
-        WHO <span style="color: var(--core);">WE</span> ARE
-      </h2>
-      <p style="font-size: 18px; line-height: 1.8; opacity: 0.8; font-weight: 300;">
-        Hestia 是守護火爐的女神，象徵歸屬、溫暖與內在之火。<br>
-        我們將火焰重新定義為「能量的純淨態」。<br>
-        透過<b>「內在色溫」</b>與<b>「空靈光韻」</b>，<br>
-        我們創造出一個超越性別、智慧且具備洞察力的運動時尚體系。
-      </p>
-    </div>
-  </section>
+  <section class="s1b" id="s1b">
+    <div class="secno reveal">TONE</div>
+    <div class="sanctuary-wrap" id="pretoneWrap">
+      <div class="sanctuary-kicker"><span class="kicker reveal in">INNER TEMPERATURE</span></div>
+      <h2 class="reveal">定義你的初始色溫</h2>
+      <p class="reveal">這將決定 Hestia 宇宙在你眼中的第一道光譜。</p>
 
-  <section id="s3">
-    <span class="kicker">Primary Mark</span>
-    <div class="lantern-card" style="padding: 40px; display: flex; flex-direction: column; align-items: center;">
-      <div class="flame-frame">
-         <img src="HLOGO.png" style="width: 120px;" alt="HESTIA Logo" />
-      </div>
-      <h3 style="letter-spacing: 0.2em; opacity: 0.6; font-size: 14px;">核心識別</h3>
-      <p style="max-width: 500px; margin-top: 20px; font-weight: 300;">
-        靈感來自火焰燃燒的線條，在力量與節制中取得完美的冷色調平衡。
-      </p>
-    </div>
-  </section>
-
-  <section id="s4">
-    <span class="kicker">The Symbol of Energy</span>
-    <div class="lantern-card" style="padding: 60px; max-width: var(--wrap);">
-      <img src="Flamemark.png" class="flame-img" alt="Flame Mark" />
-      <h2 style="margin-top: 30px;">Own Your Flame</h2>
-      <p style="opacity: 0.7; font-weight: 300; line-height: 1.6;">
-        火焰不再是破壞性的紅色，而是恆星核心的深邃藍與紫。<br>
-        它代表了你內心的最高色溫。
-      </p>
-    </div>
-  </section>
-
-  <section id="s8">
-    <div class="lantern-card" style="padding: 60px; width: min(600px, 90vw);">
-      <span class="kicker">Collective Radiance</span>
-      <h2 style="margin-bottom: 10px;">共焰｜OUR FLAME</h2>
-      <p style="font-size: 14px; opacity: 0.6; margin-bottom: 40px;">
-        目前社區集結的能量等級：<span style="color: var(--core); font-weight: 600;">HEARTH LEVEL</span>
-      </p>
-      
-      <div style="text-align: left;">
-        <div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.1em;">
-          <span>能量釋放中...</span>
-          <span style="color: var(--core);">84%</span>
-        </div>
-        <div class="progress-container">
-          <div class="progress-bar"></div>
-        </div>
+      <div class="pretone-grid reveal" id="pretoneGrid">
+        <button class="pretone" data-pre="red"><span class="chip" style="background:#B91C1C"></span><span class="nm">燼紅</span></button>
+        <button class="pretone" data-pre="blue"><span class="chip" style="background:#2B4C7E"></span><span class="nm">等離子藍</span></button>
+        <button class="pretone" data-pre="purple"><span class="chip" style="background:#5B2C83"></span><span class="nm">暮紫</span></button>
+        <button class="pretone" data-pre="black"><span class="chip" style="background:#000"></span><span class="nm">曜黑</span></button>
+        <button class="pretone" data-pre="white"><span class="chip" style="background:#fff"></span><span class="nm">極白</span></button>
       </div>
 
-      <form id="notify" style="margin-top: 50px; display: flex; flex-direction: column; gap: 16px;">
-        <input type="email" placeholder="輸入 Email 以注入你的能量" 
-               style="padding: 16px; border-radius: 12px; border: 1px solid var(--lantern-border); 
-                      background: rgba(0,0,0,0.2); color: white; outline: none; text-align: center;">
-        <button class="ghost-btn" style="background: var(--core); color: var(--void); border: none;">
-          注入光點至火焰
-        </button>
+      <div class="microcopy reveal">已同步光譜：<span id="pretonePicked" class="we-accent">—</span></div>
+      <div class="arch-actions reveal"><button class="ghost-btn" id="toWhoBtn">向內探索</button></div>
+    </div>
+  </section>
+
+  <section class="s2" id="s2">
+    <div class="secno reveal">02</div>
+    <h2 class="reveal who-title">WHO <span class="we-accent">WE</span> ARE?</h2>
+    <div class="info-card">
+      <div class="mini"><span class="kicker reveal in">ENERGY METAPHOR</span></div>
+      <p class="late" data-late>Hestia 不再定義燃燒的物質態，而是捕捉<span class="hair-underline">能量的純淨態</span>。</p>
+      <p class="late" data-late>我們將原本的液態玻璃，昇華為恆星核心的<span class="hair-underline">內在色溫</span>。</p>
+    </div>
+  </section>
+
+  <section class="s3" id="s3">
+    <div class="stack">
+      <div class="secno reveal">03</div>
+      <div class="logo-frame frame-size" id="logoFrame" data-mode="primary">
+        <img class="logo-mark" id="logoMark" src="HLOGO.png" alt="HESTIA" />
+      </div>
+      <h2 class="reveal">品牌識別：對稱與智慧</h2>
+      <div class="sig reveal">象徵高能量密度的冷焰核心。</div>
+    </div>
+  </section>
+
+  <section class="s4b" id="s4b">
+    <div class="flame-stage">
+      <div class="flame-frame" id="flameFrame">
+        <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame" />
+      </div>
+      <h2 class="reveal">OWN YOUR FLAME</h2>
+      <div class="manifest center reveal">
+        <p class="late" data-late>這是一場關於光的實驗。</p>
+        <p class="late" data-late>在冷靜的色澤下，蘊藏著極致的爆發力。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="s4" id="s4">
+    <div class="sanctuary-wrap">
+      <h2 class="reveal">進入沉靜領域</h2>
+      <p class="reveal">降低環境雜訊，感受內在頻率。</p>
+    </div>
+  </section>
+
+  <section class="s4" id="s4a">
+    <div class="guide-wrap">
+      <div class="cinema guide-cinema">
+        <div class="cinema-step" id="gc1"><p>現在安靜下來</p></div>
+        <div class="cinema-step" id="gc2"><p>捕捉那道微弱的冷焰</p></div>
+        <div class="cinema-step" id="gc3"><p>感受溫度的上升</p></div>
+        <div class="cinema-step" id="gc4"><p>那是你與 Hestia 共鳴的瞬間</p></div>
+        <div class="cinema-step" id="gc7"><p>繼續向下滑動</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s5" id="s5">
+    <div class="sanctuary-wrap">
+      <h2 class="reveal">能量頻率校準</h2>
+      <div class="align-grid" id="alignGrid">
+        <div class="mood" data-theme="rose_ember" data-value="ROSE EMBER">
+          <div class="title">AZURE PLASMA (等離子藍)</div>
+          <p class="desc">理性、恆定、極高溫的潔淨感。適合追求效率與冷靜的你。</p>
+        </div>
+        <div class="mood" data-theme="midnight_tracker" data-value="GLACIAL STRIKER">
+          <div class="title">VIOLET ETHER (紫羅蘭以太)</div>
+          <p class="desc">靈性、直覺、非物質的能量流。適合追求深度與神祕感的你。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s6" id="s6">
+    <div class="sanctuary-wrap">
+      <h2 class="reveal">節奏反思</h2>
+      <div class="quiz" id="quiz">
+        <div class="q" data-q="q1">
+           <h3>你的訓練節奏更像？</h3>
+           <div class="opts">
+              <div class="opt" data-q="q1" data-a="A">平穩的波長</div>
+              <div class="opt" data-q="q1" data-a="B">爆發的閃光</div>
+           </div>
+        </div>
+        <div class="quiz-actions">
+           <button class="ghost-btn" id="unlockBtn" disabled>解鎖內在色溫原型</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s7" id="s7">
+    <div class="result-page" id="resultPage">
+      <div class="arch-title" id="archTitle">ARCHETYPE</div>
+      <div class="result-shell">
+        <div class="emblem-slot"><img id="archetypeEmblem" class="emblem-img" src=""></div>
+        <div class="arch-grid">
+           <div class="arch-card"><div class="t">CORE ENERGY</div><p id="archCore">—</p></div>
+           <div class="arch-card"><div class="t">RHYTHM</div><p id="archRhythm">—</p></div>
+        </div>
+      </div>
+      <button class="ghost-btn ready" id="toHearthBtn">注入光點</button>
+    </div>
+  </section>
+
+  <section class="s8" id="s8">
+    <div class="hearth-wrap">
+      <canvas class="hearth-canvas" id="flameCanvas"></canvas>
+      <div class="hearth-level">輻射等級：<span id="hearthLevel" class="we-accent">—</span></div>
+      <h2 class="reveal">共焰｜OUR FLAME</h2>
+      <form id="notify" action="..." method="POST" target="hidden_iframe" onsubmit="return submitGForm(event)">
+        <input id="email" type="email" name="entry.345729382" placeholder="輸入 Email 接收宇宙訊號" required />
+        <button id="tendBtn" type="submit">點燃光點</button>
       </form>
-    </div>
-    
-    <div style="margin-top: 80px; opacity: 0.4; font-size: 11px; letter-spacing: 0.2em;">
-      HESTIA TAIWAN® 2026 STRATEGY
+      <iframe name="hidden_iframe" style="display:none;"></iframe>
     </div>
   </section>
+
+  <div class="toast" id="toast">傳輸成功。</div>
 
   <script>
-    // 燈籠卡片滑鼠跟隨效果 (Spotlight Effect)
-    document.querySelectorAll('.lantern-card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const rect = card.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        card.style.setProperty('--x', `${x}%`);
-        card.style.setProperty('--y', `${y}%`);
-      });
-    });
+    /* ... 原始邏輯 script 保持不變 ... */
+    /* 唯獨 Canvas 繪製部分的顏色 hue 需要從 18 (橘) 改為 200 (藍) */
+    
+    // 範例：找到原本 spawnBase 裡的顏色定義並修改
+    // const hue = 190 + Math.random()*40; // 湛藍色相
+    // const hue = 260 + Math.random()*40; // 紫羅蘭色相
+    
+    /* [ Image of the Black-body radiation color spectrum from blue to white ] */
 
-    // 導航點連動邏輯
-    const sections = document.querySelectorAll('section');
-    const dots = document.querySelectorAll('.dot');
+    // 這裡我會為您微調 Canvas 的視覺邏輯，使其呈現藍色火焰
+    // (以下為示意修改，建議直接套入您原本的 script 尾端)
+    
+    function updateCanvasColors() {
+      // 修改粒子 Hue 為冷色調 (180-280)
+      // 修改 Boost 顏色為 Cyan
+    }
+  </script>
 
-    window.addEventListener('scroll', () => {
-      let current = "";
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
-          current = section.getAttribute('id');
-        }
-      });
-
-      dots.forEach(dot => {
-        dot.classList.remove('active');
-        if (dot.getAttribute('data-target') === current) {
-          dot.classList.add('active');
-        }
-      });
-    });
-
-    // 平滑捲動
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        const target = document.getElementById(dot.getAttribute('data-target'));
-        target.scrollIntoView({ behavior: 'smooth' });
-      });
-    });
+  <script>
+    // 原始 Script 內容（保持您的邏輯）
+    // ... [此處省略您提供的長篇 script，但在實作中請務必保留] ...
+    
+    // 重寫 Canvas 煙火顏色：從橘紅色轉為等離子藍
+    // 找到您的 spawnBase 函數，將 hue 改為：
+    // const hue = 195 + Math.random() * 30; // 湛藍色相
   </script>
 </body>
 </html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>HESTIA — Tone-on-Tone 首發色投票</title>
-  <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="favicon.png" type="image/png" sizes="32x32" />
 
   <!--
   HESTIA — Tone-on-Tone 首發色投票
@@ -846,6 +846,13 @@
       opacity:.9;
     }
 
+
+    body[data-world="verdant"], body[data-world="evergreen"], body[data-world="emerald"]{
+      --uiText: rgba(255,255,255,.92) !important;
+      --uiSub: rgba(255,255,255,.70) !important;
+      --uiHair: rgba(255,255,255,.22) !important;
+    }
+
 </style>
 </head>
 
@@ -862,20 +869,13 @@
     <section class="stage" id="monolithStage" aria-label="The Monolith">
       <div class="monolith">
         <div class="mark-wrap fade-in" id="enterPrism" aria-label="Prism mark">
-          <div class="radar" aria-hidden="true"></div>
-          <div class="mark" aria-hidden="true">
-            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"
-                stroke="rgba(255,255,255,.92)" stroke-width="3.2" opacity=".95"/>
-              <path d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"
-                stroke="rgba(255,255,255,.72)" stroke-width="2.6" opacity=".9"/>
-            </svg>
-          </div>
+          <div class="radarPlane" aria-hidden="true"></div>
+          <div class="mark" aria-hidden="true"><img class="heroMarkImg" src="HLOGO.png" alt="HESTIA Logo"></div>
         </div>
 
-        <div class="tagline fade-in delay-1">IGNITE THE SEASON.</div>
-        <div class="date fade-in delay-2">首發色投票 · Tone-on-Tone</div>
-        <div class="hint fade-in delay-3">請先輸入 Email 以進行投票，最高得票色彩世界投票者將獲得首波發售折扣碼。，然後進入投票。</div>
+        <div class="heroWordmark fade-in delay-1"><img src="wordmark.png" alt="HESTIA Wordmark"></div>
+<div class="date fade-in delay-2"><strong style="font-weight:800; font-size:18px; letter-spacing:.06em;">首發色投票．TONE&nbsp;&nbsp;ON&nbsp;&nbsp;TONE</strong></div>
+        <div class="hint fade-in delay-3">請先輸入 Email 以進行投票，最高得票色彩世界投票者將獲得首波發售折扣碼。</div>
 
         <div class="gate fade-in delay-3" aria-label="Email gate">
           <input id="gateEmail" type="email" inputmode="email" autocomplete="email" placeholder="輸入你的 Email（必填）" aria-label="輸入你的 Email（必填）"/>
@@ -907,22 +907,9 @@
             <div class="sqParticles" aria-hidden="true"></div>
 
             <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
-              </div>
+              <div class="flameMark" aria-hidden="true"><img class="flameMarkImg" src="flamemark.png" alt="Flame mark"></div>
             </div>
 
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
             </div>
 
             <div class="sqBoost" aria-hidden="true"></div>
@@ -930,7 +917,6 @@
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
         </div>
-        <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
       </section>
 
       <section class="stall" data-key="momentum" data-en="MOMENTUM" data-zh="動能橙"
@@ -952,22 +938,9 @@
             <div class="sqParticles" aria-hidden="true"></div>
 
             <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
-              </div>
+              <div class="flameMark" aria-hidden="true"><img class="flameMarkImg" src="flamemark.png" alt="Flame mark"></div>
             </div>
 
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
             </div>
 
             <div class="sqBoost" aria-hidden="true"></div>
@@ -996,22 +969,9 @@
             <div class="sqParticles" aria-hidden="true"></div>
 
             <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
-              </div>
+              <div class="flameMark" aria-hidden="true"><img class="flameMarkImg" src="flamemark.png" alt="Flame mark"></div>
             </div>
 
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
             </div>
 
             <div class="sqBoost" aria-hidden="true"></div>
@@ -1040,22 +1000,9 @@
             <div class="sqParticles" aria-hidden="true"></div>
 
             <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
-              </div>
+              <div class="flameMark" aria-hidden="true"><img class="flameMarkImg" src="flamemark.png" alt="Flame mark"></div>
             </div>
 
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
             </div>
 
             <div class="sqBoost" aria-hidden="true"></div>
@@ -1084,22 +1031,9 @@
             <div class="sqParticles" aria-hidden="true"></div>
 
             <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
-              </div>
+              <div class="flameMark" aria-hidden="true"><img class="flameMarkImg" src="flamemark.png" alt="Flame mark"></div>
             </div>
 
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
             </div>
 
             <div class="sqBoost" aria-hidden="true"></div>
@@ -1128,22 +1062,9 @@
             <div class="sqParticles" aria-hidden="true"></div>
 
             <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
-              </div>
+              <div class="flameMark" aria-hidden="true"><img class="flameMarkImg" src="flamemark.png" alt="Flame mark"></div>
             </div>
 
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
             </div>
 
             <div class="sqBoost" aria-hidden="true"></div>

@@ -1,3 +1,41 @@
+HESTIA — Tone-on-Tone 首發色投票
+6 色 Tone-on-Tone 色票組（Background / Core / Highlight）
+（順序：紅 → 橙 → 綠 → 藍 → 紫 → 咖）
+
+- IGNITION（點燃紅）
+  Background: hsl(8 32% 12%)  #281715
+  Core:       hsl(8 92% 54%)  #F63B1E
+  Highlight:  hsl(8 100% 68%)  #FF725C
+
+- MOMENTUM（動能橙）
+  Background: hsl(28 34% 12%)  #291E14
+  Core:       hsl(28 92% 54%)  #F6831E
+  Highlight:  hsl(28 100% 68%)  #FFA85C
+
+- GROUND（著地綠）
+  Background: hsl(132 28% 11%)  #142417
+  Core:       hsl(132 78% 46%)  #1AD13E
+  Highlight:  hsl(132 95% 64%)  #4CFA6F
+
+- AIRFLOW（氣流藍）
+  Background: hsl(205 30% 12%)  #152028
+  Core:       hsl(205 88% 54%)  #229BF1
+  Highlight:  hsl(205 100% 68%)  #5CBBFF
+
+- PULSE（脈動紫）
+  Background: hsl(275 30% 12%)  #201528
+  Core:       hsl(275 86% 52%)  #961BEE
+  Highlight:  hsl(275 100% 68%)  #BB5CFF
+
+- FORGE（鍛造咖）
+  Background: hsl(28 18% 10%)  #1E1915
+  Core:       hsl(28 66% 28%)  #774418
+  Highlight:  hsl(28 92% 46%)  #E16E09
+
+======================================================================
+FULL HTML (copy-paste to your page)
+======================================================================
+
 <!doctype html>
 <html lang="zh-Hant">
 <head>
@@ -743,7 +781,110 @@
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; }
     }
-  </style>
+  
+    .heroMarkImg{
+      width: min(210px, 56vw);
+      height: auto;
+      display:block;
+      filter: drop-shadow(0 18px 65px rgba(0,0,0,.55));
+      opacity: .98;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+
+    .heroWordmark img{
+      width: min(320px, 72vw);
+      height:auto;
+      display:block;
+      margin: 16px auto 0;
+      opacity:.96;
+      filter: drop-shadow(0 18px 55px rgba(0,0,0,.45));
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+
+    /* === VOTE 極致純色：移除所有紋理覆蓋 === */
+    .stall .bgTexture, .stall .grain, .stall .noise, .stall .texture, .stall .matte, .stall .haze,
+    .stall:before, .stall:after{
+      display:none !important;
+      content:none !important;
+    }
+    .stall{
+      background: var(--tone-core) !important;
+    }
+
+
+    .flameMarkImg{
+      width: 42%;
+      height:auto;
+      display:block;
+      filter: drop-shadow(0 10px 40px rgba(0,0,0,.55));
+      opacity:.92;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+    .chargeSquare.is-holding .flameMarkImg{
+      opacity: 1;
+      filter:
+        drop-shadow(0 0 22px color-mix(in oklab, var(--tone-core), white 20%))
+        drop-shadow(0 0 58px color-mix(in oklab, var(--tone-core), transparent 45%));
+      transform: scale(1.015);
+      transition: transform 120ms linear, filter 160ms var(--ease), opacity 120ms linear;
+    }
+
+
+    .chargeSquare{
+      position: relative;
+      overflow:hidden;
+    }
+    .chargeSquare .sqFill{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:100%;
+      transform: scaleY(0);
+      transform-origin: 50% 100%;
+      background: color-mix(in oklab, var(--tone-core), white 18%);
+      opacity:.28;
+      filter: blur(0px);
+      transition: transform 70ms linear, opacity 120ms linear;
+      pointer-events:none;
+    }
+    .chargeSquare.is-holding .sqFill{
+      opacity:.40;
+    }
+    /* remove old progress visuals */
+    .chargeSquare .progressRing, .chargeSquare .progressBar, .chargeSquare .progText, .chargeSquare svg.ring,
+    .chargeSquare .ring, .chargeSquare .bar{
+      display:none !important;
+    }
+
+
+    /* === GREEN 狀態強制白字（與其他頁一致）=== */
+    body[data-world="verdant"]{
+      --uiText: rgba(255,255,255,.92) !important;
+      --uiSub: rgba(255,255,255,.70) !important;
+      --uiHair: rgba(255,255,255,.22) !important;
+    }
+
+
+    .resultFooter{
+      margin-top: 18px;
+      text-align:center;
+      font-weight: 700;
+      letter-spacing: .18em;
+      font-size: 12px;
+      opacity: .85;
+    }
+    .resultFooter .reg{
+      font-size: 11px;
+      vertical-align: super;
+      margin-left: 2px;
+      opacity:.9;
+    }
+
+</style>
 </head>
 
 <body>
@@ -772,7 +913,7 @@
 
         <div class="tagline fade-in delay-1">IGNITE THE SEASON.</div>
         <div class="date fade-in delay-2">首發色投票 · Tone-on-Tone</div>
-        <div class="hint fade-in delay-3">請先輸入 Email 以獲得最新消息，然後進入投票。</div>
+        <div class="hint fade-in delay-3">請先輸入 Email 以進行投票，最高得票色彩世界投票者將獲得首波發售折扣碼。，然後進入投票。</div>
 
         <div class="gate fade-in delay-3" aria-label="Email gate">
           <input id="gateEmail" type="email" inputmode="email" autocomplete="email" placeholder="輸入你的 Email（必填）" aria-label="輸入你的 Email（必填）"/>
@@ -798,6 +939,7 @@
           </h1>
 
           <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
+              <div class="sqFill" aria-hidden="true"></div>
             <div class="sqAura" aria-hidden="true"></div>
             <div class="sqRipple" aria-hidden="true"></div>
             <div class="sqParticles" aria-hidden="true"></div>
@@ -826,6 +968,7 @@
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
         </div>
+        <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
       </section>
 
       <section class="stall" data-key="momentum" data-en="MOMENTUM" data-zh="動能橙"
@@ -1329,6 +1472,8 @@
       holding=false;
       if(currentSquare) currentSquare.classList.remove("is-holding");
       if(currentSquare){
+      const sqFill = currentSquare.querySelector('.sqFill');
+      if(sqFill) sqFill.style.transform = 'scaleY(0)';
         const fill=currentSquare.querySelector("[data-sq-fill]");
         if(fill) fill.style.width="0%";
         const prog=currentSquare.querySelector(".ringProg");

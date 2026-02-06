@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>HESTIA — Tone-on-Tone 首發色投票</title>
   <link rel="icon" href="favicon.png" type="image/png" sizes="32x32" />
 
@@ -919,6 +919,9 @@
       opacity:.9;
     }
 
+
+    /* iOS Safari: prevent input focus zoom */
+    input, select, textarea{ font-size:16px !important; -webkit-text-size-adjust:100%; }
 </style>
 </head>
 
@@ -1210,9 +1213,9 @@
             <canvas id="cardCanvas" width="1200" height="750"></canvas>
           </div>
 
-          <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
+          
 
-<div class="heat" id="heat"></div>
+          <div class="heat" id="heat"></div>
 
           <div class="tiny">
             ※ 會一併送出：Email + 目前投票色（key / 英文 / 中文）。<br/>
@@ -1240,7 +1243,18 @@
     const UNIQUE_CHECK_ENDPOINT = ""; // e.g. https://script.google.com/macros/s/XXXXX/exec
     const VOTE_ENDPOINT = "";         // e.g. https://script.google.com/macros/s/XXXXX/exec
 
-    const GOOGLE_FORM_PREFILL_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/viewform?usp=pp_url";
+    const GOOGLE_FORM_VIEW_BASE="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/viewform?usp=pp_url";
+    const GOOGLE_FORM_RESPONSE_URL="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse";
+
+    function sendVoteToGoogleForm(email,colorKey){
+      try{
+        const fd=new FormData();
+        fd.append("entry.345729382", email);
+        fd.append("entry.324440347", colorKey);
+        // no-cors: request will be sent even if response is opaque
+        fetch(GOOGLE_FORM_RESPONSE_URL, { method:"POST", mode:"no-cors", body: fd });
+      }catch(e){}
+    }
 
   const WORLDS = [{"key": "ignition", "en": "IGNITION", "zh": "點燃紅", "h": 8, "sat": 92, "lum": 54, "core_hex": "#F63B1E", "hi_hex": "#FF725C"}, {"key": "momentum", "en": "MOMENTUM", "zh": "動能橙", "h": 28, "sat": 92, "lum": 54, "core_hex": "#F6831E", "hi_hex": "#FFA85C"}, {"key": "ground", "en": "GROUND", "zh": "著地綠", "h": 132, "sat": 78, "lum": 46, "core_hex": "#1AD13E", "hi_hex": "#4CFA6F"}, {"key": "airflow", "en": "AIRFLOW", "zh": "氣流藍", "h": 205, "sat": 88, "lum": 54, "core_hex": "#229BF1", "hi_hex": "#5CBBFF"}, {"key": "pulse", "en": "PULSE", "zh": "脈動紫", "h": 275, "sat": 86, "lum": 52, "core_hex": "#961BEE", "hi_hex": "#BB5CFF"}, {"key": "forge", "en": "FORGE", "zh": "鍛造咖", "h": 28, "sat": 66, "lum": 28, "core_hex": "#774418", "hi_hex": "#E16E09"}];
 
@@ -1355,12 +1369,16 @@
     const activeName = $("#activeColorName");
 
     function openSpectrum(){
-      spectrum.classList.add("is-open");
+spectrum.classList.add("is-open");
       monolithStage.style.opacity="0";
       monolithStage.style.pointerEvents="none";
       phase.textContent="SPECTRUM";
       activeChip.style.opacity="1";
       activeChip.style.transform="translateY(0)";
+      // Ensure first world tone is applied immediately (Option A)
+      spectrum.scrollTo({top:0, left:0, behavior:"instant"});
+      applyActive(WORLDS[0].key);
+
     }
 
     async function backendCheckAlreadyVoted(email){
@@ -1638,12 +1656,11 @@
     const cardCanvas=$("#cardCanvas");
     const ctx=cardCanvas.getContext("2d");
 
-    
-
     // HLOGO for Founder Card (right-side mark)
     const hlogoImg=new Image();
     hlogoImg.src="HLOGO.png";
-const noiseCanvas=document.createElement("canvas");
+
+    const noiseCanvas=document.createElement("canvas");
     noiseCanvas.width=240; noiseCanvas.height=150;
     const nctx=noiseCanvas.getContext("2d");
     const img=nctx.createImageData(noiseCanvas.width, noiseCanvas.height);
@@ -1731,7 +1748,7 @@ const noiseCanvas=document.createElement("canvas");
       ctx.globalAlpha=.95;
       if(hlogoImg && hlogoImg.complete && hlogoImg.naturalWidth>0){
         const size=180;
-        const x=W-64-size-70;
+        const x=W-64-size-120; // shift left further
         const y=H/2 - size/2 + 40;
         ctx.drawImage(hlogoImg, x, y, size, size);
       }else{
@@ -1750,10 +1767,9 @@ const noiseCanvas=document.createElement("canvas");
       $("#confirmDesc").textContent = `你投給了「${w.zh}」｜${w.en}。這份選擇會成為首發色決策的一票。`;
 
       const sum=Object.values(liveCounts).reduce((a,b)=>a+b,0);
-      const total = sum || 0;
-
+      const total=sum;
       for(const ww of WORLDS){
-        const pct = total===0 ? 16 : Math.round((liveCounts[ww.key]||0)/total*100);
+        const pct = (total===0) ? 16 : Math.round((liveCounts[ww.key]||0)/total*100);
         const bar=document.querySelector(`[data-bar="${ww.key}"]`);
         const label=document.querySelector(`[data-pct="${ww.key}"]`);
         if(bar) bar.style.width = clamp(pct, 6, 100) + "%";
@@ -1766,8 +1782,18 @@ const noiseCanvas=document.createElement("canvas");
       confirm.classList.add("is-on");
     }
 
-    // Tap backdrop to close (since buttons are removed)
-    confirm.addEventListener("click",(e)=>{ if(e.target===confirm){ confirm.classList.remove("is-on"); }});
+    $("#closeConfirm").addEventListener("click", ()=>confirm.classList.remove("is-on"));
+
+    $("#downloadCard").addEventListener("click", ()=>{
+      const key=cardCanvas.dataset.key || WORLDS[0].key;
+      const serial=cardCanvas.dataset.serial || "0000";
+      const w=getWorld(key);
+      const link=document.createElement("a");
+      link.download = `HESTIA-FounderCard-${w.en}-${serial}.png`;
+      link.href = cardCanvas.toDataURL("image/png");
+      link.click();
+    });
+
     setToneInstant(WORLDS[0].h, WORLDS[0].sat, WORLDS[0].lum);
     startMonolithCycle();
   </script>

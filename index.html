@@ -744,15 +744,91 @@
       *{ animation:none !important; transition:none !important; }
     }
   
-    .heroWordmark img{
-      width: min(180px, 40vw); /* 50% smaller feel */
+    /* ===== Requested Patch (minimal) ===== */
+
+    /* 1) Hero HLOGO 縮小 */
+    .heroMarkImg{
+      width: min(120px, 32vw) !important;
       height:auto;
       display:block;
-      margin: 14px auto 0;
-      opacity:.96;
-      filter: drop-shadow(0 14px 45px rgba(0,0,0,.45));
+      margin: 0 auto;
       user-select:none;
       -webkit-user-drag:none;
+    }
+
+    /* 2) Hero 圓盤雷達移除（保留背景換色） */
+    #monolithStage .mark-wrap .radar{ display:none !important; }
+
+    /* 3) 全頁文字固定白色 */
+    :root{
+      --uiText: rgba(255,255,255,.92) !important;
+      --uiSub: rgba(255,255,255,.70) !important;
+      --uiHair: rgba(255,255,255,.22) !important;
+    }
+    body, body *{ color: var(--uiText); }
+    .chip, .chip *{ color: rgba(255,255,255,.88) !important; }
+    input, input::placeholder{ color: rgba(255,255,255,.88) !important; }
+
+    /* 4) VOTE A–F：移除紋理，只留純色 */
+    .stall::before, .stall::after,
+    .stall .grain, .stall .noise, .stall .texture, .stall .matte, .stall .bgTexture,
+    .stall .bg, .stall .bgLayer, .stall .bgNoise, .stall .bgGrain{
+      content:none !important;
+      display:none !important;
+    }
+    .stall{ background: var(--tone-core) !important; }
+
+    /* 5) Flamemark 縮小（你說太大） */
+    .flame-img{
+      width: 22% !important; /* 約縮半 */
+      height:auto;
+      display:block;
+      opacity:.92;
+      filter: drop-shadow(0 10px 40px rgba(0,0,0,.55));
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* 7) 按壓注入：移除圓圈，只留長條；加粗 2 倍＋光澤 */
+    .ring{ display:none !important; }
+    .sqProgress{
+      height: 18px !important; /* 加粗一倍（原本約 9px） */
+      border-radius: 999px !important;
+      overflow:hidden;
+      background: rgba(255,255,255,.16) !important;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    }
+    .sqFill{
+      background: linear-gradient(90deg,
+        color-mix(in oklab, var(--tone-core), white 24%),
+        color-mix(in oklab, var(--tone-core), white 8%)
+      ) !important;
+      box-shadow:
+        0 0 22px color-mix(in oklab, var(--tone-core), transparent 45%),
+        inset 0 1px 0 rgba(255,255,255,.28),
+        inset 0 -1px 0 rgba(0,0,0,.22);
+    }
+
+    /* Wordmark 縮小 50% */
+    .heroWordmark img{ width: min(180px, 40vw) !important; height:auto; display:block; margin: 14px auto 0; }
+
+    /* 4) Tone on tone 粗體略放大 */
+    .date{ font-weight: 800 !important; font-size: 18px !important; letter-spacing: .06em; }
+
+    /* 8) 結果頁落款置中 */
+    .resultFooter{
+      margin-top: 18px;
+      text-align:center;
+      font-weight: 700;
+      letter-spacing: .18em;
+      font-size: 12px;
+      opacity: .85;
+    }
+    .resultFooter .reg{
+      font-size: 11px;
+      vertical-align: super;
+      margin-left: 2px;
+      opacity:.9;
     }
 
 </style>
@@ -778,7 +854,7 @@
         </div>
 
         <div class="heroWordmark fade-in delay-1"><img src="wordmark.png" alt="HESTIA Wordmark"></div>
-        <div class="date fade-in delay-2"><strong style="font-weight:800; font-size:18px; letter-spacing:.06em;">首發色投票．TONE&nbsp;&nbsp;ON&nbsp;&nbsp;TONE</strong></div>
+        <div class="date fade-in delay-2">首發色投票．TONE  ON TONE</div>
         <div class="hint fade-in delay-3">請先輸入 Email 以進行投票<br>最高得票色彩世界投票者，將獲得首波發售折扣碼</div>
 
         <div class="gate fade-in delay-3" aria-label="Email gate">
@@ -811,7 +887,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
-                <img class="flame-img" id="flameImg" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src=\'flamemark.png\';">
+                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
               </div>
             </div>
 
@@ -851,11 +927,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
+                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
               </div>
             </div>
 
@@ -895,11 +967,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
+                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
               </div>
             </div>
 
@@ -939,11 +1007,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
+                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
               </div>
             </div>
 
@@ -983,11 +1047,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
+                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
               </div>
             </div>
 
@@ -1027,11 +1087,7 @@
 
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
-                <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
-                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
-                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
-                </svg>
+                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
               </div>
             </div>
 
@@ -1048,6 +1104,7 @@
           </div>
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
+          <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
         </div>
       </section>
     </main>

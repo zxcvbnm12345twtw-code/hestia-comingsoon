@@ -126,6 +126,10 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
       overscroll-behavior-y:none;
+    
+      height: 100vh;
+      height: 100svh;
+      overflow: hidden;
     }
 
     body {
@@ -137,47 +141,23 @@
     input { user-select:text; -webkit-user-select:text; -webkit-touch-callout:default; }
 
     .app {
-      min-height:100vh;
-      position:relative;
-      overflow:hidden;
+      height: 100vh;
+      height: 100svh;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      overscroll-behavior-y: none;
+      -webkit-overflow-scrolling: touch;
       background:
         radial-gradient(1200px 900px at 18% 16%, color-mix(in oklab, var(--tone-core), white 12%) 0%, rgba(0,0,0,0) 56%),
         radial-gradient(900px 900px at 82% 28%, color-mix(in oklab, var(--tone-core), black 36%) 0%, rgba(0,0,0,0) 62%),
         linear-gradient(180deg, var(--tone-bg), var(--tone-atm) 42%, var(--tone-bg) 100%);
       transition: background 900ms var(--ease);
       transform: translateZ(0);
+    
     }
-
-    .radar {
-      position:absolute;
-      inset:-55%;
-      border-radius:999px;
-      background:
-        conic-gradient(from 0deg,
-          rgba(255,255,255,.00) 0deg,
-          color-mix(in oklab, var(--tone-core), white 22%) 55deg,
-          rgba(255,255,255,.00) 120deg,
-          color-mix(in oklab, var(--tone-core), white 16%) 215deg,
-          rgba(255,255,255,.00) 360deg);
-      opacity:.58;
-      animation: radarSpin 3.2s linear infinite;
-      pointer-events:none;
-      mix-blend-mode: screen;
-      filter: blur(0.6px);
-    }
-    .radar::after {
-      content:"";
-      position:absolute; inset:16%;
-      border-radius:999px;
-      background:
-        radial-gradient(closest-side,
-          color-mix(in oklab, var(--tone-core), white 24%) 0%,
-          rgba(255,255,255,.06) 44%,
-          rgba(0,0,0,.00) 72%);
-      opacity:.74;
-      filter: blur(16px);
-    }
-    @keyframes radarSpin{ to{ transform: rotate(360deg); } }
+}
 
     .topbar {
       position:fixed;
@@ -210,21 +190,7 @@
       white-space:nowrap;
     }
     .chip b{ color:var(--uiText); font-weight:720; letter-spacing:.06em; }
-    
-    .brand-chip{ gap:10px; }
-    .wordmark{
-      height: 14px;
-      width: auto;
-      display:inline-block;
-      vertical-align: middle;
-      filter: drop-shadow(0 10px 26px rgba(0,0,0,.45));
-      opacity:.96;
-    }
-    /* SVG uses currentColor */
-    .monoMarkSvg, .markSvg{
-      color: rgba(255,255,255,.92);
-    }
-.chip .dot {
+    .chip .dot {
       width:10px; height:10px; border-radius:99px;
       background: var(--tone-core);
       box-shadow: 0 0 16px color-mix(in oklab, var(--tone-core), transparent 45%);
@@ -243,12 +209,16 @@
 
     .stage {
       position:relative;
-      min-height:100vh;
+      height: 100vh;
+      height: 100svh;
       display:flex;
       align-items:center;
       justify-content:center;
       padding: calc(18px + var(--safeTop)) calc(18px + var(--safeRight)) calc(18px + var(--safeBottom)) calc(18px + var(--safeLeft));
       z-index:10;
+    
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
     .monolith { width: min(520px, 92vw); text-align:center; }
 
@@ -399,13 +369,15 @@
     .stall[data-motif="magma"]::before {
       background:
         radial-gradient(900px 520px at 28% 22%, color-mix(in oklab, var(--tone-core), white 14%) 0%, transparent 55%),
-        radial-gradient(900px 620px at 72% 78%, color-mix(in oklab, var(--tone-core), black 35%) 0%, transparent 60%);
+        radial-gradient(900px 620px at 72% 78%, color-mix(in oklab, var(--tone-core), black 35%) 0%, transparent 60%),
+        repeating-linear-gradient(110deg, color-mix(in oklab, var(--tone-core), transparent 82%) 0 18px, transparent 18px 40px);
       animation: driftA 6.0s var(--ease) infinite alternate;
     }
     .stall[data-motif="spark"]::before {
       background:
         radial-gradient(820px 560px at 35% 25%, color-mix(in oklab, var(--tone-core), white 18%) 0%, transparent 62%),
-        radial-gradient(980px 720px at 70% 75%, color-mix(in oklab, var(--tone-core), black 34%) 0%, transparent 66%);
+        radial-gradient(980px 720px at 70% 75%, color-mix(in oklab, var(--tone-core), black 34%) 0%, transparent 66%),
+        repeating-linear-gradient(135deg, color-mix(in oklab, var(--tone-core), transparent 84%) 0 10px, transparent 10px 30px);
       animation: driftB 6.8s var(--ease) infinite alternate;
     }
     .stall[data-motif="mist"]::before {
@@ -419,7 +391,8 @@
     .stall[data-motif="moss"]::before {
       background:
         radial-gradient(820px 620px at 30% 35%, color-mix(in oklab, var(--tone-core), white 12%) 0%, transparent 60%),
-        radial-gradient(940px 760px at 70% 70%, color-mix(in oklab, var(--tone-core), black 40%) 0%, transparent 65%);
+        radial-gradient(940px 760px at 70% 70%, color-mix(in oklab, var(--tone-core), black 40%) 0%, transparent 65%),
+        repeating-radial-gradient(circle at 30% 40%, color-mix(in oklab, var(--tone-core), transparent 74%) 0 6px, transparent 6px 16px);
       animation: driftD 8.8s var(--ease) infinite alternate;
     }
     .stall[data-motif="nebula"]::before {
@@ -433,7 +406,8 @@
     .stall[data-motif="forge"]::before {
       background:
         radial-gradient(820px 620px at 28% 20%, color-mix(in oklab, var(--tone-core), white 14%) 0%, transparent 60%),
-        radial-gradient(980px 760px at 76% 80%, color-mix(in oklab, var(--tone-core), black 44%) 0%, transparent 68%);
+        radial-gradient(980px 760px at 76% 80%, color-mix(in oklab, var(--tone-core), black 44%) 0%, transparent 68%),
+        repeating-linear-gradient(90deg, color-mix(in oklab, var(--tone-core), transparent 86%) 0 2px, transparent 2px 10px);
       animation: driftB 7.2s var(--ease) infinite alternate;
     }
     @keyframes driftA { from{ transform: translate3d(-1.2%,-1.0%,0) scale(1.02); opacity:.48; } to{ transform: translate3d( 1.0%, 1.4%,0) scale(1.05); opacity:.60; } }
@@ -742,6 +716,60 @@
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; }
     }
+  
+    /* --- Global readability (keep all pages white text, incl. GREEN) --- */
+    .stage, .prism, .stall, .vote, .done { color: rgba(255,255,255,.92); }
+    .stall .copy, .stall .label, .stall .desc, .stall .meta, .stall p, .stall h2, .stall h3,
+    .vote, .vote * , .done, .done * { color: inherit; }
+    /* Wordmark */
+    .wordmark{
+      height: 14px;
+      width: auto;
+      display:inline-block;
+      vertical-align: middle;
+      opacity:.96;
+    }
+    /* Hero mark interaction (SVG) */
+    .hestia-mark{
+      width: clamp(54px, 10vw, 84px);
+      height: auto;
+      color: rgba(255,255,255,.92);
+      filter: drop-shadow(0 16px 40px rgba(0,0,0,.45));
+      transform-origin: 50% 50%;
+      transition: transform 700ms cubic-bezier(.2,.8,.2,1), opacity 700ms cubic-bezier(.2,.8,.2,1), filter 700ms cubic-bezier(.2,.8,.2,1);
+    }
+    /* Simple, high-end halo instead of radar (Safari-safe) */
+    .mark-wrap{
+      position: relative;
+      border-radius: 999px;
+    }
+    .mark-wrap::before{
+      content:"";
+      position:absolute;
+      inset:-32%;
+      border-radius:999px;
+      background: radial-gradient(circle at 50% 40%, rgba(255,255,255,.18), rgba(255,255,255,0) 62%);
+      opacity:.85;
+      pointer-events:none;
+      filter: blur(10px);
+      transform: translateZ(0);
+      transition: opacity 700ms cubic-bezier(.2,.8,.2,1);
+    }
+    .mark-wrap:hover .hestia-mark{
+      transform: translateY(-2px) scale(1.02);
+      filter: drop-shadow(0 18px 48px rgba(0,0,0,.52));
+    }
+    /* Tone-linked micro-pulse on page change */
+    @keyframes markPulse{
+      0%{ transform: translateY(0) scale(1); }
+      40%{ transform: translateY(-1px) scale(1.025); }
+      100%{ transform: translateY(0) scale(1); }
+    }
+    .is-tinting .hestia-mark{ animation: markPulse 520ms cubic-bezier(.2,.8,.2,1) 1; }
+
+    /* Remove any remaining pattern layers inside stalls (keep clean) */
+    .stall::before, .stall::after { background-image: none !important; }
+
   </style>
 </head>
 
@@ -749,7 +777,7 @@
   <div class="app" id="app">
 
     <div class="topbar">
-      <div class="chip brand-chip"><span class="dot"></span><img class="wordmark" src="wordmark.png" alt="HESTIA" /> <span id="phase">PRISM</span></div>
+      <div class="chip"><span class="dot"></span><img class="wordmark" src="wordmark.png" alt="<img class="wordmark" src="wordmark.png" alt="HESTIA" />" /> <span id="phase">PRISM</span></div>
       <div class="chip" id="activeColorChip" style="opacity:.0; transform: translateY(-6px); transition: opacity 420ms var(--ease), transform 420ms var(--ease);">
         <span style="opacity:.9">Color</span> <b id="activeColorName">—</b>
       </div>
@@ -758,9 +786,64 @@
     <section class="stage" id="monolithStage" aria-label="The Monolith">
       <div class="monolith">
         <div class="mark-wrap fade-in" id="enterPrism" aria-label="Prism mark">
-          <div class="radar" aria-hidden="true"></div>
-          <div class="mark" aria-hidden="true">
-            <svg class="monoMarkSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 377.947 377.947"><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 283.46h283.46V0H0Z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 377.947)"><path d="m0 0 .021 30.904v21.16c1.7-.726 2.874-1.347 3.741-1.975 13.229-9.61 26.525-19.134 39.59-28.963 8.824-6.639 11.979-15.609 12.006-26.809v-53.709c-1.7.726-2.895 1.347-3.762 1.976-13.229 9.61-26.525 19.133-39.59 28.963C3.182-21.815.048-12.845.021-1.645V0z" fill="currentColor" fill-rule="nonzero" transform="translate(192.76 80.98)"/><path d="M0 0c-.002 40.944 0 .466 0 41.447-.744 43.582-46.129 81.844-106.34 81.844s-105.597-38.262-106.341-81.844c0-40.981.002-.503 0-41.447 0-6.713-.047-13.786-.047-21.213 1.701.727 2.882 1.348 3.749 1.977 13.229 9.61 26.525 19.132 39.59 28.962 8.824 6.639 11.958 15.609 11.985 26.809v.036l.029 27.898c0 30.598 19.233 55.105 51.035 55.105s51.034-24.507 51.034-55.105l.029-27.934c.027-11.2 3.161-20.17 11.985-26.809 13.065-9.83 26.361-19.352 39.59-28.962.867-.629 2.049-1.25 3.749-1.977C.047-13.786 0-6.713 0 0" fill="currentColor" fill-rule="nonzero" transform="translate(248.07 131.631)"/><path d="M0 0v52.064c-1.7-.726-2.874-1.347-3.741-1.975-13.229-9.61-26.525-19.134-39.59-28.963-8.824-6.639-11.979-15.609-12.006-26.809v-53.709c1.7.726 2.895 1.347 3.762 1.976 13.229 9.61 26.525 19.133 39.59 28.963C-3.161-21.815-.027-12.845 0-1.645z" fill="currentColor" fill-rule="nonzero" transform="translate(90.68 80.98)"/></g></svg>
+<div class="mark" aria-hidden="true">
+            <svg class="hestia-mark" aria-hidden="true" focusable="false"
+   version="1.1"
+   id="hestia-svg2"
+   viewBox="0 0 377.94666 377.94666"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="hestia-defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="hestia-clipPath16">
+      <path
+         d="M 0,283.46 H 283.46 V 0 H 0 Z"
+         id="hestia-path14" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="hestia-namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25" />
+  <g
+     id="hestia-g8"
+     transform="matrix(1.3333333,0,0,-1.3333333,0,377.94667)">
+    <g
+       id="hestia-g10">
+      <g
+         id="hestia-g12"
+         clip-path="url(#hestia-clipPath16)">
+        <g
+           id="hestia-g18"
+           transform="translate(192.7594,80.9799)">
+          <path
+             d="m 0,0 0.021,30.904 v 21.16 c 1.7,-0.726 2.874,-1.347 3.741,-1.975 13.229,-9.61 26.525,-19.134 39.59,-28.963 8.824,-6.639 11.979,-15.609 12.006,-26.809 0.001,-0.551 -10e-4,-1.094 0,-1.644 v -30.905 -21.16 c -1.7,0.726 -2.895,1.347 -3.762,1.976 -13.229,9.61 -26.525,19.133 -39.59,28.963 -8.824,6.638 -11.958,15.608 -11.985,26.808 -0.001,0.552 10e-4,1.094 0,1.645 z"
+             style="fill:#231916;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="hestia-path20" />
+        </g>
+        <g
+           id="hestia-g22"
+           transform="translate(248.0703,131.631)">
+          <path
+             d="m 0,0 c -0.002,40.944 0,0.466 0,41.447 -0.744,43.582 -46.129,81.844 -106.34,81.844 -60.211,0 -105.597,-38.262 -106.341,-81.844 0,-40.981 0.002,-0.503 0,-41.447 0,-6.713 -0.047,-13.786 -0.047,-21.213 1.701,0.727 2.882,1.348 3.749,1.977 13.229,9.61 26.525,19.132 39.59,28.962 8.824,6.639 11.958,15.609 11.985,26.809 v 0.036 l 0.029,27.898 c 0,30.598 19.233,55.105 51.035,55.105 31.802,0 51.034,-24.507 51.034,-55.105 l 0.029,-27.934 c 0.027,-11.2 3.161,-20.17 11.985,-26.809 13.065,-9.83 26.361,-19.352 39.59,-28.962 0.867,-0.629 2.049,-1.25 3.749,-1.977 C 0.047,-13.786 0,-6.713 0,0"
+             style="fill:#231916;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="hestia-path24" />
+        </g>
+        <g
+           id="hestia-g26"
+           transform="translate(90.6796,80.9799)">
+          <path
+             d="m 0,0 v 30.904 21.16 C -1.7,51.338 -2.874,50.717 -3.741,50.089 -16.97,40.479 -30.266,30.955 -43.331,21.126 -52.155,14.487 -55.31,5.517 -55.337,-5.683 c -10e-4,-0.551 0.001,-1.094 0,-1.644 v -30.905 -21.16 c 1.7,0.726 2.895,1.347 3.762,1.976 13.229,9.61 26.525,19.133 39.59,28.963 C -3.161,-21.815 -0.027,-12.845 0,-1.645 0.001,-1.093 -0.001,-0.551 0,0"
+             style="fill:#231916;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="hestia-path28" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
           </div>
         </div>
 
@@ -799,7 +882,10 @@
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
                 <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg class="markSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 377.947 377.947"><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 283.46h283.46V0H0Z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 377.947)"><path d="m0 0 .021 30.904v21.16c1.7-.726 2.874-1.347 3.741-1.975 13.229-9.61 26.525-19.134 39.59-28.963 8.824-6.639 11.979-15.609 12.006-26.809v-53.709c-1.7.726-2.895 1.347-3.762 1.976-13.229 9.61-26.525 19.133-39.59 28.963C3.182-21.815.048-12.845.021-1.645V0z" fill="currentColor" fill-rule="nonzero" transform="translate(192.76 80.98)"/><path d="M0 0c-.002 40.944 0 .466 0 41.447-.744 43.582-46.129 81.844-106.34 81.844s-105.597-38.262-106.341-81.844c0-40.981.002-.503 0-41.447 0-6.713-.047-13.786-.047-21.213 1.701.727 2.882 1.348 3.749 1.977 13.229 9.61 26.525 19.132 39.59 28.962 8.824 6.639 11.958 15.609 11.985 26.809v.036l.029 27.898c0 30.598 19.233 55.105 51.035 55.105s51.034-24.507 51.034-55.105l.029-27.934c.027-11.2 3.161-20.17 11.985-26.809 13.065-9.83 26.361-19.352 39.59-28.962.867-.629 2.049-1.25 3.749-1.977C.047-13.786 0-6.713 0 0" fill="currentColor" fill-rule="nonzero" transform="translate(248.07 131.631)"/><path d="M0 0v52.064c-1.7-.726-2.874-1.347-3.741-1.975-13.229-9.61-26.525-19.134-39.59-28.963-8.824-6.639-11.979-15.609-12.006-26.809v-53.709c1.7.726 2.895 1.347 3.762 1.976 13.229 9.61 26.525 19.133 39.59 28.963C-3.161-21.815-.027-12.845 0-1.645z" fill="currentColor" fill-rule="nonzero" transform="translate(90.68 80.98)"/></g></svg>
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
+                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
+                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
+                </svg>
               </div>
             </div>
 
@@ -840,7 +926,10 @@
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
                 <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg class="markSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 377.947 377.947"><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 283.46h283.46V0H0Z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 377.947)"><path d="m0 0 .021 30.904v21.16c1.7-.726 2.874-1.347 3.741-1.975 13.229-9.61 26.525-19.134 39.59-28.963 8.824-6.639 11.979-15.609 12.006-26.809v-53.709c-1.7.726-2.895 1.347-3.762 1.976-13.229 9.61-26.525 19.133-39.59 28.963C3.182-21.815.048-12.845.021-1.645V0z" fill="currentColor" fill-rule="nonzero" transform="translate(192.76 80.98)"/><path d="M0 0c-.002 40.944 0 .466 0 41.447-.744 43.582-46.129 81.844-106.34 81.844s-105.597-38.262-106.341-81.844c0-40.981.002-.503 0-41.447 0-6.713-.047-13.786-.047-21.213 1.701.727 2.882 1.348 3.749 1.977 13.229 9.61 26.525 19.132 39.59 28.962 8.824 6.639 11.958 15.609 11.985 26.809v.036l.029 27.898c0 30.598 19.233 55.105 51.035 55.105s51.034-24.507 51.034-55.105l.029-27.934c.027-11.2 3.161-20.17 11.985-26.809 13.065-9.83 26.361-19.352 39.59-28.962.867-.629 2.049-1.25 3.749-1.977C.047-13.786 0-6.713 0 0" fill="currentColor" fill-rule="nonzero" transform="translate(248.07 131.631)"/><path d="M0 0v52.064c-1.7-.726-2.874-1.347-3.741-1.975-13.229-9.61-26.525-19.134-39.59-28.963-8.824-6.639-11.979-15.609-12.006-26.809v-53.709c1.7.726 2.895 1.347 3.762 1.976 13.229 9.61 26.525 19.133 39.59 28.963C-3.161-21.815-.027-12.845 0-1.645z" fill="currentColor" fill-rule="nonzero" transform="translate(90.68 80.98)"/></g></svg>
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
+                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
+                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
+                </svg>
               </div>
             </div>
 
@@ -881,7 +970,10 @@
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
                 <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg class="markSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 377.947 377.947"><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 283.46h283.46V0H0Z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 377.947)"><path d="m0 0 .021 30.904v21.16c1.7-.726 2.874-1.347 3.741-1.975 13.229-9.61 26.525-19.134 39.59-28.963 8.824-6.639 11.979-15.609 12.006-26.809v-53.709c-1.7.726-2.895 1.347-3.762 1.976-13.229 9.61-26.525 19.133-39.59 28.963C3.182-21.815.048-12.845.021-1.645V0z" fill="currentColor" fill-rule="nonzero" transform="translate(192.76 80.98)"/><path d="M0 0c-.002 40.944 0 .466 0 41.447-.744 43.582-46.129 81.844-106.34 81.844s-105.597-38.262-106.341-81.844c0-40.981.002-.503 0-41.447 0-6.713-.047-13.786-.047-21.213 1.701.727 2.882 1.348 3.749 1.977 13.229 9.61 26.525 19.132 39.59 28.962 8.824 6.639 11.958 15.609 11.985 26.809v.036l.029 27.898c0 30.598 19.233 55.105 51.035 55.105s51.034-24.507 51.034-55.105l.029-27.934c.027-11.2 3.161-20.17 11.985-26.809 13.065-9.83 26.361-19.352 39.59-28.962.867-.629 2.049-1.25 3.749-1.977C.047-13.786 0-6.713 0 0" fill="currentColor" fill-rule="nonzero" transform="translate(248.07 131.631)"/><path d="M0 0v52.064c-1.7-.726-2.874-1.347-3.741-1.975-13.229-9.61-26.525-19.134-39.59-28.963-8.824-6.639-11.979-15.609-12.006-26.809v-53.709c1.7.726 2.895 1.347 3.762 1.976 13.229 9.61 26.525 19.133 39.59 28.963C-3.161-21.815-.027-12.845 0-1.645z" fill="currentColor" fill-rule="nonzero" transform="translate(90.68 80.98)"/></g></svg>
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
+                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
+                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
+                </svg>
               </div>
             </div>
 
@@ -922,7 +1014,10 @@
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
                 <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg class="markSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 377.947 377.947"><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 283.46h283.46V0H0Z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 377.947)"><path d="m0 0 .021 30.904v21.16c1.7-.726 2.874-1.347 3.741-1.975 13.229-9.61 26.525-19.134 39.59-28.963 8.824-6.639 11.979-15.609 12.006-26.809v-53.709c-1.7.726-2.895 1.347-3.762 1.976-13.229 9.61-26.525 19.133-39.59 28.963C3.182-21.815.048-12.845.021-1.645V0z" fill="currentColor" fill-rule="nonzero" transform="translate(192.76 80.98)"/><path d="M0 0c-.002 40.944 0 .466 0 41.447-.744 43.582-46.129 81.844-106.34 81.844s-105.597-38.262-106.341-81.844c0-40.981.002-.503 0-41.447 0-6.713-.047-13.786-.047-21.213 1.701.727 2.882 1.348 3.749 1.977 13.229 9.61 26.525 19.132 39.59 28.962 8.824 6.639 11.958 15.609 11.985 26.809v.036l.029 27.898c0 30.598 19.233 55.105 51.035 55.105s51.034-24.507 51.034-55.105l.029-27.934c.027-11.2 3.161-20.17 11.985-26.809 13.065-9.83 26.361-19.352 39.59-28.962.867-.629 2.049-1.25 3.749-1.977C.047-13.786 0-6.713 0 0" fill="currentColor" fill-rule="nonzero" transform="translate(248.07 131.631)"/><path d="M0 0v52.064c-1.7-.726-2.874-1.347-3.741-1.975-13.229-9.61-26.525-19.134-39.59-28.963-8.824-6.639-11.979-15.609-12.006-26.809v-53.709c1.7.726 2.895 1.347 3.762 1.976 13.229 9.61 26.525 19.133 39.59 28.963C-3.161-21.815-.027-12.845 0-1.645z" fill="currentColor" fill-rule="nonzero" transform="translate(90.68 80.98)"/></g></svg>
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
+                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
+                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
+                </svg>
               </div>
             </div>
 
@@ -963,7 +1058,10 @@
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
                 <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg class="markSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 377.947 377.947"><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 283.46h283.46V0H0Z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 377.947)"><path d="m0 0 .021 30.904v21.16c1.7-.726 2.874-1.347 3.741-1.975 13.229-9.61 26.525-19.134 39.59-28.963 8.824-6.639 11.979-15.609 12.006-26.809v-53.709c-1.7.726-2.895 1.347-3.762 1.976-13.229 9.61-26.525 19.133-39.59 28.963C3.182-21.815.048-12.845.021-1.645V0z" fill="currentColor" fill-rule="nonzero" transform="translate(192.76 80.98)"/><path d="M0 0c-.002 40.944 0 .466 0 41.447-.744 43.582-46.129 81.844-106.34 81.844s-105.597-38.262-106.341-81.844c0-40.981.002-.503 0-41.447 0-6.713-.047-13.786-.047-21.213 1.701.727 2.882 1.348 3.749 1.977 13.229 9.61 26.525 19.132 39.59 28.962 8.824 6.639 11.958 15.609 11.985 26.809v.036l.029 27.898c0 30.598 19.233 55.105 51.035 55.105s51.034-24.507 51.034-55.105l.029-27.934c.027-11.2 3.161-20.17 11.985-26.809 13.065-9.83 26.361-19.352 39.59-28.962.867-.629 2.049-1.25 3.749-1.977C.047-13.786 0-6.713 0 0" fill="currentColor" fill-rule="nonzero" transform="translate(248.07 131.631)"/><path d="M0 0v52.064c-1.7-.726-2.874-1.347-3.741-1.975-13.229-9.61-26.525-19.134-39.59-28.963-8.824-6.639-11.979-15.609-12.006-26.809v-53.709c1.7.726 2.895 1.347 3.762 1.976 13.229 9.61 26.525 19.133 39.59 28.963C-3.161-21.815-.027-12.845 0-1.645z" fill="currentColor" fill-rule="nonzero" transform="translate(90.68 80.98)"/></g></svg>
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
+                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
+                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
+                </svg>
               </div>
             </div>
 
@@ -1004,7 +1102,10 @@
             <div class="sqInner" aria-hidden="true">
               <div class="flameMark" aria-hidden="true">
                 <!-- TODO: 你可替換為你的正式 HESTIA 火焰 SVG（inline），以做更精準的注入效果 -->
-                <svg class="markSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 377.947 377.947"><defs><clipPath id="a" clipPathUnits="userSpaceOnUse"><path d="M0 283.46h283.46V0H0Z"/></clipPath></defs><g clip-path="url(#a)" transform="matrix(1.33333 0 0 -1.33333 0 377.947)"><path d="m0 0 .021 30.904v21.16c1.7-.726 2.874-1.347 3.741-1.975 13.229-9.61 26.525-19.134 39.59-28.963 8.824-6.639 11.979-15.609 12.006-26.809v-53.709c-1.7.726-2.895 1.347-3.762 1.976-13.229 9.61-26.525 19.133-39.59 28.963C3.182-21.815.048-12.845.021-1.645V0z" fill="currentColor" fill-rule="nonzero" transform="translate(192.76 80.98)"/><path d="M0 0c-.002 40.944 0 .466 0 41.447-.744 43.582-46.129 81.844-106.34 81.844s-105.597-38.262-106.341-81.844c0-40.981.002-.503 0-41.447 0-6.713-.047-13.786-.047-21.213 1.701.727 2.882 1.348 3.749 1.977 13.229 9.61 26.525 19.132 39.59 28.962 8.824 6.639 11.958 15.609 11.985 26.809v.036l.029 27.898c0 30.598 19.233 55.105 51.035 55.105s51.034-24.507 51.034-55.105l.029-27.934c.027-11.2 3.161-20.17 11.985-26.809 13.065-9.83 26.361-19.352 39.59-28.962.867-.629 2.049-1.25 3.749-1.977C.047-13.786 0-6.713 0 0" fill="currentColor" fill-rule="nonzero" transform="translate(248.07 131.631)"/><path d="M0 0v52.064c-1.7-.726-2.874-1.347-3.741-1.975-13.229-9.61-26.525-19.134-39.59-28.963-8.824-6.639-11.979-15.609-12.006-26.809v-53.709c1.7.726 2.895 1.347 3.762 1.976 13.229 9.61 26.525 19.133 39.59 28.963C-3.161-21.815-.027-12.845 0-1.645z" fill="currentColor" fill-rule="nonzero" transform="translate(90.68 80.98)"/></g></svg>
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="markSvg">
+                  <path class="markStroke1" d="M60 10c10 18-2 22 10 36 8 9 20 8 20 28 0 19-13 36-30 36-17 0-30-17-30-36 0-20 12-19 20-28 12-14 0-18 10-36Z"/>
+                  <path class="markStroke2" d="M60 40c6 10-1 12 6 20 5 6 12 5 12 17 0 12-8 22-18 22-10 0-18-10-18-22 0-12 7-11 12-17 7-8 0-10 6-20Z"/>
+                </svg>
               </div>
             </div>
 

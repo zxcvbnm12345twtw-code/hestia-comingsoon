@@ -745,6 +745,10 @@
     }
   
     /* === HESTIA 正式 Logo：Fill + Stroke 雙層（灌能走線）=== */
+
+    .markStack{ transition: transform 120ms linear; }
+    .markSvgFill, .markSvgStroke{ transition: opacity 120ms linear, filter 160ms var(--ease); }
+
     .markStack{
       position:absolute;
       inset:0;
@@ -1214,6 +1218,40 @@
       root.style.setProperty("--uiStroke", lightUI ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.14)");
     }
 
+    // === 避免 SVG clipPath / id 衝突（每個 stall 自動加上唯一後綴）===
+    function uniquifySVGIds(){
+      const svgs = Array.from(document.querySelectorAll(".chargeSquare svg, .mark-wrap svg"));
+      svgs.forEach((svg, idx)=>{
+        const suffix = "-" + idx;
+        // 1) clipPath id
+        const clip = svg.querySelector("clipPath[id]");
+        if(clip){
+          const oldId = clip.getAttribute("id");
+          const newId = oldId + suffix;
+          clip.setAttribute("id", newId);
+          // update any elements referencing it
+          svg.querySelectorAll(`[clip-path="url(#${oldId})"]`).forEach(el=>{
+            el.setAttribute("clip-path", `url(#${newId})`);
+          });
+        }
+        // 2) generic id collisions (rare but safe)
+        svg.querySelectorAll("[id]").forEach(el=>{
+          const id = el.getAttribute("id");
+          if(id && id !== (clip?.getAttribute("id")||"")){
+            const newId = id + suffix;
+            el.setAttribute("id", newId);
+            // update url(#id) references inside this svg
+            svg.querySelectorAll(`[fill="url(#${id})"],[stroke="url(#${id})"],[filter="url(#${id})"],[mask="url(#${id})"]`).forEach(ref=>{
+              ["fill","stroke","filter","mask"].forEach(attr=>{
+                const v = ref.getAttribute(attr);
+                if(v === `url(#${id})`) ref.setAttribute(attr, `url(#${newId})`);
+              });
+            });
+          }
+        });
+      });
+    }
+
     function lerp(a,b,t){ return a+(b-a)*t; }
     function lerpHue(a,b,t){
       let d = ((b - a + 540) % 360) - 180; // shortest path
@@ -1396,9 +1434,16 @@
     const bloom=$("#bloom");
     const confirm=$("#confirm");
 
-    let holding=false, holdStart=0, holdTimer=null, raf=null, currentSquare=null;
-
-    function pulseBloom(){
+    let holding=false, holdStart=0, holdTimer=null, raf=null, if(currentSquare){
+      const stack = currentSquare.querySelector(".markStack");
+      if(stack) stack.style.transform = "scale(1)";
+      const fillSvg = currentSquare.querySelector(".markSvgFill");
+      if(fillSvg){ fillSvg.style.opacity = ""; fillSvg.style.filter = ""; }
+      const strokeSvg = currentSquare.querySelector(".markSvgStroke");
+      if(strokeSvg){ strokeSvg.style.opacity = ""; }
+    }
+    currentSquare=null;
+function pulseBloom(){
       bloom.classList.add("is-on");
       setTimeout(()=>bloom.classList.remove("is-on"), 340);
     }
@@ -1498,6 +1543,12 @@
       holding=true;
       currentSquare=square;
       currentSquare.classList.add("is-holding");
+      // 預先初始化 stroke path 長度（讓走線一定有資料）
+      try{ prepStrokePaths(currentSquare); }catch(e){ console.warn(e); }
+      // 立即顯示灌能層（避免看起來沒反應）
+      const strokeSvg = currentSquare.querySelector(".markSvgStroke");
+      if(strokeSvg) strokeSvg.style.opacity = "0.85";
+
       const fill=square.querySelector("[data-sq-fill]");
       const ring=square.querySelector(".ringProg");
       holdStart=performance.now();
@@ -1526,8 +1577,22 @@
         if(ring) ring.style.strokeDashoffset = String(276.46 * (1-p));
         updateLogoInject(currentSquare, p);
 
-
-        if(p>0.35 && vibCount<1){ vib(10); vibCount++; }
+        // 視覺回饋加強：不論走線是否成功，都會看到 Logo 被「灌亮」與微縮放
+        const fillSvg = currentSquare.querySelector(".markSvgFill");
+        const strokeSvg = currentSquare.querySelector(".markSvgStroke");
+        const stack = currentSquare.querySelector(".markStack");
+        if(stack){
+          const sc = 1 + p*0.035;
+          stack.style.transform = `scale(${sc})`;
+        }
+        if(fillSvg){
+          fillSvg.style.opacity = String(0.55 + p*0.40);
+          fillSvg.style.filter = `drop-shadow(0 0 ${12 + p*26}px rgba(255,255,255,${0.10 + p*0.10}))`;
+        }
+        if(strokeSvg){
+          strokeSvg.style.opacity = String(0.65 + p*0.35);
+        }
+if(p>0.35 && vibCount<1){ vib(10); vibCount++; }
         if(p>0.60 && vibCount<2){ vib(12); vibCount++; }
         if(p>0.82 && vibCount<3){ vib(16); vibCount++; }
         if(p>0.94 && vibCount<4){ vib(20); vibCount++; }
@@ -1709,6 +1774,7 @@
     });
 
     setToneInstant(WORLDS[0].h, WORLDS[0].sat, WORLDS[0].lum);
+    uniquifySVGIds();
     startMonolithCycle();
   </script>
 </body>

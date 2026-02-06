@@ -1212,7 +1212,7 @@
           <div class="cardPreview" aria-label="Founder Card 預覽">
             <canvas id="cardCanvas" width="1200" height="750"></canvas>
           </div>
-         <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
+          <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
           
 
           <div class="heat" id="heat"></div>
@@ -1248,11 +1248,40 @@
 
     function sendVoteToGoogleForm(email,colorKey){
       try{
-        const fd=new FormData();
-        fd.append("entry.345729382", email);
-        fd.append("entry.324440347", colorKey);
-        fetch(GOOGLE_FORM_RESPONSE_URL, { method:"POST", mode:"no-cors", body: fd });
+        // Submit via hidden form/iframe (more reliable for Google Forms than fetch in many environments)
+        let iframe=document.getElementById("gfSink");
+        if(!iframe){
+          iframe=document.createElement("iframe");
+          iframe.id="gfSink";
+          iframe.name="gfSink";
+          iframe.style.position="absolute";
+          iframe.style.left="-9999px";
+          iframe.style.top="-9999px";
+          iframe.style.width="1px";
+          iframe.style.height="1px";
+          iframe.style.opacity="0";
+          document.body.appendChild(iframe);
+        }
+
+        const form=document.createElement("form");
+        form.action="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse";
+        form.method="POST";
+        form.target="gfSink";
+
+        const add=(name,val)=>{ const i=document.createElement("input"); i.type="hidden"; i.name=name; i.value=val; form.appendChild(i); };
+        add("entry.345729382", email);
+        add("entry.324440347", colorKey);
+
+        // common Google Forms fields (safe to include; improves acceptance across variants)
+        add("fvv","1");
+        add("draftResponse","[]");
+        add("pageHistory","0");
+
+        document.body.appendChild(form);
+        form.submit();
+        setTimeout(()=>{ form.remove(); }, 1200);
       }catch(e){}
+    }
     }
 
 

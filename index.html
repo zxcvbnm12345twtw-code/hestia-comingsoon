@@ -1195,7 +1195,7 @@
           </div>
 
           <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
-          <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
+          
         </div>
       </section>
     </main>
@@ -1212,7 +1212,7 @@
           <div class="cardPreview" aria-label="Founder Card 預覽">
             <canvas id="cardCanvas" width="1200" height="750"></canvas>
           </div>
-
+          <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
           
 
           <div class="heat" id="heat"></div>
@@ -1748,7 +1748,7 @@ spectrum.classList.add("is-open");
       ctx.globalAlpha=.95;
       if(hlogoImg && hlogoImg.complete && hlogoImg.naturalWidth>0){
         const size=180;
-        const x=W-64-size-120; // shift left further
+        const x=W-50-size-160; // shift left further
         const y=H/2 - size/2 + 40;
         ctx.drawImage(hlogoImg, x, y, size, size);
       }else{

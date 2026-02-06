@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>HESTIA — Tone-on-Tone 首發色投票</title>
+  <title>HESTIA — TONE ON TONE 首發色投票</title>
   <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
 
   <!--
-  HESTIA — Tone-on-Tone 首發色投票
-  6 色 Tone-on-Tone 色票組（Background / Core / Highlight）
+  HESTIA — TONE ON TONE 首發色投票
+  6 色 TONE ON TONE 色票組（Background / Core / Highlight）
   （順序：紅 → 橙 → 綠 → 藍 → 紫 → 咖）
 
   - IGNITION（點燃紅）
@@ -770,15 +770,58 @@
     /* Remove any remaining pattern layers inside stalls (keep clean) */
     .stall::before, .stall::after { background-image: none !important; }
 
+  
+/* =========================
+   PATCH v5: HERO + GLOBAL
+   ========================= */
+/* Lock all text to white across all pages */
+:root{
+  --uiText: rgba(255,255,255,.92) !important;
+  --uiTextMuted: rgba(255,255,255,.72) !important;
+  --uiStroke: rgba(255,255,255,.14) !important;
+}
+.app, .app * { color: var(--uiText); }
+.tagline, .date, .hint, .opt-en, .opt-zh, .zh, .tiny, .pct, .cell .name, .subEn, .content p { color: var(--uiTextMuted) !important; }
+
+/* HERO mark: always white */
+.hestia-mark{ color: rgba(255,255,255,.95) !important; }
+.hestia-mark path{ fill: currentColor !important; }
+
+/* HERO wordmark */
+.hero-wordmark{
+  display:block;
+  height: 18px;
+  width: auto;
+  margin: 14px auto 0;
+  opacity: .96;
+  filter: drop-shadow(0 10px 26px rgba(0,0,0,.45));
+  pointer-events:none;
+}
+
+/* Remove status/toast top gap now that topbar is gone */
+.toast{ top: calc(16px + var(--safeTop)); }
+
+/* Remove Safari conic/radar risk: keep mark-wrap simple, no extra pseudo */
+.mark-wrap::before{ content:none !important; }
+
+/* Results panel buttons removed */
+.actions{ display:none !important; }
+
+/* Optional: remove circular ring inside vote square if you don't want it */
+.ring{ display:none !important; }
+  
+
+/* iOS / Safari full-viewport hardening */
+html, body { height: 100%; }
+.app { height: 100dvh; height: 100svh; height: 100vh; }
+.stage, .stall { height: 100dvh; height: 100svh; height: 100vh; }
+
   </style>
 </head>
 
 <body>
   <div class="app" id="app">
-
-    <div class="topbar">
-      <div class="chip"><span class="dot"></span><img class="wordmark" src="wordmark.png" alt="<img class="wordmark" src="wordmark.png" alt="HESTIA" />" /> <span id="phase">PRISM</span></div>
-      <div class="chip" id="activeColorChip" style="opacity:.0; transform: translateY(-6px); transition: opacity 420ms var(--ease), transform 420ms var(--ease);">
+<div class="chip" id="activeColorChip" style="opacity:.0; transform: translateY(-6px); transition: opacity 420ms var(--ease), transform 420ms var(--ease);">
         <span style="opacity:.9">Color</span> <b id="activeColorName">—</b>
       </div>
     </div>
@@ -845,11 +888,11 @@
   </g>
 </svg>
           </div>
-        </div>
+        <img class="hero-wordmark fade-in delay-2" src="wordmark.png" alt="HESTIA" />
+</div>
 
-        <div class="tagline fade-in delay-1">IGNITE THE SEASON.</div>
-        <div class="date fade-in delay-2">首發色投票 · Tone-on-Tone</div>
-        <div class="hint fade-in delay-3">請先輸入 Email 以獲得最新消息，然後進入投票。</div>
+        <div class="date fade-in delay-2">首發色投票 · TONE ON TONE</div>
+        <div class="hint fade-in delay-3">請先輸入 Email 以進行投票。<br/>最高票的色彩投票者將可獲得 HESTIA 首波發售折扣碼。</div>
 
         <div class="gate fade-in delay-3" aria-label="Email gate">
           <input id="gateEmail" type="email" inputmode="email" autocomplete="email" placeholder="輸入你的 Email（必填）" aria-label="輸入你的 Email（必填）"/>
@@ -1138,13 +1181,7 @@
           <div class="cardPreview" aria-label="Founder Card 預覽">
             <canvas id="cardCanvas" width="1200" height="750"></canvas>
           </div>
-
-          <div class="actions">
-            <button class="btn primary" id="downloadCard" type="button">下載卡片</button>
-            <button class="btn" id="closeConfirm" type="button">繼續瀏覽</button>
-          </div>
-
-          <div class="heat" id="heat"></div>
+<div class="heat" id="heat"></div>
 
           <div class="tiny">
             ※ 會一併送出：Email + 目前投票色（key / 英文 / 中文）。<br/>
@@ -1160,9 +1197,28 @@
 
   <script>
     // ====== Google Form（保留路徑；不具備「阻擋重複 email」能力）======
-    const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/XXXXXXXXXXXX/formResponse";
-    const ENTRY_EMAIL = "entry.1111111111";
-    const ENTRY_COLOR = "entry.2222222222";
+    const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScr6dSu1JP1mhf1oCP3JNtd0KCcvnjvXqdAeYZ5E2AVBMKMgw/formResponse";
+    const ENTRY_EMAIL = "entry.1302796239";
+    const ENTRY_COLOR = "entry.779089187";
+
+
+function sendToGoogleForm(email, toneKey){
+  try{
+    const fd = new FormData();
+    fd.append(ENTRY_EMAIL, email);
+    fd.append(ENTRY_COLOR, toneKey);
+
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(GOOGLE_FORM_ACTION_URL, fd);
+      return true;
+    }
+    sendToGoogleForm(email, world.key);
+return true;
+  }catch(e){
+    return false;
+  }
+}
+
 
     // ====== Apps Script Web App（可做到「每個 email 只能投一次」）======
     // 若你部署了 Apps Script Web App，填入下列 URL：
@@ -1628,7 +1684,7 @@
 
       ctx.font="650 32px system-ui, -apple-system, 'SF Pro Text'";
       ctx.fillStyle="rgba(255,255,255,.80)";
-      ctx.fillText("HESTIA • Tone-on-Tone", 112, 268);
+      ctx.fillText("HESTIA • TONE ON TONE", 112, 268);
 
       ctx.font="900 78px system-ui, -apple-system, 'SF Pro Display'";
       ctx.fillStyle="rgba(255,255,255,.94)";
@@ -1682,9 +1738,9 @@
       confirm.classList.add("is-on");
     }
 
-    $("#closeConfirm").addEventListener("click", ()=>confirm.classList.remove("is-on"));
+    null.addEventListener("click", ()=>confirm.classList.remove("is-on"));
 
-    $("#downloadCard").addEventListener("click", ()=>{
+    null.addEventListener("click", ()=>{
       const key=cardCanvas.dataset.key || WORLDS[0].key;
       const serial=cardCanvas.dataset.serial || "0000";
       const w=getWorld(key);

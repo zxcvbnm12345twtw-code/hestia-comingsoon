@@ -811,7 +811,12 @@
 .ring{ display:none !important; }
   
 
-/* iOS / Safari full-viewport hardening */
+
+    /* JS-stability nodes should never show */
+    .topbar{ display:none !important; }
+    #activeColorChip,#activeColorName,#phase{ display:none !important; }
+
+    /* iOS / Safari full-viewport hardening */
 html, body { height: 100%; }
 .app { height: 100dvh; height: 100svh; height: 100vh; }
 .stage, .stall { height: 100dvh; height: 100svh; height: 100vh; }

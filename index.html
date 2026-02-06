@@ -533,18 +533,7 @@
     }
     .markStroke2{ stroke-width: 2.6; opacity:.82; }
 
-    .ring {
-      position:absolute;
-      inset: 10px;
-      width: calc(100% - 20px);
-      height: calc(100% - 20px);
-      pointer-events:none;
-      opacity: .0;
-      transform: rotate(-90deg);
-      transition: opacity 160ms var(--ease);
-    }
-    .chargeSquare.is-holding .ring{ opacity: .95; }
-    .ringTrack {
+    .chargeSquare.is-holding .ringTrack {
       fill:none;
       stroke: rgba(255,255,255,.10);
       stroke-width: 3;
@@ -824,15 +813,71 @@
     /* Remove result actions + preview to avoid extra space */
     .confirm .actions, .confirm .cardPreview { display:none !important; }
 
-  </style>
+  
+    /* --- HERO: lock mark to white --- */
+    .stage .hestia-mark{ color: rgba(255,255,255,.92) !important; }
+
+    .hero-wordmark{
+      display:block !important;
+      height: 18px;
+      width: auto;
+      margin-top: 14px;
+      opacity: .96;
+    }
+
+    /* --- GLOBAL: lock text to white --- */
+    html, body, .app, .stage, .prism, .stall, .vote, .done,
+    .app * { color: rgba(255,255,255,.92) !important; }
+    .muted, .sub, .note, .hint, .desc { color: rgba(255,255,255,.72) !important; }
+
+    /* --- VOTE flame mark (fill-up injection) --- */
+    .icon{ width: 44px; height: 44px; display:grid; place-items:center; }
+    .flameMark{ width: 40px; height: auto; display:block; }
+    .tone{ --toneColor: rgba(255,255,255,.92); }
+    .tone[data-tone="red"]{   --toneColor:#F06A5A; }
+    .tone[data-tone="orange"]{--toneColor:#FF9B3D; }
+    .tone[data-tone="green"]{ --toneColor:#66C7A6; }
+    .tone[data-tone="blue"]{  --toneColor:#7DA7FF; }
+    .tone[data-tone="purple"]{--toneColor:#B48BFF; }
+    .tone[data-tone="brown"]{ --toneColor:#B58A66; }
+
+    .flameFillRect{
+      transform-origin: 50% 100%;
+      height: 0%;
+      y: 100%;
+      transition: none;
+    }
+    .tone.is-pressing .flameFillRect{
+      animation: flameFillUp 1000ms linear forwards;
+    }
+    @keyframes flameFillUp{
+      0%   { height: 0%; y: 100%; }
+      100% { height: 100%; y: 0%; }
+    }
+
+    /* --- iOS full-screen hard lock --- */
+    html, body { height: 100%; }
+    body { overscroll-behavior: none; }
+    .app { height: 100dvh; height: 100svh; height: 100vh; }
+    .stage, .prism, .stall, .vote, .done { height: 100dvh; height: 100svh; height: 100vh; }
+
+    .heroTitle{
+      font-weight: 800;
+      font-size: clamp(22px, 4.2vw, 34px);
+      line-height: 1.1;
+      letter-spacing: .01em;
+    }
+    .heroHint{
+      font-size: 14px;
+      color: rgba(255,255,255,.72) !important;
+    }
+
+</style>
 </head>
 
 <body>
   <div class="app" id="app">
-
-    <div class="topbar">
-      <div class="chip"><span class="dot"></span><img class="wordmark" src="wordmark.png" alt="<img class="wordmark" src="wordmark.png" alt="HESTIA" />" /> <span id="phase">PRISM</span></div>
-      <div class="chip" id="activeColorChip" style="opacity:.0; transform: translateY(-6px); transition: opacity 420ms var(--ease), transform 420ms var(--ease);">
+<div class="chip" id="activeColorChip" style="opacity:.0; transform: translateY(-6px); transition: opacity 420ms var(--ease), transform 420ms var(--ease);">
         <span style="opacity:.9">Color</span> <b id="activeColorName">—</b>
       </div>
     </div>
@@ -901,10 +946,10 @@
           </div>
         </div>
 
-        <div class="tagline fade-in delay-1">IGNITE THE SEASON.</div>
+        <div class="tagline fade-in delay-1"></div>
         <div class="date fade-in delay-2">首發色投票 · Tone-on-Tone</div>
-        <div class="hint fade-in delay-3">請先輸入 Email 以進行投票。</div>
-        <div class="reward fade-in delay-3">最高票色彩的投票者，將有機會獲得 HESTIA 首波發售專屬折扣碼。</div>
+        <div class="hint fade-in delay-3">請先輸入 Email 以進行投票</div>
+        <div class="reward fade-in delay-3">最高票的色彩世界，將可獲得 HESTIA 首波發售折扣碼。</div>
 
         <div class="gate fade-in delay-3" aria-label="Email gate">
           <input id="gateEmail" type="email" inputmode="email" autocomplete="email" placeholder="輸入你的 Email（必填）" aria-label="輸入你的 Email（必填）"/>
@@ -924,7 +969,7 @@
             <span class="opt-zh">爆發 / 進場即存在</span>
           </div>
 
-          <h1 class="colorName">
+          <h1 class="colorName" class="heroTitle">
             <span class="en">IGNITION</span>
             <span class="zh">點燃紅</span>
           </h1>
@@ -1612,43 +1657,7 @@
 
     function startHold(square){
       if(!spectrum.classList.contains("is-open")) return;
-      if(!userEmail){ showToast("請先輸入 Email。"); return; }
-
-      const st=square.closest(".stall");
-      const key=st?.dataset?.key || activeKey;
-      applyActive(key);
-
-      holding=true;
-      currentSquare=square;
-      currentSquare.classList.add("is-holding");
-      const fill=square.querySelector("[data-sq-fill]");
-      const ring=square.querySelector(".ringProg");
-      holdStart=performance.now();
-
-      vib(10);
-
-      holdTimer=setTimeout(async ()=>{
-        vib(28);
-        pulseBloom();
-        try {
-          await submitVoteOnce(key);
-          liveCounts[key] = (liveCounts[key]||0)+1;
-          setTimeout(()=>showConfirm(key), 420);
-        } catch(e) {
-          console.warn(e);
-          if(e.code==="already_voted") showToast("此 Email 已投過票。");
-          else showToast("送出失敗，請稍後再試。");
-        }
-        resetHold();
-      }, 1000);
-
-      let vibCount=0;
-      const step=(t)=>{
-        const p=clamp((t-holdStart)/1000, 0, 1);
-        if(fill) fill.style.width = (p*100).toFixed(1) + "%";
-        if(ring) ring.style.strokeDashoffset = String(276.46 * (1-p));
-
-        if(p>0.35 && vibCount<1){ vib(10); vibCount++; }
+      if(!userEmail){ showToast("請先輸入 Email 以進行投票<1){ vib(10); vibCount++; }
         if(p>0.60 && vibCount<2){ vib(12); vibCount++; }
         if(p>0.82 && vibCount<3){ vib(16); vibCount++; }
         if(p>0.94 && vibCount<4){ vib(20); vibCount++; }

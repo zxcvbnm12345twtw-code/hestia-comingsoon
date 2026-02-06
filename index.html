@@ -1212,7 +1212,7 @@
           <div class="cardPreview" aria-label="Founder Card 預覽">
             <canvas id="cardCanvas" width="1200" height="750"></canvas>
           </div>
-          <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
+         <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
           
 
           <div class="heat" id="heat"></div>
@@ -1244,6 +1244,17 @@
     const VOTE_ENDPOINT = "";         // e.g. https://script.google.com/macros/s/XXXXX/exec
 
     const GOOGLE_FORM_VIEW_BASE="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/viewform?usp=pp_url";
+    const GOOGLE_FORM_RESPONSE_URL="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse";
+
+    function sendVoteToGoogleForm(email,colorKey){
+      try{
+        const fd=new FormData();
+        fd.append("entry.345729382", email);
+        fd.append("entry.324440347", colorKey);
+        fetch(GOOGLE_FORM_RESPONSE_URL, { method:"POST", mode:"no-cors", body: fd });
+      }catch(e){}
+    }
+
 
   const WORLDS = [{"key": "ignition", "en": "IGNITION", "zh": "點燃紅", "h": 8, "sat": 92, "lum": 54, "core_hex": "#F63B1E", "hi_hex": "#FF725C"}, {"key": "momentum", "en": "MOMENTUM", "zh": "動能橙", "h": 28, "sat": 92, "lum": 54, "core_hex": "#F6831E", "hi_hex": "#FFA85C"}, {"key": "ground", "en": "GROUND", "zh": "著地綠", "h": 132, "sat": 78, "lum": 46, "core_hex": "#1AD13E", "hi_hex": "#4CFA6F"}, {"key": "airflow", "en": "AIRFLOW", "zh": "氣流藍", "h": 205, "sat": 88, "lum": 54, "core_hex": "#229BF1", "hi_hex": "#5CBBFF"}, {"key": "pulse", "en": "PULSE", "zh": "脈動紫", "h": 275, "sat": 86, "lum": 52, "core_hex": "#961BEE", "hi_hex": "#BB5CFF"}, {"key": "forge", "en": "FORGE", "zh": "鍛造咖", "h": 28, "sat": 66, "lum": 28, "core_hex": "#774418", "hi_hex": "#E16E09"}];
 
@@ -1736,7 +1747,7 @@ spectrum.classList.add("is-open");
 
       ctx.globalAlpha=.95;
       if(hlogoImg && hlogoImg.complete && hlogoImg.naturalWidth>0){
-        const size=180;
+        const size=200;
         const x=W-64-size-170; // shift left further
         const y=H/2 - size/2 + 40;
         ctx.drawImage(hlogoImg, x, y, size, size);
@@ -1785,6 +1796,17 @@ spectrum.classList.add("is-open");
 
     setToneInstant(WORLDS[0].h, WORLDS[0].sat, WORLDS[0].lum);
     startMonolithCycle();
-  </script>
+  
+  // --- Force Hero background cycling (safety net) ---
+  try{
+    const kickHero = () => { try{ startMonolithCycle(); }catch(e){} };
+    // kick immediately and after a tick (some browsers need layout ready)
+    kickHero(); setTimeout(kickHero, 80); setTimeout(kickHero, 400);
+    document.addEventListener("visibilitychange", () => {
+      if(!document.hidden){ kickHero(); }
+    });
+    window.addEventListener("focus", kickHero);
+  }catch(e){}
+</script>
 </body>
 </html>

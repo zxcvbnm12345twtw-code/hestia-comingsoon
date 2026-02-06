@@ -1210,12 +1210,9 @@
             <canvas id="cardCanvas" width="1200" height="750"></canvas>
           </div>
 
-          <div class="actions">
-            <button class="btn primary" id="downloadCard" type="button">下載卡片</button>
-            <button class="btn" id="closeConfirm" type="button">繼續瀏覽</button>
-          </div>
+          <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
 
-          <div class="heat" id="heat"></div>
+<div class="heat" id="heat"></div>
 
           <div class="tiny">
             ※ 會一併送出：Email + 目前投票色（key / 英文 / 中文）。<br/>
@@ -1639,7 +1636,12 @@
     const cardCanvas=$("#cardCanvas");
     const ctx=cardCanvas.getContext("2d");
 
-    const noiseCanvas=document.createElement("canvas");
+    
+
+    // HLOGO for Founder Card (right-side mark)
+    const hlogoImg=new Image();
+    hlogoImg.src="HLOGO.png";
+const noiseCanvas=document.createElement("canvas");
     noiseCanvas.width=240; noiseCanvas.height=150;
     const nctx=noiseCanvas.getContext("2d");
     const img=nctx.createImageData(noiseCanvas.width, noiseCanvas.height);
@@ -1724,10 +1726,17 @@
       ctx.fillStyle="rgba(255,255,255,.70)";
       ctx.fillText("Your Spectrum is Set", 112, 612);
 
-      ctx.globalAlpha=.9;
-      ctx.strokeStyle="rgba(255,255,255,.86)";
-      ctx.lineWidth=7;
-      drawFlame(ctx, W-260, H-280, 140);
+      ctx.globalAlpha=.95;
+      if(hlogoImg && hlogoImg.complete && hlogoImg.naturalWidth>0){
+        const size=180;
+        const x=W-64-size;
+        const y=H/2 - size/2 + 40;
+        ctx.drawImage(hlogoImg, x, y, size, size);
+      }else{
+        ctx.strokeStyle="rgba(255,255,255,.86)";
+        ctx.lineWidth=7;
+        drawFlame(ctx, W-260, H-280, 140);
+      }
       ctx.globalAlpha=1;
 
       cardCanvas.dataset.serial=serial;
@@ -1738,33 +1747,25 @@
       const w=getWorld(key);
       $("#confirmDesc").textContent = `你投給了「${w.zh}」｜${w.en}。這份選擇會成為首發色決策的一票。`;
 
-      const total=Object.values(liveCounts).reduce((a,b)=>a+b,0) || 1;
+      const sum=Object.values(liveCounts).reduce((a,b)=>a+b,0);
+      const total = sum || 0;
+
       for(const ww of WORLDS){
-        const pct=Math.round((liveCounts[ww.key]||0)/total*100);
+        const pct = total===0 ? 16 : Math.round((liveCounts[ww.key]||0)/total*100);
         const bar=document.querySelector(`[data-bar="${ww.key}"]`);
         const label=document.querySelector(`[data-pct="${ww.key}"]`);
         if(bar) bar.style.width = clamp(pct, 6, 100) + "%";
         if(label) label.textContent = pct + "%";
       }
 
-      const serial=String(Math.floor(1000+Math.random()*8999)).padStart(4,"0");
+      const serial=String(4021 + Math.floor(Math.random() * (9999-4021+1))).padStart(4,"0");
       renderFounderCard(w, serial);
 
       confirm.classList.add("is-on");
     }
 
-    $("#closeConfirm").addEventListener("click", ()=>confirm.classList.remove("is-on"));
-
-    $("#downloadCard").addEventListener("click", ()=>{
-      const key=cardCanvas.dataset.key || WORLDS[0].key;
-      const serial=cardCanvas.dataset.serial || "0000";
-      const w=getWorld(key);
-      const link=document.createElement("a");
-      link.download = `HESTIA-FounderCard-${w.en}-${serial}.png`;
-      link.href = cardCanvas.toDataURL("image/png");
-      link.click();
-    });
-
+    // Tap backdrop to close (since buttons are removed)
+    confirm.addEventListener("click",(e)=>{ if(e.target===confirm){ confirm.classList.remove("is-on"); }});
     setToneInstant(WORLDS[0].h, WORLDS[0].sat, WORLDS[0].lum);
     startMonolithCycle();
   </script>

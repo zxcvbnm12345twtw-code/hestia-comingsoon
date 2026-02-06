@@ -27,19 +27,20 @@
     html, body { height: 100%; margin: 0; background: #000; color: var(--uiText); overflow: hidden; font-family: system-ui, -apple-system, sans-serif; }
 
     .app {
-      height: 100vh; height: 100svh;
-      position: relative;
-      overflow-x: hidden;
-      overflow-y: auto;
-      scroll-snap-type: y mandatory;
-      background:
-        radial-gradient(1200px 900px at 18% 16%, color-mix(in oklab, var(--tone-core), white 12%) 0%, rgba(0,0,0,0) 56%),
-        radial-gradient(900px 900px at 82% 28%, color-mix(in oklab, var(--tone-core), black 36%) 0%, rgba(0,0,0,0) 62%),
-        linear-gradient(180deg, var(--tone-bg), var(--tone-atm) 42%, var(--tone-bg) 100%);
-      transition: background 900ms var(--ease);
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: none;
-    }
+  height: 100vh; height: 100svh;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+
+  background:
+    radial-gradient(1200px 900px at 18% 16%, hsla(var(--hue) 92% 62% / .22) 0%, rgba(0,0,0,0) 56%),
+    radial-gradient(900px 900px at 82% 28%, hsla(var(--hue) 92% 40% / .18) 0%, rgba(0,0,0,0) 62%),
+    linear-gradient(180deg, hsl(var(--hue) 30% 10%), hsl(var(--hue) 34% 12%) 42%, hsl(var(--hue) 30% 10%) 100%);
+  transition: background 900ms var(--ease);
+}
 
     /* --- UI Components --- */
     .chip {
@@ -54,8 +55,21 @@
     .stage { height: 100vh; height: 100svh; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; transition: opacity 800ms; }
     .monolith { width: min(520px, 92vw); text-align: center; }
 
-    .mark-wrap { margin: 0 auto; width: min(240px, 60vw); aspect-ratio: 1/1; border-radius: 50%; background: rgba(255,255,255,.05); border: 1px solid var(--uiStroke); position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    .hestia-mark { width: 50%; height: auto; fill: currentColor; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); color:#fff; }
+    
+.mark-wrap { 
+  margin: 0 auto; 
+  width: min(240px, 60vw); 
+  aspect-ratio: 1/1;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  position: relative; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  box-shadow: none;
+}
+    .hestia-mark { width: 52%; height: auto; fill: currentColor; color: #fff; filter: drop-shadow(0 0 20px rgba(255,255,255,0.18)); }
     .hero-wordmark { height: 20px; margin-top: 18px; opacity: 0.9; display:inline-block; }
 
     .gate { margin-top: 26px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
@@ -72,10 +86,34 @@
     .colorName .en { font-size: clamp(40px, 10vw, 64px); font-weight: 900; display: block; }
     .colorName .zh { font-size: 16px; opacity: 0.7; letter-spacing: 0.2em; }
 
-    .chargeSquare { margin: 30px auto; width: 220px; aspect-ratio: 1/1; border-radius: 24px; border: 1px solid var(--uiStroke); background: rgba(255,255,255,0.03); position: relative; cursor: pointer; overflow: hidden; transition: transform 0.2s; touch-action: none; user-select:none; -webkit-user-select:none; }
+    
+.chargeSquare { 
+  margin: 30px auto; 
+  width: 220px; aspect-ratio: 1/1; 
+  border-radius: 24px; 
+  border: none;
+  background: transparent;
+  position: relative; 
+  cursor: pointer; 
+  overflow: visible; 
+  transition: transform 0.2s; 
+  touch-action: none; 
+  user-select:none; -webkit-user-select:none;
+}
     .chargeSquare:active { transform: scale(0.98); }
-    .sqFill { position: absolute; bottom: 0; left: 0; width: 0%; height: 100%; background: var(--tone-core); opacity: 0.22; transition: width 0.1s linear; }
-    .sqInner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    
+.sqFill { 
+  position: absolute; 
+  bottom: 0; left: 0; 
+  width: 100%; 
+  height: 0%;
+  background: var(--tone-core); 
+  opacity: 0.22; 
+  transition: height 0.1s linear; 
+  border-radius: 20px;
+  transform-origin: bottom;
+}
+    .sqInner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events:none; }
     .markSvg { width: 40%; stroke: #fff; stroke-width: 2; fill: none; opacity:.95; }
 
     .confirm { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: 600ms; }
@@ -83,6 +121,25 @@
     .panel { width: min(420px, 90vw); background: #111; border: 1px solid var(--uiStroke); border-radius: 32px; padding: 24px; text-align: center; }
     .cardPreview { width: 100%; aspect-ratio: 16/10; background: #000; border-radius: 16px; margin: 20px 0; overflow: hidden; }
     canvas { width: 100%; height: 100%; }
+
+.voteProgress{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--uiStroke);
+}
+.voteProgress .seg{
+  width: 22px; height: 6px;
+  border-radius: 99px;
+  background: rgba(255,255,255,.14);
+  opacity: .9;
+}
+.voteProgress .seg.on{
+  background: var(--tone-core);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--tone-core), transparent 30%);
+}
 
     .toast { position: fixed; bottom: calc(40px + var(--safeBottom)); left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.9); color: #000; padding: 10px 20px; border-radius: 99px; font-size: 14px; z-index: 300; opacity: 0; transition: 0.3s; }
     .toast.on { opacity: 1; }
@@ -102,7 +159,72 @@
     <section class="stage" id="monolithStage">
       <div class="monolith">
         <div class="mark-wrap">
-          <svg class="hestia-mark" viewBox="0 0 100 100"><path d="M50 10 L80 80 L50 65 L20 80 Z" /></svg>
+          <svg class="hestia-mark"
+   version="1.1"
+   id="svg2"
+   viewBox="0 0 377.94666 377.94666"
+   sodipodi:docname="HESTIA LOGO.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath16">
+      <path
+         d="M 0,283.46 H 283.46 V 0 H 0 Z"
+         id="path14" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <g
+     id="g8"
+     inkscape:groupmode="layer"
+     inkscape:label="HESTIA LOGO"
+     transform="matrix(1.3333333,0,0,-1.3333333,0,377.94667)">
+    <g
+       id="g10">
+      <g
+         id="g12"
+         clip-path="url(#clipPath16)">
+        <g
+           id="g18"
+           transform="translate(192.7594,80.9799)">
+          <path
+             d="m 0,0 0.021,30.904 v 21.16 c 1.7,-0.726 2.874,-1.347 3.741,-1.975 13.229,-9.61 26.525,-19.134 39.59,-28.963 8.824,-6.639 11.979,-15.609 12.006,-26.809 0.001,-0.551 -10e-4,-1.094 0,-1.644 v -30.905 -21.16 c -1.7,0.726 -2.895,1.347 -3.762,1.976 -13.229,9.61 -26.525,19.133 -39.59,28.963 -8.824,6.638 -11.958,15.608 -11.985,26.808 -0.001,0.552 10e-4,1.094 0,1.645 z"
+             style="fill:#231916;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path20" />
+        </g>
+        <g
+           id="g22"
+           transform="translate(248.0703,131.631)">
+          <path
+             d="m 0,0 c -0.002,40.944 0,0.466 0,41.447 -0.744,43.582 -46.129,81.844 -106.34,81.844 -60.211,0 -105.597,-38.262 -106.341,-81.844 0,-40.981 0.002,-0.503 0,-41.447 0,-6.713 -0.047,-13.786 -0.047,-21.213 1.701,0.727 2.882,1.348 3.749,1.977 13.229,9.61 26.525,19.132 39.59,28.962 8.824,6.639 11.958,15.609 11.985,26.809 v 0.036 l 0.029,27.898 c 0,30.598 19.233,55.105 51.035,55.105 31.802,0 51.034,-24.507 51.034,-55.105 l 0.029,-27.934 c 0.027,-11.2 3.161,-20.17 11.985,-26.809 13.065,-9.83 26.361,-19.352 39.59,-28.962 0.867,-0.629 2.049,-1.25 3.749,-1.977 C 0.047,-13.786 0,-6.713 0,0"
+             style="fill:#231916;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path24" />
+        </g>
+        <g
+           id="g26"
+           transform="translate(90.6796,80.9799)">
+          <path
+             d="m 0,0 v 30.904 21.16 C -1.7,51.338 -2.874,50.717 -3.741,50.089 -16.97,40.479 -30.266,30.955 -43.331,21.126 -52.155,14.487 -55.31,5.517 -55.337,-5.683 c -10e-4,-0.551 0.001,-1.094 0,-1.644 v -30.905 -21.16 c 1.7,0.726 2.895,1.347 3.762,1.976 13.229,9.61 26.525,19.133 39.59,28.963 C -3.161,-21.815 -0.027,-12.845 0,-1.645 0.001,-1.093 -0.001,-0.551 0,0"
+             style="fill:#231916;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path28" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
         </div>
 
         <!-- Use wordmark.png (same folder) -->
@@ -128,9 +250,7 @@
           <h1 class="colorName"><span class="en">IGNITION</span><span class="zh">點燃紅</span></h1>
           <div class="chargeSquare" data-charge-square>
             <div class="sqFill" data-sq-fill></div>
-            <div class="sqInner">
-              <svg viewBox="0 0 100 100" class="markSvg"><path d="M50 20 L70 70 L50 60 L30 70 Z" /></svg>
-            </div>
+            <div class="sqInner"><img src="Flamemark.png" alt="Flame Mark" style="width:42%; height:auto; opacity:.95; filter: drop-shadow(0 10px 26px rgba(0,0,0,.45));"/></div>
           </div>
           <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
         </div>
@@ -141,9 +261,7 @@
           <h1 class="colorName"><span class="en">MOMENTUM</span><span class="zh">動能橙</span></h1>
           <div class="chargeSquare" data-charge-square>
             <div class="sqFill" data-sq-fill></div>
-            <div class="sqInner">
-              <svg viewBox="0 0 100 100" class="markSvg"><path d="M50 20 L70 70 L50 60 L30 70 Z" /></svg>
-            </div>
+            <div class="sqInner"><img src="Flamemark.png" alt="Flame Mark" style="width:42%; height:auto; opacity:.95; filter: drop-shadow(0 10px 26px rgba(0,0,0,.45));"/></div>
           </div>
           <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
         </div>
@@ -154,13 +272,49 @@
           <h1 class="colorName"><span class="en">GROUND</span><span class="zh">著地綠</span></h1>
           <div class="chargeSquare" data-charge-square>
             <div class="sqFill" data-sq-fill></div>
-            <div class="sqInner">
-              <svg viewBox="0 0 100 100" class="markSvg"><path d="M50 20 L70 70 L50 60 L30 70 Z" /></svg>
-            </div>
+            <div class="sqInner"><img src="Flamemark.png" alt="Flame Mark" style="width:42%; height:auto; opacity:.95; filter: drop-shadow(0 10px 26px rgba(0,0,0,.45));"/></div>
           </div>
           <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
         </div>
-      </section>
+      <section class="stall" data-key="airflow" data-en="AIRFLOW" data-zh="流動藍" data-hue="210">
+  <div class="product">
+    <h1 class="colorName"><span class="en">AIRFLOW</span><span class="zh">流動藍</span></h1>
+    <div class="chargeSquare" data-charge-square>
+      <div class="sqFill" data-sq-fill></div>
+      <div class="sqInner">
+        <img src="Flamemark.png" alt="Flame Mark" style="width:42%; height:auto; opacity:.95; filter: drop-shadow(0 10px 26px rgba(0,0,0,.45));"/>
+      </div>
+    </div>
+    <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
+  </div>
+</section>
+
+<section class="stall" data-key="violet" data-en="VIOLET" data-zh="靜焰紫" data-hue="270">
+  <div class="product">
+    <h1 class="colorName"><span class="en">VIOLET</span><span class="zh">靜焰紫</span></h1>
+    <div class="chargeSquare" data-charge-square>
+      <div class="sqFill" data-sq-fill></div>
+      <div class="sqInner">
+        <img src="Flamemark.png" alt="Flame Mark" style="width:42%; height:auto; opacity:.95; filter: drop-shadow(0 10px 26px rgba(0,0,0,.45));"/>
+      </div>
+    </div>
+    <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
+  </div>
+</section>
+
+<section class="stall" data-key="roast" data-en="ROAST" data-zh="醇焙咖" data-hue="28">
+  <div class="product">
+    <h1 class="colorName"><span class="en">ROAST</span><span class="zh">醇焙咖</span></h1>
+    <div class="chargeSquare" data-charge-square>
+      <div class="sqFill" data-sq-fill></div>
+      <div class="sqInner">
+        <img src="Flamemark.png" alt="Flame Mark" style="width:42%; height:auto; opacity:.95; filter: drop-shadow(0 10px 26px rgba(0,0,0,.45));"/>
+      </div>
+    </div>
+    <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
+  </div>
+</section>
+
     </main>
 
     <section class="confirm" id="confirm">
@@ -179,10 +333,13 @@
 
   <script>
     const WORLDS = [
-      {key: "ignition", en: "IGNITION", zh: "點燃紅", h: 8, sat: 92, lum: 54, core_hex: "#F63B1E"},
-      {key: "momentum", en: "MOMENTUM", zh: "動能橙", h: 28, sat: 92, lum: 54, core_hex: "#F6831E"},
-      {key: "ground", en: "GROUND", zh: "著地綠", h: 132, sat: 78, lum: 46, core_hex: "#1AD13E"}
-    ];
+  {key: "ignition", en: "IGNITION", zh: "點燃紅", h: 8,   sat: 92, lum: 54, core_hex: "#F63B1E"},
+  {key: "momentum", en: "MOMENTUM", zh: "動能橙", h: 28,  sat: 92, lum: 54, core_hex: "#FF8A2B"},
+  {key: "ground",   en: "GROUND",   zh: "著地綠", h: 132, sat: 78, lum: 46, core_hex: "#21D176"},
+  {key: "airflow",  en: "AIRFLOW",  zh: "流動藍", h: 210, sat: 78, lum: 56, core_hex: "#6FA8FF"},
+  {key: "violet",   en: "VIOLET",   zh: "靜焰紫", h: 270, sat: 76, lum: 60, core_hex: "#B48BFF"},
+  {key: "roast",    en: "ROAST",    zh: "醇焙咖", h: 28,  sat: 38, lum: 40, core_hex: "#9B6B4E"}
+];
 
     // Google Form endpoint + entry ids (yours)
     const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScr6dSu1JP1mhf1oCP3JNtd0KCcvnjvXqdAeYZ5E2AVBMKMgw/formResponse";
@@ -263,9 +420,9 @@
     let holdTimer = null;
 
     function resetFill(fill){
-      fill.style.transition = 'width 0.2s ease-out';
-      fill.style.width = '0%';
-      setTimeout(()=>{ fill.style.transition = 'width 1s linear'; }, 220);
+      fill.style.transition = 'height 0.2s ease-out';
+      fill.style.height = '0%';
+      setTimeout(()=>{ fill.style.transition = 'height 1s linear'; }, 220);
     }
 
     $$('[data-charge-square]').forEach(sq => {
@@ -286,8 +443,8 @@
         e.preventDefault();
         sq.setPointerCapture?.(e.pointerId);
 
-        fill.style.transition = 'width 1s linear';
-        fill.style.width = '100%';
+        fill.style.transition = 'height 1s linear';
+        fill.style.height = '100%';
 
         clearTimeout(holdTimer);
         holdTimer = setTimeout(() => {
@@ -333,6 +490,11 @@
       ctx.globalAlpha = .92;
       ctx.fillText(userEmail, 50, 450);
       ctx.globalAlpha = 1;
+
+// progress highlight
+document.querySelectorAll('.voteProgress .seg').forEach(seg=>{
+  seg.classList.toggle('on', seg.dataset.seg === world.key);
+});
 
       $('#confirm').classList.add('is-on');
       $('#confirmTitle').textContent = "投票完成";

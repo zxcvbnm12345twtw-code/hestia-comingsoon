@@ -831,6 +831,94 @@
       opacity:.9;
     }
 
+
+    /* === Patch: Vote flamemark 置中 + 70% 佔比（A–F）=== */
+    .chargeSquare .flameMark{
+      position:absolute !important;
+      inset:0 !important;
+      display:grid !important;
+      place-items:center !important;
+      pointer-events:none;
+    }
+    .chargeSquare .flame-img{
+      width: 70% !important;
+      height:auto !important;
+      max-width: 70% !important;
+      max-height: 70% !important;
+      display:block !important;
+      margin: 0 auto !important;
+      opacity:.92;
+    }
+
+    /* === Patch: 充能條更明顯（更亮、更粗、更有光澤）=== */
+    .sqProgress{
+      height: 20px !important;
+      background: rgba(0,0,0,.20) !important;
+      border: 1px solid rgba(255,255,255,.18) !important;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.08),
+        0 10px 26px rgba(0,0,0,.28) !important;
+    }
+    .sqFill{
+      position:relative;
+      background: linear-gradient(90deg,
+        color-mix(in oklab, var(--tone-core), white 40%),
+        color-mix(in oklab, var(--tone-core), white 10%)
+      ) !important;
+      box-shadow:
+        0 0 30px color-mix(in oklab, var(--tone-core), transparent 35%),
+        0 0 14px rgba(255,255,255,.16),
+        inset 0 1px 0 rgba(255,255,255,.38),
+        inset 0 -1px 0 rgba(0,0,0,.18) !important;
+    }
+    .sqFill::after{
+      content:"";
+      position:absolute; inset:-30% -20%;
+      background: linear-gradient(115deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.38) 45%,
+        rgba(255,255,255,0) 60%);
+      transform: translateX(-60%);
+      opacity: .55;
+      filter: blur(0.4px);
+      animation: barShimmer 1.2s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes barShimmer{
+      from{ transform: translateX(-60%); }
+      to{ transform: translateX(60%); }
+    }
+
+    /* === Patch: 結果頁按鈕移除（防守式）=== */
+    .resultActions{ display:none !important; }
+
+    /* === Patch: 結果卡右側 Logo（HLOGO）=== */
+    .resultHlogo{
+      width: 110px;
+      height:auto;
+      display:block;
+      opacity:.92;
+      filter: drop-shadow(0 14px 55px rgba(0,0,0,.45));
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* === Patch: 結果頁落款置中 === */
+    .resultFooter{
+      margin-top: 18px;
+      text-align:center;
+      font-weight: 700;
+      letter-spacing: .18em;
+      font-size: 12px;
+      opacity: .85;
+    }
+    .resultFooter .reg{
+      font-size: 11px;
+      vertical-align: super;
+      margin-left: 2px;
+      opacity:.9;
+    }
+
 </style>
 </head>
 

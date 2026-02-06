@@ -947,9 +947,9 @@
         </div>
 
         <div class="tagline fade-in delay-1"></div>
-        <div class="date fade-in delay-2">首發色投票 · Tone on Tone</div>
+        <div class="date fade-in delay-2">首發色投票 · Tone-on-Tone</div>
         <div class="hint fade-in delay-3">請先輸入 Email 以進行投票</div>
-        <div class="reward fade-in delay-3">最高票的色彩世界投票者，將可獲得 HESTiA 首波發售折扣碼。</div>
+        <div class="reward fade-in delay-3">最高票的色彩世界，將可獲得 HESTIA 首波發售折扣碼。</div>
 
         <div class="gate fade-in delay-3" aria-label="Email gate">
           <input id="gateEmail" type="email" inputmode="email" autocomplete="email" placeholder="輸入你的 Email（必填）" aria-label="輸入你的 Email（必填）"/>
@@ -1460,7 +1460,8 @@
 
     const monolithStage = $("#monolithStage");
     const spectrum = $("#spectrum");
-    const phase = $("#phase");
+    const phase = $("#phase"); // optional
+    
     const activeChip = $("#activeColorChip");
     const activeName = $("#activeColorName");
 
@@ -1468,7 +1469,7 @@
       spectrum.classList.add("is-open");
       monolithStage.style.opacity="0";
       monolithStage.style.pointerEvents="none";
-      phase.textContent="SPECTRUM";
+      if(phase) phase.textContent="SPECTRUM";
       activeChip.style.opacity="1";
       activeChip.style.transform="translateY(0)";
     }
@@ -1709,134 +1710,7 @@
     }
     buildHeatmap();
 
-    const cardCanvas=$("#cardCanvas");
-    const ctx=cardCanvas.getContext("2d");
-
-    const noiseCanvas=document.createElement("canvas");
-    noiseCanvas.width=240; noiseCanvas.height=150;
-    const nctx=noiseCanvas.getContext("2d");
-    const img=nctx.createImageData(noiseCanvas.width, noiseCanvas.height);
-    for(let i=0;i<img.data.length;i+=4){
-      const v=Math.floor(Math.random()*255);
-      img.data[i]=v; img.data[i+1]=v; img.data[i+2]=v; img.data[i+3]=Math.floor(Math.random()*60);
-    }
-    nctx.putImageData(img,0,0);
-
-    function roundRect(ctx,x,y,w,h,r){
-      const rr=Math.min(r,w/2,h/2);
-      ctx.beginPath();
-      ctx.moveTo(x+rr,y);
-      ctx.arcTo(x+w,y,x+w,y+h,rr);
-      ctx.arcTo(x+w,y+h,x,y+h,rr);
-      ctx.arcTo(x,y+h,x,y,rr);
-      ctx.arcTo(x,y,x+w,y,rr);
-      ctx.closePath();
-    }
-    function drawFlame(ctx,cx,cy,s){
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - s*0.75);
-      ctx.bezierCurveTo(cx + s*0.35, cy - s*0.35, cx + s*0.10, cy - s*0.10, cx + s*0.40, cy + s*0.15);
-      ctx.bezierCurveTo(cx + s*0.70, cy + s*0.45, cx + s*0.35, cy + s*0.78, cx, cy + s*0.78);
-      ctx.bezierCurveTo(cx - s*0.35, cy + s*0.78, cx - s*0.70, cy + s*0.45, cx - s*0.40, cy + s*0.15);
-      ctx.bezierCurveTo(cx - s*0.10, cy - s*0.10, cx - s*0.35, cy - s*0.35, cx, cy - s*0.75);
-      ctx.closePath();
-      ctx.stroke();
-    }
-
-    function renderFounderCard(w, serial){
-      const W=cardCanvas.width, H=cardCanvas.height;
-      ctx.clearRect(0,0,W,H);
-
-      const g=ctx.createLinearGradient(0,0,W,H);
-      g.addColorStop(0, w.hi_hex);
-      g.addColorStop(0.55, w.core_hex);
-      g.addColorStop(1, "#0B0B0C");
-      ctx.fillStyle=g;
-      ctx.fillRect(0,0,W,H);
-
-      ctx.globalAlpha=0.22;
-      ctx.drawImage(noiseCanvas,0,0,W,H);
-      ctx.globalAlpha=1;
-
-      ctx.fillStyle="rgba(0,0,0,.18)";
-      roundRect(ctx, 64, 64, W-128, H-128, 32);
-      ctx.fill();
-      ctx.strokeStyle="rgba(255,255,255,.22)";
-      ctx.lineWidth=2;
-      roundRect(ctx, 64, 64, W-128, H-128, 32);
-      ctx.stroke();
-
-      ctx.fillStyle="rgba(255,255,255,.92)";
-      ctx.font="800 54px system-ui, -apple-system, 'SF Pro Display'";
-      ctx.fillText("FOUNDER", 112, 210);
-
-      ctx.font="650 32px system-ui, -apple-system, 'SF Pro Text'";
-      ctx.fillStyle="rgba(255,255,255,.80)";
-      ctx.fillText("HESTIA • Tone-on-Tone", 112, 268);
-
-      ctx.font="900 78px system-ui, -apple-system, 'SF Pro Display'";
-      ctx.fillStyle="rgba(255,255,255,.94)";
-      ctx.fillText(w.en, 112, 390);
-
-      ctx.font="650 32px 'PingFang TC', system-ui";
-      ctx.fillStyle="rgba(255,255,255,.80)";
-      ctx.fillText(w.zh, 112, 442);
-
-      ctx.font="700 32px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-      ctx.fillStyle="rgba(255,255,255,.82)";
-      ctx.fillText(`No. ${serial}`, 112, 510);
-
-      ctx.strokeStyle="rgba(255,255,255,.26)";
-      ctx.lineWidth=2;
-      ctx.beginPath();
-      ctx.moveTo(112, 556);
-      ctx.lineTo(520, 556);
-      ctx.stroke();
-
-      ctx.font="650 26px system-ui, -apple-system, 'SF Pro Text'";
-      ctx.fillStyle="rgba(255,255,255,.70)";
-      ctx.fillText("Your Spectrum is Set", 112, 612);
-
-      ctx.globalAlpha=.9;
-      ctx.strokeStyle="rgba(255,255,255,.86)";
-      ctx.lineWidth=7;
-      drawFlame(ctx, W-260, H-280, 140);
-      ctx.globalAlpha=1;
-
-      cardCanvas.dataset.serial=serial;
-      cardCanvas.dataset.key=w.key;
-    }
-
-    function showConfirm(key){
-      const w=getWorld(key);
-      $("#confirmDesc").textContent = `你投給了「${w.zh}」｜${w.en}。這份選擇會成為首發色決策的一票。`;
-
-      const total=Object.values(liveCounts).reduce((a,b)=>a+b,0) || 1;
-      for(const ww of WORLDS){
-        const pct=Math.round((liveCounts[ww.key]||0)/total*100);
-        const bar=document.querySelector(`[data-bar="${ww.key}"]`);
-        const label=document.querySelector(`[data-pct="${ww.key}"]`);
-        if(bar) bar.style.width = clamp(pct, 6, 100) + "%";
-        if(label) label.textContent = pct + "%";
-      }
-
-      const serial=String(Math.floor(1000+Math.random()*8999)).padStart(4,"0");
-      renderFounderCard(w, serial);
-
-      confirm.classList.add("is-on");
-    }
-
-    $("#closeConfirm").addEventListener("click", ()=>confirm.classList.remove("is-on"));
-
-    $("#downloadCard").addEventListener("click", ()=>{
-      const key=cardCanvas.dataset.key || WORLDS[0].key;
-      const serial=cardCanvas.dataset.serial || "0000";
-      const w=getWorld(key);
-      const link=document.createElement("a");
-      link.download = `HESTIA-FounderCard-${w.en}-${serial}.png`;
-      link.href = cardCanvas.toDataURL("image/png");
-      link.click();
-    });
+    // （投票結果下載卡片功能已移除）
 
     setToneInstant(WORLDS[0].h, WORLDS[0].sat, WORLDS[0].lum);
     startMonolithCycle();

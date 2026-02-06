@@ -1,3 +1,41 @@
+HESTIA — Tone-on-Tone 首發色投票
+6 色 Tone-on-Tone 色票組（Background / Core / Highlight）
+（順序：紅 → 橙 → 綠 → 藍 → 紫 → 咖）
+
+- IGNITION（點燃紅）
+  Background: hsl(8 32% 12%)  #281715
+  Core:       hsl(8 92% 54%)  #F63B1E
+  Highlight:  hsl(8 100% 68%)  #FF725C
+
+- MOMENTUM（動能橙）
+  Background: hsl(28 34% 12%)  #291E14
+  Core:       hsl(28 92% 54%)  #F6831E
+  Highlight:  hsl(28 100% 68%)  #FFA85C
+
+- GROUND（著地綠）
+  Background: hsl(132 28% 11%)  #142417
+  Core:       hsl(132 78% 46%)  #1AD13E
+  Highlight:  hsl(132 95% 64%)  #4CFA6F
+
+- AIRFLOW（氣流藍）
+  Background: hsl(205 30% 12%)  #152028
+  Core:       hsl(205 88% 54%)  #229BF1
+  Highlight:  hsl(205 100% 68%)  #5CBBFF
+
+- PULSE（脈動紫）
+  Background: hsl(275 30% 12%)  #201528
+  Core:       hsl(275 86% 52%)  #961BEE
+  Highlight:  hsl(275 100% 68%)  #BB5CFF
+
+- FORGE（鍛造咖）
+  Background: hsl(28 18% 10%)  #1E1915
+  Core:       hsl(28 66% 28%)  #774418
+  Highlight:  hsl(28 92% 46%)  #E16E09
+
+======================================================================
+FULL HTML (copy-paste to your page)
+======================================================================
+
 <!doctype html>
 <html lang="zh-Hant">
 <head>
@@ -1244,17 +1282,6 @@
     const VOTE_ENDPOINT = "";         // e.g. https://script.google.com/macros/s/XXXXX/exec
 
     const GOOGLE_FORM_VIEW_BASE="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/viewform?usp=pp_url";
-    const GOOGLE_FORM_RESPONSE_URL="https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/formResponse";
-
-    function sendVoteToGoogleForm(email,colorKey){
-      try{
-        const fd=new FormData();
-        fd.append("entry.345729382", email);
-        fd.append("entry.324440347", colorKey);
-        // no-cors: request will be sent even if response is opaque
-        fetch(GOOGLE_FORM_RESPONSE_URL, { method:"POST", mode:"no-cors", body: fd });
-      }catch(e){}
-    }
 
   const WORLDS = [{"key": "ignition", "en": "IGNITION", "zh": "點燃紅", "h": 8, "sat": 92, "lum": 54, "core_hex": "#F63B1E", "hi_hex": "#FF725C"}, {"key": "momentum", "en": "MOMENTUM", "zh": "動能橙", "h": 28, "sat": 92, "lum": 54, "core_hex": "#F6831E", "hi_hex": "#FFA85C"}, {"key": "ground", "en": "GROUND", "zh": "著地綠", "h": 132, "sat": 78, "lum": 46, "core_hex": "#1AD13E", "hi_hex": "#4CFA6F"}, {"key": "airflow", "en": "AIRFLOW", "zh": "氣流藍", "h": 205, "sat": 88, "lum": 54, "core_hex": "#229BF1", "hi_hex": "#5CBBFF"}, {"key": "pulse", "en": "PULSE", "zh": "脈動紫", "h": 275, "sat": 86, "lum": 52, "core_hex": "#961BEE", "hi_hex": "#BB5CFF"}, {"key": "forge", "en": "FORGE", "zh": "鍛造咖", "h": 28, "sat": 66, "lum": 28, "core_hex": "#774418", "hi_hex": "#E16E09"}];
 
@@ -1449,7 +1476,7 @@ spectrum.classList.add("is-open");
     let monolithTimer = null;
 
     function startMonolithCycle(){
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      /* keep hero cycling even if prefers-reduced-motion is enabled */
       const order = WORLDS; // already in requested order
       // start from current tone
       animateTone(order[0].h, order[0].sat, order[0].lum, 900);
@@ -1748,7 +1775,7 @@ spectrum.classList.add("is-open");
       ctx.globalAlpha=.95;
       if(hlogoImg && hlogoImg.complete && hlogoImg.naturalWidth>0){
         const size=180;
-        const x=W-50-size-160; // shift left further
+        const x=W-64-size-170; // shift left further
         const y=H/2 - size/2 + 40;
         ctx.drawImage(hlogoImg, x, y, size, size);
       }else{

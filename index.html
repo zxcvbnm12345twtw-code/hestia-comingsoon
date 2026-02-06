@@ -3,112 +3,162 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>HESTIA — Tone-on-Tone 首發色投票</title>
+  <title>HESTIA — TONE ON TONE 首發色投票</title>
   <style>
     :root {
-      --hue: 8; --sat: 92%; --lum: 54%;
+      --hue: 8;
+      --sat: 92%;
+      --lum: 54%;
       --tone-bg: hsl(var(--hue) 30% 10%);
       --tone-atm: hsl(var(--hue) 34% 12%);
       --tone-core: hsl(var(--hue) var(--sat) var(--lum));
       --tone-hi: hsl(var(--hue) 100% 68%);
-      --uiText: rgba(255,255,255,.92);
-      --uiTextMuted: rgba(255,255,255,.72);
-      --uiStroke: rgba(255,255,255,.14);
+      --uiText: rgba(255,255,255,.92) !important;
+      --uiTextMuted: rgba(255,255,255,.72) !important;
+      --uiStroke: rgba(255,255,255,.14) !important;
       --safeTop: env(safe-area-inset-top);
       --safeBottom: env(safe-area-inset-bottom);
       --ease: cubic-bezier(.2,.8,.2,1);
       --ease2: cubic-bezier(.16,1,.3,1);
       --dur: 900ms;
     }
+
     * { box-sizing: border-box; }
-    html, body {
-      height: 100%; margin: 0; background: #000; color: var(--uiText);
-      font-family: system-ui, -apple-system, sans-serif;
-      overflow: hidden; -webkit-font-smoothing: antialiased;
-    }
+    html, body { height: 100%; margin: 0; background: #000; color: var(--uiText); overflow: hidden; font-family: system-ui, -apple-system, sans-serif; }
+
     .app {
-      height: 100vh; height: 100svh; position: relative;
-      overflow-x: hidden; overflow-y: auto; scroll-snap-type: y mandatory;
+      height: 100vh; height: 100svh;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
       background:
         radial-gradient(1200px 900px at 18% 16%, color-mix(in oklab, var(--tone-core), white 12%) 0%, rgba(0,0,0,0) 56%),
         radial-gradient(900px 900px at 82% 28%, color-mix(in oklab, var(--tone-core), black 36%) 0%, rgba(0,0,0,0) 62%),
         linear-gradient(180deg, var(--tone-bg), var(--tone-atm) 42%, var(--tone-bg) 100%);
       transition: background 900ms var(--ease);
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: none;
     }
-    .topbar {
-      position: fixed; top: calc(10px + var(--safeTop)); left: 20px; right: 20px;
-      display: flex; justify-content: space-between; z-index: 100; pointer-events: none;
-    }
+
+    /* --- UI Components --- */
     .chip {
-      pointer-events: auto; background: rgba(0,0,0,.22); padding: 8px 16px; border-radius: 99px;
-      border: 1px solid var(--uiStroke); backdrop-filter: blur(12px); font-size: 12px;
+      position: fixed; top: calc(20px + var(--safeTop)); left: 50%; transform: translateX(-50%);
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px;
+      background: rgba(0,0,0,.3); border: 1px solid var(--uiStroke); backdrop-filter: blur(12px);
+      z-index: 100; opacity: 0; pointer-events: none; transition: opacity 400ms;
     }
-    .stage {
-      height: 100vh; height: 100svh; display: flex; align-items: center; justify-content: center;
-      scroll-snap-align: start; transition: opacity 800ms;
-    }
+    .chip b { color: #fff; }
+    .chip .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--tone-core); box-shadow: 0 0 10px var(--tone-core); }
+
+    .stage { height: 100vh; height: 100svh; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; transition: opacity 800ms; }
     .monolith { width: min(520px, 92vw); text-align: center; }
-    .mark-wrap { margin: 0 auto; width: 240px; aspect-ratio: 1/1; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; border: 1px solid var(--uiStroke); }
-    .hestia-mark { width: 60%; height: auto; fill: #fff; transition: transform 0.5s; }
-    .gate { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
-    .gate input { width: 300px; height: 48px; border-radius: 16px; border: 1px solid var(--uiStroke); background: rgba(0,0,0,0.2); color: #fff; padding: 0 16px; text-align: center; }
-    .gate button { width: 300px; height: 48px; border-radius: 16px; background: var(--tone-core); color: #fff; border: none; font-weight: bold; cursor: pointer; }
-    .spectrum { position: absolute; inset: 0; overflow-y: auto; scroll-snap-type: y mandatory; opacity: 0; pointer-events: none; }
-    .spectrum.is-open { opacity: 1; pointer-events: auto; }
+
+    .mark-wrap { margin: 0 auto; width: min(240px, 60vw); aspect-ratio: 1/1; border-radius: 50%; background: rgba(255,255,255,.05); border: 1px solid var(--uiStroke); position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .hestia-mark { width: 50%; height: auto; fill: currentColor; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); color:#fff; }
+    .hero-wordmark { height: 20px; margin-top: 18px; opacity: 0.9; display:inline-block; }
+
+    .gate { margin-top: 26px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+    .gate input { width: 280px; height: 48px; border-radius: 12px; border: 1px solid var(--uiStroke); background: rgba(255,255,255,0.05); color: #fff; padding: 0 16px; text-align: center; outline: none; }
+    .gate button { width: 280px; height: 48px; border-radius: 12px; border: none; background: var(--tone-core); color: #fff; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+    .gate button:active { transform: scale(0.95); }
+    .warn { font-size: 12px; color: #ff4d4d; opacity: 0; }
+
+    .spectrum { position: absolute; inset: 0; overflow-y: auto; scroll-snap-type: y mandatory; opacity: 0; pointer-events: none; transition: opacity 600ms, transform 600ms; transform: translateY(20px); }
+    .spectrum.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
     .stall { height: 100vh; height: 100svh; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; position: relative; }
-    .chargeSquare { width: 260px; aspect-ratio: 1/1; border-radius: 24px; border: 1px solid var(--uiStroke); background: rgba(255,255,255,0.03); position: relative; overflow: hidden; cursor: pointer; }
-    .sqFill { position: absolute; bottom: 0; left: 0; width: 0%; height: 100%; background: var(--tone-core); opacity: 0.3; transition: width 0.1s linear; }
-    .confirm { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.5s; }
+    .product { text-align: center; z-index: 2; padding-bottom: var(--safeBottom); }
+    .colorName .en { font-size: clamp(40px, 10vw, 64px); font-weight: 900; display: block; }
+    .colorName .zh { font-size: 16px; opacity: 0.7; letter-spacing: 0.2em; }
+
+    .chargeSquare { margin: 30px auto; width: 220px; aspect-ratio: 1/1; border-radius: 24px; border: 1px solid var(--uiStroke); background: rgba(255,255,255,0.03); position: relative; cursor: pointer; overflow: hidden; transition: transform 0.2s; touch-action: none; user-select:none; -webkit-user-select:none; }
+    .chargeSquare:active { transform: scale(0.98); }
+    .sqFill { position: absolute; bottom: 0; left: 0; width: 0%; height: 100%; background: var(--tone-core); opacity: 0.22; transition: width 0.1s linear; }
+    .sqInner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .markSvg { width: 40%; stroke: #fff; stroke-width: 2; fill: none; opacity:.95; }
+
+    .confirm { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: 600ms; }
     .confirm.is-on { opacity: 1; pointer-events: auto; }
-    .panel { width: min(500px, 92vw); background: #111; border-radius: 32px; padding: 24px; text-align: center; border: 1px solid var(--uiStroke); }
-    canvas { width: 100%; border-radius: 16px; margin: 20px 0; border: 1px solid #333; }
-    .toast { position: fixed; top: 40px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 20px; border-radius: 99px; z-index: 300; opacity: 0; transition: 0.3s; }
+    .panel { width: min(420px, 90vw); background: #111; border: 1px solid var(--uiStroke); border-radius: 32px; padding: 24px; text-align: center; }
+    .cardPreview { width: 100%; aspect-ratio: 16/10; background: #000; border-radius: 16px; margin: 20px 0; overflow: hidden; }
+    canvas { width: 100%; height: 100%; }
+
+    .toast { position: fixed; bottom: calc(40px + var(--safeBottom)); left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.9); color: #000; padding: 10px 20px; border-radius: 99px; font-size: 14px; z-index: 300; opacity: 0; transition: 0.3s; }
     .toast.on { opacity: 1; }
+
+    /* Reduce accidental selection highlight */
+    body, .app { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
+
 <body>
   <div class="app" id="app">
-    <div class="topbar">
-      <div class="chip">HESTIA — <span id="phase">PRISM</span></div>
-      <div class="chip" id="activeColorChip" style="opacity: 0;">Color: <b id="activeColorName">—</b></div>
+    <div class="chip" id="activeColorChip">
+      <div class="dot"></div>
+      <b>COLOR</b> <span id="activeColorName">—</span>
     </div>
 
     <section class="stage" id="monolithStage">
       <div class="monolith">
-        <div class="mark-wrap"><svg class="hestia-mark" viewBox="0 0 100 100"><path d="M50 10 L85 85 L50 65 L15 85 Z"/></svg></div>
-        <h1 style="margin-top:20px; font-weight: 900; letter-spacing: 2px;">HESTIA</h1>
-        <p style="color:var(--uiTextMuted);">首發色投票 · Tone-on-Tone</p>
+        <div class="mark-wrap">
+          <svg class="hestia-mark" viewBox="0 0 100 100"><path d="M50 10 L80 80 L50 65 L20 80 Z" /></svg>
+        </div>
+
+        <!-- Use wordmark.png (same folder) -->
+        <img class="hero-wordmark" src="wordmark.png" alt="HESTIA" />
+
+        <p style="color:var(--uiTextMuted); font-size:14px; margin-top:14px;">首發色投票 · TONE ON TONE</p>
+        <p style="color:var(--uiTextMuted); font-size:13px; margin:10px 0 0; line-height:1.7;">
+          請先輸入 Email 以進行投票。<br/>
+          最高票的色彩投票者將可獲得 HESTIA 首波發售折扣碼。
+        </p>
+
         <div class="gate">
-          <input id="gateEmail" type="email" placeholder="輸入你的 Email" />
+          <input id="gateEmail" type="email" placeholder="輸入你的 Email" autocomplete="email" />
           <button id="gateBtn">進入投票</button>
-          <div id="gateWarn" style="color:red; font-size:12px; opacity:0;">請輸入正確 Email</div>
+          <div class="warn" id="gateWarn">請輸入有效的 Email</div>
         </div>
       </div>
     </section>
 
     <main class="spectrum" id="spectrum">
       <section class="stall" data-key="ignition" data-en="IGNITION" data-zh="點燃紅" data-hue="8">
-        <div class="monolith">
-          <h2 style="font-size: 48px; margin: 0;">IGNITION</h2>
-          <p>Option A · 點燃紅</p>
+        <div class="product">
+          <h1 class="colorName"><span class="en">IGNITION</span><span class="zh">點燃紅</span></h1>
           <div class="chargeSquare" data-charge-square>
             <div class="sqFill" data-sq-fill></div>
-            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:12px; opacity:0.6;">長按一秒投票</div>
+            <div class="sqInner">
+              <svg viewBox="0 0 100 100" class="markSvg"><path d="M50 20 L70 70 L50 60 L30 70 Z" /></svg>
+            </div>
           </div>
+          <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
         </div>
       </section>
+
       <section class="stall" data-key="momentum" data-en="MOMENTUM" data-zh="動能橙" data-hue="28">
-        <div class="monolith">
-          <h2 style="font-size: 48px; margin: 0;">MOMENTUM</h2>
-          <p>Option B · 動能橙</p>
-          <div class="chargeSquare" data-charge-square><div class="sqFill" data-sq-fill></div></div>
+        <div class="product">
+          <h1 class="colorName"><span class="en">MOMENTUM</span><span class="zh">動能橙</span></h1>
+          <div class="chargeSquare" data-charge-square>
+            <div class="sqFill" data-sq-fill></div>
+            <div class="sqInner">
+              <svg viewBox="0 0 100 100" class="markSvg"><path d="M50 20 L70 70 L50 60 L30 70 Z" /></svg>
+            </div>
+          </div>
+          <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
         </div>
       </section>
+
       <section class="stall" data-key="ground" data-en="GROUND" data-zh="著地綠" data-hue="132">
-        <div class="monolith">
-          <h2 style="font-size: 48px; margin: 0;">GROUND</h2>
-          <p>Option C · 著地綠</p>
-          <div class="chargeSquare" data-charge-square><div class="sqFill" data-sq-fill></div></div>
+        <div class="product">
+          <h1 class="colorName"><span class="en">GROUND</span><span class="zh">著地綠</span></h1>
+          <div class="chargeSquare" data-charge-square>
+            <div class="sqFill" data-sq-fill></div>
+            <div class="sqInner">
+              <svg viewBox="0 0 100 100" class="markSvg"><path d="M50 20 L70 70 L50 60 L30 70 Z" /></svg>
+            </div>
+          </div>
+          <p style="font-size:12px; opacity:0.5">長按方塊一秒注滿能量</p>
         </div>
       </section>
     </main>
@@ -116,112 +166,197 @@
     <section class="confirm" id="confirm">
       <div class="panel">
         <h2 id="confirmTitle">投票完成</h2>
-        <p style="font-size:14px; color:var(--uiTextMuted);">您的專屬 Founder Card 已生成</p>
-        <canvas id="cardCanvas" width="1200" height="750"></canvas>
-        <div style="display:flex; gap:12px; justify-content:center;">
-          <button id="downloadCard" style="padding:12px 24px; border-radius:12px; background:var(--tone-core); color:#fff; border:none; cursor:pointer;">下載卡片</button>
-          <button id="closeConfirm" style="padding:12px 24px; border-radius:12px; background:#333; color:#fff; border:none; cursor:pointer;">關閉</button>
+        <p id="confirmDesc" style="font-size:14px; color:var(--uiTextMuted)">感謝參與，您的專屬 Founder Card 已生成。</p>
+        <div class="cardPreview">
+          <canvas id="cardCanvas" width="800" height="500"></canvas>
         </div>
+        <button id="closeBtn" style="background:none; border:1px solid var(--uiStroke); color:#fff; padding:10px 20px; border-radius:12px; cursor:pointer">關閉</button>
       </div>
     </section>
 
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast">已送出</div>
   </div>
 
   <script>
     const WORLDS = [
-      {key: "ignition", en: "IGNITION", zh: "點燃紅", h: 8, sat: 92, lum: 54, hex: "#F63B1E"},
-      {key: "momentum", en: "MOMENTUM", zh: "動能橙", h: 28, sat: 92, lum: 54, hex: "#F6831E"},
-      {key: "ground", en: "GROUND", zh: "著地綠", h: 132, sat: 78, lum: 46, hex: "#1AD13E"}
+      {key: "ignition", en: "IGNITION", zh: "點燃紅", h: 8, sat: 92, lum: 54, core_hex: "#F63B1E"},
+      {key: "momentum", en: "MOMENTUM", zh: "動能橙", h: 28, sat: 92, lum: 54, core_hex: "#F6831E"},
+      {key: "ground", en: "GROUND", zh: "著地綠", h: 132, sat: 78, lum: 46, core_hex: "#1AD13E"}
     ];
+
+    // Google Form endpoint + entry ids (yours)
+    const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScr6dSu1JP1mhf1oCP3JNtd0KCcvnjvXqdAeYZ5E2AVBMKMgw/formResponse";
+    const ENTRY_EMAIL = "entry.1302796239";
+    const ENTRY_COLOR = "entry.779089187";
 
     const $ = s => document.querySelector(s);
     const $$ = s => document.querySelectorAll(s);
     let userEmail = "";
 
-    // 色彩切換邏輯
+    function toast(msg="已送出"){
+      const t=$("#toast");
+      t.textContent = msg;
+      t.classList.add("on");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(()=>t.classList.remove("on"), 1400);
+    }
+
+    //防止顏色初始化崩潰
     function setTone(h, s, l) {
       document.documentElement.style.setProperty("--hue", h);
       document.documentElement.style.setProperty("--sat", s + "%");
       document.documentElement.style.setProperty("--lum", l + "%");
+      // also update chip dot glow
+      const dot = $("#activeColorChip .dot");
+      if(dot) dot.style.background = getComputedStyle(document.documentElement).getPropertyValue("--tone-core");
     }
 
-    // Hero 頁面背景變色循環 [cite: 561]
-    let cycleIdx = 0;
-    const cycleTimer = setInterval(() => {
-      if ($('#spectrum').classList.contains('is-open')) return;
-      const w = WORLDS[cycleIdx % WORLDS.length];
-      setTone(w.h, w.sat, w.lum);
-      cycleIdx++;
-    }, 2000);
+    function sendToGoogleForm(email, toneKey){
+      try{
+        const fd = new FormData();
+        fd.append(ENTRY_EMAIL, email);
+        fd.append(ENTRY_COLOR, toneKey);
+
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(GOOGLE_FORM_ACTION_URL, fd);
+          return true;
+        }
+        fetch(GOOGLE_FORM_ACTION_URL, { method:"POST", mode:"no-cors", body: fd }).catch(()=>{});
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
+
+    function votedKey(email){
+      // one vote per email on this device (client-side guard)
+      return "HESTIA_TONEON_TONE_VOTED_" + btoa(unescape(encodeURIComponent(email.trim().toLowerCase())));
+    }
 
     // Email 進入邏輯
     $('#gateBtn').addEventListener('click', () => {
-      const email = $('#gateEmail').value;
-      if (!email.includes('@')) { $('#gateWarn').style.opacity = 1; return; }
+      const email = $('#gateEmail').value.trim();
+      if (!email || !email.includes('@') || email.length < 6) {
+        $('#gateWarn').style.opacity = 1;
+        return;
+      }
+      $('#gateWarn').style.opacity = 0;
+
+      // one vote per email
+      if (localStorage.getItem(votedKey(email))) {
+        toast("此 Email 已投票");
+        // still allow browsing (open spectrum)
+      }
+
       userEmail = email;
       $('#monolithStage').style.opacity = 0;
       setTimeout(() => {
         $('#monolithStage').style.display = 'none';
         $('#spectrum').classList.add('is-open');
         $('#activeColorChip').style.opacity = 1;
-        $('#phase').textContent = "SPECTRUM";
+        // initialize chip name
+        $('#activeColorName').textContent = WORLDS[0].en;
       }, 800);
     });
 
-    // 投票長按 UX [cite: 568, 588]
-    let holdTimer;
-    $$('[data-charge-square]').forEach(sq => {
-      const fill = sq.querySelector('[data-sq-fill]');
-      sq.addEventListener('pointerdown', () => {
-        fill.style.width = '100%';
-        fill.style.transition = 'width 1s linear';
-        holdTimer = setTimeout(() => {
-          const world = WORLDS.find(w => w.key === sq.closest('.stall').dataset.key);
-          showResult(world);
-        }, 1000);
-      });
-      sq.addEventListener('pointerup', () => {
-        clearTimeout(holdTimer);
-        fill.style.transition = 'width 0.2s ease-out';
-        fill.style.width = '0%';
-      });
-    });
+    // 長按投票邏輯（1s）
+    let holdTimer = null;
 
-    // 結果與卡片生成 [cite: 511, 614]
-    function showResult(w) {
-      const canvas = $('#cardCanvas');
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = w.hex;
-      ctx.fillRect(0, 0, 1200, 750);
-      ctx.fillStyle = "rgba(255,255,255,0.9)";
-      ctx.font = "bold 80px sans-serif";
-      ctx.fillText("FOUNDER CARD", 80, 150);
-      ctx.font = "120px sans-serif";
-      ctx.fillText(w.en, 80, 400);
-      ctx.font = "40px sans-serif";
-      ctx.fillText(userEmail, 80, 650);
-      $('#confirm').classList.add('is-on');
+    function resetFill(fill){
+      fill.style.transition = 'width 0.2s ease-out';
+      fill.style.width = '0%';
+      setTimeout(()=>{ fill.style.transition = 'width 1s linear'; }, 220);
     }
 
-    // 修正：修正原本可能導致崩潰的監聽器引用 [cite: 617, 618]
-    $('#closeConfirm').addEventListener('click', () => $('#confirm').classList.remove('is-on'));
-    $('#downloadCard').addEventListener('click', () => {
-      const link = document.createElement('a');
-      link.download = `HESTIA-Founder-${userEmail}.png`;
-      link.href = $('#cardCanvas').toDataURL();
-      link.click();
+    $$('[data-charge-square]').forEach(sq => {
+      const fill = sq.querySelector('[data-sq-fill]');
+
+      // prevent text selection on iOS long press
+      sq.addEventListener('contextmenu', e => e.preventDefault());
+
+      sq.addEventListener('pointerdown', (e) => {
+        if (!userEmail) { toast("請先輸入 Email"); return; }
+
+        // if already voted, block vote
+        if (localStorage.getItem(votedKey(userEmail))) {
+          toast("此 Email 已投票");
+          return;
+        }
+
+        e.preventDefault();
+        sq.setPointerCapture?.(e.pointerId);
+
+        fill.style.transition = 'width 1s linear';
+        fill.style.width = '100%';
+
+        clearTimeout(holdTimer);
+        holdTimer = setTimeout(() => {
+          const key = sq.closest('.stall').dataset.key;
+          showResult(key);
+        }, 1000);
+      }, {passive:false});
+
+      const cancel = () => {
+        clearTimeout(holdTimer);
+        resetFill(fill);
+      };
+
+      sq.addEventListener('pointerup', cancel);
+      sq.addEventListener('pointercancel', cancel);
+      sq.addEventListener('pointerleave', cancel);
     });
 
-    // 滾動切換背景色 [cite: 566]
+    function showResult(key) {
+      const world = WORLDS.find(w => w.key === key);
+      if(!world) return;
+
+      // mark voted locally
+      localStorage.setItem(votedKey(userEmail), new Date().toISOString());
+
+      // send to Google Form
+      sendToGoogleForm(userEmail, world.key);
+      toast("已送出");
+
+      const canvas = $('#cardCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // 簡單繪製卡片
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = world.core_hex;
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 40px system-ui, -apple-system, sans-serif';
+      ctx.fillText('HESTIA FOUNDER', 50, 80);
+      ctx.font = 'bold 58px system-ui, -apple-system, sans-serif';
+      ctx.fillText(world.en, 50, 250);
+      ctx.font = '20px system-ui, -apple-system, sans-serif';
+      ctx.globalAlpha = .92;
+      ctx.fillText(userEmail, 50, 450);
+      ctx.globalAlpha = 1;
+
+      $('#confirm').classList.add('is-on');
+      $('#confirmTitle').textContent = "投票完成";
+      $('#confirmDesc').textContent = `你投給了 ${world.en} · ${world.zh}。`;
+    }
+
+    // Close (no download here; keep stable)
+    $('#closeBtn').addEventListener('click', () => {
+      $('#confirm').classList.remove('is-on');
+    });
+
+    // 監聽滾動切換背景色
     $('#spectrum').addEventListener('scroll', () => {
-      const idx = Math.round($('#spectrum').scrollTop / window.innerHeight);
-      const w = WORLDS[idx];
-      if (w) {
+      const h = window.innerHeight || 1;
+      const index = Math.round($('#spectrum').scrollTop / h);
+      const w = WORLDS[index];
+      if(w) {
         setTone(w.h, w.sat, w.lum);
         $('#activeColorName').textContent = w.en;
       }
     });
+
+    // 初始化第一個顏色
+    setTone(WORLDS[0].h, WORLDS[0].sat, WORLDS[0].lum);
   </script>
 </body>
 </html>

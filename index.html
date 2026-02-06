@@ -819,7 +819,7 @@
     .resultFooter{
       margin-top: 18px;
       text-align:center;
-      font-weight: 700;
+      font-weight: 400;
       letter-spacing: .18em;
       font-size: 12px;
       opacity: .85;
@@ -1240,7 +1240,9 @@
     const UNIQUE_CHECK_ENDPOINT = ""; // e.g. https://script.google.com/macros/s/XXXXX/exec
     const VOTE_ENDPOINT = "";         // e.g. https://script.google.com/macros/s/XXXXX/exec
 
-    const WORLDS = [{"key": "ignition", "en": "IGNITION", "zh": "點燃紅", "h": 8, "sat": 92, "lum": 54, "core_hex": "#F63B1E", "hi_hex": "#FF725C"}, {"key": "momentum", "en": "MOMENTUM", "zh": "動能橙", "h": 28, "sat": 92, "lum": 54, "core_hex": "#F6831E", "hi_hex": "#FFA85C"}, {"key": "ground", "en": "GROUND", "zh": "著地綠", "h": 132, "sat": 78, "lum": 46, "core_hex": "#1AD13E", "hi_hex": "#4CFA6F"}, {"key": "airflow", "en": "AIRFLOW", "zh": "氣流藍", "h": 205, "sat": 88, "lum": 54, "core_hex": "#229BF1", "hi_hex": "#5CBBFF"}, {"key": "pulse", "en": "PULSE", "zh": "脈動紫", "h": 275, "sat": 86, "lum": 52, "core_hex": "#961BEE", "hi_hex": "#BB5CFF"}, {"key": "forge", "en": "FORGE", "zh": "鍛造咖", "h": 28, "sat": 66, "lum": 28, "core_hex": "#774418", "hi_hex": "#E16E09"}];
+    const GOOGLE_FORM_PREFILL_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/viewform?usp=pp_url";
+
+  const WORLDS = [{"key": "ignition", "en": "IGNITION", "zh": "點燃紅", "h": 8, "sat": 92, "lum": 54, "core_hex": "#F63B1E", "hi_hex": "#FF725C"}, {"key": "momentum", "en": "MOMENTUM", "zh": "動能橙", "h": 28, "sat": 92, "lum": 54, "core_hex": "#F6831E", "hi_hex": "#FFA85C"}, {"key": "ground", "en": "GROUND", "zh": "著地綠", "h": 132, "sat": 78, "lum": 46, "core_hex": "#1AD13E", "hi_hex": "#4CFA6F"}, {"key": "airflow", "en": "AIRFLOW", "zh": "氣流藍", "h": 205, "sat": 88, "lum": 54, "core_hex": "#229BF1", "hi_hex": "#5CBBFF"}, {"key": "pulse", "en": "PULSE", "zh": "脈動紫", "h": 275, "sat": 86, "lum": 52, "core_hex": "#961BEE", "hi_hex": "#BB5CFF"}, {"key": "forge", "en": "FORGE", "zh": "鍛造咖", "h": 28, "sat": 66, "lum": 28, "core_hex": "#774418", "hi_hex": "#E16E09"}];
 
     // demo heatmap counts（你可改成後台回傳）
     let liveCounts = { ignition:58, momentum:41, ground:29, airflow:36, pulse:21, forge:18 };
@@ -1729,7 +1731,7 @@ const noiseCanvas=document.createElement("canvas");
       ctx.globalAlpha=.95;
       if(hlogoImg && hlogoImg.complete && hlogoImg.naturalWidth>0){
         const size=180;
-        const x=W-64-size;
+        const x=W-64-size-70;
         const y=H/2 - size/2 + 40;
         ctx.drawImage(hlogoImg, x, y, size, size);
       }else{
@@ -1758,7 +1760,7 @@ const noiseCanvas=document.createElement("canvas");
         if(label) label.textContent = pct + "%";
       }
 
-      const serial=String(4021 + Math.floor(Math.random() * (9999-4021+1))).padStart(4,"0");
+      const serial=(()=>{const k="hestia_founder_serial"; const cur=parseInt(localStorage.getItem(k)||"4020",10)+1; localStorage.setItem(k,String(cur)); return String(cur).padStart(4,"0");})();
       renderFounderCard(w, serial);
 
       confirm.classList.add("is-on");

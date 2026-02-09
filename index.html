@@ -921,7 +921,7 @@
 
 
     /* iOS Safari: prevent input focus zoom */
-    input, select, textarea{ font-size:16px; -webkit-text-size-adjust:100%; }
+    input, select, textarea{ font-size:16px !important; -webkit-text-size-adjust:100%; }
 
     /* Guide page (between Gate and Vote) */
     .guidePage{
@@ -932,8 +932,8 @@
       text-align:center;
       scroll-snap-align: start;
       scroll-snap-stop: always;
-      background: #281715;
-      --tone-core: #281715;
+      background: #e7371c;
+      --tone-core: #e7371c;
     }
     .guideCopy{
       max-width: 28ch;
@@ -978,7 +978,7 @@
 
     <main class="spectrum" id="spectrum" aria-label="The Spectrum">
 
-      <section class="guidePage" aria-label="投票導覽">
+      <section class="guidePage" aria-label="投票導覽" data-world="guide" style="--tone-core:#e7371c; --tone-h:8; --tone-s:86%; --tone-l:50%;">
         <div class="guideCopy">
           本投票只針對顏色色相<br>深淺明度不需考慮在內<br>接下來每一頁代表一個顏色<br>下滑開始瀏覽
         </div>
@@ -1480,8 +1480,14 @@ spectrum.classList.add("is-open");
 
     // ====== Spectrum active color update ======
     let activeKey = WORLDS[0].key;
-    function applyActive(key){
-      const w=getWorld(key);
+    
+    function setToneVar(coreHex){
+      document.documentElement.style.setProperty("--tone-core", coreHex);
+    }
+function applyActive(key){
+      
+      if(key==="guide"){ setToneVar("#e7371c"); activeKey="guide"; activeName.textContent=""; return; }
+const w=getWorld(key);
       activeKey=key;
       activeName.textContent = w.en;
       animateTone(w.h, w.sat, w.lum, 720);

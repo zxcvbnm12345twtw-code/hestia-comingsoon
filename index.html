@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
   <title>HESTIA — Tone-on-Tone 首發色投票</title>
   <link rel="icon" href="favicon.png" type="image/png" sizes="32x32" />
 
@@ -126,6 +126,8 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
       overscroll-behavior-y:none;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     body {
@@ -134,7 +136,7 @@
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    input { user-select:text; -webkit-user-select:text; -webkit-touch-callout:default; }
+    input { user-select:text; -webkit-user-select:text; -webkit-touch-callout:default; font-size:16px; line-height:1.2; }
 
     .app {
       min-height:100vh;
@@ -1361,6 +1363,16 @@
       phase.textContent="SPECTRUM";
       activeChip.style.opacity="1";
       activeChip.style.transform="translateY(0)";
+
+      // ★ 進入投票後：立即固定到 IGNITION 背景色，避免卡在 Hero 當下色
+      // （依需求：hsl(8 32% 12%)  #281715）
+      setToneInstant(8, 32, 12);
+      toneState.h = 8; toneState.s = 32; toneState.l = 12;
+
+      // 回到 Option A 起點（不依賴滑動才校正）
+      spectrum.scrollTop = 0;
+      activeKey = "ignition";
+      activeName.textContent = "IGNITION";
     }
 
     async function backendCheckAlreadyVoted(email){

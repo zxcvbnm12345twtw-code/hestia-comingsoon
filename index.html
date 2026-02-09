@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>HESTIA — Tone-on-Tone 首發色投票</title>
   <link rel="icon" href="favicon.png" type="image/png" sizes="32x32" />
 
@@ -126,8 +126,6 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
       overscroll-behavior-y:none;
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
     }
 
     body {
@@ -136,7 +134,7 @@
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    input { user-select:text; -webkit-user-select:text; -webkit-touch-callout:default; font-size:16px; line-height:1.2; }
+    input { user-select:text; -webkit-user-select:text; -webkit-touch-callout:default; }
 
     .app {
       min-height:100vh;
@@ -921,6 +919,25 @@
       opacity:.9;
     }
 
+
+    /* iOS Safari: prevent input focus zoom */
+    input, select, textarea{ font-size:16px; -webkit-text-size-adjust:100%; }
+
+    /* Guide page (between Gate and Vote) */
+    .guidePage{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding: 22px;
+      text-align:center;
+    }
+    .guideCopy{
+      max-width: 28ch;
+      line-height: 1.55;
+      font-size: 15px;
+      letter-spacing: .02em;
+      opacity: .92;
+    }
 </style>
 </head>
 
@@ -956,6 +973,14 @@
     </section>
 
     <main class="spectrum" id="spectrum" aria-label="The Spectrum">
+
+      <section class="guidePage" aria-label="投票導覽">
+        <div class="guideCopy">
+          本投票只針對顏色色相，深淺明度不需考慮在內。<br>
+          下滑每一頁代表一個顏色，下滑開始瀏覽。
+        </div>
+      </section>
+
 
       <section class="stall" data-key="ignition" data-en="IGNITION" data-zh="點燃紅"
         data-hue="8" data-sat="92" data-lum="54" data-motif="magma" aria-label="IGNITION">
@@ -1357,22 +1382,17 @@
     const activeName = $("#activeColorName");
 
     function openSpectrum(){
-      spectrum.classList.add("is-open");
+spectrum.classList.add("is-open");
       monolithStage.style.opacity="0";
       monolithStage.style.pointerEvents="none";
       phase.textContent="SPECTRUM";
       activeChip.style.opacity="1";
       activeChip.style.transform="translateY(0)";
 
-      // ★ 進入投票後：立即固定到 IGNITION 背景色，避免卡在 Hero 當下色
-      // （依需求：hsl(8 32% 12%)  #281715）
-      setToneInstant(8, 32, 12);
-      toneState.h = 8; toneState.s = 32; toneState.l = 12;
+      // Freeze hero color at the moment you enter Vote (guide uses current color)
+      try{ if(monolithTimer){ clearInterval(monolithTimer); monolithTimer=null; } }catch(e){}
 
-      // 回到 Option A 起點（不依賴滑動才校正）
       spectrum.scrollTop = 0;
-      activeKey = "ignition";
-      activeName.textContent = "IGNITION";
     }
 
     async function backendCheckAlreadyVoted(email){

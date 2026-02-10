@@ -1276,105 +1276,66 @@
 
   const WORLDS = [{"key": "ignition", "en": "IGNITION", "zh": "點燃紅", "h": 8, "sat": 92, "lum": 54, "core_hex": "#F63B1E", "hi_hex": "#FF725C"}, {"key": "momentum", "en": "MOMENTUM", "zh": "動能橙", "h": 28, "sat": 92, "lum": 54, "core_hex": "#F6831E", "hi_hex": "#FFA85C"}, {"key": "ground", "en": "GROUND", "zh": "著地綠", "h": 132, "sat": 78, "lum": 46, "core_hex": "#1AD13E", "hi_hex": "#4CFA6F"}, {"key": "airflow", "en": "AIRFLOW", "zh": "氣流藍", "h": 205, "sat": 88, "lum": 54, "core_hex": "#229BF1", "hi_hex": "#5CBBFF"}, {"key": "pulse", "en": "PULSE", "zh": "脈動紫", "h": 275, "sat": 86, "lum": 52, "core_hex": "#961BEE", "hi_hex": "#BB5CFF"}, {"key": "forge", "en": "FORGE", "zh": "鍛造咖", "h": 28, "sat": 66, "lum": 28, "core_hex": "#774418", "hi_hex": "#E16E09"}];
 
-    // ====== Live counts（Results page）======
-    // 初始可全 0：在 total=0 時會顯示 16.6% 均分；一旦有票數就改為「即時占比」。
+    // demo heatmap counts（你可改成後台回傳）
     let liveCounts = { ignition:0, momentum:0, ground:0, airflow:0, pulse:0, forge:0 };
 
-    // Published CSV（Google Sheets）
+    // ====== Live counts source (Google Sheets CSV, read-only) ======
+    // 當總票數為 0 時，結果頁會顯示 6 色均分（16.6%）；一旦開始有票數，就顯示真實占比。
     const RESULTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSQsxR8NEnvsi2qf5hxQpxYuMfIlBEHibSQJ7Twdjol9LtGIur6_ZgnRxJ3eLVzOebTC2WuCZTsdZC/pub?gid=1298926627&single=true&output=csv";
 
-    function toNum(v){
+    function _toNum(v){
       const n = Number(String(v||"").replace(/[^\d.-]/g,""));
       return Number.isFinite(n) ? n : 0;
     }
 
-    function parseCountsFromCSV(csv){
-      // 支援兩種常見格式：
-      // A) key,count（例如 ignition,58）
-      // B) header 為 key（例如 ignition,momentum,...），下一列為 counts（58,41,...）
-      const lines = String(csv||"").trim().split(/\r?\n/).filter(Boolean);
-      if(lines.length===0) return null;
-
-      const rows = lines.map(line=>{
-        // 簡易 CSV split（此表格應無複雜引號需求；若有也會盡量不壞）
-        const parts = [];
-        let cur="", inQ=false;
-        for(let i=0;i<line.length;i++){
-          const ch=line[i];
-          if(ch==='"'){ inQ=!inQ; continue; }
-          if(ch===',' && !inQ){ parts.push(cur); cur=""; continue; }
-          cur+=ch;
+    function _parseCountsCSV(csv){
+      // 預期格式：key,count（可含表頭）
+      // ignition,12
+      // momentum,9
+      const out = { ignition:0, momentum:0, ground:0, airflow:0, pulse:0, forge:0 };
+      const text = String(csv||"").trim();
+      if(!text) return out;
+      const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+      for(const line of lines){
+        const parts = line.split(",").map(s=>s.trim());
+        if(parts.length < 2) continue;
+        const key = (parts[0]||"").toLowerCase();
+        if(key==="key" || key==="color" || key==="world") continue; // header
+        if(Object.prototype.hasOwnProperty.call(out, key)){
+          out[key] = _toNum(parts[1]);
         }
-        parts.push(cur);
-        return parts.map(s=>String(s).trim());
-      });
-
-      // A) key,count
-      const maybePairs = rows.slice(0,20).every(r=>r.length>=2);
-      if(maybePairs){
-        const out = {};
-        let hit=0;
-        for(const r of rows){
-          const k = (r[0]||"").toLowerCase();
-          if(["ignition","momentum","ground","airflow","pulse","forge"].includes(k)){
-            out[k]=toNum(r[1]);
-            hit++;
-          }
-        }
-        if(hit>=2) return out; // 有命中就採用
       }
-
-      // B) header keys + one data row
-      if(rows.length>=2){
-        const header = rows[0].map(s=>s.toLowerCase());
-        const data = rows[1];
-        const out = {};
-        let hit=0;
-        header.forEach((h,idx)=>{
-          if(["ignition","momentum","ground","airflow","pulse","forge"].includes(h)){
-            out[h]=toNum(data[idx]);
-            hit++;
-          }
-        });
-        if(hit>=2) return out;
-      }
-
-      return null;
+      return out;
     }
 
-    async function fetchAndApplyCounts(){
+    async function fetchCountsFromCSV(){
+      if(!RESULTS_CSV_URL) return null;
       try{
-        const url = RESULTS_CSV_URL + (RESULTS_CSV_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
-        const res = await fetch(url, { cache: "no-store" });
-        if(!res.ok) throw new Error("csv_fetch_failed");
+        const res = await fetch(RESULTS_CSV_URL, { cache:"no-store" });
+        if(!res.ok) throw new Error("CSV fetch failed: "+res.status);
         const csv = await res.text();
-        const parsed = parseCountsFromCSV(csv);
-        if(parsed){
-          liveCounts = { ...liveCounts, ...parsed };
-          updateHeatmapFromCounts();
-        }
-      }catch(err){
-        // 靜默失敗（不影響投票流程）
-        // console.warn(err);
+        return _parseCountsCSV(csv);
+      }catch(e){
+        console.warn(e);
+        return null;
       }
     }
 
-    function pctOneDecimalFloor(x){
-      return Math.floor(x*10)/10;
-    }
-
-    function updateHeatmapFromCounts(){
-      const total = Object.values(liveCounts).reduce((a,b)=>a+(Number(b)||0),0);
+    function applyCountsToResultUI(){
+      const sum = Object.values(liveCounts).reduce((a,b)=>a+(Number(b)||0),0);
+      const total = sum || 0;
       for(const ww of WORLDS){
-        const raw = total===0 ? 16.6 : ((liveCounts[ww.key]||0)/total*100);
-        const pct = total===0 ? 16.6 : Math.round(raw*10)/10;
+        const pctVal = total===0 ? (100/6) : ((liveCounts[ww.key]||0)/total*100);
+        const pctText = (Math.round(pctVal*10)/10).toFixed(1) + "%";
         const bar=document.querySelector(`[data-bar="${ww.key}"]`);
         const label=document.querySelector(`[data-pct="${ww.key}"]`);
-        if(bar) bar.style.width = Math.max(0, Math.min(100, raw)) + "%";
-        if(label) label.textContent = (total===0 ? 16.6 : pct) + "%";
+        if(bar){
+          const w = clamp(pctVal, 6, 100); // keep a minimum visual presence
+          bar.style.width = w + "%";
+        }
+        if(label) label.textContent = pctText;
       }
     }
-
 
     const $ = (s, el=document) => el.querySelector(s);
     const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
@@ -1899,19 +1860,10 @@ const noiseCanvas=document.createElement("canvas");
       const w=getWorld(key);
       $("#confirmDesc").textContent = `你投給了「${w.zh}」｜${w.en}。這份選擇會成為首發色決策的一票。`;
 
-      // Heatmap：在 total=0 時預設 16.6% 均分；有票數後顯示即時占比
-      updateHeatmapFromCounts();
-      fetchAndApplyCounts();
+            applyCountsToResultUI();
 
-      // 小幅輪詢（結果頁開啟後約 25 秒內更新）
-      clearInterval(window.__heatPoller);
-      let __heatTry=0;
-      window.__heatPoller = setInterval(()=>{
-        fetchAndApplyCounts();
-        __heatTry++;
-        if(__heatTry>=10) clearInterval(window.__heatPoller);
-      }, 2500);
-}
+      // 更新為「全站即時占比」（讀取公開 CSV；失敗則維持目前顯示）
+      fetchCountsFromCSV().then((c)=>{ if(c){ liveCounts=c; applyCountsToResultUI(); } });
 
       const serial=(()=>{const k="hestia_founder_serial"; const cur=parseInt(localStorage.getItem(k)||"4020",10)+1; localStorage.setItem(k,String(cur)); return String(cur).padStart(4,"0");})();
       renderFounderCard(w, serial);

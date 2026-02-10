@@ -924,25 +924,7 @@
     input, select, textarea{ font-size:16px !important; -webkit-text-size-adjust:100%; }
 
     /* Guide page (between Gate and Vote) */
-    .guidePage{
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      padding: 22px;
-      text-align:center;
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
-      background: #e7371c;
-      --tone-core: #e7371c;
-    }
-    .guideCopy{
-      max-width: 28ch;
-      line-height: 1.55;
-      font-size: 15px;
-      letter-spacing: .02em;
-      opacity: .92;
-    }
-</style>
+    </style>
 </head>
 
 <body>
@@ -977,15 +959,7 @@
     </section>
 
     <main class="spectrum" id="spectrum" aria-label="The Spectrum">
-
-      <section class="guidePage" aria-label="投票導覽" data-world="guide" style="--tone-core:#e7371c; --tone-h:8; --tone-s:86%; --tone-l:50%;">
-        <div class="guideCopy">
-          本投票只針對顏色色相<br>深淺明度不需考慮在內<br>接下來每一頁代表一個顏色<br>下滑開始瀏覽
-        </div>
-      </section>
-
-
-      <section class="stall" data-key="ignition" data-en="IGNITION" data-zh="點燃紅"
+<section class="stall" data-key="ignition" data-en="IGNITION" data-zh="點燃紅"
         data-hue="8" data-sat="92" data-lum="54" data-motif="magma" aria-label="IGNITION">
         <div class="product">
           <div class="opt">
@@ -1396,6 +1370,17 @@ spectrum.classList.add("is-open");
       try{ if(monolithTimer){ clearInterval(monolithTimer); monolithTimer=null; } }catch(e){}
 
       spectrum.scrollTop = 0;
+      // Calibrate tone immediately on enter (ensure background matches visible Option A without waiting for scroll)
+      const calibrateSpectrumTone = () => {
+        try{
+          const first = spectrum.querySelector(".stall[data-world]");
+          if(first && first.dataset && first.dataset.world){
+            applyActive(first.dataset.world);
+          }
+        }catch(e){}
+      };
+      requestAnimationFrame(()=>requestAnimationFrame(calibrateSpectrumTone));
+
     }
 
     async function backendCheckAlreadyVoted(email){
@@ -1480,13 +1465,7 @@ spectrum.classList.add("is-open");
 
     // ====== Spectrum active color update ======
     let activeKey = WORLDS[0].key;
-    
-    function setToneVar(coreHex){
-      document.documentElement.style.setProperty("--tone-core", coreHex);
-    }
 function applyActive(key){
-      
-      if(key==="guide"){ setToneVar("#e7371c"); activeKey="guide"; activeName.textContent=""; return; }
 const w=getWorld(key);
       activeKey=key;
       activeName.textContent = w.en;

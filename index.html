@@ -1359,6 +1359,9 @@
     const activeName = $("#activeColorName");
 
     function openSpectrum(){
+
+      try{ document.body.dataset.stage="vote"; }catch(e){}
+      try{ if(monolithTimer){ clearInterval(monolithTimer); monolithTimer=null; } }catch(e){}
 spectrum.classList.add("is-open");
       monolithStage.style.opacity="0";
       monolithStage.style.pointerEvents="none";
@@ -1376,7 +1379,7 @@ spectrum.classList.add("is-open");
           const first = spectrum.querySelector(".stall[data-world]");
           if(first && first.dataset && first.dataset.world){
             applyActive(first.dataset.world);
-          }
+    }
         }catch(e){}
       };
       requestAnimationFrame(()=>requestAnimationFrame(calibrateSpectrumTone));
@@ -1789,6 +1792,7 @@ const noiseCanvas=document.createElement("canvas");
     // Tap backdrop to close (since buttons are removed)
     confirm.addEventListener("click",(e)=>{ if(e.target===confirm){ confirm.classList.remove("is-on"); }});
     setToneInstant(WORLDS[0].h, WORLDS[0].sat, WORLDS[0].lum);
+    try{ document.body.dataset.stage="hero"; }catch(e){}
     startMonolithCycle();
   </script>
 </body>

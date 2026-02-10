@@ -924,7 +924,24 @@
     input, select, textarea{ font-size:16px !important; -webkit-text-size-adjust:100%; }
 
     /* Guide page (between Gate and Vote) */
-    </style>
+    
+    /* Vote guide page (part of Spectrum) */
+    .stall--guide{
+      background: var(--tone-core);
+    }
+    .stall--guide .guideInner{
+      height: 100%;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 26px;
+      font-size: 15px;
+      line-height: 1.6;
+      letter-spacing: .02em;
+      opacity: .95;
+    }
+</style>
 </head>
 
 <body>
@@ -959,6 +976,16 @@
     </section>
 
     <main class="spectrum" id="spectrum" aria-label="The Spectrum">
+
+      <section class="stall stall--guide" data-world="guide" aria-label="投票導覽">
+        <div class="guideInner">
+          本投票只針對顏色色相<br>
+          深淺明度、飽和彩度皆不考慮<br>
+          下滑每頁代表一個色相<br>
+          下滑立即開始！
+        </div>
+      </section>
+
 <section class="stall" data-key="ignition" data-en="IGNITION" data-zh="點燃紅"
         data-hue="8" data-sat="92" data-lum="54" data-motif="magma" aria-label="IGNITION">
         <div class="product">
@@ -1469,6 +1496,8 @@ spectrum.classList.add("is-open");
     // ====== Spectrum active color update ======
     let activeKey = WORLDS[0].key;
 function applyActive(key){
+
+      if(key==="guide"){ try{ activeKey="guide"; activeName.textContent=""; }catch(e){} return; }
 const w=getWorld(key);
       activeKey=key;
       activeName.textContent = w.en;

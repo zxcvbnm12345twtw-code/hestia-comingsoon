@@ -1247,9 +1247,9 @@
 <div class="heat" id="heat"></div>
 
           <div class="tiny">
-            ※ 會一併送出：Email + 目前投票色（key / 英文 / 中文）。<br/>
-            ※ 本頁採前端限制：同裝置／同瀏覽器下，每個 Email 僅能投一次（localStorage）。<br/>
-            ※ 前端也會以 localStorage 做一次性保護（同裝置）。
+            ※ 資料會一併送出：Email + 目前投票色（key / 英文 / 中文）。<br/>
+            ※ 每個 Email 僅能投一次，請不要惡意洗票。<br/>
+            ※ 感謝你/妳參與HESTiA品牌誕生，我們將很快與大家見面！
           </div>
         </div>
       </div>
@@ -1858,7 +1858,7 @@ const noiseCanvas=document.createElement("canvas");
 
     function showConfirm(key){
       const w=getWorld(key);
-      $("#confirmDesc").textContent = `你投給了「${w.zh}」｜${w.en}。這份選擇會成為首發色決策的一票。`;
+      $("#confirmDesc").textContent = `你投給了「${w.zh}」｜${w.en}。以下是專屬於你/妳的Founder卡。`;
 
             applyCountsToResultUI();
 

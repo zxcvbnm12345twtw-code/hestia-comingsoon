@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#08080b">
-<title>HESTIA｜色調聖所 V5</title>
+<title>HESTIA｜Tone on Tone 首發色投票</title>
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
 <style>
 :root{
@@ -48,13 +49,15 @@ body{
     "PingFang TC",
     "Microsoft JhengHei",
     sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
 
 body{
   overscroll-behavior:none;
 }
 
-button{
+button,
+input{
   font:inherit;
 }
 
@@ -63,6 +66,12 @@ button,
   -webkit-touch-callout:none;
   -webkit-user-select:none;
   user-select:none;
+}
+
+input{
+  -webkit-user-select:text;
+  user-select:text;
+  font-size:16px;
 }
 
 .app{
@@ -76,9 +85,7 @@ button,
 }
 
 /* =========================================================
-   三層環境背景
-   手機：只隨捲動速度產生慣性
-   電腦：額外加入非常輕微的游標空間偏移
+   環境背景
    ========================================================= */
 
 .environment{
@@ -173,7 +180,7 @@ button,
   z-index:80;
   pointer-events:none;
   opacity:.07;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter id='n'/%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   animation:grain .22s steps(2) infinite;
   mix-blend-mode:soft-light;
 }
@@ -188,7 +195,6 @@ button,
 
 /* =========================================================
    品牌列
-   手機置中；電腦改為左右配置
    ========================================================= */
 
 .site-header{
@@ -204,42 +210,65 @@ button,
   pointer-events:none;
 }
 
-.brand{
+.header-brand{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:9px;
   font-size:11px;
   font-weight:650;
   letter-spacing:.17em;
 }
 
-.brand-mark{
-  width:19px;
+.header-mark{
+  width:21px;
   height:25px;
+  object-fit:contain;
   filter:drop-shadow(0 0 18px var(--glow-a));
 }
 
-.section-name{
+.header-section{
   display:none;
   color:var(--muted);
   font-size:10px;
-  letter-spacing:.16em;
+  letter-spacing:.14em;
+}
+
+.test-badge{
+  display:none;
+  position:absolute;
+  z-index:75;
+  top:calc(var(--safe-top) + 39px);
+  left:50%;
+  transform:translateX(-50%);
+  padding:7px 10px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  background:rgba(0,0,0,.20);
+  color:rgba(255,255,255,.56);
+  backdrop-filter:blur(12px);
+  font-size:10px;
+  white-space:nowrap;
+  pointer-events:none;
+}
+
+body.test-mode .test-badge{
+  display:block;
 }
 
 /* =========================================================
-   首屏喚醒
+   首頁 Email Gate + 喚醒
    ========================================================= */
 
-.intro{
+.hero{
   position:absolute;
   inset:0;
   z-index:50;
   display:grid;
   place-items:center;
   padding:
-    calc(var(--safe-top) + 62px)
+    calc(var(--safe-top) + 70px)
     24px
-    calc(var(--safe-bottom) + 66px);
+    calc(var(--safe-bottom) + 40px);
   text-align:center;
   transition:
     opacity 1s var(--ease),
@@ -247,52 +276,143 @@ button,
     transform 1s var(--ease);
 }
 
-.intro.is-hidden{
+.hero.is-hidden{
   opacity:0;
   visibility:hidden;
   transform:scale(1.035);
 }
 
-.intro-inner{
-  width:min(100%,660px);
+.hero-inner{
+  width:min(100%,560px);
 }
 
-.intro-kicker{
-  margin-bottom:24px;
-  color:var(--muted);
-  font-size:11px;
+.hero-logo{
+  display:block;
+  width:min(116px,30vw);
+  height:auto;
+  margin:0 auto 20px;
+  object-fit:contain;
+  filter:drop-shadow(0 18px 50px rgba(0,0,0,.35));
+}
+
+.hero-wordmark{
+  display:block;
+  width:min(210px,48vw);
+  height:auto;
+  margin:0 auto;
+  object-fit:contain;
+}
+
+.hero-title{
+  margin:18px 0 0;
+  color:var(--fg);
+  font-size:14px;
+  font-weight:760;
   letter-spacing:.10em;
 }
 
-.intro h1{
-  margin:0;
-  font-size:clamp(44px,11vw,94px);
-  font-weight:390;
-  line-height:.94;
-  letter-spacing:.01em;
-}
-
-.intro-copy{
-  margin:23px auto 0;
+.hero-copy{
+  margin:15px auto 0;
   max-width:430px;
   color:var(--muted);
-  font-size:14px;
-  line-height:1.9;
+  font-size:13px;
+  line-height:1.8;
 }
 
-.awaken-shell{
+.email-gate{
+  width:min(100%,460px);
+  margin:24px auto 0;
+  display:grid;
+  gap:10px;
+}
+
+.email-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:9px;
+}
+
+.email-input{
+  min-width:0;
+  height:48px;
+  padding:0 14px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:15px;
+  outline:none;
+  background:rgba(0,0,0,.18);
+  color:var(--fg);
+  backdrop-filter:blur(12px);
+}
+
+.email-input::placeholder{
+  color:rgba(255,255,255,.40);
+}
+
+.email-input:focus{
+  border-color:rgba(255,255,255,.31);
+  box-shadow:0 0 0 3px rgba(255,255,255,.04);
+}
+
+.email-button{
+  height:48px;
+  padding:0 16px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:15px;
+  background:rgba(255,255,255,.08);
+  color:var(--fg);
+  font-size:13px;
+  font-weight:720;
+  cursor:pointer;
+}
+
+.email-button:disabled{
+  opacity:.48;
+  cursor:default;
+}
+
+.email-message{
+  min-height:18px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+  opacity:0;
+  transform:translateY(-3px);
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+}
+
+.email-message.is-visible{
+  opacity:1;
+  transform:none;
+}
+
+.awaken-area{
   position:relative;
-  width:154px;
-  height:154px;
-  margin:35px auto 0;
+  width:150px;
+  height:150px;
+  margin:17px auto 0;
   display:grid;
   place-items:center;
+  opacity:.26;
+  filter:grayscale(.3);
+  pointer-events:none;
+  transition:
+    opacity .5s var(--ease),
+    filter .5s var(--ease),
+    transform .5s var(--ease);
+}
+
+.awaken-area.is-unlocked{
+  opacity:1;
+  filter:none;
+  pointer-events:auto;
 }
 
 .awaken-button{
   position:relative;
-  width:112px;
-  height:112px;
+  width:108px;
+  height:108px;
   display:grid;
   place-items:center;
   overflow:hidden;
@@ -322,16 +442,17 @@ button,
   transform:scale(1.16);
 }
 
-.awaken-flame{
+.awaken-icon{
   position:relative;
   z-index:2;
-  width:34px;
-  height:46px;
+  width:42px;
+  height:50px;
+  object-fit:contain;
   filter:drop-shadow(0 0 24px var(--glow-a));
   transition:transform .28s var(--ease);
 }
 
-.awaken-button.is-holding .awaken-flame{
+.awaken-button.is-holding .awaken-icon{
   transform:scale(.94);
 }
 
@@ -360,37 +481,19 @@ button,
   filter:drop-shadow(0 0 9px rgba(255,255,255,.34));
 }
 
-.entry-instruction{
+.awaken-instruction{
   position:absolute;
-  top:calc(100% + 15px);
+  top:calc(100% + 12px);
   left:50%;
-  width:240px;
+  width:250px;
   transform:translateX(-50%);
   color:var(--muted);
   font-size:11px;
-  letter-spacing:.06em;
-}
-
-.quick-entry{
-  margin-top:38px;
-  padding:8px 10px;
-  border:0;
-  background:transparent;
-  color:var(--faint);
-  font-size:11px;
-  text-decoration:underline;
-  text-underline-offset:5px;
-  cursor:pointer;
-  opacity:0;
-  animation:showQuick .7s 4s forwards;
-}
-
-@keyframes showQuick{
-  to{opacity:1}
+  letter-spacing:.04em;
 }
 
 /* =========================================================
-   色調瀏覽
+   Guide + Tone Scroller
    ========================================================= */
 
 .experience{
@@ -424,20 +527,114 @@ button,
   display:none;
 }
 
-.tone{
+.slide{
   position:relative;
   width:100%;
   min-height:100dvh;
   display:grid;
   place-items:center;
   padding:
-    calc(var(--safe-top) + 72px)
-    27px
-    calc(var(--safe-bottom) + 112px);
+    calc(var(--safe-top) + 76px)
+    25px
+    calc(var(--safe-bottom) + 108px);
   scroll-snap-align:start;
   scroll-snap-stop:always;
 }
 
+/* Guide */
+.guide-content{
+  width:min(100%,520px);
+  text-align:center;
+  opacity:.08;
+  transform:translateY(20px);
+  filter:blur(6px);
+  transition:
+    opacity .7s var(--ease),
+    transform .85s var(--ease),
+    filter .8s var(--ease);
+}
+
+.guide-slide.is-settled .guide-content{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+
+.guide-kicker{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.09em;
+}
+
+.guide-title{
+  margin:14px 0 0;
+  font-size:clamp(35px,10vw,58px);
+  font-weight:390;
+  line-height:1;
+  letter-spacing:-.035em;
+}
+
+.guide-intro{
+  margin:17px auto 0;
+  max-width:420px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.guide-steps{
+  margin:27px auto 0;
+  display:grid;
+  gap:10px;
+  text-align:left;
+}
+
+.guide-step{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  padding:14px 15px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:17px;
+  background:rgba(255,255,255,.028);
+  backdrop-filter:blur(12px);
+}
+
+.guide-number{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;
+  color:var(--fg);
+  font-size:12px;
+}
+
+.guide-step strong{
+  display:block;
+  margin-bottom:4px;
+  font-size:13px;
+  font-weight:720;
+}
+
+.guide-step p{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.65;
+}
+
+.guide-start{
+  margin-top:21px;
+  color:var(--fg);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.05em;
+}
+
+/* Tone */
 .tone-content{
   position:relative;
   z-index:3;
@@ -457,8 +654,20 @@ button,
   transition:opacity .5s var(--ease);
 }
 
+.tone-code{
+  margin-top:11px;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.14em;
+  opacity:0;
+  transform:translateY(8px);
+  transition:
+    opacity .55s .10s var(--ease),
+    transform .6s .10s var(--ease);
+}
+
 .tone-title{
-  margin:13px 0 0;
+  margin:10px 0 0;
   font-size:clamp(46px,13vw,112px);
   font-weight:380;
   line-height:.92;
@@ -475,7 +684,7 @@ button,
 
 .tone-meta{
   width:100%;
-  margin-top:25px;
+  margin-top:24px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -517,7 +726,7 @@ button,
   background:rgba(255,255,255,.045);
   color:var(--fg);
   font-size:12px;
-  letter-spacing:.06em;
+  letter-spacing:.05em;
   cursor:pointer;
   opacity:0;
   transform:translateY(10px);
@@ -532,30 +741,34 @@ button,
   background:rgba(255,255,255,.14);
 }
 
-/* 完整停穩後才顯示 */
-.tone.is-settled .tone-number{
+.tone-slide.is-settled .tone-number{
   opacity:1;
 }
 
-.tone.is-settled .tone-title{
+.tone-slide.is-settled .tone-code{
+  opacity:1;
+  transform:none;
+}
+
+.tone-slide.is-settled .tone-title{
   opacity:1;
   transform:none;
   filter:blur(0);
 }
 
-.tone.is-settled .tone-meta{
+.tone-slide.is-settled .tone-meta{
   opacity:1;
   transform:none;
   pointer-events:auto;
 }
 
-.tone.is-settled .select-tone{
+.tone-slide.is-settled .select-tone{
   opacity:1;
   transform:none;
   pointer-events:auto;
 }
 
-/* 滑動中立刻退場 */
+.experience.is-moving .guide-content,
 .experience.is-moving .tone-title{
   opacity:.04;
   transform:translateY(20px);
@@ -564,7 +777,9 @@ button,
   transition-duration:.18s;
 }
 
-.experience.is-moving .tone-meta{
+.experience.is-moving .tone-code,
+.experience.is-moving .tone-meta,
+.experience.is-moving .select-tone{
   opacity:0;
   transform:translateY(13px);
   pointer-events:none;
@@ -572,23 +787,22 @@ button,
   transition-duration:.16s;
 }
 
-.experience.is-moving .select-tone{
-  opacity:0;
-  pointer-events:none;
-  transition-delay:0s;
-  transition-duration:.14s;
-}
-
-/* 下方進度改為置中，不干擾主畫面 */
+/* Bottom nav */
 .page-index{
   position:absolute;
   z-index:20;
   left:50%;
-  bottom:calc(var(--safe-bottom) + 55px);
+  bottom:calc(var(--safe-bottom) + 54px);
   display:flex;
-  gap:11px;
+  gap:10px;
   transform:translateX(-50%);
   pointer-events:none;
+  opacity:0;
+  transition:opacity .3s ease;
+}
+
+.page-index.is-visible{
+  opacity:1;
 }
 
 .page-index span{
@@ -603,7 +817,7 @@ button,
 }
 
 .page-index span.is-active{
-  width:22px;
+  width:21px;
   background:rgba(255,255,255,.9);
   box-shadow:0 0 18px rgba(255,255,255,.42);
 }
@@ -612,18 +826,18 @@ button,
   position:absolute;
   z-index:20;
   left:50%;
-  bottom:calc(var(--safe-bottom) + 22px);
+  bottom:calc(var(--safe-bottom) + 21px);
   width:calc(100% - 48px);
   transform:translateX(-50%);
   color:var(--faint);
   text-align:center;
   font-size:10px;
-  letter-spacing:.04em;
+  letter-spacing:.03em;
   pointer-events:none;
 }
 
 /* =========================================================
-   獨立選擇模式
+   Selection Overlay
    ========================================================= */
 
 .selection-overlay{
@@ -711,14 +925,21 @@ button,
 .selection-caption{
   color:var(--muted);
   font-size:11px;
-  letter-spacing:.08em;
+  letter-spacing:.07em;
   transition:
     opacity .35s ease,
     transform .6s var(--ease);
 }
 
+.selection-code{
+  margin-top:11px;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.13em;
+}
+
 .selection-title{
-  margin:15px 0 10px;
+  margin:10px 0 10px;
   font-size:clamp(38px,10vw,66px);
   font-weight:390;
   line-height:1;
@@ -743,12 +964,10 @@ button,
   position:relative;
   width:190px;
   height:190px;
-  margin:32px auto 0;
+  margin:31px auto 0;
   display:grid;
   place-items:center;
-  transform:
-    translateZ(0)
-    scale(calc(1 - var(--hold-progress) * .055));
+  transform:scale(calc(1 - var(--hold-progress) * .055));
 }
 
 .confirm-button{
@@ -801,11 +1020,12 @@ button,
   filter:blur(calc(14px - var(--hold-progress) * 7px));
 }
 
-.confirm-flame{
+.confirm-icon{
   position:relative;
   z-index:2;
-  width:38px;
-  height:52px;
+  width:50px;
+  height:58px;
+  object-fit:contain;
   filter:
     drop-shadow(
       0 0
@@ -823,7 +1043,7 @@ button,
   transform:translateX(-50%);
   color:var(--muted);
   font-size:11px;
-  letter-spacing:.05em;
+  letter-spacing:.04em;
 }
 
 .cancel-selection{
@@ -838,7 +1058,6 @@ button,
   cursor:pointer;
 }
 
-/* 完成收束 */
 .selection-overlay.is-completing .selection-space::before,
 .selection-overlay.is-completing .selection-space::after{
   opacity:.9;
@@ -847,6 +1066,7 @@ button,
 }
 
 .selection-overlay.is-completing .selection-caption,
+.selection-overlay.is-completing .selection-code,
 .selection-overlay.is-completing .selection-title,
 .selection-overlay.is-completing .selection-copy,
 .selection-overlay.is-completing .confirm-instruction,
@@ -867,13 +1087,46 @@ button,
   transition:box-shadow .9s var(--ease);
 }
 
-/* 投票結果 */
-.result-panel{
+/* =========================================================
+   Founder Result
+   ========================================================= */
+
+.result-view{
   position:absolute;
+  inset:0;
   z-index:5;
-  width:min(calc(100% - 48px),520px);
-  padding:34px 26px 28px;
+  overflow-y:auto;
+  padding:
+    calc(var(--safe-top) + 76px)
+    20px
+    calc(var(--safe-bottom) + 26px);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(18px);
+  transition:
+    opacity .7s var(--ease),
+    visibility .7s,
+    transform .8s var(--ease);
+  touch-action:pan-y;
+}
+
+.selection-overlay.is-confirmed .selection-card{
+  opacity:0;
+  visibility:hidden;
+}
+
+.selection-overlay.is-confirmed .result-view{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+}
+
+.result-panel{
+  width:min(100%,620px);
+  margin:0 auto;
+  padding:25px 18px 22px;
   border:1px solid rgba(255,255,255,.14);
+  border-radius:24px;
   background:
     linear-gradient(
       145deg,
@@ -882,60 +1135,149 @@ button,
     );
   box-shadow:0 28px 110px rgba(0,0,0,.46);
   text-align:center;
-  opacity:0;
-  visibility:hidden;
-  transform:translateY(18px);
-  transition:
-    opacity .7s var(--ease),
-    visibility .7s,
-    transform .8s var(--ease);
-}
-
-.selection-overlay.is-confirmed .selection-card{
-  opacity:0;
-  visibility:hidden;
-}
-
-.selection-overlay.is-confirmed .result-panel{
-  opacity:1;
-  visibility:visible;
-  transform:none;
+  backdrop-filter:blur(18px);
 }
 
 .result-label{
   color:var(--muted);
   font-size:11px;
-  letter-spacing:.08em;
+  letter-spacing:.07em;
 }
 
 .result-title{
-  margin:17px 0 11px;
-  font-size:clamp(37px,10vw,62px);
+  margin:13px 0 8px;
+  font-size:clamp(35px,10vw,58px);
   font-weight:390;
   line-height:1;
   letter-spacing:-.035em;
 }
 
-.result-copy{
-  margin:0;
+.result-code{
   color:var(--muted);
+  font-size:11px;
+  letter-spacing:.13em;
+}
+
+.result-copy{
+  margin:13px auto 0;
+  max-width:410px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.card-preview{
+  width:100%;
+  margin-top:19px;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 55px rgba(0,0,0,.30);
+}
+
+.card-preview canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+.result-footer{
+  margin-top:14px;
+  color:rgba(255,255,255,.66);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.16em;
+}
+
+.world-progress-title{
+  margin-top:25px;
+  color:var(--fg);
   font-size:14px;
-  line-height:1.85;
+  font-weight:740;
+}
+
+.world-progress-copy{
+  margin:7px auto 0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.65;
+}
+
+.heat{
+  margin-top:15px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  text-align:left;
+}
+
+.heat-cell{
+  padding:11px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:15px;
+  background:rgba(0,0,0,.15);
+}
+
+.heat-name{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin:0 0 8px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.heat-name strong{
+  color:var(--fg);
+  font-weight:680;
+}
+
+.heat-bar{
+  height:9px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:999px;
+  background:rgba(255,255,255,.07);
+}
+
+.heat-bar i{
+  display:block;
+  width:0%;
+  height:100%;
+  border-radius:999px;
+  background:var(--bar-color,rgba(255,255,255,.45));
+  box-shadow:0 0 18px var(--bar-color,rgba(255,255,255,.30));
+  transition:width .8s var(--ease);
+}
+
+.heat-pct{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:11px;
 }
 
 .result-note{
-  margin-top:19px;
-  padding-top:17px;
+  margin-top:18px;
+  padding-top:16px;
   border-top:1px solid var(--line);
   color:var(--faint);
-  font-size:11px;
+  font-size:10px;
   line-height:1.7;
 }
 
-.return-button{
-  margin-top:25px;
-  padding:13px 18px;
-  border:1px solid rgba(255,255,255,.18);
+.result-actions{
+  margin-top:20px;
+  display:flex;
+  justify-content:center;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+.result-button{
+  padding:12px 17px;
+  border:1px solid rgba(255,255,255,.17);
   border-radius:999px;
   background:rgba(255,255,255,.04);
   color:var(--fg);
@@ -943,8 +1285,48 @@ button,
   cursor:pointer;
 }
 
+.test-reset{
+  display:none;
+}
+
+body.test-mode .test-reset{
+  display:inline-flex;
+}
+
+/* Toast */
+.toast{
+  position:fixed;
+  z-index:300;
+  top:calc(var(--safe-top) + 54px);
+  left:50%;
+  max-width:calc(100% - 36px);
+  padding:10px 13px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  background:rgba(0,0,0,.38);
+  color:var(--fg);
+  backdrop-filter:blur(14px);
+  box-shadow:0 14px 45px rgba(0,0,0,.44);
+  font-size:12px;
+  text-align:center;
+  opacity:0;
+  visibility:hidden;
+  transform:translate(-50%,-7px);
+  transition:
+    opacity .24s ease,
+    visibility .24s,
+    transform .24s ease;
+  pointer-events:none;
+}
+
+.toast.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:translate(-50%,0);
+}
+
 /* =========================================================
-   電腦版：保留置中主體，但使用滑鼠／鍵盤提示和空間偏移
+   Desktop
    ========================================================= */
 
 @media(min-width:820px){
@@ -954,31 +1336,35 @@ button,
     padding-right:40px;
   }
 
-  .section-name{
+  .header-section{
     display:block;
   }
 
-  .tone{
+  .hero{
+    padding-top:calc(var(--safe-top) + 90px);
+  }
+
+  .slide{
     padding:
-      calc(var(--safe-top) + 72px)
+      calc(var(--safe-top) + 82px)
       8vw
-      calc(var(--safe-bottom) + 105px);
+      calc(var(--safe-bottom) + 100px);
   }
 
   .tone-content{
-    width:min(100%,980px);
+    width:min(100%,960px);
   }
 
   .tone-title{
-    font-size:clamp(68px,8vw,124px);
+    font-size:clamp(68px,8vw,112px);
   }
 
-  .tone-description{
-    max-width:450px;
+  .guide-steps{
+    grid-template-columns:1fr 1fr;
   }
 
-  .swatch{
-    width:52px;
+  .guide-step:last-child{
+    grid-column:1 / -1;
   }
 
   .page-index{
@@ -987,6 +1373,18 @@ button,
 
   .browse-guide{
     bottom:18px;
+  }
+
+  .result-view{
+    padding-top:calc(var(--safe-top) + 88px);
+  }
+
+  .result-panel{
+    padding:31px 28px 26px;
+  }
+
+  .heat{
+    grid-template-columns:repeat(3,1fr);
   }
 }
 
@@ -1014,49 +1412,62 @@ button,
   <div class="grain" aria-hidden="true"></div>
 
   <header class="site-header">
-    <div class="brand">
-      <svg class="brand-mark" viewBox="0 0 48 64" fill="none" aria-hidden="true">
-        <path d="M24 3C23 17 9 21 9 39c0 12 7 21 15 22 8-1 15-10 15-22C39 21 25 17 24 3Z" stroke="currentColor" stroke-width="1.4"/>
-        <path d="M24 18c-1 9-8 12-8 22 0 7 4 13 8 14 4-1 8-7 8-14 0-10-7-13-8-22Z" stroke="currentColor" stroke-width="1.1" opacity=".62"/>
-      </svg>
+    <div class="header-brand">
+      <img class="header-mark" src="/HLOGO.png" alt="">
       <span>HESTIA</span>
     </div>
-
-    <div class="section-name">色調聖所</div>
+    <div class="header-section">色調聖所</div>
   </header>
 
-  <section class="intro" id="intro">
-    <div class="intro-inner">
-      <div class="intro-kicker">一個會回應你的安靜空間</div>
+  <div class="test-badge">測試頁｜不會寫入正式票數</div>
 
-      <h1>喚醒<br>你的火焰</h1>
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <img class="hero-logo" src="/HLOGO.png" alt="HESTIA Logo">
+      <img class="hero-wordmark" src="/wordmark.png" alt="HESTIA">
 
-      <p class="intro-copy">
-        不急著做出選擇。<br>
-        先停留片刻，讓空間感覺到你的存在。
+      <div class="hero-title">首發色投票 · TONE ON TONE</div>
+
+      <p class="hero-copy">
+        請先輸入 Email。完成確認後，長按火焰進入色調聖所。<br>
+        最高得票色彩世界的參與者，將獲得首波發售折扣碼。
       </p>
 
-      <div class="awaken-shell">
-        <button class="awaken-button" id="awakenButton" type="button" aria-label="長按火焰進入色調聖所">
-          <svg class="awaken-flame" viewBox="0 0 48 64" fill="none" aria-hidden="true">
-            <path d="M24 3C23 17 9 21 9 39c0 12 7 21 15 22 8-1 15-10 15-22C39 21 25 17 24 3Z" stroke="currentColor" stroke-width="1.35"/>
-            <path d="M24 18c-1 9-8 12-8 22 0 7 4 13 8 14 4-1 8-7 8-14 0-10-7-13-8-22Z" stroke="currentColor" stroke-width="1.1" opacity=".62"/>
-          </svg>
-        </button>
+      <div class="email-gate">
+        <div class="email-row">
+          <input
+            class="email-input"
+            id="emailInput"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="輸入你的 Email"
+            aria-label="輸入你的 Email"
+          >
+          <button class="email-button" id="emailButton" type="button">
+            確認
+          </button>
+        </div>
 
-        <svg class="entry-ring" viewBox="0 0 152 152" aria-hidden="true">
-          <circle class="ring-track" cx="76" cy="76" r="70"></circle>
-          <circle class="ring-value" id="entryRing" cx="76" cy="76" r="70"></circle>
-        </svg>
-
-        <div class="entry-instruction" id="entryInstruction">
-          長按火焰，進入色調聖所
+        <div class="email-message" id="emailMessage">
+          請先輸入有效 Email。
         </div>
       </div>
 
-      <button class="quick-entry" id="quickEntry" type="button">
-        直接進入體驗
-      </button>
+      <div class="awaken-area" id="awakenArea">
+        <button class="awaken-button" id="awakenButton" type="button" aria-label="長按火焰進入投票">
+          <img class="awaken-icon" src="/Flamemark.png" alt="">
+        </button>
+
+        <svg class="entry-ring" viewBox="0 0 150 150" aria-hidden="true">
+          <circle class="ring-track" cx="75" cy="75" r="70"></circle>
+          <circle class="ring-value" id="entryRing" cx="75" cy="75" r="70"></circle>
+        </svg>
+
+        <div class="awaken-instruction" id="awakenInstruction">
+          先確認 Email
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1064,7 +1475,7 @@ button,
     <div class="page-index" id="pageIndex" aria-hidden="true"></div>
     <div class="scroller" id="scroller"></div>
     <div class="browse-guide" id="browseGuide">
-      上下滑動，感受色調之間的變化
+      向上滑動，開始感受色調
     </div>
   </section>
 
@@ -1073,19 +1484,15 @@ button,
 
     <div class="selection-card">
       <div class="selection-caption">你正在選擇</div>
-
+      <div class="selection-code" id="selectionCode">IGNITION</div>
       <h2 class="selection-title" id="selectionTitle">餘燼霧紅</h2>
-
       <p class="selection-copy" id="selectionCopy">
         安靜而集中，像未曾熄滅的內在熱度。
       </p>
 
       <div class="confirm-shell">
         <button class="confirm-button" id="confirmButton" type="button" aria-label="長按確認這組色調">
-          <svg class="confirm-flame" viewBox="0 0 48 64" fill="none" aria-hidden="true">
-            <path d="M24 3C23 17 9 21 9 39c0 12 7 21 15 22 8-1 15-10 15-22C39 21 25 17 24 3Z" stroke="currentColor" stroke-width="1.4"/>
-            <path d="M24 18c-1 9-8 12-8 22 0 7 4 13 8 14 4-1 8-7 8-14 0-10-7-13-8-22Z" stroke="currentColor" stroke-width="1.1" opacity=".62"/>
-          </svg>
+          <img class="confirm-icon" src="/Flamemark.png" alt="">
         </button>
 
         <div class="confirm-instruction" id="confirmInstruction">
@@ -1098,74 +1505,182 @@ button,
       </button>
     </div>
 
-    <div class="result-panel">
-      <div class="result-label">已收到你的選擇</div>
+    <div class="result-view">
+      <div class="result-panel">
+        <div class="result-label">已收到你的選擇</div>
+        <h2 class="result-title" id="resultTitle">餘燼霧紅</h2>
+        <div class="result-code" id="resultCode">IGNITION</div>
+        <p class="result-copy" id="resultCopy">
+          安靜而集中，像未曾熄滅的內在熱度。
+        </p>
 
-      <h2 class="result-title" id="resultTitle">餘燼霧紅</h2>
+        <div class="card-preview" aria-label="Founder Card 預覽">
+          <canvas id="founderCanvas" width="1200" height="750"></canvas>
+        </div>
 
-      <p class="result-copy" id="resultCopy">
-        安靜而集中，像未曾熄滅的內在熱度。
-      </p>
+        <div class="result-footer">HESTIA TAIWAN®</div>
 
-      <div class="result-note">
-        目前為體驗版本，選擇只會暫存在這台裝置，尚未連接正式投票資料庫。
+        <div class="world-progress-title">即時色彩世界進度</div>
+        <p class="world-progress-copy">
+          以下比例來自目前公開統計；測試模式會在畫面中模擬加入你選擇的這一票。
+        </p>
+
+        <div class="heat" id="heat"></div>
+
+        <div class="result-note">
+          每個 Email 僅能投票一次。正式版送出資料格式仍為：
+          Email＋原有色彩 key／英文名稱／中文名稱，既有表單欄位與即時統計來源不變。
+        </div>
+
+        <div class="result-actions">
+          <button class="result-button" id="returnButton" type="button">
+            返回色調空間
+          </button>
+          <button class="result-button test-reset" id="resetTestButton" type="button">
+            重置測試流程
+          </button>
+        </div>
       </div>
-
-      <button class="return-button" id="returnButton" type="button">
-        返回色調空間
-      </button>
     </div>
   </section>
 
+  <div class="toast" id="toast" aria-live="polite"></div>
 </main>
 
 <script>
 (() => {
   "use strict";
 
-  const tones = [
+  const TEST_MODE = true;
+
+  /*
+    現行正式後台設定：保持原值。
+    TEST_MODE=true 時不會送出 Google Form，也不會寫入正式票數。
+  */
+  const GOOGLE_FORM_ACTION_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSfhd7xkPSuii1u9faP0mQNmF-6tSbDqZIrupyK1_e4w7ZU0pQ/formResponse";
+
+  const ENTRY_EMAIL = "entry.989342676";
+  const ENTRY_COLOR = "entry.567761042";
+
+  const UNIQUE_CHECK_ENDPOINT = "";
+  const VOTE_ENDPOINT = "";
+
+  const RESULTS_CSV_URL =
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSQsxR8NEnvsi2qf5hxQpxYuMfIlBEHibSQJ7Twdjol9LtGIur6_ZgnRxJ3eLVzOebTC2WuCZTsdZC/pub?gid=1298926627&single=true&output=csv";
+
+  /*
+    顯示名稱與新色票已更新。
+    backendValue 完全保留原正式網站送出的字串，
+    因此 Google Form／試算表／CSV key 不需要修改。
+  */
+  const TONES = [
     {
-      name:"餘燼霧紅",
+      key:"ignition",
+      en:"IGNITION",
+      displayName:"餘燼霧紅",
+      originalZh:"點燃紅",
+      backendValue:"ignition|IGNITION|點燃紅",
       description:"安靜而集中，像未曾熄滅的內在熱度。",
-      colors:["#4b1119","#7e2530","#b46563","#d4a59b"],
-      a:"#ab484e",
-      b:"#671a23",
-      base:"#18090d"
+      colors:["#4B1119","#7E2530","#B46563","#D4A59B"],
+      a:"#AB484E",
+      b:"#671A23",
+      base:"#18090D",
+      cardCore:"#A94A50",
+      cardHi:"#D4A59B"
     },
     {
-      name:"玫瑰煙粉",
-      description:"柔和不等於退讓，溫度與意志可以同時存在。",
-      colors:["#4c2930","#7c4e57","#ae7a80","#d9b3b4"],
-      a:"#a96f79",
-      b:"#6f414a",
-      base:"#1a1013"
+      key:"momentum",
+      en:"MOMENTUM",
+      displayName:"琥珀熾光",
+      originalZh:"動能橙",
+      backendValue:"momentum|MOMENTUM|動能橙",
+      description:"溫暖而有方向，像日落前仍在推進的光。",
+      colors:["#3A2114","#6A3F22","#A56D3C","#D2A06E"],
+      a:"#B27443",
+      b:"#75401F",
+      base:"#160D08",
+      cardCore:"#B27443",
+      cardHi:"#D2A06E"
     },
     {
-      name:"午夜深藍",
-      description:"表面沉靜，底層仍持續流動。",
-      colors:["#101a2b","#223654","#405f85","#7994b2"],
-      a:"#496d96",
-      b:"#203c62",
-      base:"#070c15"
-    },
-    {
-      name:"礦石鼠尾",
+      key:"ground",
+      en:"GROUND",
+      displayName:"礦石鼠尾",
+      originalZh:"著地綠",
+      backendValue:"ground|GROUND|著地綠",
       description:"穩定、克制，也保有向外延伸的空間。",
-      colors:["#26312d","#45584f","#71877a","#a7b5aa"],
-      a:"#6f8a7d",
-      b:"#3d564b",
-      base:"#0d1310"
+      colors:["#26312D","#45584F","#71877A","#A7B5AA"],
+      a:"#6F8A7D",
+      b:"#3D564B",
+      base:"#0D1310",
+      cardCore:"#6F8A7D",
+      cardHi:"#A7B5AA"
+    },
+    {
+      key:"airflow",
+      en:"AIRFLOW",
+      displayName:"午夜深藍",
+      originalZh:"氣流藍",
+      backendValue:"airflow|AIRFLOW|氣流藍",
+      description:"表面沉靜，底層仍持續流動。",
+      colors:["#101A2B","#223654","#405F85","#7994B2"],
+      a:"#496D96",
+      b:"#203C62",
+      base:"#070C15",
+      cardCore:"#496D96",
+      cardHi:"#7994B2"
+    },
+    {
+      key:"pulse",
+      en:"PULSE",
+      displayName:"暮影煙紫",
+      originalZh:"脈動紫",
+      backendValue:"pulse|PULSE|脈動紫",
+      description:"成熟而敏銳，在暗處保留自己的張力。",
+      colors:["#241627","#46304C","#73577B","#A58AAA"],
+      a:"#80608A",
+      b:"#4F3557",
+      base:"#100A12",
+      cardCore:"#80608A",
+      cardHi:"#A58AAA"
+    },
+    {
+      key:"forge",
+      en:"FORGE",
+      displayName:"焦土岩褐",
+      originalZh:"鍛造咖",
+      backendValue:"forge|FORGE|鍛造咖",
+      description:"溫厚、踏實，像被時間留下的穩定質地。",
+      colors:["#241A14","#49362A","#725745","#A2846E"],
+      a:"#81644F",
+      b:"#503A2C",
+      base:"#100C09",
+      cardCore:"#81644F",
+      cardHi:"#A2846E"
     }
   ];
 
-  const rootStyle = document.documentElement.style;
-  const app = document.getElementById("app");
+  const GUIDE_VISUAL = {
+    a:"#8A5C62",
+    b:"#463035",
+    base:"#100B0D"
+  };
 
-  const intro = document.getElementById("intro");
+  const VISUALS = [GUIDE_VISUAL,...TONES];
+
+  const app = document.getElementById("app");
+  const rootStyle = document.documentElement.style;
+
+  const hero = document.getElementById("hero");
+  const emailInput = document.getElementById("emailInput");
+  const emailButton = document.getElementById("emailButton");
+  const emailMessage = document.getElementById("emailMessage");
+
+  const awakenArea = document.getElementById("awakenArea");
   const awakenButton = document.getElementById("awakenButton");
+  const awakenInstruction = document.getElementById("awakenInstruction");
   const entryRing = document.getElementById("entryRing");
-  const entryInstruction = document.getElementById("entryInstruction");
-  const quickEntry = document.getElementById("quickEntry");
 
   const experience = document.getElementById("experience");
   const scroller = document.getElementById("scroller");
@@ -1173,19 +1688,43 @@ button,
   const browseGuide = document.getElementById("browseGuide");
 
   const selectionOverlay = document.getElementById("selectionOverlay");
+  const selectionCode = document.getElementById("selectionCode");
   const selectionTitle = document.getElementById("selectionTitle");
   const selectionCopy = document.getElementById("selectionCopy");
   const confirmButton = document.getElementById("confirmButton");
   const confirmInstruction = document.getElementById("confirmInstruction");
   const cancelSelection = document.getElementById("cancelSelection");
+
   const resultTitle = document.getElementById("resultTitle");
+  const resultCode = document.getElementById("resultCode");
   const resultCopy = document.getElementById("resultCopy");
+  const founderCanvas = document.getElementById("founderCanvas");
+  const heat = document.getElementById("heat");
   const returnButton = document.getElementById("returnButton");
+  const resetTestButton = document.getElementById("resetTestButton");
+  const toast = document.getElementById("toast");
 
-  const circumference = 439.82;
+  if(TEST_MODE){
+    document.body.classList.add("test-mode");
+  }
 
-  let activeIndex = 0;
-  let selectedIndex = 0;
+  const STORAGE_EMAIL = TEST_MODE
+    ? "HESTIA_TONE_TEST_V6_EMAIL"
+    : "HESTIA_PRISM_EMAIL";
+
+  const STORAGE_VOTED = TEST_MODE
+    ? "HESTIA_TONE_TEST_V6_VOTED"
+    : "HESTIA_PRISM_VOTED";
+
+  const STORAGE_SERIAL = TEST_MODE
+    ? "HESTIA_TONE_TEST_V6_SERIAL"
+    : "hestia_founder_serial";
+
+  let userEmail = "";
+  let emailUnlocked = false;
+  let activeSlideIndex = 0;
+  let activeToneIndex = 0;
+  let selectedToneIndex = 0;
   let selectionMode = false;
 
   let scrollIdleTimer = 0;
@@ -1198,8 +1737,32 @@ button,
   let targetNearY = 0;
   let currentNearY = 0;
 
+  const circumference = 439.82;
+
   function clamp(value,min,max){
     return Math.max(min,Math.min(max,value));
+  }
+
+  function validEmail(value){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function showMessage(text,isError=false){
+    emailMessage.textContent = text;
+    emailMessage.style.color = isError
+      ? "rgba(255,210,210,.88)"
+      : "rgba(244,239,233,.60)";
+    emailMessage.classList.add("is-visible");
+  }
+
+  function showToast(text){
+    toast.textContent = text;
+    toast.classList.add("is-visible");
+
+    window.clearTimeout(showToast.timer);
+    showToast.timer = window.setTimeout(() => {
+      toast.classList.remove("is-visible");
+    },1700);
   }
 
   function hexToRgb(hex){
@@ -1234,25 +1797,25 @@ button,
   }
 
   function updateEnvironment(indexA,indexB,progress){
-    const toneA = tones[indexA];
-    const toneB = tones[indexB];
+    const visualA = VISUALS[indexA];
+    const visualB = VISUALS[indexB];
 
-    const glowA = mixColor(toneA.a,toneB.a,progress);
-    const glowB = mixColor(toneA.b,toneB.b,progress);
-    const base = mixColor(toneA.base,toneB.base,progress);
+    const glowA = mixColor(visualA.a,visualB.a,progress);
+    const glowB = mixColor(visualA.b,visualB.b,progress);
+    const base = mixColor(visualA.base,visualB.base,progress);
 
     rootStyle.setProperty("--glow-a",rgbString(glowA,.36));
     rootStyle.setProperty("--glow-b",rgbString(glowB,.25));
     rootStyle.setProperty("--base",rgbHex(base));
   }
 
-  function clearVisibleTone(){
+  function clearSettledSlides(){
     window.clearTimeout(revealTimer);
 
     document
-      .querySelectorAll(".tone.is-settled")
-      .forEach(section => {
-        section.classList.remove("is-settled");
+      .querySelectorAll(".slide.is-settled")
+      .forEach(slide => {
+        slide.classList.remove("is-settled");
       });
   }
 
@@ -1262,49 +1825,150 @@ button,
     });
   }
 
-  function settleCurrentTone(){
+  function buildSlides(){
+    const guide = document.createElement("section");
+    guide.className = "slide guide-slide";
+    guide.dataset.slideIndex = "0";
+
+    guide.innerHTML = `
+      <div class="guide-content">
+        <div class="guide-kicker">進入前，先認識這次的選擇方式</div>
+        <h1 class="guide-title">操作指南</h1>
+        <p class="guide-intro">
+          這不是對深淺、明暗或彩度的評分。請感受每一個色相帶給你的直覺，選出最希望 HESTIA 首發的色彩世界。
+        </p>
+
+        <div class="guide-steps">
+          <div class="guide-step">
+            <div class="guide-number">1</div>
+            <div>
+              <strong>上下滑動</strong>
+              <p>每一頁是一個色彩世界。停穩後，名稱與色調會從霧裡浮現。</p>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-number">2</div>
+            <div>
+              <strong>只看色相</strong>
+              <p>本次只選紅、橙、綠、藍、紫、咖；深淺、彩度與黑白灰不列入判斷。</p>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <div class="guide-number">3</div>
+            <div>
+              <strong>先選擇，再確認</strong>
+              <p>點擊「選擇這組色調」後，會進入獨立確認畫面；長按火焰才會正式完成。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-start">
+          每個 Email 僅能投一次<br>
+          向上滑動，開始感受
+        </div>
+      </div>
+    `;
+
+    scroller.appendChild(guide);
+
+    TONES.forEach((tone,index) => {
+      const dot = document.createElement("span");
+
+      if(index === 0){
+        dot.classList.add("is-active");
+      }
+
+      pageIndex.appendChild(dot);
+
+      const slide = document.createElement("section");
+      slide.className = "slide tone-slide";
+      slide.dataset.slideIndex = String(index+1);
+      slide.dataset.toneIndex = String(index);
+
+      slide.innerHTML = `
+        <div class="tone-content">
+          <div class="tone-number">
+            ${String(index+1).padStart(2,"0")}／${String(TONES.length).padStart(2,"0")}
+          </div>
+
+          <div class="tone-code">${tone.en}</div>
+          <h1 class="tone-title">${tone.displayName}</h1>
+
+          <div class="tone-meta">
+            <div class="tone-description">
+              ${tone.description}
+            </div>
+
+            <div class="swatches">
+              ${tone.colors.map(color => `
+                <span class="swatch" style="background:${color}"></span>
+              `).join("")}
+            </div>
+
+            <button
+              class="select-tone"
+              type="button"
+              data-index="${index}"
+            >
+              選擇這組色調
+            </button>
+          </div>
+        </div>
+      `;
+
+      scroller.appendChild(slide);
+    });
+
+    document.querySelectorAll(".select-tone").forEach(button => {
+      button.addEventListener("click",event => {
+        event.preventDefault();
+        event.stopPropagation();
+        openSelection(Number(button.dataset.index));
+      });
+    });
+  }
+
+  function settleCurrentSlide(){
     if(selectionMode){
       return;
     }
 
     const height = scroller.clientHeight || window.innerHeight;
-    const nextIndex = clamp(
+    activeSlideIndex = clamp(
       Math.round(scroller.scrollTop/height),
       0,
-      tones.length-1
+      TONES.length
     );
 
-    activeIndex = nextIndex;
-    updatePageIndex(activeIndex);
-
     experience.classList.remove("is-moving");
-    browseGuide.textContent = "停留片刻，感受這組色調";
+    clearSettledSlides();
 
-    clearVisibleTone();
+    if(activeSlideIndex === 0){
+      pageIndex.classList.remove("is-visible");
+      browseGuide.textContent = "向上滑動，開始感受色調";
+    }else{
+      activeToneIndex = activeSlideIndex-1;
+      updatePageIndex(activeToneIndex);
+      pageIndex.classList.add("is-visible");
+      browseGuide.textContent = "停留片刻，感受這組色調";
+    }
 
     revealTimer = window.setTimeout(() => {
-      const currentSection = document.querySelector(
-        `.tone[data-index="${activeIndex}"]`
+      const slide = document.querySelector(
+        `.slide[data-slide-index="${activeSlideIndex}"]`
       );
 
-      if(currentSection && !selectionMode){
-        currentSection.classList.add("is-settled");
+      if(slide && !selectionMode){
+        slide.classList.add("is-settled");
       }
     },360);
   }
 
   function scheduleScrollIdle(){
     window.clearTimeout(scrollIdleTimer);
-
-    /*
-      不再依賴 pointerup。
-      iPhone 慣性滑動結束後，只要 170ms 沒有新的 scroll 事件，
-      就會可靠地進入停穩狀態。
-    */
-    scrollIdleTimer = window.setTimeout(
-      settleCurrentTone,
-      170
-    );
+    scrollIdleTimer = window.setTimeout(settleCurrentSlide,170);
   }
 
   function handleScroll(){
@@ -1313,8 +1977,7 @@ button,
     }
 
     experience.classList.add("is-moving");
-    clearVisibleTone();
-    browseGuide.textContent = "上下滑動，感受色調之間的變化";
+    clearSettledSlides();
 
     const now = performance.now();
     const currentTop = scroller.scrollTop;
@@ -1328,17 +1991,30 @@ button,
     const raw = clamp(
       currentTop/height,
       0,
-      tones.length-1
+      TONES.length
     );
 
-    const currentIndex = Math.floor(raw);
-    const nextIndex = Math.min(tones.length-1,currentIndex+1);
-    const progress = raw-currentIndex;
-
-    updateEnvironment(currentIndex,nextIndex,progress);
-    updatePageIndex(
-      clamp(Math.round(raw),0,tones.length-1)
+    const currentVisualIndex = Math.floor(raw);
+    const nextVisualIndex = Math.min(
+      VISUALS.length-1,
+      currentVisualIndex+1
     );
+    const progress = raw-currentVisualIndex;
+
+    updateEnvironment(
+      currentVisualIndex,
+      nextVisualIndex,
+      progress
+    );
+
+    if(raw < .55){
+      pageIndex.classList.remove("is-visible");
+    }else{
+      pageIndex.classList.add("is-visible");
+      updatePageIndex(
+        clamp(Math.round(raw)-1,0,TONES.length-1)
+      );
+    }
 
     targetMidY = clamp(velocity*165,-18,18);
     targetNearY = clamp(velocity*270,-28,28);
@@ -1359,71 +2035,105 @@ button,
     requestAnimationFrame(animateLayers);
   }
 
-  tones.forEach((tone,index) => {
-    const dot = document.createElement("span");
+  async function sha256(value){
+    try{
+      const input = new TextEncoder().encode(value);
+      const digest = await crypto.subtle.digest("SHA-256",input);
+      return [...new Uint8Array(digest)]
+        .map(byte => byte.toString(16).padStart(2,"0"))
+        .join("");
+    }catch(error){
+      return btoa(unescape(encodeURIComponent(value))).slice(0,64);
+    }
+  }
 
-    if(index === 0){
-      dot.classList.add("is-active");
+  async function backendCheckAlreadyVoted(email){
+    if(TEST_MODE || !UNIQUE_CHECK_ENDPOINT){
+      return false;
     }
 
-    pageIndex.appendChild(dot);
+    const url = new URL(UNIQUE_CHECK_ENDPOINT);
+    url.searchParams.set("action","check");
+    url.searchParams.set("email",email);
 
-    const section = document.createElement("section");
-    section.className = "tone";
-    section.dataset.index = String(index);
-
-    section.innerHTML = `
-      <div class="tone-content">
-        <div class="tone-number">
-          ${String(index+1).padStart(2,"0")}／${String(tones.length).padStart(2,"0")}
-        </div>
-
-        <h2 class="tone-title">${tone.name}</h2>
-
-        <div class="tone-meta">
-          <div class="tone-description">
-            ${tone.description}
-          </div>
-
-          <div class="swatches">
-            ${tone.colors.map(color => `
-              <span class="swatch" style="background:${color}"></span>
-            `).join("")}
-          </div>
-
-          <button
-            class="select-tone"
-            type="button"
-            data-index="${index}"
-          >
-            選擇這組色調
-          </button>
-        </div>
-      </div>
-    `;
-
-    scroller.appendChild(section);
-  });
-
-  /*
-    每一顆投票按鈕直接綁定 click。
-    不再讓外層 scroller 代理事件，也不在按下按鈕時
-    把整個畫面誤判為「開始拖曳」。
-  */
-  document.querySelectorAll(".select-tone").forEach(button => {
-    button.addEventListener("click",event => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const index = Number(button.dataset.index);
-      openSelection(index);
+    const response = await fetch(url.toString(),{
+      method:"POST"
     });
+
+    const data = await response.json();
+
+    return !!(data && data.ok && data.exists);
+  }
+
+  async function verifyEmail(){
+    const email = (emailInput.value || "")
+      .trim()
+      .toLowerCase();
+
+    if(!validEmail(email)){
+      showMessage("請輸入有效的 Email。",true);
+      emailInput.focus();
+      return;
+    }
+
+    emailButton.disabled = true;
+    emailButton.textContent = "確認中";
+
+    try{
+      const hash = await sha256(email);
+      const votedHash = localStorage.getItem(STORAGE_VOTED);
+
+      if(votedHash && votedHash === hash){
+        showMessage("這個 Email 已經完成投票。",true);
+        showToast("這個 Email 已經完成投票。");
+        return;
+      }
+
+      const exists = await backendCheckAlreadyVoted(email);
+
+      if(exists){
+        localStorage.setItem(STORAGE_VOTED,hash);
+        showMessage("這個 Email 已經完成投票。",true);
+        showToast("這個 Email 已經完成投票。");
+        return;
+      }
+
+      userEmail = email;
+      emailUnlocked = true;
+
+      localStorage.setItem(STORAGE_EMAIL,email);
+
+      awakenArea.classList.add("is-unlocked");
+      awakenInstruction.textContent = "長按火焰，進入色調聖所";
+      showMessage(
+        TEST_MODE
+          ? "Email 已確認。測試模式不會寫入正式票數。"
+          : "Email 已確認，可以進入投票。"
+      );
+    }catch(error){
+      console.warn(error);
+      showMessage("目前無法完成確認，請稍後再試。",true);
+    }finally{
+      emailButton.disabled = false;
+      emailButton.textContent = "確認";
+    }
+  }
+
+  emailButton.addEventListener("click",verifyEmail);
+
+  emailInput.addEventListener("keydown",event => {
+    if(event.key === "Enter"){
+      verifyEmail();
+    }
   });
 
-  /* =======================================================
-     首屏長按
-     ======================================================= */
+  const savedEmail = localStorage.getItem(STORAGE_EMAIL);
 
+  if(savedEmail){
+    emailInput.value = savedEmail;
+  }
+
+  /* Hero long hold */
   let entryHolding = false;
   let entryStart = 0;
   let entryFrame = 0;
@@ -1434,21 +2144,24 @@ button,
     entryHolding = false;
     entryPointerId = null;
     cancelAnimationFrame(entryFrame);
-
     awakenButton.classList.remove("is-holding");
     entryRing.style.strokeDashoffset = String(circumference);
-    entryInstruction.textContent = "長按火焰，進入色調聖所";
+
+    awakenInstruction.textContent = emailUnlocked
+      ? "長按火焰，進入色調聖所"
+      : "先確認 Email";
   }
 
-  function enterExperience(){
+  function openExperience(){
     resetEntry();
 
-    intro.classList.add("is-hidden");
+    hero.classList.add("is-hidden");
     experience.classList.add("is-visible");
 
-    window.setTimeout(() => {
-      settleCurrentTone();
-    },720);
+    scroller.scrollTop = 0;
+    updateEnvironment(0,0,0);
+
+    window.setTimeout(settleCurrentSlide,720);
   }
 
   function entryTick(now){
@@ -1465,13 +2178,13 @@ button,
     entryRing.style.strokeDashoffset =
       String(circumference*(1-progress));
 
-    entryInstruction.textContent =
+    awakenInstruction.textContent =
       progress < .70
         ? "再停留一下"
-        : "正在喚醒";
+        : "正在進入";
 
     if(progress >= 1){
-      enterExperience();
+      openExperience();
       return;
     }
 
@@ -1479,6 +2192,11 @@ button,
   }
 
   awakenButton.addEventListener("pointerdown",event => {
+    if(!emailUnlocked){
+      showMessage("請先確認 Email。",true);
+      return;
+    }
+
     event.preventDefault();
 
     entryHolding = true;
@@ -1493,30 +2211,36 @@ button,
 
   awakenButton.addEventListener("pointerup",resetEntry);
   awakenButton.addEventListener("pointercancel",resetEntry);
-  quickEntry.addEventListener("click",enterExperience);
 
-  /* =======================================================
-     手機與電腦共用原生捲動；只用 scroll idle 判斷停穩
-     ======================================================= */
+  scroller.addEventListener("scroll",handleScroll,{
+    passive:true
+  });
 
-  scroller.addEventListener("scroll",handleScroll,{passive:true});
-
-  /*
-    iOS 回到頁面、旋轉螢幕或網址列高度變化時，
-    重新辨識目前頁面，避免索引與內容錯位。
-  */
   window.addEventListener("resize",() => {
     window.clearTimeout(scrollIdleTimer);
     scrollIdleTimer = window.setTimeout(
-      settleCurrentTone,
+      settleCurrentSlide,
       120
     );
-  },{passive:true});
+  },{
+    passive:true
+  });
 
-  /*
-    電腦版增加方向鍵操作。
-    手機不會觸發，也不干擾觸控。
-  */
+  function goToSlide(slideIndex){
+    const next = clamp(slideIndex,0,TONES.length);
+    const height = scroller.clientHeight || window.innerHeight;
+
+    experience.classList.add("is-moving");
+    clearSettledSlides();
+
+    scroller.scrollTo({
+      top:next*height,
+      behavior:"smooth"
+    });
+
+    scheduleScrollIdle();
+  }
+
   window.addEventListener("keydown",event => {
     if(
       selectionMode ||
@@ -1527,31 +2251,15 @@ button,
 
     if(event.key === "ArrowDown" || event.key === "PageDown"){
       event.preventDefault();
-      goToTone(activeIndex+1);
+      goToSlide(activeSlideIndex+1);
     }
 
     if(event.key === "ArrowUp" || event.key === "PageUp"){
       event.preventDefault();
-      goToTone(activeIndex-1);
+      goToSlide(activeSlideIndex-1);
     }
   });
 
-  function goToTone(index){
-    const nextIndex = clamp(index,0,tones.length-1);
-    const height = scroller.clientHeight || window.innerHeight;
-
-    experience.classList.add("is-moving");
-    clearVisibleTone();
-
-    scroller.scrollTo({
-      top:nextIndex*height,
-      behavior:"smooth"
-    });
-
-    scheduleScrollIdle();
-  }
-
-  /* 電腦版游標空間偏移；手機完全不啟用 */
   if(window.matchMedia("(pointer:fine)").matches){
     let targetX = 0;
     let targetY = 0;
@@ -1561,7 +2269,9 @@ button,
     app.addEventListener("pointermove",event => {
       targetX = ((event.clientX/window.innerWidth)-.5)*9;
       targetY = ((event.clientY/window.innerHeight)-.5)*7;
-    },{passive:true});
+    },{
+      passive:true
+    });
 
     const desktopLoop = () => {
       desktopX += (targetX-desktopX)*.035;
@@ -1574,23 +2284,20 @@ button,
     };
 
     desktopLoop();
-
-    browseGuide.textContent = "滾動滑鼠或使用方向鍵切換色調";
   }
 
-  /* =======================================================
-     獨立選擇模式
-     ======================================================= */
-
   function openSelection(index){
-    selectedIndex = clamp(index,0,tones.length-1);
+    selectedToneIndex = clamp(index,0,TONES.length-1);
     selectionMode = true;
 
-    const tone = tones[selectedIndex];
+    const tone = TONES[selectedToneIndex];
 
-    selectionTitle.textContent = tone.name;
+    selectionCode.textContent = tone.en;
+    selectionTitle.textContent = tone.displayName;
     selectionCopy.textContent = tone.description;
-    resultTitle.textContent = tone.name;
+
+    resultCode.textContent = tone.en;
+    resultTitle.textContent = tone.displayName;
     resultCopy.textContent = tone.description;
 
     selectionOverlay.classList.remove(
@@ -1602,10 +2309,6 @@ button,
     selectionOverlay.classList.add("is-open");
     selectionOverlay.setAttribute("aria-hidden","false");
 
-    /*
-      投票模式與瀏覽模式完全分離。
-      進入後鎖住底層捲動，不可能同時切換 Tone。
-    */
     scroller.style.overflowY = "hidden";
     browseGuide.style.opacity = "0";
     confirmInstruction.textContent = "長按火焰，確認這次選擇";
@@ -1626,16 +2329,96 @@ button,
     scroller.style.overflowY = "auto";
     browseGuide.style.opacity = "";
 
-    settleCurrentTone();
+    settleCurrentSlide();
   }
 
   cancelSelection.addEventListener("click",closeSelection);
   returnButton.addEventListener("click",closeSelection);
 
-  /* =======================================================
-     長按確認：只看時間與移動距離，不含壓力資料
-     ======================================================= */
+  async function postToGoogleForm(email,colorValue){
+    const formData = new URLSearchParams();
+    formData.append(ENTRY_EMAIL,email);
+    formData.append(ENTRY_COLOR,colorValue);
 
+    await fetch(GOOGLE_FORM_ACTION_URL,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{
+        "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
+      },
+      body:formData.toString()
+    });
+  }
+
+  async function postToAppsScriptVote(email,colorValue){
+    if(!VOTE_ENDPOINT){
+      return null;
+    }
+
+    const url = new URL(VOTE_ENDPOINT);
+    url.searchParams.set("action","vote");
+    url.searchParams.set("email",email);
+    url.searchParams.set("color",colorValue);
+
+    const response = await fetch(url.toString(),{
+      method:"POST"
+    });
+
+    return await response.json();
+  }
+
+  async function submitVote(tone){
+    if(TEST_MODE){
+      await new Promise(resolve => setTimeout(resolve,420));
+      return;
+    }
+
+    const email = (userEmail || "")
+      .trim()
+      .toLowerCase();
+
+    if(!email){
+      throw new Error("missing_email");
+    }
+
+    const hash = await sha256(email);
+    const votedHash = localStorage.getItem(STORAGE_VOTED);
+
+    if(votedHash && votedHash === hash){
+      const error = new Error("already_voted");
+      error.code = "already_voted";
+      throw error;
+    }
+
+    if(VOTE_ENDPOINT){
+      const data = await postToAppsScriptVote(
+        email,
+        tone.backendValue
+      );
+
+      if(data && data.ok && data.saved){
+        localStorage.setItem(STORAGE_VOTED,hash);
+        return;
+      }
+
+      if(data && data.reason === "already_voted"){
+        localStorage.setItem(STORAGE_VOTED,hash);
+
+        const error = new Error("already_voted");
+        error.code = "already_voted";
+        throw error;
+      }
+    }
+
+    await postToGoogleForm(
+      email,
+      tone.backendValue
+    );
+
+    localStorage.setItem(STORAGE_VOTED,hash);
+  }
+
+  /* Hold confirmation */
   let holdActive = false;
   let holdStart = 0;
   let holdFrame = 0;
@@ -1655,30 +2438,41 @@ button,
     confirmInstruction.textContent = "長按火焰，確認這次選擇";
   }
 
-  function completeSelection(){
+  async function completeSelection(){
     holdActive = false;
     cancelAnimationFrame(holdFrame);
 
     selectionOverlay.style.setProperty("--hold-progress","1");
     selectionOverlay.classList.add("is-completing");
-    confirmInstruction.textContent = "正在收束這組色調";
+    confirmInstruction.textContent = TEST_MODE
+      ? "正在建立測試結果"
+      : "正在送出你的選擇";
+
+    const tone = TONES[selectedToneIndex];
 
     try{
-      localStorage.setItem(
-        "hestiaToneSanctuaryV5",
-        JSON.stringify({
-          tone:tones[selectedIndex].name,
-          selectedAt:new Date().toISOString()
-        })
-      );
-    }catch(error){
-      /* 無法使用 localStorage 時，仍然完成畫面體驗 */
-    }
+      await submitVote(tone);
 
-    window.setTimeout(() => {
+      window.setTimeout(async () => {
+        renderFounderCard(tone);
+        await updateWorldProgress(tone.key);
+
+        selectionOverlay.classList.remove("is-completing");
+        selectionOverlay.classList.add("is-confirmed");
+      },760);
+    }catch(error){
+      console.warn(error);
+
       selectionOverlay.classList.remove("is-completing");
-      selectionOverlay.classList.add("is-confirmed");
-    },940);
+      selectionOverlay.style.setProperty("--hold-progress","0");
+
+      confirmInstruction.textContent =
+        error.code === "already_voted"
+          ? "這個 Email 已完成投票"
+          : "送出失敗，請稍後再試";
+
+      showToast(confirmInstruction.textContent);
+    }
   }
 
   function holdTick(now){
@@ -1757,7 +2551,294 @@ button,
 
   confirmButton.addEventListener("pointercancel",cancelHold);
 
-  /* 初始化 */
+  /* Founder Card */
+  const founderContext = founderCanvas.getContext("2d");
+  const hlogoImage = new Image();
+  hlogoImage.src = "/HLOGO.png";
+
+  const noiseCanvas = document.createElement("canvas");
+  noiseCanvas.width = 240;
+  noiseCanvas.height = 150;
+
+  const noiseContext = noiseCanvas.getContext("2d");
+  const noiseData = noiseContext.createImageData(
+    noiseCanvas.width,
+    noiseCanvas.height
+  );
+
+  for(let index=0;index<noiseData.data.length;index+=4){
+    const value = Math.floor(Math.random()*255);
+
+    noiseData.data[index] = value;
+    noiseData.data[index+1] = value;
+    noiseData.data[index+2] = value;
+    noiseData.data[index+3] = Math.floor(Math.random()*55);
+  }
+
+  noiseContext.putImageData(noiseData,0,0);
+
+  function roundedRect(context,x,y,width,height,radius){
+    const r = Math.min(radius,width/2,height/2);
+
+    context.beginPath();
+    context.moveTo(x+r,y);
+    context.arcTo(x+width,y,x+width,y+height,r);
+    context.arcTo(x+width,y+height,x,y+height,r);
+    context.arcTo(x,y+height,x,y,r);
+    context.arcTo(x,y,x+width,y,r);
+    context.closePath();
+  }
+
+  function nextFounderSerial(){
+    const current = parseInt(
+      localStorage.getItem(STORAGE_SERIAL) || "4020",
+      10
+    ) + 1;
+
+    localStorage.setItem(STORAGE_SERIAL,String(current));
+
+    return String(current).padStart(4,"0");
+  }
+
+  function renderFounderCard(tone){
+    const context = founderContext;
+    const width = founderCanvas.width;
+    const height = founderCanvas.height;
+    const serial = nextFounderSerial();
+
+    context.clearRect(0,0,width,height);
+
+    const gradient = context.createLinearGradient(0,0,width,height);
+    gradient.addColorStop(0,tone.cardHi);
+    gradient.addColorStop(.55,tone.cardCore);
+    gradient.addColorStop(1,"#09090B");
+
+    context.fillStyle = gradient;
+    context.fillRect(0,0,width,height);
+
+    context.globalAlpha = .20;
+    context.drawImage(noiseCanvas,0,0,width,height);
+    context.globalAlpha = 1;
+
+    context.fillStyle = "rgba(0,0,0,.17)";
+    roundedRect(context,64,64,width-128,height-128,32);
+    context.fill();
+
+    context.strokeStyle = "rgba(255,255,255,.23)";
+    context.lineWidth = 2;
+    roundedRect(context,64,64,width-128,height-128,32);
+    context.stroke();
+
+    context.fillStyle = "rgba(255,255,255,.94)";
+    context.font = "800 52px system-ui,-apple-system,sans-serif";
+    context.fillText("HESTIA FOUNDER",112,205);
+
+    context.fillStyle = "rgba(255,255,255,.78)";
+    context.font = "650 29px system-ui,-apple-system,sans-serif";
+    context.fillText("Tone on Tone 首發色投票",112,260);
+
+    context.fillStyle = "rgba(255,255,255,.95)";
+    context.font = "850 72px system-ui,-apple-system,sans-serif";
+    context.fillText(tone.en,112,385);
+
+    context.fillStyle = "rgba(255,255,255,.83)";
+    context.font = "650 35px 'PingFang TC',system-ui,sans-serif";
+    context.fillText(tone.displayName,112,441);
+
+    context.fillStyle = "rgba(255,255,255,.82)";
+    context.font = "700 31px ui-monospace,SFMono-Regular,Menlo,monospace";
+    context.fillText(`No. ${serial}`,112,512);
+
+    context.strokeStyle = "rgba(255,255,255,.26)";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.moveTo(112,556);
+    context.lineTo(520,556);
+    context.stroke();
+
+    context.fillStyle = "rgba(255,255,255,.69)";
+    context.font = "650 25px system-ui,-apple-system,sans-serif";
+    context.fillText("Your Spectrum is Set",112,611);
+
+    if(
+      hlogoImage.complete &&
+      hlogoImage.naturalWidth > 0
+    ){
+      const size = 185;
+      const x = width-64-size-62;
+      const y = height/2-size/2+34;
+
+      context.globalAlpha = .94;
+      context.drawImage(hlogoImage,x,y,size,size);
+      context.globalAlpha = 1;
+    }
+  }
+
+  /* Live Progress */
+  const emptyCounts = () => ({
+    ignition:0,
+    momentum:0,
+    ground:0,
+    airflow:0,
+    pulse:0,
+    forge:0
+  });
+
+  function buildHeat(){
+    heat.innerHTML = "";
+
+    TONES.forEach(tone => {
+      const cell = document.createElement("div");
+      cell.className = "heat-cell";
+
+      cell.innerHTML = `
+        <div class="heat-name">
+          <strong>${tone.displayName}</strong>
+          <span>${tone.en}</span>
+        </div>
+
+        <div class="heat-bar">
+          <i
+            data-bar="${tone.key}"
+            style="--bar-color:${tone.cardCore}"
+          ></i>
+        </div>
+
+        <div class="heat-pct" data-pct="${tone.key}">
+          —%
+        </div>
+      `;
+
+      heat.appendChild(cell);
+    });
+  }
+
+  function parseNumber(value){
+    const number = Number(
+      String(value || "").replace(/[^\d.-]/g,"")
+    );
+
+    return Number.isFinite(number)
+      ? number
+      : 0;
+  }
+
+  function parseCountsCsv(csv){
+    const counts = emptyCounts();
+    const text = String(csv || "").replace(/^\uFEFF/,"").trim();
+
+    if(!text){
+      return counts;
+    }
+
+    const lines = text
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    lines.forEach(line => {
+      const parts = line
+        .split(",")
+        .map(part => part.trim().replace(/^"|"$/g,""));
+
+      if(parts.length < 2){
+        return;
+      }
+
+      const key = (parts[0] || "").toLowerCase();
+
+      if(
+        key === "key" ||
+        key === "color" ||
+        key === "world"
+      ){
+        return;
+      }
+
+      if(Object.prototype.hasOwnProperty.call(counts,key)){
+        counts[key] = parseNumber(parts[1]);
+      }
+    });
+
+    return counts;
+  }
+
+  async function fetchCounts(){
+    if(!RESULTS_CSV_URL){
+      return null;
+    }
+
+    try{
+      const response = await fetch(RESULTS_CSV_URL,{
+        cache:"no-store"
+      });
+
+      if(!response.ok){
+        throw new Error(`CSV ${response.status}`);
+      }
+
+      return parseCountsCsv(await response.text());
+    }catch(error){
+      console.warn(error);
+      return null;
+    }
+  }
+
+  function applyCounts(counts){
+    const total = Object
+      .values(counts)
+      .reduce((sum,value) => sum+(Number(value) || 0),0);
+
+    TONES.forEach(tone => {
+      const percentage = total === 0
+        ? 100/TONES.length
+        : ((counts[tone.key] || 0)/total)*100;
+
+      const displayPercentage =
+        `${(Math.round(percentage*10)/10).toFixed(1)}%`;
+
+      const bar = document.querySelector(
+        `[data-bar="${tone.key}"]`
+      );
+
+      const label = document.querySelector(
+        `[data-pct="${tone.key}"]`
+      );
+
+      if(bar){
+        bar.style.width = `${clamp(percentage,5,100)}%`;
+      }
+
+      if(label){
+        label.textContent = displayPercentage;
+      }
+    });
+  }
+
+  async function updateWorldProgress(selectedKey){
+    const fetched = await fetchCounts();
+    const counts = fetched || emptyCounts();
+
+    if(TEST_MODE){
+      counts[selectedKey] = (counts[selectedKey] || 0)+1;
+    }
+
+    applyCounts(counts);
+  }
+
+  resetTestButton.addEventListener("click",() => {
+    if(!TEST_MODE){
+      return;
+    }
+
+    localStorage.removeItem(STORAGE_EMAIL);
+    localStorage.removeItem(STORAGE_VOTED);
+    localStorage.removeItem(STORAGE_SERIAL);
+    window.location.reload();
+  });
+
+  buildSlides();
+  buildHeat();
   updateEnvironment(0,0,0);
   animateLayers();
 

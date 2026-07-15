@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#08080b">
-<title>HESTIA｜Tone on Tone 首發色投票</title>
+<title>HESTIA｜Tone on Tone 首發色投票 V6.1</title>
 <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
 <style>
@@ -1737,6 +1737,21 @@ body.test-mode .test-reset{
   let targetNearY = 0;
   let currentNearY = 0;
 
+  /*
+    首屏色彩輪播：
+    紅 → 橙 → 綠 → 藍 → 紫 → 咖
+    每色停留 3.5 秒，融色轉場 1.8 秒。
+    Email 確認後停在當下色調。
+  */
+  let heroCycleIndex = 0;
+  let heroCycleTimer = 0;
+  let heroCycleFrame = 0;
+  let heroCycleRunning = false;
+  let heroCycleProgress = 0;
+
+  const HERO_HOLD_DURATION = 3500;
+  const HERO_TRANSITION_DURATION = 1800;
+
   const circumference = 439.82;
 
   function clamp(value,min,max){
@@ -1807,6 +1822,104 @@ body.test-mode .test-reset{
     rootStyle.setProperty("--glow-a",rgbString(glowA,.36));
     rootStyle.setProperty("--glow-b",rgbString(glowB,.25));
     rootStyle.setProperty("--base",rgbHex(base));
+  }
+
+  function easeInOutSine(progress){
+    return -(Math.cos(Math.PI*progress)-1)/2;
+  }
+
+  function cancelHeroTransition(){
+    if(heroCycleFrame){
+      cancelAnimationFrame(heroCycleFrame);
+      heroCycleFrame = 0;
+    }
+  }
+
+  function stopHeroCycle(){
+    heroCycleRunning = false;
+
+    window.clearTimeout(heroCycleTimer);
+    heroCycleTimer = 0;
+
+    cancelHeroTransition();
+  }
+
+  function animateHeroToNextTone(){
+    if(!heroCycleRunning){
+      return;
+    }
+
+    const fromToneIndex = heroCycleIndex;
+    const nextToneIndex = (heroCycleIndex+1)%TONES.length;
+    const startedAt = performance.now();
+
+    cancelHeroTransition();
+
+    const frame = now => {
+      if(!heroCycleRunning){
+        return;
+      }
+
+      const rawProgress = clamp(
+        (now-startedAt)/HERO_TRANSITION_DURATION,
+        0,
+        1
+      );
+
+      heroCycleProgress = easeInOutSine(rawProgress);
+
+      /*
+        VISUALS[0] 是操作指南；
+        首屏六色從 VISUALS[1] 開始。
+      */
+      updateEnvironment(
+        fromToneIndex+1,
+        nextToneIndex+1,
+        heroCycleProgress
+      );
+
+      if(rawProgress < 1){
+        heroCycleFrame = requestAnimationFrame(frame);
+        return;
+      }
+
+      heroCycleFrame = 0;
+      heroCycleIndex = nextToneIndex;
+      heroCycleProgress = 0;
+
+      heroCycleTimer = window.setTimeout(
+        animateHeroToNextTone,
+        HERO_HOLD_DURATION
+      );
+    };
+
+    heroCycleFrame = requestAnimationFrame(frame);
+  }
+
+  function startHeroCycle(){
+    stopHeroCycle();
+
+    heroCycleIndex = 0;
+    heroCycleProgress = 0;
+
+    /*
+      「減少動態效果」模式仍顯示第一組紅色，
+      但不自動輪播。
+    */
+    updateEnvironment(1,1,0);
+
+    if(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ){
+      return;
+    }
+
+    heroCycleRunning = true;
+
+    heroCycleTimer = window.setTimeout(
+      animateHeroToNextTone,
+      HERO_HOLD_DURATION
+    );
   }
 
   function clearSettledSlides(){
@@ -2101,6 +2214,12 @@ body.test-mode .test-reset{
       userEmail = email;
       emailUnlocked = true;
 
+      /*
+        Email 確認後，背景停留在使用者當下看見的色調，
+        不再繼續輪播。
+      */
+      stopHeroCycle();
+
       localStorage.setItem(STORAGE_EMAIL,email);
 
       awakenArea.classList.add("is-unlocked");
@@ -2154,6 +2273,7 @@ body.test-mode .test-reset{
 
   function openExperience(){
     resetEntry();
+    stopHeroCycle();
 
     hero.classList.add("is-hidden");
     experience.classList.add("is-visible");
@@ -2837,9 +2957,23 @@ body.test-mode .test-reset{
     window.location.reload();
   });
 
+  document.addEventListener("visibilitychange",() => {
+    if(document.hidden){
+      stopHeroCycle();
+      return;
+    }
+
+    if(
+      !emailUnlocked &&
+      !hero.classList.contains("is-hidden")
+    ){
+      startHeroCycle();
+    }
+  });
+
   buildSlides();
   buildHeat();
-  updateEnvironment(0,0,0);
+  startHeroCycle();
   animateLayers();
 
 })();

@@ -1,1908 +1,3139 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>HESTiA — Tone on Tone 首發色投票</title>
-  <link rel="icon" href="favicon.png" type="image/png" sizes="32x32" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#08080b">
+<title>HESTIA｜Tone on Tone 首發色投票</title>
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
-  <!--
-  HESTIA — Tone-on-Tone 首發色投票
-  6 色 Tone-on-Tone 色票組（Background / Core / Highlight）
-  （順序：紅 → 橙 → 綠 → 藍 → 紫 → 咖）
+<style>
+:root{
+  --fg:#f4efe9;
+  --muted:rgba(244,239,233,.60);
+  --faint:rgba(244,239,233,.30);
+  --line:rgba(255,255,255,.15);
 
-  - IGNITION（點燃紅）
-    Background: hsl(8 32% 12%)  #281715
-    Core:       hsl(8 92% 54%)  #F63B1E
-    Highlight:  hsl(8 100% 68%)  #FF725C
+  --base:#18090d;
+  --glow-a:rgba(171,72,78,.36);
+  --glow-b:rgba(103,26,35,.25);
 
-  - MOMENTUM（動能橙）
-    Background: hsl(28 34% 12%)  #291E14
-    Core:       hsl(28 92% 54%)  #F6831E
-    Highlight:  hsl(28 100% 68%)  #FFA85C
+  --mid-y:0px;
+  --near-y:0px;
+  --desktop-x:0px;
+  --desktop-y:0px;
 
-  - GROUND（著地綠）
-    Background: hsl(132 28% 11%)  #142417
-    Core:       hsl(132 78% 46%)  #1AD13E
-    Highlight:  hsl(132 95% 64%)  #4CFA6F
+  --safe-top:max(18px,env(safe-area-inset-top));
+  --safe-bottom:max(18px,env(safe-area-inset-bottom));
+  --ease:cubic-bezier(.22,.72,.24,1);
+}
 
-  - AIRFLOW（氣流藍）
-    Background: hsl(205 30% 12%)  #152028
-    Core:       hsl(205 88% 54%)  #229BF1
-    Highlight:  hsl(205 100% 68%)  #5CBBFF
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-  - PULSE（脈動紫）
-    Background: hsl(275 30% 12%)  #201528
-    Core:       hsl(275 86% 52%)  #961BEE
-    Highlight:  hsl(275 100% 68%)  #BB5CFF
+html,
+body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:#08080b;
+  color:var(--fg);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans TC",
+    "PingFang TC",
+    "Microsoft JhengHei",
+    sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
 
-  - FORGE（鍛造咖）
-    Background: hsl(28 18% 10%)  #1E1915
-    Core:       hsl(28 66% 28%)  #774418
-    Highlight:  hsl(28 92% 46%)  #E16E09
+body{
+  overscroll-behavior:none;
+}
 
-  ============================
-  「每個 Email 只能投一次」建議後台（Apps Script Web App）
-  ============================
-  // Google Apps Script（建議做「每個 email 只能投一次」的後台機制）
-  // 1) 建立 Google Sheet：欄位建議 A=timestamp, B=email, C=color
-  // 2) Extensions → Apps Script，貼上本程式碼
-  // 3) Deploy → New deployment → Web app
-  //    - Execute as: Me
-  //    - Who has access: Anyone
-  // 4) 得到 Web App URL，填入 HTML 內 UNIQUE_CHECK_ENDPOINT / VOTE_ENDPOINT
+button,
+input{
+  font:inherit;
+}
 
-  const SHEET_NAME = 'votes';
+button,
+[role="button"]{
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
 
-  function doPost(e) {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sh = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+input{
+  -webkit-user-select:text;
+  user-select:text;
+  font-size:16px;
+}
 
-    const action = (e.parameter.action || '').toLowerCase();
-    const email  = (e.parameter.email  || '').trim().toLowerCase();
-    const color  = (e.parameter.color  || '').trim();
+.app{
+  position:relative;
+  width:100%;
+  height:100dvh;
+  min-height:100vh;
+  overflow:hidden;
+  isolation:isolate;
+  background:#08080b;
+}
 
-    if (!email) return _json({ ok:false, reason:'missing_email' });
+/* =========================================================
+   環境背景
+   ========================================================= */
 
-    // 建立 email 索引（讀 B 欄）
-    const lastRow = sh.getLastRow();
-    const emails = lastRow >= 2 ? sh.getRange(2, 2, lastRow-1, 1).getValues().flat().map(x=>String(x||'').toLowerCase()) : [];
+.environment{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  background:
+    radial-gradient(86vmax 68vmax at 72% 35%,var(--glow-a),transparent 64%),
+    radial-gradient(76vmax 62vmax at 20% 76%,var(--glow-b),transparent 66%),
+    linear-gradient(148deg,var(--base),#09090c 61%,#020203);
+  transition:background .14s linear;
+}
 
-    const exists = emails.includes(email);
+.layer{
+  position:absolute;
+  inset:-12%;
+  pointer-events:none;
+  will-change:transform,opacity;
+}
 
-    if (action === 'check') {
-      return _json({ ok:true, exists });
-    }
+.layer-far{
+  background:
+    radial-gradient(52vmax 46vmax at 74% 28%,var(--glow-a),transparent 68%),
+    radial-gradient(46vmax 42vmax at 22% 78%,var(--glow-b),transparent 70%);
+  filter:blur(50px);
+  opacity:.46;
+  transform:
+    translate3d(
+      calc(var(--desktop-x) * .20),
+      calc(var(--desktop-y) * .20),
+      0
+    )
+    scale(1.08);
+  animation:farBreath 18s ease-in-out infinite alternate;
+}
 
-    if (action === 'vote') {
-      if (exists) return _json({ ok:false, reason:'already_voted' });
+.layer-mid{
+  background:
+    conic-gradient(
+      from 218deg at 58% 46%,
+      transparent 0 18%,
+      rgba(255,255,255,.035) 25%,
+      transparent 35% 61%,
+      rgba(255,255,255,.022) 69%,
+      transparent 80%
+    );
+  filter:blur(32px);
+  opacity:.62;
+  mix-blend-mode:soft-light;
+  transform:
+    translate3d(
+      calc(var(--desktop-x) * .45),
+      calc(var(--mid-y) + var(--desktop-y) * .45),
+      0
+    )
+    scale(1.10);
+}
 
-      sh.appendRow([new Date(), email, color]);
-      return _json({ ok:true, saved:true });
-    }
+.layer-near{
+  background:
+    radial-gradient(34vmax 20vmax at 50% 57%,rgba(255,255,255,.045),transparent 72%),
+    linear-gradient(105deg,transparent 26%,rgba(255,255,255,.024) 47%,transparent 66%);
+  filter:blur(18px);
+  opacity:.42;
+  mix-blend-mode:screen;
+  transform:
+    translate3d(
+      var(--desktop-x),
+      calc(var(--near-y) + var(--desktop-y)),
+      0
+    )
+    scale(1.04);
+}
 
-    return _json({ ok:false, reason:'unknown_action' });
+@keyframes farBreath{
+  to{
+    opacity:.58;
+    transform:
+      translate3d(
+        calc(var(--desktop-x) * .20 - 2vw),
+        calc(var(--desktop-y) * .20 + 2vh),
+        0
+      )
+      scale(1.14);
+  }
+}
+
+.grain{
+  position:absolute;
+  inset:-50%;
+  z-index:80;
+  pointer-events:none;
+  opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  animation:grain .22s steps(2) infinite;
+  mix-blend-mode:soft-light;
+}
+
+@keyframes grain{
+  0%{transform:translate(0)}
+  25%{transform:translate(2%,-1%)}
+  50%{transform:translate(-1%,2%)}
+  75%{transform:translate(1%,1%)}
+  100%{transform:translate(-2%,-1%)}
+}
+
+/* =========================================================
+   品牌列
+   ========================================================= */
+
+.site-header{
+  position:absolute;
+  z-index:70;
+  top:0;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:var(--safe-top) 20px 0;
+  pointer-events:none;
+}
+
+.header-brand{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:11px;
+  font-weight:650;
+  letter-spacing:.17em;
+}
+
+.header-mark{
+  width:21px;
+  height:25px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 18px var(--glow-a));
+}
+
+.header-section{
+  display:none;
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:.14em;
+}
+
+/* =========================================================
+   首頁 Email Gate + 喚醒
+   ========================================================= */
+
+.hero{
+  position:absolute;
+  inset:0;
+  z-index:50;
+  display:grid;
+  place-items:center;
+  padding:
+    calc(var(--safe-top) + 70px)
+    24px
+    calc(var(--safe-bottom) + 40px);
+  text-align:center;
+  transition:
+    opacity 1s var(--ease),
+    visibility 1s,
+    transform 1s var(--ease);
+}
+
+.hero.is-hidden{
+  opacity:0;
+  visibility:hidden;
+  transform:scale(1.035);
+}
+
+.hero-inner{
+  width:min(100%,560px);
+}
+
+.hero-logo{
+  display:block;
+  width:min(116px,30vw);
+  height:auto;
+  margin:0 auto 20px;
+  object-fit:contain;
+  filter:drop-shadow(0 18px 50px rgba(0,0,0,.35));
+}
+
+.hero-wordmark{
+  display:block;
+  width:min(210px,48vw);
+  height:auto;
+  margin:0 auto;
+  object-fit:contain;
+}
+
+.hero-title{
+  margin:18px 0 0;
+  color:var(--fg);
+  font-size:14px;
+  font-weight:760;
+  letter-spacing:.10em;
+}
+
+.hero-copy{
+  margin:15px auto 0;
+  max-width:430px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.motion-hint{
+  margin:10px auto 0;
+  max-width:420px;
+  color:rgba(244,239,233,.34);
+  font-size:10px;
+  line-height:1.55;
+  letter-spacing:.015em;
+}
+
+.email-gate{
+  width:min(100%,460px);
+  margin:24px auto 0;
+  display:grid;
+  gap:10px;
+}
+
+.email-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:9px;
+}
+
+.email-input{
+  min-width:0;
+  height:48px;
+  padding:0 14px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:15px;
+  outline:none;
+  background:rgba(0,0,0,.18);
+  color:var(--fg);
+  backdrop-filter:blur(12px);
+}
+
+.email-input::placeholder{
+  color:rgba(255,255,255,.40);
+}
+
+.email-input:focus{
+  border-color:rgba(255,255,255,.31);
+  box-shadow:0 0 0 3px rgba(255,255,255,.04);
+}
+
+.email-button{
+  height:48px;
+  padding:0 16px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:15px;
+  background:rgba(255,255,255,.08);
+  color:var(--fg);
+  font-size:13px;
+  font-weight:720;
+  cursor:pointer;
+}
+
+.email-button:disabled{
+  opacity:.48;
+  cursor:default;
+}
+
+.email-message{
+  min-height:18px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.5;
+  opacity:0;
+  transform:translateY(-3px);
+  transition:
+    opacity .25s ease,
+    transform .25s ease;
+}
+
+.email-message.is-visible{
+  opacity:1;
+  transform:none;
+}
+
+.awaken-area{
+  position:relative;
+  width:150px;
+  height:150px;
+  margin:17px auto 0;
+  display:grid;
+  place-items:center;
+  opacity:.26;
+  filter:grayscale(.3);
+  pointer-events:none;
+  transition:
+    opacity .5s var(--ease),
+    filter .5s var(--ease),
+    transform .5s var(--ease);
+}
+
+.awaken-area.is-unlocked{
+  opacity:1;
+  filter:none;
+  pointer-events:auto;
+}
+
+.awaken-button{
+  position:relative;
+  width:108px;
+  height:108px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:50%;
+  background:rgba(255,255,255,.028);
+  color:var(--fg);
+  backdrop-filter:blur(12px);
+  cursor:pointer;
+  touch-action:none;
+}
+
+.awaken-button::before{
+  content:"";
+  position:absolute;
+  inset:10px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--glow-a),transparent 68%);
+  opacity:.62;
+  transition:
+    opacity .3s var(--ease),
+    transform .3s var(--ease);
+}
+
+.awaken-button.is-holding::before{
+  opacity:1;
+  transform:scale(1.16);
+}
+
+.awaken-icon{
+  position:relative;
+  z-index:2;
+  width:42px;
+  height:50px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 24px var(--glow-a));
+  transition:transform .28s var(--ease);
+}
+
+.awaken-button.is-holding .awaken-icon{
+  transform:scale(.94);
+}
+
+.entry-ring{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  transform:rotate(-90deg);
+}
+
+.ring-track,
+.ring-value{
+  fill:none;
+  stroke-width:1.8;
+}
+
+.ring-track{
+  stroke:rgba(255,255,255,.08);
+}
+
+.ring-value{
+  stroke:rgba(255,255,255,.9);
+  stroke-linecap:round;
+  stroke-dasharray:439.82;
+  stroke-dashoffset:439.82;
+  filter:drop-shadow(0 0 9px rgba(255,255,255,.34));
+}
+
+.awaken-instruction{
+  position:absolute;
+  top:calc(100% + 12px);
+  left:50%;
+  width:250px;
+  transform:translateX(-50%);
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.04em;
+}
+
+/* =========================================================
+   Guide + Tone Scroller
+   ========================================================= */
+
+.experience{
+  position:absolute;
+  inset:0;
+  z-index:10;
+  opacity:0;
+  visibility:hidden;
+  transition:
+    opacity 1s var(--ease),
+    visibility 1s;
+}
+
+.experience.is-visible{
+  opacity:1;
+  visibility:visible;
+}
+
+.scroller{
+  position:absolute;
+  inset:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scroll-snap-type:y mandatory;
+  scrollbar-width:none;
+  touch-action:pan-y;
+  -webkit-overflow-scrolling:touch;
+}
+
+.scroller::-webkit-scrollbar{
+  display:none;
+}
+
+.slide{
+  position:relative;
+  width:100%;
+  min-height:100dvh;
+  display:grid;
+  place-items:center;
+  padding:
+    calc(var(--safe-top) + 76px)
+    25px
+    calc(var(--safe-bottom) + 108px);
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+}
+
+/* Guide */
+.guide-content{
+  width:min(100%,520px);
+  text-align:center;
+  opacity:.08;
+  transform:translateY(20px);
+  filter:blur(6px);
+  transition:
+    opacity .7s var(--ease),
+    transform .85s var(--ease),
+    filter .8s var(--ease);
+}
+
+.guide-slide.is-settled .guide-content{
+  opacity:1;
+  transform:none;
+  filter:none;
+}
+
+.guide-kicker{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.09em;
+}
+
+.guide-title{
+  margin:14px 0 0;
+  font-size:clamp(35px,10vw,58px);
+  font-weight:390;
+  line-height:1;
+  letter-spacing:-.035em;
+}
+
+.guide-intro{
+  margin:17px auto 0;
+  max-width:420px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.guide-lock-note{
+  margin:20px auto 0;
+  padding:11px 13px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:14px;
+  background:rgba(0,0,0,.12);
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+}
+
+.guide-lock-note strong{
+  display:block;
+  margin-bottom:2px;
+  color:var(--fg);
+  font-weight:700;
+}
+
+.guide-steps{
+  margin:13px auto 0;
+  display:grid;
+  gap:9px;
+  text-align:left;
+}
+
+.guide-step{
+  appearance:none;
+  width:100%;
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  padding:13px 14px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:17px;
+  background:rgba(255,255,255,.028);
+  color:var(--fg);
+  text-align:left;
+  backdrop-filter:blur(12px);
+  cursor:pointer;
+  transition:
+    border-color .35s var(--ease),
+    background .35s var(--ease),
+    transform .25s var(--ease),
+    opacity .35s var(--ease);
+}
+
+.guide-step:active{
+  transform:scale(.985);
+}
+
+.guide-step.is-confirmed{
+  border-color:rgba(255,255,255,.28);
+  background:rgba(255,255,255,.075);
+}
+
+.guide-number{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;
+  color:var(--fg);
+  font-size:12px;
+  transition:
+    background .35s var(--ease),
+    border-color .35s var(--ease),
+    box-shadow .35s var(--ease);
+}
+
+.guide-step.is-confirmed .guide-number{
+  border-color:rgba(255,255,255,.42);
+  background:rgba(255,255,255,.13);
+  box-shadow:0 0 22px rgba(255,255,255,.10);
+}
+
+.guide-step strong{
+  display:block;
+  margin-bottom:4px;
+  font-size:13px;
+  font-weight:720;
+}
+
+.guide-step p{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.65;
+}
+
+.guide-status{
+  display:inline-block;
+  margin-top:7px;
+  color:rgba(244,239,233,.38);
+  font-size:10px;
+  letter-spacing:.04em;
+  transition:color .3s ease;
+}
+
+.guide-step.is-confirmed .guide-status{
+  color:rgba(244,239,233,.82);
+}
+
+.guide-start{
+  margin-top:17px;
+  color:var(--fg);
+  font-size:12px;
+  font-weight:700;
+  line-height:1.65;
+  letter-spacing:.035em;
+}
+
+.guide-start.is-unlocked{
+  text-shadow:0 0 22px rgba(255,255,255,.14);
+}
+
+/* Tone */
+.tone-content{
+  position:relative;
+  z-index:3;
+  width:min(100%,760px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.tone-number{
+  color:var(--faint);
+  font-size:10px;
+  letter-spacing:.20em;
+  opacity:.35;
+  transition:opacity .5s var(--ease);
+}
+
+.tone-code{
+  margin-top:11px;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.14em;
+  opacity:0;
+  transform:translateY(8px);
+  transition:
+    opacity 1.55s .10s var(--ease),
+    transform 1.6s .10s var(--ease);
+}
+
+.tone-title{
+  margin:10px 0 0;
+  font-size:clamp(46px,13vw,112px);
+  font-weight:380;
+  line-height:.92;
+  letter-spacing:-.04em;
+  text-shadow:0 18px 70px rgba(0,0,0,.38);
+  opacity:.06;
+  transform:translateY(24px);
+  filter:blur(6px);
+  transition:
+    opacity 1.72s var(--ease),
+    transform 1.9s var(--ease),
+    filter 1.82s var(--ease);
+}
+
+.tone-meta{
+  width:100%;
+  margin-top:24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+  opacity:0;
+  transform:translateY(17px);
+  pointer-events:none;
+  transition:
+    opacity 1.72s .15s var(--ease),
+    transform 1.82s .15s var(--ease);
+}
+
+.tone-description{
+  max-width:370px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.85;
+}
+
+.swatches{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+
+.swatch{
+  width:42px;
+  height:5px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:99px;
+  box-shadow:0 5px 24px rgba(0,0,0,.28);
+}
+
+.select-tone{
+  margin-top:3px;
+  padding:14px 21px;
+  border:1px solid rgba(255,255,255,.19);
+  border-radius:999px;
+  background:rgba(255,255,255,.045);
+  color:var(--fg);
+  font-size:12px;
+  letter-spacing:.05em;
+  cursor:pointer;
+  opacity:0;
+  transform:translateY(10px);
+  pointer-events:none;
+  transition:
+    opacity .7s 1.05s var(--ease),
+    transform .8s 1.05s var(--ease),
+    background .2s ease;
+}
+
+.select-tone:active{
+  background:rgba(255,255,255,.14);
+}
+
+.tone-slide.is-settled .tone-number{
+  opacity:1;
+}
+
+.tone-slide.is-settled .tone-code{
+  opacity:1;
+  transform:none;
+}
+
+.tone-slide.is-settled .tone-title{
+  opacity:1;
+  transform:none;
+  filter:blur(0);
+}
+
+.tone-slide.is-settled .tone-meta{
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
+}
+
+.tone-slide.is-settled .select-tone{
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
+}
+
+.experience.is-moving .guide-content,
+.experience.is-moving .tone-title{
+  opacity:.04;
+  transform:translateY(20px);
+  filter:blur(6px);
+  transition-delay:0s;
+  transition-duration:.18s;
+}
+
+.experience.is-moving .tone-code,
+.experience.is-moving .tone-meta,
+.experience.is-moving .select-tone{
+  opacity:0;
+  transform:translateY(13px);
+  pointer-events:none;
+  transition-delay:0s;
+  transition-duration:.16s;
+}
+
+/* Bottom nav */
+.page-index{
+  position:absolute;
+  z-index:20;
+  left:50%;
+  bottom:calc(var(--safe-bottom) + 54px);
+  display:flex;
+  gap:10px;
+  transform:translateX(-50%);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .3s ease;
+}
+
+.page-index.is-visible{
+  opacity:1;
+}
+
+.page-index span{
+  width:5px;
+  height:5px;
+  border-radius:99px;
+  background:rgba(255,255,255,.24);
+  transition:
+    width .35s var(--ease),
+    background .35s var(--ease),
+    box-shadow .35s var(--ease);
+}
+
+.page-index span.is-active{
+  width:21px;
+  background:rgba(255,255,255,.9);
+  box-shadow:0 0 18px rgba(255,255,255,.42);
+}
+
+.browse-guide{
+  position:absolute;
+  z-index:20;
+  left:50%;
+  bottom:calc(var(--safe-bottom) + 21px);
+  width:calc(100% - 48px);
+  transform:translateX(-50%);
+  color:var(--faint);
+  text-align:center;
+  font-size:10px;
+  letter-spacing:.03em;
+  pointer-events:none;
+}
+
+/* =========================================================
+   Selection Overlay
+   ========================================================= */
+
+.selection-overlay{
+  --hold-progress:0;
+  position:absolute;
+  inset:0;
+  z-index:100;
+  display:grid;
+  place-items:center;
+  padding:
+    calc(var(--safe-top) + 28px)
+    24px
+    calc(var(--safe-bottom) + 24px);
+  background:rgba(4,4,6,.60);
+  backdrop-filter:blur(27px);
+  opacity:0;
+  visibility:hidden;
+  transition:
+    opacity .65s var(--ease),
+    visibility .65s;
+  touch-action:none;
+}
+
+.selection-overlay.is-open{
+  opacity:1;
+  visibility:visible;
+}
+
+.selection-space{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.selection-space::before,
+.selection-space::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  transition:
+    transform .9s var(--ease),
+    opacity .9s var(--ease),
+    filter .9s var(--ease);
+}
+
+.selection-space::before{
+  width:84vmax;
+  height:84vmax;
+  background:radial-gradient(circle,var(--glow-a),transparent 66%);
+  filter:blur(44px);
+  opacity:.52;
+  transform:
+    translate(-50%,-50%)
+    scale(calc(1 + var(--hold-progress) * .18));
+}
+
+.selection-space::after{
+  width:54vmax;
+  height:54vmax;
+  background:radial-gradient(circle,var(--glow-b),transparent 68%);
+  filter:blur(34px);
+  opacity:.34;
+  transform:
+    translate(-50%,-50%)
+    scale(calc(1 + var(--hold-progress) * .26));
+}
+
+.selection-card{
+  position:relative;
+  z-index:3;
+  width:min(100%,540px);
+  min-height:530px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:34px 18px 28px;
+  text-align:center;
+}
+
+.selection-caption{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.07em;
+  transition:
+    opacity .35s ease,
+    transform .6s var(--ease);
+}
+
+.selection-code{
+  margin-top:11px;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.13em;
+}
+
+.selection-title{
+  margin:10px 0 10px;
+  font-size:clamp(38px,10vw,66px);
+  font-weight:390;
+  line-height:1;
+  letter-spacing:-.035em;
+  transition:
+    opacity .35s ease,
+    transform .7s var(--ease);
+}
+
+.selection-copy{
+  max-width:370px;
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.82;
+  transition:
+    opacity .35s ease,
+    transform .7s var(--ease);
+}
+
+.confirm-shell{
+  position:relative;
+  width:190px;
+  height:190px;
+  margin:31px auto 0;
+  display:grid;
+  place-items:center;
+  transform:scale(calc(1 - var(--hold-progress) * .055));
+}
+
+.confirm-button{
+  position:relative;
+  width:132px;
+  height:132px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle at 50% 56%,
+      rgba(255,255,255,calc(.025 + var(--hold-progress) * .06)),
+      rgba(255,255,255,.015) 58%,
+      transparent 72%
+    );
+  color:var(--fg);
+  cursor:pointer;
+  touch-action:none;
+  transform:scale(calc(1 - var(--hold-progress) * .08));
+  box-shadow:
+    0 0 calc(18px + var(--hold-progress) * 42px) var(--glow-a),
+    inset 0 0 calc(8px + var(--hold-progress) * 24px) rgba(255,255,255,.025);
+}
+
+.confirm-button::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    conic-gradient(
+      rgba(255,255,255,.92)
+      calc(var(--hold-progress) * 1turn),
+      rgba(255,255,255,.08) 0
+    );
+  -webkit-mask:radial-gradient(circle,transparent 67%,#000 69%);
+  mask:radial-gradient(circle,transparent 67%,#000 69%);
+}
+
+.confirm-button::after{
+  content:"";
+  position:absolute;
+  inset:12px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--glow-a),transparent 70%);
+  opacity:calc(.34 + var(--hold-progress) * .66);
+  transform:scale(calc(.92 + var(--hold-progress) * .2));
+  filter:blur(calc(14px - var(--hold-progress) * 7px));
+}
+
+.confirm-icon{
+  position:relative;
+  z-index:2;
+  width:50px;
+  height:58px;
+  object-fit:contain;
+  filter:
+    drop-shadow(
+      0 0
+      calc(18px + var(--hold-progress) * 25px)
+      rgba(255,255,255,.34)
+    );
+  transform:scale(calc(1 - var(--hold-progress) * .08));
+}
+
+.confirm-instruction{
+  position:absolute;
+  top:calc(100% + 15px);
+  left:50%;
+  width:260px;
+  transform:translateX(-50%);
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.04em;
+}
+
+.cancel-selection{
+  margin-top:42px;
+  padding:11px 14px;
+  border:0;
+  background:transparent;
+  color:var(--faint);
+  font-size:12px;
+  text-decoration:underline;
+  text-underline-offset:5px;
+  cursor:pointer;
+}
+
+.selection-overlay.is-completing .selection-space::before,
+.selection-overlay.is-completing .selection-space::after{
+  opacity:.9;
+  filter:blur(18px);
+  transform:translate(-50%,-50%) scale(.08);
+}
+
+.selection-overlay.is-completing .selection-caption,
+.selection-overlay.is-completing .selection-code,
+.selection-overlay.is-completing .selection-title,
+.selection-overlay.is-completing .selection-copy,
+.selection-overlay.is-completing .confirm-instruction,
+.selection-overlay.is-completing .cancel-selection{
+  opacity:0;
+  transform:translateY(-8px);
+}
+
+.selection-overlay.is-completing .confirm-shell{
+  transform:scale(.72);
+  transition:transform .9s var(--ease);
+}
+
+.selection-overlay.is-completing .confirm-button{
+  box-shadow:
+    0 0 90px var(--glow-a),
+    inset 0 0 40px rgba(255,255,255,.06);
+  transition:box-shadow .9s var(--ease);
+}
+
+/* =========================================================
+   Founder Result
+   ========================================================= */
+
+.result-view{
+  position:absolute;
+  inset:0;
+  z-index:5;
+  overflow-y:auto;
+  padding:
+    calc(var(--safe-top) + 76px)
+    20px
+    calc(var(--safe-bottom) + 26px);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(18px);
+  transition:
+    opacity .7s var(--ease),
+    visibility .7s,
+    transform .8s var(--ease);
+  touch-action:pan-y;
+}
+
+.selection-overlay.is-confirmed .selection-card{
+  opacity:0;
+  visibility:hidden;
+}
+
+.selection-overlay.is-confirmed .result-view{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+}
+
+.result-panel{
+  width:min(100%,620px);
+  margin:0 auto;
+  padding:25px 18px 22px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:24px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.085),
+      rgba(255,255,255,.022)
+    );
+  box-shadow:0 28px 110px rgba(0,0,0,.46);
+  text-align:center;
+  backdrop-filter:blur(18px);
+}
+
+.result-label{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.07em;
+}
+
+.result-title{
+  margin:13px 0 8px;
+  font-size:clamp(35px,10vw,58px);
+  font-weight:390;
+  line-height:1;
+  letter-spacing:-.035em;
+}
+
+.result-code{
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.13em;
+}
+
+.result-copy{
+  margin:13px auto 0;
+  max-width:410px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.card-preview{
+  width:100%;
+  margin-top:19px;
+  aspect-ratio:16/10;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 55px rgba(0,0,0,.30);
+}
+
+.card-preview canvas{
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+.result-footer{
+  margin-top:14px;
+  color:rgba(255,255,255,.66);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.16em;
+}
+
+.world-progress-title{
+  margin-top:25px;
+  color:var(--fg);
+  font-size:14px;
+  font-weight:740;
+}
+
+.world-progress-copy{
+  margin:7px auto 0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.65;
+}
+
+.heat{
+  margin-top:15px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  text-align:left;
+}
+
+.heat-cell{
+  padding:11px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:15px;
+  background:rgba(0,0,0,.15);
+}
+
+.heat-name{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin:0 0 8px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.heat-name strong{
+  color:var(--fg);
+  font-weight:680;
+}
+
+.heat-bar{
+  height:9px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:999px;
+  background:rgba(255,255,255,.07);
+}
+
+.heat-bar i{
+  display:block;
+  width:0%;
+  height:100%;
+  border-radius:999px;
+  background:var(--bar-color,rgba(255,255,255,.45));
+  box-shadow:0 0 18px var(--bar-color,rgba(255,255,255,.30));
+  transition:width .8s var(--ease);
+}
+
+.heat-pct{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.result-note{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+  color:var(--faint);
+  font-size:10px;
+  line-height:1.7;
+}
+
+.result-actions{
+  margin-top:20px;
+  display:flex;
+  justify-content:center;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+.result-button{
+  padding:12px 17px;
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:999px;
+  background:rgba(255,255,255,.04);
+  color:var(--fg);
+  font-size:12px;
+  cursor:pointer;
+}
+
+/* Toast */
+.toast{
+  position:fixed;
+  z-index:300;
+  top:calc(var(--safe-top) + 54px);
+  left:50%;
+  max-width:calc(100% - 36px);
+  padding:10px 13px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  background:rgba(0,0,0,.38);
+  color:var(--fg);
+  backdrop-filter:blur(14px);
+  box-shadow:0 14px 45px rgba(0,0,0,.44);
+  font-size:12px;
+  text-align:center;
+  opacity:0;
+  visibility:hidden;
+  transform:translate(-50%,-7px);
+  transition:
+    opacity .24s ease,
+    visibility .24s,
+    transform .24s ease;
+  pointer-events:none;
+}
+
+.toast.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:translate(-50%,0);
+}
+
+/* =========================================================
+   Desktop
+   ========================================================= */
+
+
+@media(max-height:720px) and (max-width:819px){
+  .slide{
+    padding-top:calc(var(--safe-top) + 64px);
+    padding-bottom:calc(var(--safe-bottom) + 90px);
   }
 
-  function _json(obj){
-    return ContentService.createTextOutput(JSON.stringify(obj))
-      .setMimeType(ContentService.MimeType.JSON);
+  .guide-title{
+    font-size:34px;
   }
-  -->
 
-  <style>
-    :root {
-      --hue: 8;
-      --sat: 92%;
-      --lum: 54%;
+  .guide-intro{
+    margin-top:11px;
+    font-size:12px;
+    line-height:1.65;
+  }
 
-      --tone-bg: hsl(var(--hue) 30% 10%);
-      --tone-atm: hsl(var(--hue) 34% 12%);
-      --tone-core: hsl(var(--hue) var(--sat) var(--lum));
-      --tone-hi: hsl(var(--hue) 100% 68%);
+  .guide-lock-note{
+    margin-top:12px;
+    padding:9px 11px;
+  }
 
-      --uiText: rgba(255,255,255,.92);
-      --uiTextMuted: rgba(255,255,255,.72);
-      --uiStroke: rgba(255,255,255,.14);
+  .guide-steps{
+    gap:7px;
+  }
 
-      --safeTop: env(safe-area-inset-top);
-      --safeBottom: env(safe-area-inset-bottom);
-      --safeLeft: env(safe-area-inset-left);
-      --safeRight: env(safe-area-inset-right);
+  .guide-step{
+    padding:10px 12px;
+  }
 
-      --ease: cubic-bezier(.2,.8,.2,1);
-      --ease2: cubic-bezier(.16,1,.3,1);
-      --dur: 900ms;
-    }
+  .guide-step p{
+    line-height:1.5;
+  }
 
-    *{ box-sizing:border-box; }
-    html, body {
-      height:100%;
-      margin:0;
-      background:#000;
-      color:var(--uiText);
-      font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", "SF Pro Text",
-        "PingFang TC","Noto Sans TC","Microsoft JhengHei", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
-      overscroll-behavior-y:none;
-    }
+  .guide-start{
+    margin-top:11px;
+  }
+}
 
-    body {
-      -webkit-user-select:none; user-select:none;
-      -webkit-touch-callout:none;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-    input { user-select:text; -webkit-user-select:text; -webkit-touch-callout:default; }
+@media(min-width:820px){
+  .site-header{
+    justify-content:space-between;
+    padding-left:40px;
+    padding-right:40px;
+  }
 
-    .app {
-      min-height:100vh;
-      position:relative;
-      overflow:hidden;
-      background:
-        radial-gradient(1200px 900px at 18% 16%, color-mix(in oklab, var(--tone-core), white 12%) 0%, rgba(0,0,0,0) 56%),
-        radial-gradient(900px 900px at 82% 28%, color-mix(in oklab, var(--tone-core), black 36%) 0%, rgba(0,0,0,0) 62%),
-        linear-gradient(180deg, var(--tone-bg), var(--tone-atm) 42%, var(--tone-bg) 100%);
-      transition: background 900ms var(--ease);
-      transform: translateZ(0);
-    }
+  .header-section{
+    display:block;
+  }
 
-    .app::before {
-      content:"";
-      position:absolute;
-      inset:-20%;
-      pointer-events:none;
-      opacity:.14;
-      mix-blend-mode: overlay;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
-    }
+  .hero{
+    padding-top:calc(var(--safe-top) + 90px);
+  }
 
-    .radar {
-      position:absolute;
-      inset:-55%;
-      border-radius:999px;
-      background:
-        conic-gradient(from 0deg,
-          rgba(255,255,255,.00) 0deg,
-          color-mix(in oklab, var(--tone-core), white 22%) 55deg,
-          rgba(255,255,255,.00) 120deg,
-          color-mix(in oklab, var(--tone-core), white 16%) 215deg,
-          rgba(255,255,255,.00) 360deg);
-      opacity:.58;
-      animation: radarSpin 3.2s linear infinite;
-      pointer-events:none;
-      mix-blend-mode: screen;
-      filter: blur(0.6px);
-    }
-    .radar::after {
-      content:"";
-      position:absolute; inset:16%;
-      border-radius:999px;
-      background:
-        radial-gradient(closest-side,
-          color-mix(in oklab, var(--tone-core), white 24%) 0%,
-          rgba(255,255,255,.06) 44%,
-          rgba(0,0,0,.00) 72%);
-      opacity:.74;
-      filter: blur(16px);
-    }
-    @keyframes radarSpin{ to{ transform: rotate(360deg); } }
+  .slide{
+    padding:
+      calc(var(--safe-top) + 82px)
+      8vw
+      calc(var(--safe-bottom) + 100px);
+  }
 
-    .topbar {
-      position:fixed;
-      top: calc(10px + var(--safeTop));
-      left: calc(12px + var(--safeLeft));
-      right: calc(12px + var(--safeRight));
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      z-index:60;
-      pointer-events:none;
-      opacity:.94;
-    }
-    .chip {
-      pointer-events:auto;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:999px;
-      background: rgba(0,0,0,.22);
-      border:1px solid rgba(255,255,255,.10);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 12px 40px rgba(0,0,0,.38);
-      color: var(--uiTextMuted);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform: uppercase;
-      white-space:nowrap;
-    }
-    .chip b{ color:var(--uiText); font-weight:720; letter-spacing:.06em; }
-    .chip .dot {
-      width:10px; height:10px; border-radius:99px;
-      background: var(--tone-core);
-      box-shadow: 0 0 16px color-mix(in oklab, var(--tone-core), transparent 45%);
-      border: 1px solid rgba(255,255,255,.14);
-    }
+  .tone-content{
+    width:min(100%,960px);
+  }
 
-    .fade-in {
-      opacity:0;
-      transform: translateY(14px);
-      animation: fadeInUp var(--dur) var(--ease2) forwards;
-    }
-    .fade-in.delay-1{ animation-delay: 120ms; }
-    .fade-in.delay-2{ animation-delay: 220ms; }
-    .fade-in.delay-3{ animation-delay: 340ms; }
-    @keyframes fadeInUp{ to{ opacity:1; transform: translateY(0); } }
+  .tone-title{
+    font-size:clamp(68px,8vw,112px);
+  }
 
-    .stage {
-      position:relative;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: calc(18px + var(--safeTop)) calc(18px + var(--safeRight)) calc(18px + var(--safeBottom)) calc(18px + var(--safeLeft));
-      z-index:10;
-    }
-    .monolith { width: min(520px, 92vw); text-align:center; }
+  .guide-steps{
+    grid-template-columns:1fr 1fr;
+  }
 
-    .mark-wrap {
-      margin: 0 auto;
-      width: min(280px, 62vw);
-      max-width: 280px;
-      aspect-ratio: 1/1;
-      border-radius: 999px;
-      background:
-        radial-gradient(closest-side at 35% 30%,
-          color-mix(in oklab, var(--tone-core), white 24%) 0%,
-          color-mix(in oklab, var(--tone-core), transparent 42%) 50%,
-          transparent 72%),
-        radial-gradient(closest-side at 65% 68%,
-          color-mix(in oklab, var(--tone-core), black 35%) 0%,
-          transparent 64%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.22));
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 18px 56px rgba(0,0,0,.55);
-      overflow:hidden;
-      transform: translateZ(0);
-      position:relative;
-    }
-    .mark {
-      position:absolute; inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:2;
-    }
-    .mark svg{ width:46%; height:46%; filter: drop-shadow(0 12px 40px rgba(0,0,0,.55)); opacity:.95; }
+  .guide-step:last-child{
+    grid-column:1 / -1;
+  }
 
-    .tagline {
-      letter-spacing:.12em;
-      text-transform: uppercase;
-      font-size:12px;
-      color: var(--uiTextMuted);
-      margin-top: 18px;
-    }
-    .date {
-      margin-top: 10px;
-      font-size: 14px;
-      color: var(--uiTextMuted);
-      opacity:.9;
-      line-height: 1.7;
-    }
-    .hint {
-      margin-top: 14px;
-      font-size: 14px;
-      color: var(--uiTextMuted);
-      line-height:1.7;
-    }
+  .page-index{
+    bottom:42px;
+  }
 
-    .gate {
-      margin: 18px auto 0;
-      width: min(520px, 92vw);
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      justify-content:center;
-      flex-wrap: wrap;
-    }
-    .gate input {
-      flex: 1 1 240px;
-      min-width: 0;
-      height: 46px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--uiText);
-      padding: 0 12px;
-      font-size: 14px;
-      outline: none;
-    }
-    .gate input::placeholder{ color: rgba(255,255,255,.42); }
-    .gate button {
-      flex: 0 0 auto;
-      height: 46px;
-      padding: 0 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: color-mix(in oklab, var(--tone-core), rgba(255,255,255,.08) 18%);
-      color: var(--uiText);
-      font-weight: 780;
-      cursor:pointer;
-      transition: transform 180ms var(--ease), opacity 220ms var(--ease);
-      white-space: nowrap;
-    }
-    .gate button:disabled{ opacity:.55; cursor:not-allowed; }
-    .gate button:active{ transform: scale(.985); }
-    .gate .warn {
-      width:100%;
-      margin-top: 8px;
-      font-size: 12px;
-      color: rgba(255,255,255,.72);
-      opacity: .0;
-      transform: translateY(-4px);
-      transition: opacity 220ms var(--ease), transform 220ms var(--ease);
-    }
-    .gate .warn.on{ opacity:1; transform: translateY(0); }
+  .browse-guide{
+    bottom:18px;
+  }
 
-    .spectrum {
-      position:absolute;
-      inset:0;
-      overflow-y:auto;
-      scroll-snap-type: y mandatory;
-      -webkit-overflow-scrolling: touch;
-      z-index:8;
-      opacity:0;
-      pointer-events:none;
-      transform: translateY(10px);
-      transition: opacity 520ms var(--ease), transform 640ms var(--ease);
-      will-change: transform, opacity;
-    }
-    .spectrum.is-open {
-      opacity:1;
-      transform: translateY(0);
-      pointer-events:auto;
-    }
+  .result-view{
+    padding-top:calc(var(--safe-top) + 88px);
+  }
 
-    .stall {
-      min-height: 100vh;
-      scroll-snap-align: start;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:
-        calc(18px + var(--safeTop))
-        calc(18px + var(--safeRight))
-        calc(40px + var(--safeBottom))
-        calc(18px + var(--safeLeft));
-      position:relative;
-      overflow:hidden;
-      transform: translateZ(0);
-      contain: paint;
-    }
-    .stall::before {
-      content:"";
-      position:absolute;
-      inset:-18%;
-      opacity:.55;
-      pointer-events:none;
-      transform: translateZ(0);
-    }
+  .result-panel{
+    padding:31px 28px 26px;
+  }
 
-    /* Motifs (same as v3) */
-    .stall[data-motif="magma"]::before {
-      background:
-        radial-gradient(900px 520px at 28% 22%, color-mix(in oklab, var(--tone-core), white 14%) 0%, transparent 55%),
-        radial-gradient(900px 620px at 72% 78%, color-mix(in oklab, var(--tone-core), black 35%) 0%, transparent 60%),
-        repeating-linear-gradient(110deg, color-mix(in oklab, var(--tone-core), transparent 82%) 0 18px, transparent 18px 40px);
-      animation: driftA 6.0s var(--ease) infinite alternate;
-    }
-    .stall[data-motif="spark"]::before {
-      background:
-        radial-gradient(820px 560px at 35% 25%, color-mix(in oklab, var(--tone-core), white 18%) 0%, transparent 62%),
-        radial-gradient(980px 720px at 70% 75%, color-mix(in oklab, var(--tone-core), black 34%) 0%, transparent 66%),
-        repeating-linear-gradient(135deg, color-mix(in oklab, var(--tone-core), transparent 84%) 0 10px, transparent 10px 30px);
-      animation: driftB 6.8s var(--ease) infinite alternate;
-    }
-    .stall[data-motif="mist"]::before {
-      background:
-        radial-gradient(700px 520px at 45% 30%, color-mix(in oklab, var(--tone-core), white 22%) 0%, transparent 62%),
-        radial-gradient(900px 620px at 60% 65%, color-mix(in oklab, var(--tone-core), transparent 40%) 0%, transparent 70%),
-        radial-gradient(240px 240px at 20% 70%, rgba(255,255,255,.12) 0%, transparent 70%),
-        radial-gradient(260px 260px at 80% 35%, rgba(255,255,255,.10) 0%, transparent 70%);
-      animation: driftC 7.8s var(--ease) infinite alternate;
-    }
-    .stall[data-motif="moss"]::before {
-      background:
-        radial-gradient(820px 620px at 30% 35%, color-mix(in oklab, var(--tone-core), white 12%) 0%, transparent 60%),
-        radial-gradient(940px 760px at 70% 70%, color-mix(in oklab, var(--tone-core), black 40%) 0%, transparent 65%),
-        repeating-radial-gradient(circle at 30% 40%, color-mix(in oklab, var(--tone-core), transparent 74%) 0 6px, transparent 6px 16px);
-      animation: driftD 8.8s var(--ease) infinite alternate;
-    }
-    .stall[data-motif="nebula"]::before {
-      background:
-        radial-gradient(760px 560px at 35% 28%, color-mix(in oklab, var(--tone-core), white 18%) 0%, transparent 62%),
-        radial-gradient(980px 780px at 72% 70%, color-mix(in oklab, var(--tone-core), black 38%) 0%, transparent 68%),
-        radial-gradient(220px 220px at 25% 75%, rgba(255,255,255,.10) 0%, transparent 70%),
-        radial-gradient(180px 180px at 78% 35%, rgba(255,255,255,.08) 0%, transparent 70%);
-      animation: driftC 8.2s var(--ease) infinite alternate;
-    }
-    .stall[data-motif="forge"]::before {
-      background:
-        radial-gradient(820px 620px at 28% 20%, color-mix(in oklab, var(--tone-core), white 14%) 0%, transparent 60%),
-        radial-gradient(980px 760px at 76% 80%, color-mix(in oklab, var(--tone-core), black 44%) 0%, transparent 68%),
-        repeating-linear-gradient(90deg, color-mix(in oklab, var(--tone-core), transparent 86%) 0 2px, transparent 2px 10px);
-      animation: driftB 7.2s var(--ease) infinite alternate;
-    }
-    @keyframes driftA { from{ transform: translate3d(-1.2%,-1.0%,0) scale(1.02); opacity:.48; } to{ transform: translate3d( 1.0%, 1.4%,0) scale(1.05); opacity:.60; } }
-    @keyframes driftB { from{ transform: translate3d(-1.0%, .7%,0) scale(1.02); opacity:.46; } to{ transform: translate3d( 1.0%,-.9%,0) scale(1.06); opacity:.60; } }
-    @keyframes driftC { from{ transform: translate3d(-1.0%, .6%,0) scale(1.02); opacity:.50; } to{ transform: translate3d( 1.0%,-.7%,0) scale(1.06); opacity:.62; } }
-    @keyframes driftD { from{ transform: translate3d(.7%, .4%,0) scale(1.02); opacity:.46; } to{ transform: translate3d(-.7%,-.6%,0) scale(1.06); opacity:.60; } }
+  .heat{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
 
-    .product { width: min(520px, 92vw); text-align:center; position:relative; z-index:2; }
-    .opt { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
-    .opt-en {
-      font-size:12px; letter-spacing:.14em; text-transform: uppercase;
-      color: var(--uiTextMuted);
-      padding:6px 10px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.14);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    .opt-zh { font-size:12px; color: var(--uiTextMuted); opacity:.92; }
-
-    .colorName { margin:0 0 14px; line-height:1.05; }
-    .colorName .en { display:block; font-size: clamp(34px, 8vw, 54px); font-weight:820; letter-spacing:-.02em; }
-    .colorName .zh { display:block; margin-top:8px; font-size:14px; letter-spacing:.14em; color: var(--uiTextMuted); }
-
-    .chargeSquare {
-      margin: 0 auto;
-      width: min(320px, 72vw);
-      max-width: 320px;
-      aspect-ratio: 1/1;
-      border-radius: 22px;
-      border: 1px solid var(--uiStroke);
-      background:
-        radial-gradient(closest-side at 30% 25%, color-mix(in oklab, var(--tone-core), white 26%) 0%, transparent 58%),
-        radial-gradient(closest-side at 70% 80%, color-mix(in oklab, var(--tone-core), black 30%) 0%, transparent 62%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.22));
-      box-shadow: 0 18px 60px rgba(0,0,0,.55);
-      position:relative;
-      overflow:hidden;
-      transform: translateZ(0);
-      cursor:pointer;
-      touch-action: manipulation;
-    }
-    .chargeSquare:active{ transform: scale(.992); }
-
-    .sqBoost {
-      position:absolute; inset:-30%;
-      background:
-        radial-gradient(closest-side,
-          color-mix(in oklab, var(--tone-core), white 18%) 0%,
-          transparent 62%);
-      opacity:0;
-      filter: blur(22px);
-      mix-blend-mode: screen;
-      pointer-events:none;
-      transform: scale(.9);
-    }
-
-    .sqAura {
-      position:absolute; inset:-10%;
-      background:
-        radial-gradient(260px 260px at var(--gx,50%) var(--gy,50%),
-          color-mix(in oklab, var(--tone-core), white 28%) 0%,
-          transparent 70%);
-      opacity: .0;
-      transition: opacity 160ms var(--ease);
-      mix-blend-mode: screen;
-      pointer-events:none;
-      filter: blur(10px);
-    }
-    .sqRipple {
-      position:absolute; inset:-20%;
-      background:
-        radial-gradient(circle at 50% 50%,
-          rgba(255,255,255,.0) 0%,
-          rgba(255,255,255,.10) 22%,
-          rgba(255,255,255,.0) 48%);
-      opacity:0;
-      transform: scale(.85);
-      pointer-events:none;
-      mix-blend-mode: screen;
-    }
-    .sqParticles {
-      position:absolute; inset:0;
-      pointer-events:none;
-      opacity:0;
-      background:
-        radial-gradient(2px 2px at 20% 35%, rgba(255,255,255,.22) 0 60%, transparent 62%),
-        radial-gradient(2px 2px at 68% 22%, rgba(255,255,255,.18) 0 60%, transparent 62%),
-        radial-gradient(2px 2px at 72% 70%, rgba(255,255,255,.18) 0 60%, transparent 62%),
-        radial-gradient(2px 2px at 35% 78%, rgba(255,255,255,.22) 0 60%, transparent 62%);
-      filter: blur(.3px);
-    }
-
-    .chargeSquare.is-holding .sqAura{ opacity:.95; }
-    .chargeSquare.is-holding .sqBoost{ opacity:.75; animation: boost 420ms var(--ease) infinite alternate; }
-    @keyframes boost{ to{ transform: scale(1.05); opacity:.92; } }
-
-    .chargeSquare.is-holding .sqParticles{ opacity:.9; animation: twinkle 420ms linear infinite; }
-    @keyframes twinkle{ 50%{ opacity:.55; } }
-
-    .chargeSquare.is-holding .sqRipple {
-      opacity:.85;
-      animation: ripple 620ms var(--ease) infinite;
-    }
-    @keyframes ripple {
-      from{ transform: scale(.82); opacity:.0; }
-      35%{ opacity:.65; }
-      to{ transform: scale(1.18); opacity:.0; }
-    }
-
-    .sqInner { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-    .markSvg {
-      width: 44%;
-      height: 44%;
-      filter: drop-shadow(0 14px 45px rgba(0,0,0,.55));
-      opacity:.96;
-    }
-    .markStroke1, .markStroke2 {
-      stroke: rgba(255,255,255,.92);
-      stroke-width: 3.2;
-      fill: none;
-      vector-effect: non-scaling-stroke;
-    }
-    .markStroke2{ stroke-width: 2.6; opacity:.82; }
-
-    .ring {
-      position:absolute;
-      inset: 10px;
-      width: calc(100% - 20px);
-      height: calc(100% - 20px);
-      pointer-events:none;
-      opacity: .0;
-      transform: rotate(-90deg);
-      transition: opacity 160ms var(--ease);
-    }
-    .chargeSquare.is-holding .ring{ opacity: .95; }
-    .ringTrack {
-      fill:none;
-      stroke: rgba(255,255,255,.10);
-      stroke-width: 3;
-    }
-    .ringProg {
-      fill:none;
-      stroke: color-mix(in oklab, var(--tone-core), white 16%);
-      stroke-width: 4;
-      stroke-linecap: round;
-      stroke-dasharray: 276.46;
-      stroke-dashoffset: 276.46;
-      filter: drop-shadow(0 0 18px color-mix(in oklab, var(--tone-core), transparent 60%));
-    }
-
-    .sqProgress {
-      position:absolute; left:12px; right:12px; bottom:12px;
-      height: 10px; border-radius:999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
-      overflow:hidden;
-      pointer-events:none;
-    }
-    .sqFill {
-      height:100%;
-      width:0%;
-      border-radius:999px;
-      background: linear-gradient(90deg, color-mix(in oklab, var(--tone-core), white 18%), color-mix(in oklab, var(--tone-core), white 0%));
-      box-shadow: 0 0 30px color-mix(in oklab, var(--tone-core), transparent 55%);
-      transition: width 60ms linear;
-    }
-
-    .hintLine { margin-top: 14px; font-size: 13px; color: var(--uiTextMuted); }
-
-    .bloom {
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(600px 600px at 50% 52%,
-          color-mix(in oklab, var(--tone-core), white 18%) 0%,
-          color-mix(in oklab, var(--tone-core), transparent 35%) 45%,
-          transparent 72%),
-        radial-gradient(1200px 1200px at 50% 52%,
-          color-mix(in oklab, var(--tone-core), white 8%) 0%,
-          transparent 60%);
-      opacity: 0;
-      pointer-events:none;
-      z-index: 120;
-      transform: scale(1.05);
-      transition: opacity 420ms var(--ease), transform 620ms var(--ease);
-    }
-    .bloom.is-on{ opacity:1; transform: scale(1); }
-
-    .confirm {
-      position: fixed;
-      inset: 0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: calc(18px + var(--safeTop)) calc(18px + var(--safeRight)) calc(18px + var(--safeBottom)) calc(18px + var(--safeLeft));
-      z-index: 130;
-      opacity:0;
-      pointer-events:none;
-      transform: translateY(10px);
-      transition: opacity 420ms var(--ease), transform 620ms var(--ease);
-    }
-    .confirm.is-on{ opacity:1; pointer-events:auto; transform: translateY(0); }
-
-    .panel {
-      width: min(560px, 92vw);
-      border-radius: 26px;
-      border: 1px solid var(--uiStroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.30));
-      box-shadow: 0 22px 65px rgba(0,0,0,.65);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      overflow:hidden;
-      position:relative;
-    }
-    .panel::before {
-      content:"";
-      position:absolute; inset:-20%;
-      background:
-        radial-gradient(600px 400px at 30% 20%, color-mix(in oklab, var(--tone-core), white 18%) 0%, transparent 62%),
-        radial-gradient(700px 460px at 75% 75%, color-mix(in oklab, var(--tone-core), black 25%) 0%, transparent 68%);
-      opacity:.65;
-      pointer-events:none;
-    }
-    .content{ position:relative; padding: 18px 18px 16px; }
-    .content h2{ margin:0 0 6px; font-size: 20px; letter-spacing:-.01em; }
-    .content .subEn{ margin:0 0 10px; font-size: 12px; letter-spacing:.12em; text-transform: uppercase; color: var(--uiTextMuted); }
-    .content p{ margin:0 0 12px; font-size: 14px; line-height:1.7; color: var(--uiTextMuted); }
-
-    /* 卡片移到上面 + 放大（你要的） */
-    .cardPreview {
-      width: 100%;
-      aspect-ratio: 16/10;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.14);
-      overflow:hidden;
-      background: rgba(0,0,0,.18);
-      margin: 4px 0 12px;
-      transform: scale(1.06);
-      transform-origin: top center;
-    }
-    .cardPreview canvas{ width:100%; height:100%; display:block; }
-
-    .actions{ display:flex; gap:10px; align-items:stretch; flex-wrap: wrap; margin: 12px 0 10px; }
-    .btn {
-      appearance:none;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.08);
-      color: var(--uiText);
-      padding: 12px 14px;
-      border-radius: 14px;
-      font-weight: 760;
-      cursor:pointer;
-      flex: 1 1 180px;
-      transition: transform 180ms var(--ease), background 220ms var(--ease);
-      white-space: nowrap;
-    }
-    .btn:active{ transform: scale(.985); }
-    .btn.primary {
-      background: color-mix(in oklab, var(--tone-core), rgba(255,255,255,.08) 18%);
-      border-color: color-mix(in oklab, var(--tone-core), rgba(255,255,255,.18) 35%);
-    }
-
-    .heat {
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .cell {
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      padding: 10px 10px;
-      position:relative;
-      overflow:hidden;
-    }
-    .cell .name{ font-size: 12px; letter-spacing:.08em; text-transform: uppercase; color: var(--uiTextMuted); margin:0 0 6px; }
-    .bar{ height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); overflow:hidden; border: 1px solid rgba(255,255,255,.10); }
-    .bar > i{ display:block; height:100%; width: 10%; border-radius: 999px; background: linear-gradient(90deg, rgba(255,255,255,.12), rgba(255,255,255,.34)); box-shadow: 0 0 22px rgba(255,255,255,.16); }
-    .pct{ margin-top: 8px; font-size: 12px; color: var(--uiTextMuted); }
-
-    .tiny{ font-size: 12px; color: var(--uiTextMuted); margin-top: 10px; line-height:1.6; }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      top: calc(56px + var(--safeTop));
-      transform: translateX(-50%);
-      z-index: 200;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.28);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 14px 45px rgba(0,0,0,.45);
-      color: var(--uiText);
-      font-size: 13px;
-      opacity:0;
-      pointer-events:none;
-      transition: opacity 240ms var(--ease), transform 240ms var(--ease);
-    }
-    .toast.on{ opacity:1; transform: translateX(-50%) translateY(0); }
-
-    @media (prefers-reduced-motion: reduce){
-      *{ animation:none !important; transition:none !important; }
-    }
-  
-    /* ===== Requested Patch (minimal) ===== */
-
-    /* 1) Hero HLOGO 縮小 */
-    .heroMarkImg{
-      width: min(120px, 32vw) !important;
-      height:auto;
-      display:block;
-      margin: 0 auto;
-      user-select:none;
-      -webkit-user-drag:none;
-    }
-
-    /* 2) Hero 圓盤雷達移除（保留背景換色） */
-    #monolithStage .mark-wrap .radar{ display:none !important; }
-
-    /* 3) 全頁文字固定白色 */
-    :root{
-      --uiText: rgba(255,255,255,.92) !important;
-      --uiSub: rgba(255,255,255,.70) !important;
-      --uiHair: rgba(255,255,255,.22) !important;
-    }
-    body, body *{ color: var(--uiText); }
-    .chip, .chip *{ color: rgba(255,255,255,.88) !important; }
-    input, input::placeholder{ color: rgba(255,255,255,.88) !important; }
-
-    /* 4) VOTE A–F：移除紋理，只留純色 */
-    .stall::before, .stall::after,
-    .stall .grain, .stall .noise, .stall .texture, .stall .matte, .stall .bgTexture,
-    .stall .bg, .stall .bgLayer, .stall .bgNoise, .stall .bgGrain{
-      content:none !important;
-      display:none !important;
-    }
-    .stall{ background: var(--tone-core) !important; }
-
-    /* 5) Flamemark 縮小（你說太大） */
-    .flame-img{
-      width: 22% !important; /* 約縮半 */
-      height:auto;
-      display:block;
-      opacity:.92;
-      filter: drop-shadow(0 10px 40px rgba(0,0,0,.55));
-      user-select:none;
-      -webkit-user-drag:none;
-    }
-
-    /* 7) 按壓注入：移除圓圈，只留長條；加粗 2 倍＋光澤 */
-    .ring{ display:none !important; }
-    .sqProgress{
-      height: 18px !important; /* 加粗一倍（原本約 9px） */
-      border-radius: 999px !important;
-      overflow:hidden;
-      background: rgba(255,255,255,.16) !important;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
-    }
-    .sqFill{
-      background: linear-gradient(90deg,
-        color-mix(in oklab, var(--tone-core), white 24%),
-        color-mix(in oklab, var(--tone-core), white 8%)
-      ) !important;
-      box-shadow:
-        0 0 22px color-mix(in oklab, var(--tone-core), transparent 45%),
-        inset 0 1px 0 rgba(255,255,255,.28),
-        inset 0 -1px 0 rgba(0,0,0,.22);
-    }
-
-    /* Wordmark 縮小 50% */
-    .heroWordmark img{ width: min(180px, 40vw) !important; height:auto; display:block; margin: 14px auto 0; }
-
-    /* 4) Tone on tone 粗體略放大 */
-    .date{ font-weight: 800 !important; font-size: 18px !important; letter-spacing: .06em; }
-
-    /* 8) 結果頁落款置中 */
-    .resultFooter{
-      margin-top: 18px;
-      text-align:center;
-      font-weight: 400;
-      letter-spacing: .18em;
-      font-size: 12px;
-      opacity: .85;
-    }
-    .resultFooter .reg{
-      font-size: 11px;
-      vertical-align: super;
-      margin-left: 2px;
-      opacity:.9;
-    }
-
-
-    /* === Patch: Vote flamemark 置中 + 70% 佔比（A–F）=== */
-    .chargeSquare .flameMark{
-      position:absolute !important;
-      inset:0 !important;
-      display:grid !important;
-      place-items:center !important;
-      pointer-events:none;
-    }
-    .chargeSquare .flame-img{
-      width: 70% !important;
-      height:auto !important;
-      max-width: 70% !important;
-      max-height: 70% !important;
-      display:block !important;
-      margin: 0 auto !important;
-      opacity:.92;
-    }
-
-    /* === Patch: 充能條更明顯（更亮、更粗、更有光澤）=== */
-    .sqProgress{
-      height: 20px !important;
-      background: rgba(0,0,0,.20) !important;
-      border: 1px solid rgba(255,255,255,.18) !important;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.08),
-        0 10px 26px rgba(0,0,0,.28) !important;
-    }
-    .sqFill{
-      position:relative;
-      background: linear-gradient(90deg,
-        color-mix(in oklab, var(--tone-core), white 40%),
-        color-mix(in oklab, var(--tone-core), white 10%)
-      ) !important;
-      box-shadow:
-        0 0 30px color-mix(in oklab, var(--tone-core), transparent 35%),
-        0 0 14px rgba(255,255,255,.16),
-        inset 0 1px 0 rgba(255,255,255,.38),
-        inset 0 -1px 0 rgba(0,0,0,.18) !important;
-    }
-    .sqFill::after{
-      content:"";
-      position:absolute; inset:-30% -20%;
-      background: linear-gradient(115deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.38) 45%,
-        rgba(255,255,255,0) 60%);
-      transform: translateX(-60%);
-      opacity: .55;
-      filter: blur(0.4px);
-      animation: barShimmer 1.2s linear infinite;
-      pointer-events:none;
-    }
-    @keyframes barShimmer{
-      from{ transform: translateX(-60%); }
-      to{ transform: translateX(60%); }
-    }
-
-    /* === Patch: 結果頁按鈕移除（防守式）=== */
-    .resultActions{ display:none !important; }
-
-    /* === Patch: 結果卡右側 Logo（HLOGO）=== */
-    .resultHlogo{
-      width: 110px;
-      height:auto;
-      display:block;
-      opacity:.92;
-      filter: drop-shadow(0 14px 55px rgba(0,0,0,.45));
-      user-select:none;
-      -webkit-user-drag:none;
-    }
-
-    /* === Patch: 結果頁落款置中 === */
-    .resultFooter{
-      margin-top: 18px;
-      text-align:center;
-      font-weight: 700;
-      letter-spacing: .18em;
-      font-size: 12px;
-      opacity: .85;
-    }
-    .resultFooter .reg{
-      font-size: 11px;
-      vertical-align: super;
-      margin-left: 2px;
-      opacity:.9;
-    }
-
-
-    /* iOS Safari: prevent input focus zoom */
-    input, select, textarea{ font-size:16px !important; -webkit-text-size-adjust:100%; }
-
-    /* Guide page (between Gate and Vote) */
-    
-    /* Vote guide page (part of Spectrum) */
-    .stall--guide{
-      background: var(--tone-core);
-    }
-    .stall--guide .guideInner{
-      height: 100%;
-      width: 100%;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 26px;
-      font-size: 15px;
-      line-height: 1.6;
-      letter-spacing: .02em;
-      opacity: .95;
-    }
+@media(prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    animation:none !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
 </style>
 </head>
 
 <body>
-  <div class="app" id="app">
-
-    <div class="topbar">
-      <div class="chip"><span class="dot"></span><b>HESTIA</b> <span id="phase">PRISM</span></div>
-      <div class="chip" id="activeColorChip" style="opacity:.0; transform: translateY(-6px); transition: opacity 420ms var(--ease), transform 420ms var(--ease);">
-        <span style="opacity:.9">Color</span> <b id="activeColorName">—</b>
-      </div>
-    </div>
-
-    <section class="stage" id="monolithStage" aria-label="The Monolith">
-      <div class="monolith">
-        <div class="mark-wrap fade-in" id="enterPrism" aria-label="Prism mark">
-          <div class="radar" aria-hidden="true"></div>
-          <div class="mark" aria-hidden="true">
-            <img class="heroMarkImg" src="HLOGO.png" alt="HESTIA Logo">
-          </div>
-        </div>
-
-        <div class="heroWordmark fade-in delay-1"><img src="wordmark.png" alt="HESTIA Wordmark"></div>
-        <div class="date fade-in delay-2">首發色投票．TONE  ON TONE</div>
-        <div class="hint fade-in delay-3">請先輸入 Email 以進行投票<br>最高得票色彩世界投票者，將獲得首波發售折扣碼</div>
-
-        <div class="gate fade-in delay-3" aria-label="Email gate">
-          <input id="gateEmail" type="email" inputmode="email" autocomplete="email" placeholder="輸入你的 Email（必填）" aria-label="輸入你的 Email（必填）"/>
-          <button id="gateBtn" type="button">進入投票</button>
-          <div class="warn" id="gateWarn">請先輸入有效 Email 才能進入投票。</div>
-        </div>
-      </div>
-    </section>
-
-    <main class="spectrum" id="spectrum" aria-label="The Spectrum">
-
-      <section class="stall stall--guide" data-world="guide" aria-label="投票導覽">
-        <div class="guideInner">
-  <div style="max-width:420px;margin:0 auto;">
-
-    <div style="font-size:18px;font-weight:800;letter-spacing:.08em;margin-bottom:18px;">
-      TONE on TONE 操作導覽
-    </div>
-
-    <div style="margin-bottom:16px;">
-      <div style="font-weight:700;margin-bottom:6px;">▍投票原則</div>
-      本投票僅針對「顏色色相 Hue」進行判斷。<br>
-      深淺明度、飽和彩度皆不在本次評估範圍。<br>
-      黑白灰等無彩色不列入投票選項。
-    </div>
-
-    <div style="margin-bottom:16px;">
-      <div style="font-weight:700;margin-bottom:6px;">▍操作方式</div>
-      向下滑動，每一頁代表一個色相。<br>
-      停留在你最有感覺的顏色頁面。<br>
-      長按 1 秒完成投票。
-    </div>
-
-    <div style="margin-bottom:20px;">
-      <div style="font-weight:700;margin-bottom:6px;">▍注意事項</div>
-      每人僅能投票一次。<br>
-      投票完成後將顯示即時比例結果。
-    </div>
-
-    <div style="font-weight:800;letter-spacing:.06em;">
-      向下滑動，即可開始
-    </div>
-
-  </div>
-</div>
-
-      </section>
-
-<section class="stall" data-key="ignition" data-en="IGNITION" data-zh="點燃紅"
-        data-hue="8" data-sat="92" data-lum="54" data-motif="magma" aria-label="IGNITION">
-        <div class="product">
-          <div class="opt">
-            <span class="opt-en">Option A</span>
-            <span class="opt-zh">爆發 / 進場即存在</span>
-          </div>
-
-          <h1 class="colorName">
-            <span class="en">IGNITION</span>
-            <span class="zh">點燃紅</span>
-          </h1>
-
-          <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
-            <div class="sqAura" aria-hidden="true"></div>
-            <div class="sqRipple" aria-hidden="true"></div>
-            <div class="sqParticles" aria-hidden="true"></div>
-
-            <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
-              </div>
-            </div>
-
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
-            </div>
-
-            <div class="sqBoost" aria-hidden="true"></div>
-          </div>
-
-          <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
-        </div>
-      </section>
-
-      <section class="stall" data-key="momentum" data-en="MOMENTUM" data-zh="動能橙"
-        data-hue="28" data-sat="92" data-lum="54" data-motif="spark" aria-label="MOMENTUM">
-        <div class="product">
-          <div class="opt">
-            <span class="opt-en">Option B</span>
-            <span class="opt-zh">推進 / 節奏輸出</span>
-          </div>
-
-          <h1 class="colorName">
-            <span class="en">MOMENTUM</span>
-            <span class="zh">動能橙</span>
-          </h1>
-
-          <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
-            <div class="sqAura" aria-hidden="true"></div>
-            <div class="sqRipple" aria-hidden="true"></div>
-            <div class="sqParticles" aria-hidden="true"></div>
-
-            <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
-              </div>
-            </div>
-
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
-            </div>
-
-            <div class="sqBoost" aria-hidden="true"></div>
-          </div>
-
-          <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
-        </div>
-      </section>
-
-      <section class="stall" data-key="ground" data-en="GROUND" data-zh="著地綠"
-        data-hue="132" data-sat="78" data-lum="46" data-motif="moss" aria-label="GROUND">
-        <div class="product">
-          <div class="opt">
-            <span class="opt-en">Option C</span>
-            <span class="opt-zh">穩定 / 長期累積</span>
-          </div>
-
-          <h1 class="colorName">
-            <span class="en">GROUND</span>
-            <span class="zh">著地綠</span>
-          </h1>
-
-          <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
-            <div class="sqAura" aria-hidden="true"></div>
-            <div class="sqRipple" aria-hidden="true"></div>
-            <div class="sqParticles" aria-hidden="true"></div>
-
-            <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
-              </div>
-            </div>
-
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
-            </div>
-
-            <div class="sqBoost" aria-hidden="true"></div>
-          </div>
-
-          <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
-        </div>
-      </section>
-
-      <section class="stall" data-key="airflow" data-en="AIRFLOW" data-zh="氣流藍"
-        data-hue="205" data-sat="88" data-lum="54" data-motif="mist" aria-label="AIRFLOW">
-        <div class="product">
-          <div class="opt">
-            <span class="opt-en">Option D</span>
-            <span class="opt-zh">呼吸 / 控制感</span>
-          </div>
-
-          <h1 class="colorName">
-            <span class="en">AIRFLOW</span>
-            <span class="zh">氣流藍</span>
-          </h1>
-
-          <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
-            <div class="sqAura" aria-hidden="true"></div>
-            <div class="sqRipple" aria-hidden="true"></div>
-            <div class="sqParticles" aria-hidden="true"></div>
-
-            <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
-              </div>
-            </div>
-
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
-            </div>
-
-            <div class="sqBoost" aria-hidden="true"></div>
-          </div>
-
-          <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
-        </div>
-      </section>
-
-      <section class="stall" data-key="pulse" data-en="PULSE" data-zh="脈動紫"
-        data-hue="275" data-sat="86" data-lum="52" data-motif="nebula" aria-label="PULSE">
-        <div class="product">
-          <div class="opt">
-            <span class="opt-en">Option E</span>
-            <span class="opt-zh">張力 / 個人風格</span>
-          </div>
-
-          <h1 class="colorName">
-            <span class="en">PULSE</span>
-            <span class="zh">脈動紫</span>
-          </h1>
-
-          <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
-            <div class="sqAura" aria-hidden="true"></div>
-            <div class="sqRipple" aria-hidden="true"></div>
-            <div class="sqParticles" aria-hidden="true"></div>
-
-            <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
-              </div>
-            </div>
-
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
-            </div>
-
-            <div class="sqBoost" aria-hidden="true"></div>
-          </div>
-
-          <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
-        </div>
-      </section>
-
-      <section class="stall" data-key="forge" data-en="FORGE" data-zh="鍛造咖"
-        data-hue="28" data-sat="66" data-lum="28" data-motif="forge" aria-label="FORGE">
-        <div class="product">
-          <div class="opt">
-            <span class="opt-en">Option F</span>
-            <span class="opt-zh">厚度 / 淬鍊時間感</span>
-          </div>
-
-          <h1 class="colorName">
-            <span class="en">FORGE</span>
-            <span class="zh">鍛造咖</span>
-          </h1>
-
-          <div class="chargeSquare" data-charge-square role="button" tabindex="0" aria-label="長按一秒投票">
-            <div class="sqAura" aria-hidden="true"></div>
-            <div class="sqRipple" aria-hidden="true"></div>
-            <div class="sqParticles" aria-hidden="true"></div>
-
-            <div class="sqInner" aria-hidden="true">
-              <div class="flameMark" aria-hidden="true">
-                <img class="flame-img" src="Flamemark.png" alt="Flame Mark" onerror="this.onerror=null;this.src='flamemark.png';">
-              </div>
-            </div>
-
-            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-              <circle class="ringTrack" cx="60" cy="60" r="44"/>
-              <circle class="ringProg" cx="60" cy="60" r="44"/>
-            </svg>
-
-            <div class="sqProgress" aria-hidden="true">
-              <div class="sqFill" data-sq-fill></div>
-            </div>
-
-            <div class="sqBoost" aria-hidden="true"></div>
-          </div>
-
-          <div class="hintLine" aria-hidden="true">長按一秒，注滿能量後完成</div>
-        
-        </div>
-      </section>
-    </main>
-
-    <div class="bloom" id="bloom" aria-hidden="true"></div>
-
-    <section class="confirm" id="confirm" aria-label="投票完成">
-      <div class="panel">
-        <div class="content">
-          <h2 id="confirmTitle">投票完成</h2>
-          <div class="subEn">Result · Ripple</div>
-          <p id="confirmDesc">你已完成首發色投票。</p>
-
-          <div class="cardPreview" aria-label="Founder Card 預覽">
-            <canvas id="cardCanvas" width="1200" height="750"></canvas>
-          </div>
-
-          <div class="resultFooter">HESTIA&nbsp;TAIWAN<span class="reg">&reg;</span></div>
-
-<div class="heat" id="heat"></div>
-
-          <div class="tiny">
-            ※ 資料會一併送出：Email + 目前投票色（key / 英文 / 中文）。<br/>
-            ※ 每個 Email 僅能投一次，重複、無效的 Email 將不列入統計。<br/>
-            ※ 感謝你/妳參與 HESTiA 品牌誕生，我們將很快與大家見面！
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="toast" id="toast" aria-live="polite">已送出。</div>
+<main class="app" id="app">
+
+  <div class="environment" aria-hidden="true">
+    <div class="layer layer-far"></div>
+    <div class="layer layer-mid"></div>
+    <div class="layer layer-near"></div>
   </div>
 
-  <script>
-    // ====== Google Form（保留路徑；不具備「阻擋重複 email」能力）======
-    const GOOGLE_FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfhd7xkPSuii1u9faP0mQNmF-6tSbDqZIrupyK1_e4w7ZU0pQ/formResponse";
-    const ENTRY_EMAIL = "entry.989342676";
-    const ENTRY_COLOR = "entry.567761042";
+  <div class="grain" aria-hidden="true"></div>
 
-    // ====== Apps Script Web App（可做到「每個 email 只能投一次」）======
-    // 若你部署了 Apps Script Web App，填入下列 URL：
-    // - UNIQUE_CHECK_ENDPOINT：用於 gate 檢查 email 是否已投過（action=check）
-    // - VOTE_ENDPOINT：用於投票提交（action=vote）
-    // 若不填，系統會退回只用 localStorage + Google Form 的模式（較弱）
-    const UNIQUE_CHECK_ENDPOINT = ""; // e.g. https://script.google.com/macros/s/XXXXX/exec
-    const VOTE_ENDPOINT = "";         // e.g. https://script.google.com/macros/s/XXXXX/exec
+  <header class="site-header">
+    <div class="header-brand">
+      <img class="header-mark" src="/HLOGO.png" alt="">
+      <span>HESTIA</span>
+    </div>
+    <div class="header-section">色調聖所</div>
+  </header>
 
-    const GOOGLE_FORM_PREFILL_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSfmk4ZgMlWpAbFKa6x1JNAq0hwn6kzXtOoB9e9nIbZxsAuNTA/viewform?usp=pp_url";
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <img class="hero-logo" src="/HLOGO.png" alt="HESTIA Logo">
+      <img class="hero-wordmark" src="/wordmark.png" alt="HESTIA">
 
-  const WORLDS = [{"key": "ignition", "en": "IGNITION", "zh": "點燃紅", "h": 8, "sat": 92, "lum": 54, "core_hex": "#F63B1E", "hi_hex": "#FF725C"}, {"key": "momentum", "en": "MOMENTUM", "zh": "動能橙", "h": 28, "sat": 92, "lum": 54, "core_hex": "#F6831E", "hi_hex": "#FFA85C"}, {"key": "ground", "en": "GROUND", "zh": "著地綠", "h": 132, "sat": 78, "lum": 46, "core_hex": "#1AD13E", "hi_hex": "#4CFA6F"}, {"key": "airflow", "en": "AIRFLOW", "zh": "氣流藍", "h": 205, "sat": 88, "lum": 54, "core_hex": "#229BF1", "hi_hex": "#5CBBFF"}, {"key": "pulse", "en": "PULSE", "zh": "脈動紫", "h": 275, "sat": 86, "lum": 52, "core_hex": "#961BEE", "hi_hex": "#BB5CFF"}, {"key": "forge", "en": "FORGE", "zh": "鍛造咖", "h": 28, "sat": 66, "lum": 28, "core_hex": "#774418", "hi_hex": "#E16E09"}];
+      <div class="hero-title">首發色投票 · TONE ON TONE</div>
 
-    // demo heatmap counts（你可改成後台回傳）
-    let liveCounts = { ignition:0, momentum:0, ground:0, airflow:0, pulse:0, forge:0 };
+      <p class="hero-copy">
+        請先輸入 Email。完成確認後，長按火焰進入色調聖所。<br>
+        最高得票色彩世界的參與者，將獲得首波發售折扣碼。
+      </p>
 
-    // ====== Live counts source (Google Sheets CSV, read-only) ======
-    // 當總票數為 0 時，結果頁會顯示 6 色均分（16.6%）；一旦開始有票數，就顯示真實占比。
-    const RESULTS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSQsxR8NEnvsi2qf5hxQpxYuMfIlBEHibSQJ7Twdjol9LtGIur6_ZgnRxJ3eLVzOebTC2WuCZTsdZC/pub?gid=1298926627&single=true&output=csv";
+      <div class="motion-hint">
+        為獲得最佳瀏覽體驗，建議關閉省電模式與「減少動態效果」。
+      </div>
 
-    function _toNum(v){
-      const n = Number(String(v||"").replace(/[^\d.-]/g,""));
-      return Number.isFinite(n) ? n : 0;
+      <div class="email-gate">
+        <div class="email-row">
+          <input
+            class="email-input"
+            id="emailInput"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="輸入你的 Email"
+            aria-label="輸入你的 Email"
+          >
+          <button class="email-button" id="emailButton" type="button">
+            確認
+          </button>
+        </div>
+
+        <div class="email-message" id="emailMessage">
+          請先輸入有效 Email。
+        </div>
+      </div>
+
+      <div class="awaken-area" id="awakenArea">
+        <button class="awaken-button" id="awakenButton" type="button" aria-label="長按火焰進入投票">
+          <img class="awaken-icon" src="/Flamemark.png" alt="">
+        </button>
+
+        <svg class="entry-ring" viewBox="0 0 150 150" aria-hidden="true">
+          <circle class="ring-track" cx="75" cy="75" r="70"></circle>
+          <circle class="ring-value" id="entryRing" cx="75" cy="75" r="70"></circle>
+        </svg>
+
+        <div class="awaken-instruction" id="awakenInstruction">
+          先確認 Email
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="experience" id="experience">
+    <div class="page-index" id="pageIndex" aria-hidden="true"></div>
+    <div class="scroller" id="scroller"></div>
+    <div class="browse-guide" id="browseGuide">
+      向上滑動，開始感受色調
+    </div>
+  </section>
+
+  <section class="selection-overlay" id="selectionOverlay" aria-hidden="true">
+    <div class="selection-space" aria-hidden="true"></div>
+
+    <div class="selection-card">
+      <div class="selection-caption">你正在選擇</div>
+      <div class="selection-code" id="selectionCode">IGNITION</div>
+      <h2 class="selection-title" id="selectionTitle">餘燼霧紅</h2>
+      <p class="selection-copy" id="selectionCopy">
+        安靜而集中，像未曾熄滅的內在熱度。
+      </p>
+
+      <div class="confirm-shell">
+        <button class="confirm-button" id="confirmButton" type="button" aria-label="長按確認這組色調">
+          <img class="confirm-icon" src="/Flamemark.png" alt="">
+        </button>
+
+        <div class="confirm-instruction" id="confirmInstruction">
+          長按火焰，確認這次選擇
+        </div>
+      </div>
+
+      <button class="cancel-selection" id="cancelSelection" type="button">
+        返回繼續查看
+      </button>
+    </div>
+
+    <div class="result-view">
+      <div class="result-panel">
+        <div class="result-label">已收到你的選擇</div>
+        <h2 class="result-title" id="resultTitle">餘燼霧紅</h2>
+        <div class="result-code" id="resultCode">IGNITION</div>
+        <p class="result-copy" id="resultCopy">
+          安靜而集中，像未曾熄滅的內在熱度。
+        </p>
+
+        <div class="card-preview" aria-label="Founder Card 預覽">
+          <canvas id="founderCanvas" width="1200" height="750"></canvas>
+        </div>
+
+        <div class="result-footer">HESTIA TAIWAN®</div>
+
+        <div class="world-progress-title">即時色彩世界進度</div>
+        <p class="world-progress-copy">
+          以下比例來自目前公開統計。
+        </p>
+
+        <div class="heat" id="heat"></div>
+
+        <div class="result-note">
+          每個 Email 僅能投票一次。正式版送出資料格式仍為：
+          Email＋原有色彩 key／英文名稱／中文名稱，既有表單欄位與即時統計來源不變。
+        </div>
+
+        <div class="result-actions">
+          <button class="result-button" id="returnButton" type="button">
+            返回色調空間
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" aria-live="polite"></div>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  /* 現行正式後台設定：保持原值。 */
+  const GOOGLE_FORM_ACTION_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSfhd7xkPSuii1u9faP0mQNmF-6tSbDqZIrupyK1_e4w7ZU0pQ/formResponse";
+
+  const ENTRY_EMAIL = "entry.989342676";
+  const ENTRY_COLOR = "entry.567761042";
+
+  const UNIQUE_CHECK_ENDPOINT = "";
+  const VOTE_ENDPOINT = "";
+
+  const RESULTS_CSV_URL =
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSQsxR8NEnvsi2qf5hxQpxYuMfIlBEHibSQJ7Twdjol9LtGIur6_ZgnRxJ3eLVzOebTC2WuCZTsdZC/pub?gid=1298926627&single=true&output=csv";
+
+  /*
+    顯示名稱與新色票已更新。
+    backendValue 完全保留原正式網站送出的字串，
+    因此 Google Form／試算表／CSV key 不需要修改。
+  */
+  const TONES = [
+    {
+      key:"ignition",
+      en:"IGNITION",
+      displayName:"餘燼霧紅",
+      originalZh:"點燃紅",
+      backendValue:"ignition|IGNITION|點燃紅",
+      description:"安靜而集中，像未曾熄滅的內在熱度。",
+      colors:["#4B1119","#7E2530","#B46563","#D4A59B"],
+      a:"#AB484E",
+      b:"#671A23",
+      base:"#18090D",
+      cardCore:"#A94A50",
+      cardHi:"#D4A59B"
+    },
+    {
+      key:"momentum",
+      en:"MOMENTUM",
+      displayName:"琥珀熾光",
+      originalZh:"動能橙",
+      backendValue:"momentum|MOMENTUM|動能橙",
+      description:"溫暖而有方向，像日落前仍在推進的光。",
+      colors:["#3A2114","#6A3F22","#A56D3C","#D2A06E"],
+      a:"#B27443",
+      b:"#75401F",
+      base:"#160D08",
+      cardCore:"#B27443",
+      cardHi:"#D2A06E"
+    },
+    {
+      key:"ground",
+      en:"GROUND",
+      displayName:"礦石鼠尾",
+      originalZh:"著地綠",
+      backendValue:"ground|GROUND|著地綠",
+      description:"穩定、克制，也保有向外延伸的空間。",
+      colors:["#26312D","#45584F","#71877A","#A7B5AA"],
+      a:"#6F8A7D",
+      b:"#3D564B",
+      base:"#0D1310",
+      cardCore:"#6F8A7D",
+      cardHi:"#A7B5AA"
+    },
+    {
+      key:"airflow",
+      en:"AIRFLOW",
+      displayName:"午夜深藍",
+      originalZh:"氣流藍",
+      backendValue:"airflow|AIRFLOW|氣流藍",
+      description:"表面沉靜，底層仍持續流動。",
+      colors:["#101A2B","#223654","#405F85","#7994B2"],
+      a:"#496D96",
+      b:"#203C62",
+      base:"#070C15",
+      cardCore:"#496D96",
+      cardHi:"#7994B2"
+    },
+    {
+      key:"pulse",
+      en:"PULSE",
+      displayName:"暮影煙紫",
+      originalZh:"脈動紫",
+      backendValue:"pulse|PULSE|脈動紫",
+      description:"成熟而敏銳，在暗處保留自己的張力。",
+      colors:["#241627","#46304C","#73577B","#A58AAA"],
+      a:"#80608A",
+      b:"#4F3557",
+      base:"#100A12",
+      cardCore:"#80608A",
+      cardHi:"#A58AAA"
+    },
+    {
+      key:"forge",
+      en:"FORGE",
+      displayName:"焦土岩褐",
+      originalZh:"鍛造咖",
+      backendValue:"forge|FORGE|鍛造咖",
+      description:"溫厚、踏實，像被時間留下的穩定質地。",
+      colors:["#241A14","#49362A","#725745","#A2846E"],
+      a:"#81644F",
+      b:"#503A2C",
+      base:"#100C09",
+      cardCore:"#81644F",
+      cardHi:"#A2846E"
+    }
+  ];
+
+  const GUIDE_VISUAL = {
+    a:"#8A5C62",
+    b:"#463035",
+    base:"#100B0D"
+  };
+
+  const VISUALS = [GUIDE_VISUAL,...TONES];
+
+  const app = document.getElementById("app");
+  const rootStyle = document.documentElement.style;
+
+  const hero = document.getElementById("hero");
+  const emailInput = document.getElementById("emailInput");
+  const emailButton = document.getElementById("emailButton");
+  const emailMessage = document.getElementById("emailMessage");
+
+  const awakenArea = document.getElementById("awakenArea");
+  const awakenButton = document.getElementById("awakenButton");
+  const awakenInstruction = document.getElementById("awakenInstruction");
+  const entryRing = document.getElementById("entryRing");
+
+  const experience = document.getElementById("experience");
+  const scroller = document.getElementById("scroller");
+  const pageIndex = document.getElementById("pageIndex");
+  const browseGuide = document.getElementById("browseGuide");
+
+  const selectionOverlay = document.getElementById("selectionOverlay");
+  const selectionCode = document.getElementById("selectionCode");
+  const selectionTitle = document.getElementById("selectionTitle");
+  const selectionCopy = document.getElementById("selectionCopy");
+  const confirmButton = document.getElementById("confirmButton");
+  const confirmInstruction = document.getElementById("confirmInstruction");
+  const cancelSelection = document.getElementById("cancelSelection");
+
+  const resultTitle = document.getElementById("resultTitle");
+  const resultCode = document.getElementById("resultCode");
+  const resultCopy = document.getElementById("resultCopy");
+  const founderCanvas = document.getElementById("founderCanvas");
+  const heat = document.getElementById("heat");
+  const returnButton = document.getElementById("returnButton");
+  const toast = document.getElementById("toast");
+
+  const STORAGE_EMAIL = "HESTIA_PRISM_EMAIL";
+  const STORAGE_VOTED = "HESTIA_PRISM_VOTED";
+  const STORAGE_SERIAL = "hestia_founder_serial";
+
+  let userEmail = "";
+  let emailUnlocked = false;
+  let activeSlideIndex = 0;
+  let activeToneIndex = 0;
+  let selectedToneIndex = 0;
+  let selectionMode = false;
+
+  let guideUnlocked = false;
+  const confirmedGuideSteps = new Set();
+  let guideLockNote = null;
+  let guideStart = null;
+
+  let scrollIdleTimer = 0;
+  let revealTimer = 0;
+  let lastScrollTop = 0;
+  let lastScrollTime = performance.now();
+
+  let targetMidY = 0;
+  let currentMidY = 0;
+  let targetNearY = 0;
+  let currentNearY = 0;
+
+  /*
+    首屏色彩輪播：
+    紅 → 橙 → 綠 → 藍 → 紫 → 咖
+    每色停留 2 秒，融色轉場 1.3 秒。
+    Email 確認後停在當下色調。
+  */
+  let heroCycleIndex = 0;
+  let heroCycleTimer = 0;
+  let heroCycleFrame = 0;
+  let heroCycleRunning = false;
+  let heroCycleProgress = 0;
+
+  const HERO_HOLD_DURATION = 2000;
+  const HERO_TRANSITION_DURATION = 1300;
+
+  const circumference = 439.82;
+
+  function clamp(value,min,max){
+    return Math.max(min,Math.min(max,value));
+  }
+
+  function validEmail(value){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function showMessage(text,isError=false){
+    emailMessage.textContent = text;
+    emailMessage.style.color = isError
+      ? "rgba(255,210,210,.88)"
+      : "rgba(244,239,233,.60)";
+    emailMessage.classList.add("is-visible");
+  }
+
+  function showToast(text){
+    toast.textContent = text;
+    toast.classList.add("is-visible");
+
+    window.clearTimeout(showToast.timer);
+    showToast.timer = window.setTimeout(() => {
+      toast.classList.remove("is-visible");
+    },1700);
+  }
+
+  function hexToRgb(hex){
+    const value = parseInt(hex.slice(1),16);
+
+    return {
+      r:(value >> 16) & 255,
+      g:(value >> 8) & 255,
+      b:value & 255
+    };
+  }
+
+  function mixColor(hexA,hexB,progress){
+    const a = hexToRgb(hexA);
+    const b = hexToRgb(hexB);
+
+    return {
+      r:Math.round(a.r+(b.r-a.r)*progress),
+      g:Math.round(a.g+(b.g-a.g)*progress),
+      b:Math.round(a.b+(b.b-a.b)*progress)
+    };
+  }
+
+  function rgbString(rgb,alpha){
+    return `rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`;
+  }
+
+  function rgbHex(rgb){
+    return "#" + [rgb.r,rgb.g,rgb.b]
+      .map(value => value.toString(16).padStart(2,"0"))
+      .join("");
+  }
+
+  function updateEnvironment(indexA,indexB,progress){
+    const visualA = VISUALS[indexA];
+    const visualB = VISUALS[indexB];
+
+    const glowA = mixColor(visualA.a,visualB.a,progress);
+    const glowB = mixColor(visualA.b,visualB.b,progress);
+    const base = mixColor(visualA.base,visualB.base,progress);
+
+    rootStyle.setProperty("--glow-a",rgbString(glowA,.36));
+    rootStyle.setProperty("--glow-b",rgbString(glowB,.25));
+    rootStyle.setProperty("--base",rgbHex(base));
+  }
+
+  function easeInOutSine(progress){
+    return -(Math.cos(Math.PI*progress)-1)/2;
+  }
+
+  function cancelHeroTransition(){
+    if(heroCycleFrame){
+      cancelAnimationFrame(heroCycleFrame);
+      heroCycleFrame = 0;
+    }
+  }
+
+  function stopHeroCycle(){
+    heroCycleRunning = false;
+
+    window.clearTimeout(heroCycleTimer);
+    heroCycleTimer = 0;
+
+    cancelHeroTransition();
+  }
+
+  function animateHeroToNextTone(){
+    if(!heroCycleRunning){
+      return;
     }
 
-    function _parseCountsCSV(csv){
-      // 預期格式：key,count（可含表頭）
-      // ignition,12
-      // momentum,9
-      const out = { ignition:0, momentum:0, ground:0, airflow:0, pulse:0, forge:0 };
-      const text = String(csv||"").trim();
-      if(!text) return out;
-      const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-      for(const line of lines){
-        const parts = line.split(",").map(s=>s.trim());
-        if(parts.length < 2) continue;
-        const key = (parts[0]||"").toLowerCase();
-        if(key==="key" || key==="color" || key==="world") continue; // header
-        if(Object.prototype.hasOwnProperty.call(out, key)){
-          out[key] = _toNum(parts[1]);
-        }
-      }
-      return out;
-    }
+    const fromToneIndex = heroCycleIndex;
+    const nextToneIndex = (heroCycleIndex+1)%TONES.length;
+    const startedAt = performance.now();
 
-    async function fetchCountsFromCSV(){
-      if(!RESULTS_CSV_URL) return null;
-      try{
-        const res = await fetch(RESULTS_CSV_URL, { cache:"no-store" });
-        if(!res.ok) throw new Error("CSV fetch failed: "+res.status);
-        const csv = await res.text();
-        return _parseCountsCSV(csv);
-      }catch(e){
-        console.warn(e);
-        return null;
-      }
-    }
+    cancelHeroTransition();
 
-    function applyCountsToResultUI(){
-      const sum = Object.values(liveCounts).reduce((a,b)=>a+(Number(b)||0),0);
-      const total = sum || 0;
-      for(const ww of WORLDS){
-        const pctVal = total===0 ? (100/6) : ((liveCounts[ww.key]||0)/total*100);
-        const pctText = (Math.round(pctVal*10)/10).toFixed(1) + "%";
-        const bar=document.querySelector(`[data-bar="${ww.key}"]`);
-        const label=document.querySelector(`[data-pct="${ww.key}"]`);
-        if(bar){
-          const w = clamp(pctVal, 6, 100); // keep a minimum visual presence
-          bar.style.width = w + "%";
-        }
-        if(label) label.textContent = pctText;
-      }
-    }
-
-    const $ = (s, el=document) => el.querySelector(s);
-    const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
-    const clamp = (n,a,b) => Math.max(a, Math.min(b,n));
-
-    function hslToRgb(h,s,l){
-      s/=100; l/=100;
-      const k = n => (n + h/30) % 12;
-      const a = s * Math.min(l, 1-l);
-      const f = n => l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n), 1)));
-      return [Math.round(255*f(0)), Math.round(255*f(8)), Math.round(255*f(4))];
-    }
-    function relativeLuminance([r,g,b]){
-      const srgb=[r,g,b].map(v=>v/255).map(v=>v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4));
-      return 0.2126*srgb[0]+0.7152*srgb[1]+0.0722*srgb[2];
-    }
-
-    function vib(ms=18){ if(navigator.vibrate) navigator.vibrate(ms); }
-    function getWorld(key){ return WORLDS.find(w=>w.key===key) || WORLDS[0]; }
-
-    // ====== 「真正漸變」的 Tone Transition（h/s/l 插值）======
-    let toneRaf = null;
-    const toneState = { h: WORLDS[0].h, s: WORLDS[0].sat, l: WORLDS[0].lum };
-
-    function setToneInstant(h,s,l){
-      const root=document.documentElement;
-      root.style.setProperty("--hue", String(h));
-      root.style.setProperty("--sat", String(s) + "%");
-      root.style.setProperty("--lum", String(l) + "%");
-
-      const L = relativeLuminance(hslToRgb(h,s,l));
-      const lightUI = L > 0.42;
-      root.style.setProperty("--uiText", lightUI ? "rgba(0,0,0,.92)" : "rgba(255,255,255,.92)");
-      root.style.setProperty("--uiTextMuted", lightUI ? "rgba(0,0,0,.62)" : "rgba(255,255,255,.72)");
-      root.style.setProperty("--uiStroke", lightUI ? "rgba(0,0,0,.12)" : "rgba(255,255,255,.14)");
-    }
-
-    function lerp(a,b,t){ return a+(b-a)*t; }
-    function lerpHue(a,b,t){
-      let d = ((b - a + 540) % 360) - 180; // shortest path
-      return (a + d * t + 360) % 360;
-    }
-    function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
-
-    function animateTone(toH,toS,toL, dur=720){
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        toneState.h=toH; toneState.s=toS; toneState.l=toL;
-        setToneInstant(toH,toS,toL);
+    const frame = now => {
+      if(!heroCycleRunning){
         return;
       }
-      if (toneRaf) cancelAnimationFrame(toneRaf);
-      const fromH=toneState.h, fromS=toneState.s, fromL=toneState.l;
-      const t0 = performance.now();
 
-      const step=(t)=>{
-        const p = clamp((t - t0)/dur, 0, 1);
-        const e = easeOutCubic(p);
-        const h = lerpHue(fromH, toH, e);
-        const s = lerp(fromS, toS, e);
-        const l = lerp(fromL, toL, e);
-        setToneInstant(h,s,l);
-        if (p < 1) toneRaf = requestAnimationFrame(step);
-        else {
-          toneRaf = null;
-          toneState.h=toH; toneState.s=toS; toneState.l=toL;
-        }
-      };
-      toneRaf = requestAnimationFrame(step);
-    }
+      const rawProgress = clamp(
+        (now-startedAt)/HERO_TRANSITION_DURATION,
+        0,
+        1
+      );
 
-    function showToast(msg){
-      const t=$("#toast");
-      t.textContent=msg;
-      t.classList.add("on");
-      clearTimeout(showToast._tm);
-      showToast._tm=setTimeout(()=>t.classList.remove("on"), 1600);
-    }
+      heroCycleProgress = easeInOutSine(rawProgress);
 
-    window.addEventListener("contextmenu",(e)=>e.preventDefault(),{capture:true});
+      /*
+        VISUALS[0] 是操作指南；
+        首屏六色從 VISUALS[1] 開始。
+      */
+      updateEnvironment(
+        fromToneIndex+1,
+        nextToneIndex+1,
+        heroCycleProgress
+      );
 
-    // ====== One-email-one-vote（前端 localStorage 保護）======
-    const LS_EMAIL_KEY = "HESTIA_PRISM_EMAIL";
-    const LS_VOTED_KEY = "HESTIA_PRISM_VOTED"; // stores sha256(email) if possible; fallback plain
-
-    async function sha256(str){
-      try {
-        const buf = new TextEncoder().encode(str);
-        const digest = await crypto.subtle.digest("SHA-256", buf);
-        const arr = Array.from(new Uint8Array(digest));
-        return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
-      } catch(e) {
-        return btoa(unescape(encodeURIComponent(str))).slice(0,64);
-      }
-    }
-
-    function validEmail(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
-
-    let userEmail = "";
-    const gateEmail = $("#gateEmail");
-    const gateBtn = $("#gateBtn");
-    const gateWarn = $("#gateWarn");
-
-    const monolithStage = $("#monolithStage");
-    const spectrum = $("#spectrum");
-    const phase = $("#phase");
-    const activeChip = $("#activeColorChip");
-    const activeName = $("#activeColorName");
-
-    function openSpectrum(){
-
-      try{ document.body.dataset.stage="vote"; }catch(e){}
-      try{ if(monolithTimer){ clearInterval(monolithTimer); monolithTimer=null; } }catch(e){}
-spectrum.classList.add("is-open");
-      monolithStage.style.opacity="0";
-      monolithStage.style.pointerEvents="none";
-      phase.textContent="SPECTRUM";
-      activeChip.style.opacity="1";
-      activeChip.style.transform="translateY(0)";
-
-      // Freeze hero color at the moment you enter Vote (guide uses current color)
-      try{ if(monolithTimer){ clearInterval(monolithTimer); monolithTimer=null; } }catch(e){}
-
-      spectrum.scrollTop = 0;
-      // Calibrate tone immediately on enter (ensure background matches visible Option A without waiting for scroll)
-      const calibrateSpectrumTone = () => {
-        try{
-          const first = spectrum.querySelector(".stall[data-world]");
-          if(first && first.dataset && first.dataset.world){
-            applyActive(first.dataset.world);
-    }
-        }catch(e){}
-      };
-      requestAnimationFrame(()=>requestAnimationFrame(calibrateSpectrumTone));
-
-    }
-
-    async function backendCheckAlreadyVoted(email){
-      if(!UNIQUE_CHECK_ENDPOINT) return null; // no backend
-      const u = new URL(UNIQUE_CHECK_ENDPOINT);
-      u.searchParams.set("action","check");
-      u.searchParams.set("email", email);
-      const res = await fetch(u.toString(), { method:"POST" });
-      const data = await res.json();
-      if(!data || !data.ok) return null;
-      return !!data.exists;
-    }
-
-    async function gateEnter(){
-      const v=(gateEmail.value||"").trim().toLowerCase();
-      if(!validEmail(v)){
-        gateWarn.classList.add("on");
-        vib(10);
-        showToast("請先輸入有效 Email。");
-        gateEmail.focus();
-        return;
-      }
-      gateWarn.classList.remove("on");
-
-      // local check
-      const hash = await sha256(v);
-      const votedHash = localStorage.getItem(LS_VOTED_KEY);
-      if(votedHash && votedHash === hash){
-        showToast("此 Email 已參與過投票。");
-        vib(18);
+      if(rawProgress < 1){
+        heroCycleFrame = requestAnimationFrame(frame);
         return;
       }
 
-      // optional backend check
-      try {
-        gateBtn.disabled = true;
-        gateBtn.textContent = "檢查中…";
-        const exists = await backendCheckAlreadyVoted(v);
-        if(exists === true){
-          showToast("此 Email 已參與過投票。");
-          vib(18);
-          return;
-        }
-      } catch(e) {
-        console.warn(e);
-        // backend failed: allow proceed but still local-protect
-      } finally {
-        gateBtn.disabled = false;
-        gateBtn.textContent = "進入投票";
+      heroCycleFrame = 0;
+      heroCycleIndex = nextToneIndex;
+      heroCycleProgress = 0;
+
+      heroCycleTimer = window.setTimeout(
+        animateHeroToNextTone,
+        HERO_HOLD_DURATION
+      );
+    };
+
+    heroCycleFrame = requestAnimationFrame(frame);
+  }
+
+  function startHeroCycle(){
+    stopHeroCycle();
+
+    heroCycleIndex = 0;
+    heroCycleProgress = 0;
+
+    /*
+      「減少動態效果」模式仍顯示第一組紅色，
+      但不自動輪播。
+    */
+    updateEnvironment(1,1,0);
+
+    if(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ){
+      return;
+    }
+
+    heroCycleRunning = true;
+
+    heroCycleTimer = window.setTimeout(
+      animateHeroToNextTone,
+      HERO_HOLD_DURATION
+    );
+  }
+
+  function clearSettledSlides(){
+    window.clearTimeout(revealTimer);
+
+    document
+      .querySelectorAll(".slide.is-settled")
+      .forEach(slide => {
+        slide.classList.remove("is-settled");
+      });
+  }
+
+  function updatePageIndex(index){
+    [...pageIndex.children].forEach((dot,dotIndex) => {
+      dot.classList.toggle("is-active",dotIndex === index);
+    });
+  }
+
+  function buildSlides(){
+    const guide = document.createElement("section");
+    guide.className = "slide guide-slide";
+    guide.dataset.slideIndex = "0";
+
+    guide.innerHTML = `
+      <div class="guide-content">
+        <div class="guide-kicker">進入前，先認識這次的選擇方式</div>
+        <h1 class="guide-title">操作指南</h1>
+        <p class="guide-intro">
+          這不是對深淺、明暗或彩度的評分。請感受每一個色相帶給你的直覺，選出最希望 HESTIA 首發的色彩世界。
+        </p>
+
+        <div class="guide-lock-note" id="guideLockNote">
+          <strong>請逐一點擊確認以下三點</strong>
+          三項都確認前，上下滑動暫不開放。已確認 0／3。
+        </div>
+
+        <div class="guide-steps">
+          <button
+            class="guide-step"
+            type="button"
+            data-guide-confirm="0"
+            aria-pressed="false"
+          >
+            <div class="guide-number">①</div>
+            <div>
+              <strong>感受</strong>
+              <p>每一頁是一個色彩世界。<br>感受顏色，名稱和色調會從霧裡浮現。</p>
+              <span class="guide-status">點擊確認</span>
+            </div>
+          </button>
+
+          <button
+            class="guide-step"
+            type="button"
+            data-guide-confirm="1"
+            aria-pressed="false"
+          >
+            <div class="guide-number">②</div>
+            <div>
+              <strong>只看色相</strong>
+              <p>本次只選紅、橙、綠、藍、紫、咖；深淺、彩度與黑白灰不列入判斷。</p>
+              <span class="guide-status">點擊確認</span>
+            </div>
+          </button>
+
+          <button
+            class="guide-step"
+            type="button"
+            data-guide-confirm="2"
+            aria-pressed="false"
+          >
+            <div class="guide-number">③</div>
+            <div>
+              <strong>先選擇，再確認</strong>
+              <p>點擊「選擇這組色調」後，會進入獨立確認畫面；長按火焰才會正式完成。</p>
+              <span class="guide-status">點擊確認</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="guide-start" id="guideStart">
+          每個 Email 僅能投一次<br>
+          完成三項確認後，才可開始滑動
+        </div>
+      </div>
+    `;
+
+    scroller.appendChild(guide);
+
+    guideLockNote = guide.querySelector("#guideLockNote");
+    guideStart = guide.querySelector("#guideStart");
+
+    guide
+      .querySelectorAll("[data-guide-confirm]")
+      .forEach(button => {
+        button.addEventListener("click",() => {
+          confirmGuideStep(button);
+        });
+      });
+
+    TONES.forEach((tone,index) => {
+      const dot = document.createElement("span");
+
+      if(index === 0){
+        dot.classList.add("is-active");
       }
 
-      userEmail = v;
-      localStorage.setItem(LS_EMAIL_KEY, v);
-      openSpectrum();
-      showToast("已解鎖投票。");
-      vib(18);
-    }
+      pageIndex.appendChild(dot);
 
-    gateBtn.addEventListener("click", gateEnter);
-    gateEmail.addEventListener("keydown",(e)=>{ if(e.key==="Enter") gateEnter(); });
+      const slide = document.createElement("section");
+      slide.className = "slide tone-slide";
+      slide.dataset.slideIndex = String(index+1);
+      slide.dataset.toneIndex = String(index);
 
-    // restore email if exists
-    const savedEmail = localStorage.getItem(LS_EMAIL_KEY);
-    if(savedEmail) gateEmail.value = savedEmail;
+      slide.innerHTML = `
+        <div class="tone-content">
+          <div class="tone-number">
+            ${String(index+1).padStart(2,"0")}／${String(TONES.length).padStart(2,"0")}
+          </div>
 
-    // ====== 首頻柔和漸變：紅→橙→綠→藍→紫→咖 ======
-    let monolithIdx = 0;
-    let monolithTimer = null;
+          <div class="tone-code">${tone.en}</div>
+          <h1 class="tone-title">${tone.displayName}</h1>
 
-    function startMonolithCycle(){
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const order = WORLDS; // already in requested order
-      // start from current tone
-      animateTone(order[0].h, order[0].sat, order[0].lum, 900);
-      monolithTimer = setInterval(()=>{
-        if (spectrum.classList.contains("is-open")) return; // stop cycling when inside vote
-        monolithIdx = (monolithIdx + 1) % order.length;
-        const w = order[monolithIdx];
-        animateTone(w.h, w.sat, w.lum, 1200); // softer
-      }, 1700);
-    }
+          <div class="tone-meta">
+            <div class="tone-description">
+              ${tone.description}
+            </div>
 
-    // ====== Spectrum active color update ======
-    let activeKey = WORLDS[0].key;
-function applyActive(key){
+            <div class="swatches">
+              ${tone.colors.map(color => `
+                <span class="swatch" style="background:${color}"></span>
+              `).join("")}
+            </div>
 
-      if(key==="guide"){ try{ activeKey="guide"; activeName.textContent=""; }catch(e){} return; }
-const w=getWorld(key);
-      activeKey=key;
-      activeName.textContent = w.en;
-      animateTone(w.h, w.sat, w.lum, 720);
-    }
+            <button
+              class="select-tone"
+              type="button"
+              data-index="${index}"
+            >
+              選擇這組色調
+            </button>
+          </div>
+        </div>
+      `;
 
-    const stalls = $$(".stall");
-    const io = new IntersectionObserver((entries)=>{
-      const visible = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-      if(!visible) return;
-      const key = visible.target.dataset.key;
-      if(key && key!==activeKey) applyActive(key);
-    }, { root: spectrum, threshold:[0.55,0.65,0.75] });
-    stalls.forEach(st=>io.observe(st));
-
-    // ====== Vote / submit ======
-    const bloom=$("#bloom");
-    const confirm=$("#confirm");
-
-    let holding=false, holdStart=0, holdTimer=null, raf=null, currentSquare=null;
-
-    function pulseBloom(){
-      bloom.classList.add("is-on");
-      setTimeout(()=>bloom.classList.remove("is-on"), 340);
-    }
-
-    function resetHold(){
-      holding=false;
-      if(currentSquare) currentSquare.classList.remove("is-holding");
-      if(currentSquare){
-        const fill=currentSquare.querySelector("[data-sq-fill]");
-        if(fill) fill.style.width="0%";
-        const prog=currentSquare.querySelector(".ringProg");
-        if(prog) prog.style.strokeDashoffset = "276.46";
-      }
-      currentSquare=null;
-      if(holdTimer){ clearTimeout(holdTimer); holdTimer=null; }
-      if(raf){ cancelAnimationFrame(raf); raf=null; }
-    }
-
-    async function postToGoogleForm(payload){
-      const fd = new URLSearchParams();
-      if(payload.email) fd.append(ENTRY_EMAIL, payload.email);
-      if(payload.color) fd.append(ENTRY_COLOR, payload.color);
-      await fetch(GOOGLE_FORM_ACTION_URL, {
-        method:"POST",
-        mode:"no-cors",
-        headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
-        body: fd.toString()
-      });
-    }
-
-    async function postToAppsScriptVote(email, color){
-      if(!VOTE_ENDPOINT) return null;
-      const u = new URL(VOTE_ENDPOINT);
-      u.searchParams.set("action","vote");
-      u.searchParams.set("email", email);
-      u.searchParams.set("color", color);
-      const res = await fetch(u.toString(), { method:"POST" });
-      const data = await res.json();
-      return data;
-    }
-
-    async function submitVoteOnce(key){
-      const email = (userEmail||"").trim().toLowerCase();
-      if(!email) throw new Error("missing_email");
-
-      const hash = await sha256(email);
-      const votedHash = localStorage.getItem(LS_VOTED_KEY);
-      if(votedHash && votedHash === hash) {
-        const err = new Error("already_voted_local");
-        err.code="already_voted";
-        throw err;
-      }
-
-      const w=getWorld(key);
-      const colorValue = `${w.key}|${w.en}|${w.zh}`;
-
-      // 1) Try backend (strong)
-      if(VOTE_ENDPOINT){
-        const data = await postToAppsScriptVote(email, colorValue);
-        if(data && data.ok && data.saved){
-          localStorage.setItem(LS_VOTED_KEY, hash);
-          return;
-        }
-        if(data && data.reason === "already_voted"){
-          localStorage.setItem(LS_VOTED_KEY, hash);
-          const err = new Error("already_voted_backend");
-          err.code="already_voted";
-          throw err;
-        }
-        // fallback to google form
-      }
-
-      // 2) Always keep Google Form path (weak, cannot block duplicates)
-      await postToGoogleForm({ email, color: colorValue });
-      localStorage.setItem(LS_VOTED_KEY, hash);
-    }
-
-    function startHold(square){
-      if(!spectrum.classList.contains("is-open")) return;
-      if(!userEmail){ showToast("請先輸入 Email。"); return; }
-
-      const st=square.closest(".stall");
-      const key=st?.dataset?.key || activeKey;
-      applyActive(key);
-
-      holding=true;
-      currentSquare=square;
-      currentSquare.classList.add("is-holding");
-      const fill=square.querySelector("[data-sq-fill]");
-      const ring=square.querySelector(".ringProg");
-      holdStart=performance.now();
-
-      vib(10);
-
-      holdTimer=setTimeout(async ()=>{
-        vib(28);
-        pulseBloom();
-        try {
-          await submitVoteOnce(key);
-          liveCounts[key] = (liveCounts[key]||0)+1;
-          setTimeout(()=>showConfirm(key), 420);
-        } catch(e) {
-          console.warn(e);
-          if(e.code==="already_voted") showToast("此 Email 已投過票。");
-          else showToast("送出失敗，請稍後再試。");
-        }
-        resetHold();
-      }, 1000);
-
-      let vibCount=0;
-      const step=(t)=>{
-        const p=clamp((t-holdStart)/1000, 0, 1);
-        if(fill) fill.style.width = (p*100).toFixed(1) + "%";
-        if(ring) ring.style.strokeDashoffset = String(276.46 * (1-p));
-
-        if(p>0.35 && vibCount<1){ vib(10); vibCount++; }
-        if(p>0.60 && vibCount<2){ vib(12); vibCount++; }
-        if(p>0.82 && vibCount<3){ vib(16); vibCount++; }
-        if(p>0.94 && vibCount<4){ vib(20); vibCount++; }
-
-        if(holding) raf=requestAnimationFrame(step);
-      };
-      raf=requestAnimationFrame(step);
-    }
-
-    function endHold(){ if(!holding) return; resetHold(); }
-
-    $$("[data-charge-square]").forEach(square=>{
-      square.addEventListener("pointermove",(e)=>{
-        const r=square.getBoundingClientRect();
-        const x=((e.clientX-r.left)/r.width)*100;
-        const y=((e.clientY-r.top)/r.height)*100;
-        square.style.setProperty("--gx", x+"%");
-        square.style.setProperty("--gy", y+"%");
-      });
-      square.addEventListener("pointerdown",(e)=>{
-        e.preventDefault();
-        square.setPointerCapture?.(e.pointerId);
-        startHold(square);
-      });
-      square.addEventListener("pointerup",(e)=>{ e.preventDefault(); endHold(); });
-      square.addEventListener("pointercancel",(e)=>{ e.preventDefault(); endHold(); });
-      square.addEventListener("keydown",(e)=>{
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); startHold(square); }
-      });
-      square.addEventListener("keyup",(e)=>{
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); endHold(); }
-      });
+      scroller.appendChild(slide);
     });
 
-    // ====== Heatmap + Founder Card (same logic) ======
-    function buildHeatmap(){
-      const heat=$("#heat");
-      heat.innerHTML="";
-      for(const w of WORLDS){
-        const cell=document.createElement("div");
-        cell.className="cell";
-        cell.innerHTML=`
-          <p class="name">${w.en}</p>
-          <div class="bar"><i data-bar="${w.key}"></i></div>
-          <div class="pct" data-pct="${w.key}">—%</div>
-        `;
-        heat.appendChild(cell);
+    document.querySelectorAll(".select-tone").forEach(button => {
+      button.addEventListener("click",event => {
+        event.preventDefault();
+        event.stopPropagation();
+        openSelection(Number(button.dataset.index));
+      });
+    });
+  }
+
+  function confirmGuideStep(button){
+    const stepIndex = Number(button.dataset.guideConfirm);
+
+    if(confirmedGuideSteps.has(stepIndex)){
+      return;
+    }
+
+    confirmedGuideSteps.add(stepIndex);
+    button.classList.add("is-confirmed");
+    button.setAttribute("aria-pressed","true");
+
+    const number = button.querySelector(".guide-number");
+    const status = button.querySelector(".guide-status");
+
+    if(number){
+      number.textContent = "✓";
+    }
+
+    if(status){
+      status.textContent = "已確認";
+    }
+
+    const confirmedCount = confirmedGuideSteps.size;
+
+    if(confirmedCount < 3){
+      guideLockNote.innerHTML = `
+        <strong>請繼續完成其餘確認</strong>
+        三項都確認前，上下滑動暫不開放。已確認 ${confirmedCount}／3。
+      `;
+      return;
+    }
+
+    guideUnlocked = true;
+    scroller.style.overflowY = "auto";
+
+    guideLockNote.innerHTML = `
+      <strong>三項已確認</strong>
+      上下滑動已開放，現在可以開始感受色調。
+    `;
+
+    guideStart.classList.add("is-unlocked");
+    guideStart.innerHTML = `
+      每個 Email 僅能投一次<br>
+      三項已確認｜向上滑動，開始感受
+    `;
+
+    browseGuide.textContent = "向上滑動，開始感受色調";
+    showToast("操作指南已確認，可以開始滑動。");
+  }
+
+  function settleCurrentSlide(){
+    if(selectionMode){
+      return;
+    }
+
+    const height = scroller.clientHeight || window.innerHeight;
+    activeSlideIndex = clamp(
+      Math.round(scroller.scrollTop/height),
+      0,
+      TONES.length
+    );
+
+    experience.classList.remove("is-moving");
+    clearSettledSlides();
+
+    if(activeSlideIndex === 0){
+      pageIndex.classList.remove("is-visible");
+      browseGuide.textContent = guideUnlocked
+        ? "向上滑動，開始感受色調"
+        : "請先逐一點擊確認三項操作指南";
+    }else{
+      activeToneIndex = activeSlideIndex-1;
+      updatePageIndex(activeToneIndex);
+      pageIndex.classList.add("is-visible");
+      browseGuide.textContent = "停留片刻，感受這組色調";
+    }
+
+    /*
+      操作指南維持原節奏；
+      色相頁面額外等待 0.5 秒後才開始浮現。
+    */
+    const revealDelay = activeSlideIndex === 0
+      ? 360
+      : 860;
+
+    revealTimer = window.setTimeout(() => {
+      const slide = document.querySelector(
+        `.slide[data-slide-index="${activeSlideIndex}"]`
+      );
+
+      if(slide && !selectionMode){
+        slide.classList.add("is-settled");
+      }
+    },revealDelay);
+  }
+
+  function scheduleScrollIdle(){
+    window.clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = window.setTimeout(settleCurrentSlide,170);
+  }
+
+  function handleScroll(){
+    if(selectionMode){
+      return;
+    }
+
+    if(!guideUnlocked){
+      if(scroller.scrollTop !== 0){
+        scroller.scrollTop = 0;
+      }
+      return;
+    }
+
+    experience.classList.add("is-moving");
+    clearSettledSlides();
+
+    const now = performance.now();
+    const currentTop = scroller.scrollTop;
+    const elapsed = Math.max(8,now-lastScrollTime);
+    const velocity = (currentTop-lastScrollTop)/elapsed;
+
+    lastScrollTop = currentTop;
+    lastScrollTime = now;
+
+    const height = scroller.clientHeight || window.innerHeight;
+    const raw = clamp(
+      currentTop/height,
+      0,
+      TONES.length
+    );
+
+    const currentVisualIndex = Math.floor(raw);
+    const nextVisualIndex = Math.min(
+      VISUALS.length-1,
+      currentVisualIndex+1
+    );
+    const progress = raw-currentVisualIndex;
+
+    updateEnvironment(
+      currentVisualIndex,
+      nextVisualIndex,
+      progress
+    );
+
+    if(raw < .55){
+      pageIndex.classList.remove("is-visible");
+    }else{
+      pageIndex.classList.add("is-visible");
+      updatePageIndex(
+        clamp(Math.round(raw)-1,0,TONES.length-1)
+      );
+    }
+
+    targetMidY = clamp(velocity*165,-18,18);
+    targetNearY = clamp(velocity*270,-28,28);
+
+    scheduleScrollIdle();
+  }
+
+  function animateLayers(){
+    currentMidY += (targetMidY-currentMidY)*.075;
+    currentNearY += (targetNearY-currentNearY)*.10;
+
+    targetMidY *= .92;
+    targetNearY *= .89;
+
+    rootStyle.setProperty("--mid-y",`${currentMidY}px`);
+    rootStyle.setProperty("--near-y",`${currentNearY}px`);
+
+    requestAnimationFrame(animateLayers);
+  }
+
+  async function sha256(value){
+    try{
+      const input = new TextEncoder().encode(value);
+      const digest = await crypto.subtle.digest("SHA-256",input);
+      return [...new Uint8Array(digest)]
+        .map(byte => byte.toString(16).padStart(2,"0"))
+        .join("");
+    }catch(error){
+      return btoa(unescape(encodeURIComponent(value))).slice(0,64);
+    }
+  }
+
+  async function backendCheckAlreadyVoted(email){
+    if(!UNIQUE_CHECK_ENDPOINT){
+      return false;
+    }
+
+    const url = new URL(UNIQUE_CHECK_ENDPOINT);
+    url.searchParams.set("action","check");
+    url.searchParams.set("email",email);
+
+    const response = await fetch(url.toString(),{
+      method:"POST"
+    });
+
+    const data = await response.json();
+
+    return !!(data && data.ok && data.exists);
+  }
+
+  async function verifyEmail(){
+    const email = (emailInput.value || "")
+      .trim()
+      .toLowerCase();
+
+    if(!validEmail(email)){
+      showMessage("請輸入有效的 Email。",true);
+      emailInput.focus();
+      return;
+    }
+
+    emailButton.disabled = true;
+    emailButton.textContent = "確認中";
+
+    try{
+      const hash = await sha256(email);
+      const votedHash = localStorage.getItem(STORAGE_VOTED);
+
+      if(votedHash && votedHash === hash){
+        showMessage("這個 Email 已經完成投票。",true);
+        showToast("這個 Email 已經完成投票。");
+        return;
+      }
+
+      const exists = await backendCheckAlreadyVoted(email);
+
+      if(exists){
+        localStorage.setItem(STORAGE_VOTED,hash);
+        showMessage("這個 Email 已經完成投票。",true);
+        showToast("這個 Email 已經完成投票。");
+        return;
+      }
+
+      userEmail = email;
+      emailUnlocked = true;
+
+      /*
+        Email 確認後，背景停留在使用者當下看見的色調，
+        不再繼續輪播。
+      */
+      stopHeroCycle();
+
+      localStorage.setItem(STORAGE_EMAIL,email);
+
+      awakenArea.classList.add("is-unlocked");
+      awakenInstruction.textContent = "長按火焰，進入色調聖所";
+      showMessage("Email 已確認，可以進入投票。");
+    }catch(error){
+      console.warn(error);
+      showMessage("目前無法完成確認，請稍後再試。",true);
+    }finally{
+      emailButton.disabled = false;
+      emailButton.textContent = "確認";
+    }
+  }
+
+  emailButton.addEventListener("click",verifyEmail);
+
+  emailInput.addEventListener("keydown",event => {
+    if(event.key === "Enter"){
+      verifyEmail();
+    }
+  });
+
+  const savedEmail = localStorage.getItem(STORAGE_EMAIL);
+
+  if(savedEmail){
+    emailInput.value = savedEmail;
+  }
+
+  /* Hero long hold */
+  let entryHolding = false;
+  let entryStart = 0;
+  let entryFrame = 0;
+  let entryPointerId = null;
+  const entryDuration = 1400;
+
+  function resetEntry(){
+    entryHolding = false;
+    entryPointerId = null;
+    cancelAnimationFrame(entryFrame);
+    awakenButton.classList.remove("is-holding");
+    entryRing.style.strokeDashoffset = String(circumference);
+
+    awakenInstruction.textContent = emailUnlocked
+      ? "長按火焰，進入色調聖所"
+      : "先確認 Email";
+  }
+
+  function openExperience(){
+    resetEntry();
+    stopHeroCycle();
+
+    hero.classList.add("is-hidden");
+    experience.classList.add("is-visible");
+
+    scroller.scrollTop = 0;
+    scroller.style.overflowY = guideUnlocked
+      ? "auto"
+      : "hidden";
+
+    browseGuide.textContent = guideUnlocked
+      ? "向上滑動，開始感受色調"
+      : "請先逐一點擊確認三項操作指南";
+
+    updateEnvironment(0,0,0);
+
+    window.setTimeout(settleCurrentSlide,720);
+  }
+
+  function entryTick(now){
+    if(!entryHolding){
+      return;
+    }
+
+    const progress = clamp(
+      (now-entryStart)/entryDuration,
+      0,
+      1
+    );
+
+    entryRing.style.strokeDashoffset =
+      String(circumference*(1-progress));
+
+    awakenInstruction.textContent =
+      progress < .70
+        ? "再停留一下"
+        : "正在進入";
+
+    if(progress >= 1){
+      openExperience();
+      return;
+    }
+
+    entryFrame = requestAnimationFrame(entryTick);
+  }
+
+  awakenButton.addEventListener("pointerdown",event => {
+    if(!emailUnlocked){
+      showMessage("請先確認 Email。",true);
+      return;
+    }
+
+    event.preventDefault();
+
+    entryHolding = true;
+    entryStart = performance.now();
+    entryPointerId = event.pointerId;
+
+    awakenButton.setPointerCapture(event.pointerId);
+    awakenButton.classList.add("is-holding");
+
+    entryFrame = requestAnimationFrame(entryTick);
+  });
+
+  awakenButton.addEventListener("pointerup",resetEntry);
+  awakenButton.addEventListener("pointercancel",resetEntry);
+
+  scroller.addEventListener("scroll",handleScroll,{
+    passive:true
+  });
+
+  window.addEventListener("resize",() => {
+    window.clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = window.setTimeout(
+      settleCurrentSlide,
+      120
+    );
+  },{
+    passive:true
+  });
+
+  function goToSlide(slideIndex){
+    if(!guideUnlocked && slideIndex > 0){
+      showToast("請先完成三項操作指南確認。");
+      return;
+    }
+
+    const next = clamp(slideIndex,0,TONES.length);
+    const height = scroller.clientHeight || window.innerHeight;
+
+    experience.classList.add("is-moving");
+    clearSettledSlides();
+
+    scroller.scrollTo({
+      top:next*height,
+      behavior:"smooth"
+    });
+
+    scheduleScrollIdle();
+  }
+
+  window.addEventListener("keydown",event => {
+    if(
+      selectionMode ||
+      !experience.classList.contains("is-visible")
+    ){
+      return;
+    }
+
+    if(event.key === "ArrowDown" || event.key === "PageDown"){
+      event.preventDefault();
+      goToSlide(activeSlideIndex+1);
+    }
+
+    if(event.key === "ArrowUp" || event.key === "PageUp"){
+      event.preventDefault();
+      goToSlide(activeSlideIndex-1);
+    }
+  });
+
+  if(window.matchMedia("(pointer:fine)").matches){
+    let targetX = 0;
+    let targetY = 0;
+    let desktopX = 0;
+    let desktopY = 0;
+
+    app.addEventListener("pointermove",event => {
+      targetX = ((event.clientX/window.innerWidth)-.5)*9;
+      targetY = ((event.clientY/window.innerHeight)-.5)*7;
+    },{
+      passive:true
+    });
+
+    const desktopLoop = () => {
+      desktopX += (targetX-desktopX)*.035;
+      desktopY += (targetY-desktopY)*.035;
+
+      rootStyle.setProperty("--desktop-x",`${desktopX}px`);
+      rootStyle.setProperty("--desktop-y",`${desktopY}px`);
+
+      requestAnimationFrame(desktopLoop);
+    };
+
+    desktopLoop();
+  }
+
+  function openSelection(index){
+    selectedToneIndex = clamp(index,0,TONES.length-1);
+    selectionMode = true;
+
+    const tone = TONES[selectedToneIndex];
+
+    selectionCode.textContent = tone.en;
+    selectionTitle.textContent = tone.displayName;
+    selectionCopy.textContent = tone.description;
+
+    resultCode.textContent = tone.en;
+    resultTitle.textContent = tone.displayName;
+    resultCopy.textContent = tone.description;
+
+    selectionOverlay.classList.remove(
+      "is-completing",
+      "is-confirmed"
+    );
+
+    selectionOverlay.style.setProperty("--hold-progress","0");
+    selectionOverlay.classList.add("is-open");
+    selectionOverlay.setAttribute("aria-hidden","false");
+
+    scroller.style.overflowY = "hidden";
+    browseGuide.style.opacity = "0";
+    confirmInstruction.textContent = "長按火焰，確認這次選擇";
+  }
+
+  function closeSelection(){
+    cancelHold();
+
+    selectionMode = false;
+
+    selectionOverlay.classList.remove(
+      "is-open",
+      "is-completing",
+      "is-confirmed"
+    );
+
+    selectionOverlay.setAttribute("aria-hidden","true");
+    scroller.style.overflowY = "auto";
+    browseGuide.style.opacity = "";
+
+    settleCurrentSlide();
+  }
+
+  cancelSelection.addEventListener("click",closeSelection);
+  returnButton.addEventListener("click",closeSelection);
+
+  async function postToGoogleForm(email,colorValue){
+    const formData = new URLSearchParams();
+    formData.append(ENTRY_EMAIL,email);
+    formData.append(ENTRY_COLOR,colorValue);
+
+    await fetch(GOOGLE_FORM_ACTION_URL,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{
+        "Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"
+      },
+      body:formData.toString()
+    });
+  }
+
+  async function postToAppsScriptVote(email,colorValue){
+    if(!VOTE_ENDPOINT){
+      return null;
+    }
+
+    const url = new URL(VOTE_ENDPOINT);
+    url.searchParams.set("action","vote");
+    url.searchParams.set("email",email);
+    url.searchParams.set("color",colorValue);
+
+    const response = await fetch(url.toString(),{
+      method:"POST"
+    });
+
+    return await response.json();
+  }
+
+  async function submitVote(tone){
+    const email = (userEmail || "")
+      .trim()
+      .toLowerCase();
+
+    if(!email){
+      throw new Error("missing_email");
+    }
+
+    const hash = await sha256(email);
+    const votedHash = localStorage.getItem(STORAGE_VOTED);
+
+    if(votedHash && votedHash === hash){
+      const error = new Error("already_voted");
+      error.code = "already_voted";
+      throw error;
+    }
+
+    if(VOTE_ENDPOINT){
+      const data = await postToAppsScriptVote(
+        email,
+        tone.backendValue
+      );
+
+      if(data && data.ok && data.saved){
+        localStorage.setItem(STORAGE_VOTED,hash);
+        return;
+      }
+
+      if(data && data.reason === "already_voted"){
+        localStorage.setItem(STORAGE_VOTED,hash);
+
+        const error = new Error("already_voted");
+        error.code = "already_voted";
+        throw error;
       }
     }
-    buildHeatmap();
 
-    const cardCanvas=$("#cardCanvas");
-    const ctx=cardCanvas.getContext("2d");
+    await postToGoogleForm(
+      email,
+      tone.backendValue
+    );
 
-    
+    localStorage.setItem(STORAGE_VOTED,hash);
+  }
 
-    // HLOGO for Founder Card (right-side mark)
-    const hlogoImg=new Image();
-    hlogoImg.src="HLOGO.png";
-const noiseCanvas=document.createElement("canvas");
-    noiseCanvas.width=240; noiseCanvas.height=150;
-    const nctx=noiseCanvas.getContext("2d");
-    const img=nctx.createImageData(noiseCanvas.width, noiseCanvas.height);
-    for(let i=0;i<img.data.length;i+=4){
-      const v=Math.floor(Math.random()*255);
-      img.data[i]=v; img.data[i+1]=v; img.data[i+2]=v; img.data[i+3]=Math.floor(Math.random()*60);
+  /* Hold confirmation */
+  let holdActive = false;
+  let holdStart = 0;
+  let holdFrame = 0;
+  let holdPointerId = null;
+  let holdStartX = 0;
+  let holdStartY = 0;
+
+  const holdDuration = 1350;
+  const movementTolerance = 10;
+
+  function cancelHold(){
+    holdActive = false;
+    holdPointerId = null;
+    cancelAnimationFrame(holdFrame);
+
+    selectionOverlay.style.setProperty("--hold-progress","0");
+    confirmInstruction.textContent = "長按火焰，確認這次選擇";
+  }
+
+  async function completeSelection(){
+    holdActive = false;
+    cancelAnimationFrame(holdFrame);
+
+    selectionOverlay.style.setProperty("--hold-progress","1");
+    selectionOverlay.classList.add("is-completing");
+    confirmInstruction.textContent = "正在送出你的選擇";
+
+    const tone = TONES[selectedToneIndex];
+
+    try{
+      await submitVote(tone);
+
+      window.setTimeout(async () => {
+        renderFounderCard(tone);
+        await updateWorldProgress();
+
+        selectionOverlay.classList.remove("is-completing");
+        selectionOverlay.classList.add("is-confirmed");
+      },760);
+    }catch(error){
+      console.warn(error);
+
+      selectionOverlay.classList.remove("is-completing");
+      selectionOverlay.style.setProperty("--hold-progress","0");
+
+      confirmInstruction.textContent =
+        error.code === "already_voted"
+          ? "這個 Email 已完成投票"
+          : "送出失敗，請稍後再試";
+
+      showToast(confirmInstruction.textContent);
     }
-    nctx.putImageData(img,0,0);
+  }
 
-    function roundRect(ctx,x,y,w,h,r){
-      const rr=Math.min(r,w/2,h/2);
-      ctx.beginPath();
-      ctx.moveTo(x+rr,y);
-      ctx.arcTo(x+w,y,x+w,y+h,rr);
-      ctx.arcTo(x+w,y+h,x,y+h,rr);
-      ctx.arcTo(x,y+h,x,y,rr);
-      ctx.arcTo(x,y,x+w,y,rr);
-      ctx.closePath();
-    }
-    function drawFlame(ctx,cx,cy,s){
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - s*0.75);
-      ctx.bezierCurveTo(cx + s*0.35, cy - s*0.35, cx + s*0.10, cy - s*0.10, cx + s*0.40, cy + s*0.15);
-      ctx.bezierCurveTo(cx + s*0.70, cy + s*0.45, cx + s*0.35, cy + s*0.78, cx, cy + s*0.78);
-      ctx.bezierCurveTo(cx - s*0.35, cy + s*0.78, cx - s*0.70, cy + s*0.45, cx - s*0.40, cy + s*0.15);
-      ctx.bezierCurveTo(cx - s*0.10, cy - s*0.10, cx - s*0.35, cy - s*0.35, cx, cy - s*0.75);
-      ctx.closePath();
-      ctx.stroke();
+  function holdTick(now){
+    if(!holdActive){
+      return;
     }
 
-    function renderFounderCard(w, serial){
-      const W=cardCanvas.width, H=cardCanvas.height;
-      ctx.clearRect(0,0,W,H);
+    const progress = clamp(
+      (now-holdStart)/holdDuration,
+      0,
+      1
+    );
 
-      const g=ctx.createLinearGradient(0,0,W,H);
-      g.addColorStop(0, w.hi_hex);
-      g.addColorStop(0.55, w.core_hex);
-      g.addColorStop(1, "#0B0B0C");
-      ctx.fillStyle=g;
-      ctx.fillRect(0,0,W,H);
+    selectionOverlay.style.setProperty(
+      "--hold-progress",
+      String(progress)
+    );
 
-      ctx.globalAlpha=0.22;
-      ctx.drawImage(noiseCanvas,0,0,W,H);
-      ctx.globalAlpha=1;
+    if(progress < .45){
+      confirmInstruction.textContent = "保持按住";
+    }else if(progress < .82){
+      confirmInstruction.textContent = "再停留一下";
+    }else{
+      confirmInstruction.textContent = "正在確認";
+    }
 
-      ctx.fillStyle="rgba(0,0,0,.18)";
-      roundRect(ctx, 64, 64, W-128, H-128, 32);
-      ctx.fill();
-      ctx.strokeStyle="rgba(255,255,255,.22)";
-      ctx.lineWidth=2;
-      roundRect(ctx, 64, 64, W-128, H-128, 32);
-      ctx.stroke();
+    if(progress >= 1){
+      completeSelection();
+      return;
+    }
 
-      ctx.fillStyle="rgba(255,255,255,.92)";
-      ctx.font="800 54px system-ui, -apple-system, 'SF Pro Display'";
-      ctx.fillText("HESTiA FOUNDER", 112, 210);
+    holdFrame = requestAnimationFrame(holdTick);
+  }
 
-      ctx.font="650 32px system-ui, -apple-system, 'SF Pro Text'";
-      ctx.fillStyle="rgba(255,255,255,.80)";
-      ctx.fillText("Tone on Tone 首發色投票", 112, 268);
+  confirmButton.addEventListener("pointerdown",event => {
+    event.preventDefault();
+    event.stopPropagation();
 
-      ctx.font="900 78px system-ui, -apple-system, 'SF Pro Display'";
-      ctx.fillStyle="rgba(255,255,255,.94)";
-      ctx.fillText(w.en, 112, 390);
+    holdActive = true;
+    holdStart = performance.now();
+    holdPointerId = event.pointerId;
+    holdStartX = event.clientX;
+    holdStartY = event.clientY;
 
-      ctx.font="650 32px 'PingFang TC', system-ui";
-      ctx.fillStyle="rgba(255,255,255,.80)";
-      ctx.fillText(w.zh, 112, 442);
+    confirmButton.setPointerCapture(event.pointerId);
+    holdFrame = requestAnimationFrame(holdTick);
+  });
 
-      ctx.font="700 32px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-      ctx.fillStyle="rgba(255,255,255,.82)";
-      ctx.fillText(`No. ${serial}`, 112, 510);
+  confirmButton.addEventListener("pointermove",event => {
+    if(
+      !holdActive ||
+      event.pointerId !== holdPointerId
+    ){
+      return;
+    }
 
-      ctx.strokeStyle="rgba(255,255,255,.26)";
-      ctx.lineWidth=2;
-      ctx.beginPath();
-      ctx.moveTo(112, 556);
-      ctx.lineTo(520, 556);
-      ctx.stroke();
+    const distance = Math.hypot(
+      event.clientX-holdStartX,
+      event.clientY-holdStartY
+    );
 
-      ctx.font="650 26px system-ui, -apple-system, 'SF Pro Text'";
-      ctx.fillStyle="rgba(255,255,255,.70)";
-      ctx.fillText("Your Spectrum is Set", 112, 612);
+    if(distance > movementTolerance){
+      cancelHold();
+      confirmInstruction.textContent = "手指移動過多，請重新長按";
+    }
+  });
 
-      ctx.globalAlpha=.95;
-      if(hlogoImg && hlogoImg.complete && hlogoImg.naturalWidth>0){
-        const size=180;
-        const x=W-64-size-70;
-        const y=H/2 - size/2 + 40;
-        ctx.drawImage(hlogoImg, x, y, size, size);
-      }else{
-        ctx.strokeStyle="rgba(255,255,255,.86)";
-        ctx.lineWidth=7;
-        drawFlame(ctx, W-260, H-280, 140);
+  confirmButton.addEventListener("pointerup",event => {
+    if(
+      holdActive &&
+      event.pointerId === holdPointerId
+    ){
+      cancelHold();
+    }
+  });
+
+  confirmButton.addEventListener("pointercancel",cancelHold);
+
+  /* Founder Card */
+  const founderContext = founderCanvas.getContext("2d");
+  const hlogoImage = new Image();
+  hlogoImage.src = "/HLOGO.png";
+
+  const noiseCanvas = document.createElement("canvas");
+  noiseCanvas.width = 240;
+  noiseCanvas.height = 150;
+
+  const noiseContext = noiseCanvas.getContext("2d");
+  const noiseData = noiseContext.createImageData(
+    noiseCanvas.width,
+    noiseCanvas.height
+  );
+
+  for(let index=0;index<noiseData.data.length;index+=4){
+    const value = Math.floor(Math.random()*255);
+
+    noiseData.data[index] = value;
+    noiseData.data[index+1] = value;
+    noiseData.data[index+2] = value;
+    noiseData.data[index+3] = Math.floor(Math.random()*55);
+  }
+
+  noiseContext.putImageData(noiseData,0,0);
+
+  function roundedRect(context,x,y,width,height,radius){
+    const r = Math.min(radius,width/2,height/2);
+
+    context.beginPath();
+    context.moveTo(x+r,y);
+    context.arcTo(x+width,y,x+width,y+height,r);
+    context.arcTo(x+width,y+height,x,y+height,r);
+    context.arcTo(x,y+height,x,y,r);
+    context.arcTo(x,y,x+width,y,r);
+    context.closePath();
+  }
+
+  function nextFounderSerial(){
+    const current = parseInt(
+      localStorage.getItem(STORAGE_SERIAL) || "4020",
+      10
+    ) + 1;
+
+    localStorage.setItem(STORAGE_SERIAL,String(current));
+
+    return String(current).padStart(4,"0");
+  }
+
+  function renderFounderCard(tone){
+    const context = founderContext;
+    const width = founderCanvas.width;
+    const height = founderCanvas.height;
+    const serial = nextFounderSerial();
+
+    context.clearRect(0,0,width,height);
+
+    const gradient = context.createLinearGradient(0,0,width,height);
+    gradient.addColorStop(0,tone.cardHi);
+    gradient.addColorStop(.55,tone.cardCore);
+    gradient.addColorStop(1,"#09090B");
+
+    context.fillStyle = gradient;
+    context.fillRect(0,0,width,height);
+
+    context.globalAlpha = .20;
+    context.drawImage(noiseCanvas,0,0,width,height);
+    context.globalAlpha = 1;
+
+    context.fillStyle = "rgba(0,0,0,.17)";
+    roundedRect(context,64,64,width-128,height-128,32);
+    context.fill();
+
+    context.strokeStyle = "rgba(255,255,255,.23)";
+    context.lineWidth = 2;
+    roundedRect(context,64,64,width-128,height-128,32);
+    context.stroke();
+
+    context.fillStyle = "rgba(255,255,255,.94)";
+    context.font = "800 52px system-ui,-apple-system,sans-serif";
+    context.fillText("HESTIA FOUNDER",112,205);
+
+    context.fillStyle = "rgba(255,255,255,.78)";
+    context.font = "650 29px system-ui,-apple-system,sans-serif";
+    context.fillText("Tone on Tone 首發色投票",112,260);
+
+    context.fillStyle = "rgba(255,255,255,.95)";
+    context.font = "850 72px system-ui,-apple-system,sans-serif";
+    context.fillText(tone.en,112,385);
+
+    context.fillStyle = "rgba(255,255,255,.83)";
+    context.font = "650 35px 'PingFang TC',system-ui,sans-serif";
+    context.fillText(tone.displayName,112,441);
+
+    context.fillStyle = "rgba(255,255,255,.82)";
+    context.font = "700 31px ui-monospace,SFMono-Regular,Menlo,monospace";
+    context.fillText(`No. ${serial}`,112,512);
+
+    context.strokeStyle = "rgba(255,255,255,.26)";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.moveTo(112,556);
+    context.lineTo(520,556);
+    context.stroke();
+
+    context.fillStyle = "rgba(255,255,255,.69)";
+    context.font = "650 25px system-ui,-apple-system,sans-serif";
+    context.fillText("Your Spectrum is Set",112,611);
+
+    if(
+      hlogoImage.complete &&
+      hlogoImage.naturalWidth > 0
+    ){
+      const size = 185;
+      const x = width-64-size-62;
+      const y = height/2-size/2+34;
+
+      context.globalAlpha = .94;
+      context.drawImage(hlogoImage,x,y,size,size);
+      context.globalAlpha = 1;
+    }
+  }
+
+  /* Live Progress */
+  const emptyCounts = () => ({
+    ignition:0,
+    momentum:0,
+    ground:0,
+    airflow:0,
+    pulse:0,
+    forge:0
+  });
+
+  function buildHeat(){
+    heat.innerHTML = "";
+
+    TONES.forEach(tone => {
+      const cell = document.createElement("div");
+      cell.className = "heat-cell";
+
+      cell.innerHTML = `
+        <div class="heat-name">
+          <strong>${tone.displayName}</strong>
+          <span>${tone.en}</span>
+        </div>
+
+        <div class="heat-bar">
+          <i
+            data-bar="${tone.key}"
+            style="--bar-color:${tone.cardCore}"
+          ></i>
+        </div>
+
+        <div class="heat-pct" data-pct="${tone.key}">
+          —%
+        </div>
+      `;
+
+      heat.appendChild(cell);
+    });
+  }
+
+  function parseNumber(value){
+    const number = Number(
+      String(value || "").replace(/[^\d.-]/g,"")
+    );
+
+    return Number.isFinite(number)
+      ? number
+      : 0;
+  }
+
+  function parseCountsCsv(csv){
+    const counts = emptyCounts();
+    const text = String(csv || "").replace(/^\uFEFF/,"").trim();
+
+    if(!text){
+      return counts;
+    }
+
+    const lines = text
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    lines.forEach(line => {
+      const parts = line
+        .split(",")
+        .map(part => part.trim().replace(/^"|"$/g,""));
+
+      if(parts.length < 2){
+        return;
       }
-      ctx.globalAlpha=1;
 
-      cardCanvas.dataset.serial=serial;
-      cardCanvas.dataset.key=w.key;
+      const key = (parts[0] || "").toLowerCase();
+
+      if(
+        key === "key" ||
+        key === "color" ||
+        key === "world"
+      ){
+        return;
+      }
+
+      if(Object.prototype.hasOwnProperty.call(counts,key)){
+        counts[key] = parseNumber(parts[1]);
+      }
+    });
+
+    return counts;
+  }
+
+  async function fetchCounts(){
+    if(!RESULTS_CSV_URL){
+      return null;
     }
 
-    function showConfirm(key){
-      const w=getWorld(key);
-      $("#confirmDesc").textContent = `你投給了「${w.zh}」｜${w.en}。以下是專屬於你/妳的Founder卡。`;
+    try{
+      const response = await fetch(RESULTS_CSV_URL,{
+        cache:"no-store"
+      });
 
-            applyCountsToResultUI();
+      if(!response.ok){
+        throw new Error(`CSV ${response.status}`);
+      }
 
-      // 更新為「全站即時占比」（讀取公開 CSV；失敗則維持目前顯示）
-      fetchCountsFromCSV().then((c)=>{ if(c){ liveCounts=c; applyCountsToResultUI(); } });
+      return parseCountsCsv(await response.text());
+    }catch(error){
+      console.warn(error);
+      return null;
+    }
+  }
 
-      const serial=(()=>{const k="hestia_founder_serial"; const cur=parseInt(localStorage.getItem(k)||"4020",10)+1; localStorage.setItem(k,String(cur)); return String(cur).padStart(4,"0");})();
-      renderFounderCard(w, serial);
+  function applyCounts(counts){
+    const total = Object
+      .values(counts)
+      .reduce((sum,value) => sum+(Number(value) || 0),0);
 
-      confirm.classList.add("is-on");
+    TONES.forEach(tone => {
+      const percentage = total === 0
+        ? 100/TONES.length
+        : ((counts[tone.key] || 0)/total)*100;
+
+      const displayPercentage =
+        `${(Math.round(percentage*10)/10).toFixed(1)}%`;
+
+      const bar = document.querySelector(
+        `[data-bar="${tone.key}"]`
+      );
+
+      const label = document.querySelector(
+        `[data-pct="${tone.key}"]`
+      );
+
+      if(bar){
+        bar.style.width = `${clamp(percentage,5,100)}%`;
+      }
+
+      if(label){
+        label.textContent = displayPercentage;
+      }
+    });
+  }
+
+  async function updateWorldProgress(){
+    const fetched = await fetchCounts();
+    const counts = fetched || emptyCounts();
+
+    applyCounts(counts);
+  }
+
+  document.addEventListener("visibilitychange",() => {
+    if(document.hidden){
+      stopHeroCycle();
+      return;
     }
 
-    // Tap backdrop to close (since buttons are removed)
-    confirm.addEventListener("click",(e)=>{ if(e.target===confirm){ confirm.classList.remove("is-on"); }});
-    setToneInstant(WORLDS[0].h, WORLDS[0].sat, WORLDS[0].lum);
-    try{ document.body.dataset.stage="hero"; }catch(e){}
-    startMonolithCycle();
-  </script>
+    if(
+      !emailUnlocked &&
+      !hero.classList.contains("is-hidden")
+    ){
+      startHeroCycle();
+    }
+  });
+
+  buildSlides();
+  buildHeat();
+  startHeroCycle();
+  animateLayers();
+
+})();
+</script>
 </body>
 </html>

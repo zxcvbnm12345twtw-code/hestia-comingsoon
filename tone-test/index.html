@@ -4,23 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#08080b">
-<title>HESTIA｜色調聖所 V4</title>
+<title>HESTIA｜色調聖所 V5</title>
 
 <style>
 :root{
   --fg:#f4efe9;
-  --muted:rgba(244,239,233,.58);
-  --faint:rgba(244,239,233,.28);
-  --line:rgba(255,255,255,.14);
+  --muted:rgba(244,239,233,.60);
+  --faint:rgba(244,239,233,.30);
+  --line:rgba(255,255,255,.15);
+
   --base:#18090d;
-  --glow-a:rgba(171,72,78,.35);
+  --glow-a:rgba(171,72,78,.36);
   --glow-b:rgba(103,26,35,.25);
-  --mid-x:0px;
+
   --mid-y:0px;
-  --near-x:0px;
   --near-y:0px;
   --desktop-x:0px;
   --desktop-y:0px;
+
   --safe-top:max(18px,env(safe-area-inset-top));
   --safe-bottom:max(18px,env(safe-area-inset-bottom));
   --ease:cubic-bezier(.22,.72,.24,1);
@@ -31,7 +32,8 @@
   -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
   width:100%;
   height:100%;
   margin:0;
@@ -73,7 +75,11 @@ button,
   background:#08080b;
 }
 
-/* ---------- 環境層：遠、中、近三層分速 ---------- */
+/* =========================================================
+   三層環境背景
+   手機：只隨捲動速度產生慣性
+   電腦：額外加入非常輕微的游標空間偏移
+   ========================================================= */
 
 .environment{
   position:absolute;
@@ -84,7 +90,7 @@ button,
     radial-gradient(86vmax 68vmax at 72% 35%,var(--glow-a),transparent 64%),
     radial-gradient(76vmax 62vmax at 20% 76%,var(--glow-b),transparent 66%),
     linear-gradient(148deg,var(--base),#09090c 61%,#020203);
-  transition:background .16s linear;
+  transition:background .14s linear;
 }
 
 .layer{
@@ -99,12 +105,14 @@ button,
     radial-gradient(52vmax 46vmax at 74% 28%,var(--glow-a),transparent 68%),
     radial-gradient(46vmax 42vmax at 22% 78%,var(--glow-b),transparent 70%);
   filter:blur(50px);
-  opacity:.44;
-  transform:translate3d(
-    calc(var(--desktop-x) * .24),
-    calc(var(--desktop-y) * .24),
-    0
-  ) scale(1.08);
+  opacity:.46;
+  transform:
+    translate3d(
+      calc(var(--desktop-x) * .20),
+      calc(var(--desktop-y) * .20),
+      0
+    )
+    scale(1.08);
   animation:farBreath 18s ease-in-out infinite alternate;
 }
 
@@ -123,12 +131,11 @@ button,
   mix-blend-mode:soft-light;
   transform:
     translate3d(
-      calc(var(--mid-x) + var(--desktop-x) * .5),
-      calc(var(--mid-y) + var(--desktop-y) * .5),
+      calc(var(--desktop-x) * .45),
+      calc(var(--mid-y) + var(--desktop-y) * .45),
       0
     )
-    rotate(.001deg)
-    scale(1.1);
+    scale(1.10);
 }
 
 .layer-near{
@@ -140,7 +147,7 @@ button,
   mix-blend-mode:screen;
   transform:
     translate3d(
-      calc(var(--near-x) + var(--desktop-x)),
+      var(--desktop-x),
       calc(var(--near-y) + var(--desktop-y)),
       0
     )
@@ -152,8 +159,8 @@ button,
     opacity:.58;
     transform:
       translate3d(
-        calc(var(--desktop-x) * .24 - 2vw),
-        calc(var(--desktop-y) * .24 + 2vh),
+        calc(var(--desktop-x) * .20 - 2vw),
+        calc(var(--desktop-y) * .20 + 2vh),
         0
       )
       scale(1.14);
@@ -165,8 +172,8 @@ button,
   inset:-50%;
   z-index:80;
   pointer-events:none;
-  opacity:.075;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter id='n'/%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   animation:grain .22s steps(2) infinite;
   mix-blend-mode:soft-light;
 }
@@ -179,7 +186,10 @@ button,
   100%{transform:translate(-2%,-1%)}
 }
 
-/* ---------- 共用品牌列 ---------- */
+/* =========================================================
+   品牌列
+   手機置中；電腦改為左右配置
+   ========================================================= */
 
 .site-header{
   position:absolute;
@@ -188,9 +198,9 @@ button,
   left:0;
   right:0;
   display:flex;
-  justify-content:space-between;
+  justify-content:center;
   align-items:center;
-  padding:var(--safe-top) 22px 0;
+  padding:var(--safe-top) 20px 0;
   pointer-events:none;
 }
 
@@ -210,12 +220,15 @@ button,
 }
 
 .section-name{
+  display:none;
   color:var(--muted);
   font-size:10px;
-  letter-spacing:.22em;
+  letter-spacing:.16em;
 }
 
-/* ---------- 首屏喚醒 ---------- */
+/* =========================================================
+   首屏喚醒
+   ========================================================= */
 
 .intro{
   position:absolute;
@@ -223,7 +236,10 @@ button,
   z-index:50;
   display:grid;
   place-items:center;
-  padding:94px 24px 90px;
+  padding:
+    calc(var(--safe-top) + 62px)
+    24px
+    calc(var(--safe-bottom) + 66px);
   text-align:center;
   transition:
     opacity 1s var(--ease),
@@ -242,10 +258,10 @@ button,
 }
 
 .intro-kicker{
-  margin-bottom:25px;
+  margin-bottom:24px;
   color:var(--muted);
   font-size:11px;
-  letter-spacing:.16em;
+  letter-spacing:.10em;
 }
 
 .intro h1{
@@ -257,8 +273,8 @@ button,
 }
 
 .intro-copy{
-  margin:24px auto 0;
-  max-width:440px;
+  margin:23px auto 0;
+  max-width:430px;
   color:var(--muted);
   font-size:14px;
   line-height:1.9;
@@ -268,7 +284,7 @@ button,
   position:relative;
   width:154px;
   height:154px;
-  margin:36px auto 0;
+  margin:35px auto 0;
   display:grid;
   place-items:center;
 }
@@ -311,8 +327,8 @@ button,
   z-index:2;
   width:34px;
   height:46px;
-  transition:transform .28s var(--ease);
   filter:drop-shadow(0 0 24px var(--glow-a));
+  transition:transform .28s var(--ease);
 }
 
 .awaken-button.is-holding .awaken-flame{
@@ -351,8 +367,8 @@ button,
   width:240px;
   transform:translateX(-50%);
   color:var(--muted);
-  font-size:10px;
-  letter-spacing:.1em;
+  font-size:11px;
+  letter-spacing:.06em;
 }
 
 .quick-entry{
@@ -373,7 +389,9 @@ button,
   to{opacity:1}
 }
 
-/* ---------- 色調瀏覽 ---------- */
+/* =========================================================
+   色調瀏覽
+   ========================================================= */
 
 .experience{
   position:absolute;
@@ -408,13 +426,14 @@ button,
 
 .tone{
   position:relative;
+  width:100%;
   min-height:100dvh;
-  display:flex;
-  align-items:flex-end;
+  display:grid;
+  place-items:center;
   padding:
-    118px
-    24px
-    calc(var(--safe-bottom) + 94px);
+    calc(var(--safe-top) + 72px)
+    27px
+    calc(var(--safe-bottom) + 112px);
   scroll-snap-align:start;
   scroll-snap-stop:always;
 }
@@ -422,52 +441,55 @@ button,
 .tone-content{
   position:relative;
   z-index:3;
-  width:min(100%,1120px);
-  margin:0 auto;
-  display:grid;
-  gap:25px;
+  width:min(100%,760px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
 }
 
 .tone-number{
   color:var(--faint);
   font-size:10px;
-  letter-spacing:.24em;
-  opacity:.5;
+  letter-spacing:.20em;
+  opacity:.35;
   transition:opacity .5s var(--ease);
 }
 
 .tone-title{
-  margin:4px 0 0;
-  max-width:880px;
-  font-size:clamp(48px,13vw,124px);
+  margin:13px 0 0;
+  font-size:clamp(46px,13vw,112px);
   font-weight:380;
-  line-height:.9;
-  letter-spacing:-.045em;
+  line-height:.92;
+  letter-spacing:-.04em;
   text-shadow:0 18px 70px rgba(0,0,0,.38);
-  opacity:.08;
-  transform:translateY(26px);
-  filter:blur(5px);
+  opacity:.06;
+  transform:translateY(24px);
+  filter:blur(6px);
   transition:
-    opacity .7s var(--ease),
+    opacity .72s var(--ease),
     transform .9s var(--ease),
-    filter .8s var(--ease);
+    filter .82s var(--ease);
 }
 
 .tone-meta{
-  max-width:470px;
+  width:100%;
+  margin-top:25px;
   display:flex;
   flex-direction:column;
+  align-items:center;
   gap:18px;
   opacity:0;
-  transform:translateY(18px);
+  transform:translateY(17px);
   pointer-events:none;
   transition:
-    opacity .7s .15s var(--ease),
-    transform .8s .15s var(--ease);
+    opacity .72s .15s var(--ease),
+    transform .82s .15s var(--ease);
 }
 
 .tone-description{
-  max-width:410px;
+  max-width:370px;
   color:var(--muted);
   font-size:14px;
   line-height:1.85;
@@ -475,11 +497,12 @@ button,
 
 .swatches{
   display:flex;
+  justify-content:center;
   gap:8px;
 }
 
 .swatch{
-  width:46px;
+  width:42px;
   height:5px;
   border:1px solid rgba(255,255,255,.11);
   border-radius:99px;
@@ -487,30 +510,29 @@ button,
 }
 
 .select-tone{
-  align-self:flex-start;
   margin-top:3px;
-  padding:14px 20px;
+  padding:14px 21px;
   border:1px solid rgba(255,255,255,.19);
   border-radius:999px;
   background:rgba(255,255,255,.045);
   color:var(--fg);
   font-size:12px;
-  letter-spacing:.08em;
+  letter-spacing:.06em;
   cursor:pointer;
   opacity:0;
   transform:translateY(10px);
   pointer-events:none;
   transition:
-    opacity .6s .4s var(--ease),
-    transform .7s .4s var(--ease),
-    background .25s ease;
+    opacity .6s .38s var(--ease),
+    transform .7s .38s var(--ease),
+    background .2s ease;
 }
 
 .select-tone:active{
-  background:rgba(255,255,255,.12);
+  background:rgba(255,255,255,.14);
 }
 
-/* 只有完全停穩的當前色調才顯示內容與按鈕 */
+/* 完整停穩後才顯示 */
 .tone.is-settled .tone-number{
   opacity:1;
 }
@@ -533,98 +555,90 @@ button,
   pointer-events:auto;
 }
 
-/* 拖曳或慣性滑動時，所有內容先退場 */
-.experience[data-motion="dragging"] .tone-title,
-.experience[data-motion="coasting"] .tone-title,
-.experience[data-motion="snapping"] .tone-title{
-  opacity:.06;
-  transform:translateY(22px);
-  filter:blur(5px);
-  transition-duration:.22s;
-}
-
-.experience[data-motion="dragging"] .tone-meta,
-.experience[data-motion="coasting"] .tone-meta,
-.experience[data-motion="snapping"] .tone-meta{
-  opacity:0;
-  transform:translateY(14px);
-  pointer-events:none;
+/* 滑動中立刻退場 */
+.experience.is-moving .tone-title{
+  opacity:.04;
+  transform:translateY(20px);
+  filter:blur(6px);
   transition-delay:0s;
   transition-duration:.18s;
 }
 
-.experience[data-motion="dragging"] .select-tone,
-.experience[data-motion="coasting"] .select-tone,
-.experience[data-motion="snapping"] .select-tone{
+.experience.is-moving .tone-meta{
+  opacity:0;
+  transform:translateY(13px);
+  pointer-events:none;
+  transition-delay:0s;
+  transition-duration:.16s;
+}
+
+.experience.is-moving .select-tone{
   opacity:0;
   pointer-events:none;
   transition-delay:0s;
-  transition-duration:.15s;
+  transition-duration:.14s;
 }
 
+/* 下方進度改為置中，不干擾主畫面 */
 .page-index{
   position:absolute;
   z-index:20;
-  top:50%;
-  right:22px;
+  left:50%;
+  bottom:calc(var(--safe-bottom) + 55px);
   display:flex;
-  flex-direction:column;
-  gap:12px;
-  transform:translateY(-50%);
+  gap:11px;
+  transform:translateX(-50%);
   pointer-events:none;
 }
 
 .page-index span{
-  width:4px;
-  height:4px;
-  border-radius:50%;
-  background:rgba(255,255,255,.25);
+  width:5px;
+  height:5px;
+  border-radius:99px;
+  background:rgba(255,255,255,.24);
   transition:
     width .35s var(--ease),
-    height .35s var(--ease),
     background .35s var(--ease),
     box-shadow .35s var(--ease);
 }
 
 .page-index span.is-active{
-  width:6px;
-  height:6px;
-  background:#fff;
-  box-shadow:0 0 18px rgba(255,255,255,.62);
+  width:22px;
+  background:rgba(255,255,255,.9);
+  box-shadow:0 0 18px rgba(255,255,255,.42);
 }
 
 .browse-guide{
   position:absolute;
   z-index:20;
-  left:24px;
-  bottom:calc(var(--safe-bottom) + 24px);
+  left:50%;
+  bottom:calc(var(--safe-bottom) + 22px);
+  width:calc(100% - 48px);
+  transform:translateX(-50%);
   color:var(--faint);
+  text-align:center;
   font-size:10px;
-  letter-spacing:.08em;
+  letter-spacing:.04em;
   pointer-events:none;
-  transition:opacity .35s ease;
 }
 
-.experience[data-motion="settled"] .browse-guide{
-  opacity:.72;
-}
-
-/* ---------- 獨立選擇模式 ---------- */
+/* =========================================================
+   獨立選擇模式
+   ========================================================= */
 
 .selection-overlay{
   --hold-progress:0;
-  --pressure:0;
   position:absolute;
   inset:0;
   z-index:100;
   display:grid;
   place-items:center;
   padding:
-    calc(var(--safe-top) + 26px)
+    calc(var(--safe-top) + 28px)
     24px
     calc(var(--safe-bottom) + 24px);
-  background:rgba(4,4,6,.58);
-  backdrop-filter:blur(26px);
+  background:rgba(4,4,6,.60);
+  backdrop-filter:blur(27px);
   opacity:0;
   visibility:hidden;
   transition:
@@ -681,31 +695,23 @@ button,
     scale(calc(1 + var(--hold-progress) * .26));
 }
 
-.selection-overlay.is-completing .selection-space::before,
-.selection-overlay.is-completing .selection-space::after{
-  opacity:.9;
-  filter:blur(18px);
-  transform:translate(-50%,-50%) scale(.08);
-}
-
 .selection-card{
   position:relative;
   z-index:3;
-  width:min(100%,560px);
-  min-height:520px;
+  width:min(100%,540px);
+  min-height:530px;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:36px 22px 30px;
+  padding:34px 18px 28px;
   text-align:center;
-  perspective:1000px;
 }
 
 .selection-caption{
   color:var(--muted);
   font-size:11px;
-  letter-spacing:.11em;
+  letter-spacing:.08em;
   transition:
     opacity .35s ease,
     transform .6s var(--ease);
@@ -713,7 +719,7 @@ button,
 
 .selection-title{
   margin:15px 0 10px;
-  font-size:clamp(38px,10vw,68px);
+  font-size:clamp(38px,10vw,66px);
   font-weight:390;
   line-height:1;
   letter-spacing:-.035em;
@@ -723,11 +729,11 @@ button,
 }
 
 .selection-copy{
-  max-width:390px;
+  max-width:370px;
   margin:0;
   color:var(--muted);
-  font-size:13px;
-  line-height:1.8;
+  font-size:14px;
+  line-height:1.82;
   transition:
     opacity .35s ease,
     transform .7s var(--ease);
@@ -737,14 +743,12 @@ button,
   position:relative;
   width:190px;
   height:190px;
-  margin:34px auto 0;
+  margin:32px auto 0;
   display:grid;
   place-items:center;
   transform:
-    perspective(900px)
-    translateZ(calc(var(--hold-progress) * 62px))
-    scale(calc(1 - var(--hold-progress) * .06));
-  transition:transform .06s linear;
+    translateZ(0)
+    scale(calc(1 - var(--hold-progress) * .055));
 }
 
 .confirm-button{
@@ -766,8 +770,7 @@ button,
   color:var(--fg);
   cursor:pointer;
   touch-action:none;
-  transform:
-    scale(calc(1 - var(--hold-progress) * .08 + var(--pressure) * .025));
+  transform:scale(calc(1 - var(--hold-progress) * .08));
   box-shadow:
     0 0 calc(18px + var(--hold-progress) * 42px) var(--glow-a),
     inset 0 0 calc(8px + var(--hold-progress) * 24px) rgba(255,255,255,.025);
@@ -794,7 +797,7 @@ button,
   border-radius:50%;
   background:radial-gradient(circle,var(--glow-a),transparent 70%);
   opacity:calc(.34 + var(--hold-progress) * .66);
-  transform:scale(calc(.92 + var(--hold-progress) * .2 + var(--pressure) * .04));
+  transform:scale(calc(.92 + var(--hold-progress) * .2));
   filter:blur(calc(14px - var(--hold-progress) * 7px));
 }
 
@@ -809,14 +812,7 @@ button,
       calc(18px + var(--hold-progress) * 25px)
       rgba(255,255,255,.34)
     );
-  transform:
-    scale(
-      calc(
-        1
-        - var(--hold-progress) * .08
-        + var(--pressure) * .05
-      )
-    );
+  transform:scale(calc(1 - var(--hold-progress) * .08));
 }
 
 .confirm-instruction{
@@ -827,11 +823,11 @@ button,
   transform:translateX(-50%);
   color:var(--muted);
   font-size:11px;
-  letter-spacing:.07em;
+  letter-spacing:.05em;
 }
 
 .cancel-selection{
-  margin-top:43px;
+  margin-top:42px;
   padding:11px 14px;
   border:0;
   background:transparent;
@@ -842,7 +838,14 @@ button,
   cursor:pointer;
 }
 
-/* 完成時，瀏覽文字退場，中央火焰收束 */
+/* 完成收束 */
+.selection-overlay.is-completing .selection-space::before,
+.selection-overlay.is-completing .selection-space::after{
+  opacity:.9;
+  filter:blur(18px);
+  transform:translate(-50%,-50%) scale(.08);
+}
+
 .selection-overlay.is-completing .selection-caption,
 .selection-overlay.is-completing .selection-title,
 .selection-overlay.is-completing .selection-copy,
@@ -853,21 +856,18 @@ button,
 }
 
 .selection-overlay.is-completing .confirm-shell{
-  transform:perspective(900px) translateZ(150px) scale(.74);
+  transform:scale(.72);
   transition:transform .9s var(--ease);
 }
 
 .selection-overlay.is-completing .confirm-button{
-  transform:scale(.82);
   box-shadow:
     0 0 90px var(--glow-a),
     inset 0 0 40px rgba(255,255,255,.06);
-  transition:
-    transform .9s var(--ease),
-    box-shadow .9s var(--ease);
+  transition:box-shadow .9s var(--ease);
 }
 
-/* 完成結果 */
+/* 投票結果 */
 .result-panel{
   position:absolute;
   z-index:5;
@@ -881,6 +881,7 @@ button,
       rgba(255,255,255,.022)
     );
   box-shadow:0 28px 110px rgba(0,0,0,.46);
+  text-align:center;
   opacity:0;
   visibility:hidden;
   transform:translateY(18px);
@@ -904,7 +905,7 @@ button,
 .result-label{
   color:var(--muted);
   font-size:11px;
-  letter-spacing:.1em;
+  letter-spacing:.08em;
 }
 
 .result-title{
@@ -942,46 +943,52 @@ button,
   cursor:pointer;
 }
 
-/* ---------- 桌機版才啟用極輕微游標空間偏移 ---------- */
-
-@media (pointer:fine){
-  .environment{
-    cursor:default;
-  }
-}
-
-/* ---------- 寬螢幕 ---------- */
+/* =========================================================
+   電腦版：保留置中主體，但使用滑鼠／鍵盤提示和空間偏移
+   ========================================================= */
 
 @media(min-width:820px){
   .site-header{
+    justify-content:space-between;
     padding-left:40px;
     padding-right:40px;
   }
 
+  .section-name{
+    display:block;
+  }
+
   .tone{
-    align-items:center;
-    padding:108px 8vw;
+    padding:
+      calc(var(--safe-top) + 72px)
+      8vw
+      calc(var(--safe-bottom) + 105px);
   }
 
   .tone-content{
-    grid-template-columns:minmax(0,1fr) 380px;
-    align-items:end;
+    width:min(100%,980px);
   }
 
-  .tone-meta{
-    padding-bottom:5px;
+  .tone-title{
+    font-size:clamp(68px,8vw,124px);
+  }
+
+  .tone-description{
+    max-width:450px;
+  }
+
+  .swatch{
+    width:52px;
   }
 
   .page-index{
-    right:34px;
+    bottom:42px;
   }
 
   .browse-guide{
-    left:40px;
+    bottom:18px;
   }
 }
-
-/* ---------- 動態減量偏好 ---------- */
 
 @media(prefers-reduced-motion:reduce){
   *,
@@ -998,7 +1005,7 @@ button,
 <body>
 <main class="app" id="app">
 
-  <div class="environment" id="environment" aria-hidden="true">
+  <div class="environment" aria-hidden="true">
     <div class="layer layer-far"></div>
     <div class="layer layer-mid"></div>
     <div class="layer layer-near"></div>
@@ -1014,6 +1021,7 @@ button,
       </svg>
       <span>HESTIA</span>
     </div>
+
     <div class="section-name">色調聖所</div>
   </header>
 
@@ -1029,7 +1037,7 @@ button,
       </p>
 
       <div class="awaken-shell">
-        <button class="awaken-button" id="awakenButton" aria-label="長按火焰進入色調聖所">
+        <button class="awaken-button" id="awakenButton" type="button" aria-label="長按火焰進入色調聖所">
           <svg class="awaken-flame" viewBox="0 0 48 64" fill="none" aria-hidden="true">
             <path d="M24 3C23 17 9 21 9 39c0 12 7 21 15 22 8-1 15-10 15-22C39 21 25 17 24 3Z" stroke="currentColor" stroke-width="1.35"/>
             <path d="M24 18c-1 9-8 12-8 22 0 7 4 13 8 14 4-1 8-7 8-14 0-10-7-13-8-22Z" stroke="currentColor" stroke-width="1.1" opacity=".62"/>
@@ -1046,17 +1054,15 @@ button,
         </div>
       </div>
 
-      <button class="quick-entry" id="quickEntry">
+      <button class="quick-entry" id="quickEntry" type="button">
         直接進入體驗
       </button>
     </div>
   </section>
 
-  <section class="experience" id="experience" data-motion="settled">
+  <section class="experience" id="experience">
     <div class="page-index" id="pageIndex" aria-hidden="true"></div>
-
     <div class="scroller" id="scroller"></div>
-
     <div class="browse-guide" id="browseGuide">
       上下滑動，感受色調之間的變化
     </div>
@@ -1075,7 +1081,7 @@ button,
       </p>
 
       <div class="confirm-shell">
-        <button class="confirm-button" id="confirmButton" aria-label="長按確認這組色調">
+        <button class="confirm-button" id="confirmButton" type="button" aria-label="長按確認這組色調">
           <svg class="confirm-flame" viewBox="0 0 48 64" fill="none" aria-hidden="true">
             <path d="M24 3C23 17 9 21 9 39c0 12 7 21 15 22 8-1 15-10 15-22C39 21 25 17 24 3Z" stroke="currentColor" stroke-width="1.4"/>
             <path d="M24 18c-1 9-8 12-8 22 0 7 4 13 8 14 4-1 8-7 8-14 0-10-7-13-8-22Z" stroke="currentColor" stroke-width="1.1" opacity=".62"/>
@@ -1087,7 +1093,7 @@ button,
         </div>
       </div>
 
-      <button class="cancel-selection" id="cancelSelection">
+      <button class="cancel-selection" id="cancelSelection" type="button">
         返回繼續查看
       </button>
     </div>
@@ -1105,7 +1111,7 @@ button,
         目前為體驗版本，選擇只會暫存在這台裝置，尚未連接正式投票資料庫。
       </div>
 
-      <button class="return-button" id="returnButton">
+      <button class="return-button" id="returnButton" type="button">
         返回色調空間
       </button>
     </div>
@@ -1152,7 +1158,9 @@ button,
     }
   ];
 
+  const rootStyle = document.documentElement.style;
   const app = document.getElementById("app");
+
   const intro = document.getElementById("intro");
   const awakenButton = document.getElementById("awakenButton");
   const entryRing = document.getElementById("entryRing");
@@ -1174,26 +1182,21 @@ button,
   const resultCopy = document.getElementById("resultCopy");
   const returnButton = document.getElementById("returnButton");
 
+  const circumference = 439.82;
+
   let activeIndex = 0;
-  let motionState = "settled";
-  let pointerDownInScroller = false;
-  let scrollTimer = 0;
+  let selectedIndex = 0;
+  let selectionMode = false;
+
+  let scrollIdleTimer = 0;
   let revealTimer = 0;
-  let snapTimer = 0;
   let lastScrollTop = 0;
   let lastScrollTime = performance.now();
-  let scrollVelocity = 0;
+
   let targetMidY = 0;
   let currentMidY = 0;
   let targetNearY = 0;
   let currentNearY = 0;
-  let currentMidX = 0;
-  let currentNearX = 0;
-  let selectedIndex = 0;
-  let selectionMode = false;
-
-  const rootStyle = document.documentElement.style;
-  const circumference = 439.82;
 
   function clamp(value,min,max){
     return Math.max(min,Math.min(max,value));
@@ -1201,6 +1204,7 @@ button,
 
   function hexToRgb(hex){
     const value = parseInt(hex.slice(1),16);
+
     return {
       r:(value >> 16) & 255,
       g:(value >> 8) & 255,
@@ -1208,14 +1212,14 @@ button,
     };
   }
 
-  function mixColor(hexA,hexB,t){
+  function mixColor(hexA,hexB,progress){
     const a = hexToRgb(hexA);
     const b = hexToRgb(hexB);
 
     return {
-      r:Math.round(a.r + (b.r-a.r)*t),
-      g:Math.round(a.g + (b.g-a.g)*t),
-      b:Math.round(a.b + (b.b-a.b)*t)
+      r:Math.round(a.r+(b.r-a.r)*progress),
+      g:Math.round(a.g+(b.g-a.g)*progress),
+      b:Math.round(a.b+(b.b-a.b)*progress)
     };
   }
 
@@ -1229,50 +1233,27 @@ button,
       .join("");
   }
 
-  function setEnvironment(indexA,indexB,progress){
+  function updateEnvironment(indexA,indexB,progress){
     const toneA = tones[indexA];
     const toneB = tones[indexB];
 
-    const colorA = mixColor(toneA.a,toneB.a,progress);
-    const colorB = mixColor(toneA.b,toneB.b,progress);
+    const glowA = mixColor(toneA.a,toneB.a,progress);
+    const glowB = mixColor(toneA.b,toneB.b,progress);
     const base = mixColor(toneA.base,toneB.base,progress);
 
-    rootStyle.setProperty("--glow-a",rgbString(colorA,.35));
-    rootStyle.setProperty("--glow-b",rgbString(colorB,.25));
+    rootStyle.setProperty("--glow-a",rgbString(glowA,.36));
+    rootStyle.setProperty("--glow-b",rgbString(glowB,.25));
     rootStyle.setProperty("--base",rgbHex(base));
   }
 
-  function vibrate(pattern){
-    if("vibrate" in navigator){
-      navigator.vibrate(pattern);
-    }
-  }
-
-  function setMotionState(nextState){
-    motionState = nextState;
-    experience.dataset.motion = nextState;
-  }
-
-  function clearSettledContent(){
+  function clearVisibleTone(){
     window.clearTimeout(revealTimer);
+
     document
       .querySelectorAll(".tone.is-settled")
-      .forEach(section => section.classList.remove("is-settled"));
-  }
-
-  function showSettledContent(index){
-    clearSettledContent();
-
-    revealTimer = window.setTimeout(() => {
-      const section = document.querySelector(`.tone[data-index="${index}"]`);
-      if(
-        section &&
-        motionState === "settled" &&
-        !selectionMode
-      ){
-        section.classList.add("is-settled");
-      }
-    },420);
+      .forEach(section => {
+        section.classList.remove("is-settled");
+      });
   }
 
   function updatePageIndex(index){
@@ -1281,64 +1262,49 @@ button,
     });
   }
 
-  function finalizeSettled(){
-    if(pointerDownInScroller || selectionMode){
+  function settleCurrentTone(){
+    if(selectionMode){
       return;
     }
 
     const height = scroller.clientHeight || window.innerHeight;
-    const nearestIndex = clamp(
-      Math.round(scroller.scrollTop / height),
+    const nextIndex = clamp(
+      Math.round(scroller.scrollTop/height),
       0,
-      tones.length - 1
+      tones.length-1
     );
 
-    const targetTop = nearestIndex * height;
-    const distance = Math.abs(scroller.scrollTop - targetTop);
-
-    if(distance > 1.5){
-      setMotionState("snapping");
-      clearSettledContent();
-
-      scroller.scrollTo({
-        top:targetTop,
-        behavior:"smooth"
-      });
-
-      window.clearTimeout(snapTimer);
-      snapTimer = window.setTimeout(finalizeSettled,430);
-      return;
-    }
-
-    activeIndex = nearestIndex;
+    activeIndex = nextIndex;
     updatePageIndex(activeIndex);
-    setMotionState("settled");
+
+    experience.classList.remove("is-moving");
     browseGuide.textContent = "停留片刻，感受這組色調";
-    showSettledContent(activeIndex);
+
+    clearVisibleTone();
+
+    revealTimer = window.setTimeout(() => {
+      const currentSection = document.querySelector(
+        `.tone[data-index="${activeIndex}"]`
+      );
+
+      if(currentSection && !selectionMode){
+        currentSection.classList.add("is-settled");
+      }
+    },360);
   }
 
-  function scheduleSettle(){
-    window.clearTimeout(scrollTimer);
+  function scheduleScrollIdle(){
+    window.clearTimeout(scrollIdleTimer);
 
-    scrollTimer = window.setTimeout(() => {
-      if(pointerDownInScroller || selectionMode){
-        return;
-      }
-
-      const current = scroller.scrollTop;
-
-      window.setTimeout(() => {
-        if(
-          Math.abs(scroller.scrollTop - current) < .6 &&
-          !pointerDownInScroller &&
-          !selectionMode
-        ){
-          finalizeSettled();
-        }else{
-          scheduleSettle();
-        }
-      },90);
-    },120);
+    /*
+      不再依賴 pointerup。
+      iPhone 慣性滑動結束後，只要 170ms 沒有新的 scroll 事件，
+      就會可靠地進入停穩狀態。
+    */
+    scrollIdleTimer = window.setTimeout(
+      settleCurrentTone,
+      170
+    );
   }
 
   function handleScroll(){
@@ -1346,71 +1312,60 @@ button,
       return;
     }
 
+    experience.classList.add("is-moving");
+    clearVisibleTone();
+    browseGuide.textContent = "上下滑動，感受色調之間的變化";
+
     const now = performance.now();
     const currentTop = scroller.scrollTop;
-    const delta = currentTop - lastScrollTop;
-    const deltaTime = Math.max(8,now-lastScrollTime);
+    const elapsed = Math.max(8,now-lastScrollTime);
+    const velocity = (currentTop-lastScrollTop)/elapsed;
 
-    scrollVelocity = delta / deltaTime;
     lastScrollTop = currentTop;
     lastScrollTime = now;
 
-    if(pointerDownInScroller){
-      setMotionState("dragging");
-    }else{
-      setMotionState("coasting");
-    }
-
-    clearSettledContent();
-    browseGuide.textContent = "上下滑動，感受色調之間的變化";
-
     const height = scroller.clientHeight || window.innerHeight;
     const raw = clamp(
-      currentTop / height,
+      currentTop/height,
       0,
-      tones.length - 1
+      tones.length-1
     );
 
     const currentIndex = Math.floor(raw);
     const nextIndex = Math.min(tones.length-1,currentIndex+1);
     const progress = raw-currentIndex;
 
-    setEnvironment(currentIndex,nextIndex,progress);
-
-    const nearestIndex = clamp(
-      Math.round(raw),
-      0,
-      tones.length - 1
+    updateEnvironment(currentIndex,nextIndex,progress);
+    updatePageIndex(
+      clamp(Math.round(raw),0,tones.length-1)
     );
 
-    updatePageIndex(nearestIndex);
+    targetMidY = clamp(velocity*165,-18,18);
+    targetNearY = clamp(velocity*270,-28,28);
 
-    targetMidY = clamp(scrollVelocity*180,-20,20);
-    targetNearY = clamp(scrollVelocity*310,-32,32);
-
-    scheduleSettle();
+    scheduleScrollIdle();
   }
 
   function animateLayers(){
     currentMidY += (targetMidY-currentMidY)*.075;
-    currentNearY += (targetNearY-currentNearY)*.1;
+    currentNearY += (targetNearY-currentNearY)*.10;
 
     targetMidY *= .92;
     targetNearY *= .89;
 
     rootStyle.setProperty("--mid-y",`${currentMidY}px`);
     rootStyle.setProperty("--near-y",`${currentNearY}px`);
-    rootStyle.setProperty("--mid-x",`${currentMidX}px`);
-    rootStyle.setProperty("--near-x",`${currentNearX}px`);
 
     requestAnimationFrame(animateLayers);
   }
 
   tones.forEach((tone,index) => {
     const dot = document.createElement("span");
+
     if(index === 0){
       dot.classList.add("is-active");
     }
+
     pageIndex.appendChild(dot);
 
     const section = document.createElement("section");
@@ -1419,16 +1374,16 @@ button,
 
     section.innerHTML = `
       <div class="tone-content">
-        <div>
-          <div class="tone-number">
-            ${String(index+1).padStart(2,"0")}／${String(tones.length).padStart(2,"0")}
-          </div>
-
-          <h2 class="tone-title">${tone.name}</h2>
+        <div class="tone-number">
+          ${String(index+1).padStart(2,"0")}／${String(tones.length).padStart(2,"0")}
         </div>
 
+        <h2 class="tone-title">${tone.name}</h2>
+
         <div class="tone-meta">
-          <div class="tone-description">${tone.description}</div>
+          <div class="tone-description">
+            ${tone.description}
+          </div>
 
           <div class="swatches">
             ${tone.colors.map(color => `
@@ -1450,18 +1405,36 @@ button,
     scroller.appendChild(section);
   });
 
-  /* ---------- 首屏長按 ---------- */
+  /*
+    每一顆投票按鈕直接綁定 click。
+    不再讓外層 scroller 代理事件，也不在按下按鈕時
+    把整個畫面誤判為「開始拖曳」。
+  */
+  document.querySelectorAll(".select-tone").forEach(button => {
+    button.addEventListener("click",event => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const index = Number(button.dataset.index);
+      openSelection(index);
+    });
+  });
+
+  /* =======================================================
+     首屏長按
+     ======================================================= */
 
   let entryHolding = false;
   let entryStart = 0;
   let entryFrame = 0;
   let entryPointerId = null;
-  const entryDuration = 1450;
+  const entryDuration = 1400;
 
   function resetEntry(){
     entryHolding = false;
     entryPointerId = null;
     cancelAnimationFrame(entryFrame);
+
     awakenButton.classList.remove("is-holding");
     entryRing.style.strokeDashoffset = String(circumference);
     entryInstruction.textContent = "長按火焰，進入色調聖所";
@@ -1474,11 +1447,8 @@ button,
     experience.classList.add("is-visible");
 
     window.setTimeout(() => {
-      setMotionState("settled");
-      showSettledContent(0);
-    },780);
-
-    vibrate(16);
+      settleCurrentTone();
+    },720);
   }
 
   function entryTick(now){
@@ -1495,11 +1465,10 @@ button,
     entryRing.style.strokeDashoffset =
       String(circumference*(1-progress));
 
-    if(progress < .72){
-      entryInstruction.textContent = "再停留一下";
-    }else{
-      entryInstruction.textContent = "正在喚醒";
-    }
+    entryInstruction.textContent =
+      progress < .70
+        ? "再停留一下"
+        : "正在喚醒";
 
     if(progress >= 1){
       enterExperience();
@@ -1515,9 +1484,9 @@ button,
     entryHolding = true;
     entryStart = performance.now();
     entryPointerId = event.pointerId;
+
     awakenButton.setPointerCapture(event.pointerId);
     awakenButton.classList.add("is-holding");
-    vibrate(7);
 
     entryFrame = requestAnimationFrame(entryTick);
   });
@@ -1526,45 +1495,63 @@ button,
   awakenButton.addEventListener("pointercancel",resetEntry);
   quickEntry.addEventListener("click",enterExperience);
 
-  /* ---------- 瀏覽狀態機 ---------- */
-
-  scroller.addEventListener("pointerdown",() => {
-    if(selectionMode){
-      return;
-    }
-
-    pointerDownInScroller = true;
-    setMotionState("dragging");
-    clearSettledContent();
-  },{passive:true});
-
-  scroller.addEventListener("pointerup",() => {
-    if(selectionMode){
-      return;
-    }
-
-    pointerDownInScroller = false;
-    setMotionState("coasting");
-    scheduleSettle();
-  },{passive:true});
-
-  scroller.addEventListener("pointercancel",() => {
-    pointerDownInScroller = false;
-    scheduleSettle();
-  },{passive:true});
+  /* =======================================================
+     手機與電腦共用原生捲動；只用 scroll idle 判斷停穩
+     ======================================================= */
 
   scroller.addEventListener("scroll",handleScroll,{passive:true});
 
-  if("onscrollend" in window){
-    scroller.addEventListener("scrollend",() => {
-      if(!pointerDownInScroller && !selectionMode){
-        finalizeSettled();
-      }
-    },{passive:true});
+  /*
+    iOS 回到頁面、旋轉螢幕或網址列高度變化時，
+    重新辨識目前頁面，避免索引與內容錯位。
+  */
+  window.addEventListener("resize",() => {
+    window.clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = window.setTimeout(
+      settleCurrentTone,
+      120
+    );
+  },{passive:true});
+
+  /*
+    電腦版增加方向鍵操作。
+    手機不會觸發，也不干擾觸控。
+  */
+  window.addEventListener("keydown",event => {
+    if(
+      selectionMode ||
+      !experience.classList.contains("is-visible")
+    ){
+      return;
+    }
+
+    if(event.key === "ArrowDown" || event.key === "PageDown"){
+      event.preventDefault();
+      goToTone(activeIndex+1);
+    }
+
+    if(event.key === "ArrowUp" || event.key === "PageUp"){
+      event.preventDefault();
+      goToTone(activeIndex-1);
+    }
+  });
+
+  function goToTone(index){
+    const nextIndex = clamp(index,0,tones.length-1);
+    const height = scroller.clientHeight || window.innerHeight;
+
+    experience.classList.add("is-moving");
+    clearVisibleTone();
+
+    scroller.scrollTo({
+      top:nextIndex*height,
+      behavior:"smooth"
+    });
+
+    scheduleScrollIdle();
   }
 
-  /* ---------- 桌機才有極輕微游標慣性 ---------- */
-
+  /* 電腦版游標空間偏移；手機完全不啟用 */
   if(window.matchMedia("(pointer:fine)").matches){
     let targetX = 0;
     let targetY = 0;
@@ -1572,8 +1559,8 @@ button,
     let desktopY = 0;
 
     app.addEventListener("pointermove",event => {
-      targetX = ((event.clientX/window.innerWidth)-.5)*10;
-      targetY = ((event.clientY/window.innerHeight)-.5)*8;
+      targetX = ((event.clientX/window.innerWidth)-.5)*9;
+      targetY = ((event.clientY/window.innerHeight)-.5)*7;
     },{passive:true});
 
     const desktopLoop = () => {
@@ -1587,18 +1574,19 @@ button,
     };
 
     desktopLoop();
+
+    browseGuide.textContent = "滾動滑鼠或使用方向鍵切換色調";
   }
 
-  /* ---------- 進入獨立選擇模式 ---------- */
+  /* =======================================================
+     獨立選擇模式
+     ======================================================= */
 
   function openSelection(index){
-    if(motionState !== "settled"){
-      return;
-    }
-
-    selectedIndex = index;
+    selectedIndex = clamp(index,0,tones.length-1);
     selectionMode = true;
-    const tone = tones[index];
+
+    const tone = tones[selectedIndex];
 
     selectionTitle.textContent = tone.name;
     selectionCopy.textContent = tone.description;
@@ -1611,56 +1599,42 @@ button,
     );
 
     selectionOverlay.style.setProperty("--hold-progress","0");
-    selectionOverlay.style.setProperty("--pressure","0");
     selectionOverlay.classList.add("is-open");
     selectionOverlay.setAttribute("aria-hidden","false");
 
-    scroller.style.overflow = "hidden";
+    /*
+      投票模式與瀏覽模式完全分離。
+      進入後鎖住底層捲動，不可能同時切換 Tone。
+    */
+    scroller.style.overflowY = "hidden";
     browseGuide.style.opacity = "0";
     confirmInstruction.textContent = "長按火焰，確認這次選擇";
-
-    vibrate(7);
   }
 
   function closeSelection(){
     cancelHold();
 
     selectionMode = false;
+
     selectionOverlay.classList.remove(
       "is-open",
       "is-completing",
       "is-confirmed"
     );
+
     selectionOverlay.setAttribute("aria-hidden","true");
-    scroller.style.overflow = "auto";
+    scroller.style.overflowY = "auto";
     browseGuide.style.opacity = "";
-    setMotionState("settled");
-    showSettledContent(activeIndex);
+
+    settleCurrentTone();
   }
-
-  scroller.addEventListener("click",event => {
-    const button = event.target.closest(".select-tone");
-
-    if(!button){
-      return;
-    }
-
-    event.preventDefault();
-
-    const index = Number(button.dataset.index);
-
-    if(
-      index === activeIndex &&
-      motionState === "settled"
-    ){
-      openSelection(index);
-    }
-  });
 
   cancelSelection.addEventListener("click",closeSelection);
   returnButton.addEventListener("click",closeSelection);
 
-  /* ---------- 選擇模式內的長按確認 ---------- */
+  /* =======================================================
+     長按確認：只看時間與移動距離，不含壓力資料
+     ======================================================= */
 
   let holdActive = false;
   let holdStart = 0;
@@ -1668,39 +1642,16 @@ button,
   let holdPointerId = null;
   let holdStartX = 0;
   let holdStartY = 0;
-  let latestPressure = 0;
-  let truePressureDetected = false;
-  const holdDuration = 1450;
-  const movementTolerance = 8;
 
-  function pressureVisual(rawPressure,pointerType){
-    if(pointerType === "pen"){
-      truePressureDetected = true;
-    }
-
-    if(
-      rawPressure > 0 &&
-      Math.abs(rawPressure-.5) > .07
-    ){
-      truePressureDetected = true;
-    }
-
-    if(!truePressureDetected){
-      return 0;
-    }
-
-    return clamp(rawPressure,0,1);
-  }
+  const holdDuration = 1350;
+  const movementTolerance = 10;
 
   function cancelHold(){
     holdActive = false;
     holdPointerId = null;
-    latestPressure = 0;
-    truePressureDetected = false;
     cancelAnimationFrame(holdFrame);
 
     selectionOverlay.style.setProperty("--hold-progress","0");
-    selectionOverlay.style.setProperty("--pressure","0");
     confirmInstruction.textContent = "長按火焰，確認這次選擇";
   }
 
@@ -1712,26 +1663,22 @@ button,
     selectionOverlay.classList.add("is-completing");
     confirmInstruction.textContent = "正在收束這組色調";
 
-    const record = {
-      tone:tones[selectedIndex].name,
-      selectedAt:new Date().toISOString()
-    };
-
     try{
       localStorage.setItem(
-        "hestiaToneSanctuaryV4",
-        JSON.stringify(record)
+        "hestiaToneSanctuaryV5",
+        JSON.stringify({
+          tone:tones[selectedIndex].name,
+          selectedAt:new Date().toISOString()
+        })
       );
     }catch(error){
-      /* 無法使用 localStorage 時仍可完成體驗 */
+      /* 無法使用 localStorage 時，仍然完成畫面體驗 */
     }
-
-    vibrate([16,40,22]);
 
     window.setTimeout(() => {
       selectionOverlay.classList.remove("is-completing");
       selectionOverlay.classList.add("is-confirmed");
-    },980);
+    },940);
   }
 
   function holdTick(now){
@@ -1739,17 +1686,15 @@ button,
       return;
     }
 
-    const elapsed = now-holdStart;
-    const progress = clamp(elapsed/holdDuration,0,1);
+    const progress = clamp(
+      (now-holdStart)/holdDuration,
+      0,
+      1
+    );
 
     selectionOverlay.style.setProperty(
       "--hold-progress",
       String(progress)
-    );
-
-    selectionOverlay.style.setProperty(
-      "--pressure",
-      String(latestPressure)
     );
 
     if(progress < .45){
@@ -1769,25 +1714,16 @@ button,
   }
 
   confirmButton.addEventListener("pointerdown",event => {
-    if(!selectionMode){
-      return;
-    }
-
     event.preventDefault();
+    event.stopPropagation();
 
     holdActive = true;
     holdStart = performance.now();
     holdPointerId = event.pointerId;
     holdStartX = event.clientX;
     holdStartY = event.clientY;
-    latestPressure = pressureVisual(
-      event.pressure,
-      event.pointerType
-    );
 
     confirmButton.setPointerCapture(event.pointerId);
-    vibrate(6);
-
     holdFrame = requestAnimationFrame(holdTick);
   });
 
@@ -1807,26 +1743,22 @@ button,
     if(distance > movementTolerance){
       cancelHold();
       confirmInstruction.textContent = "手指移動過多，請重新長按";
-      return;
     }
-
-    latestPressure = pressureVisual(
-      event.pressure,
-      event.pointerType
-    );
   });
 
   confirmButton.addEventListener("pointerup",event => {
-    if(event.pointerId === holdPointerId && holdActive){
+    if(
+      holdActive &&
+      event.pointerId === holdPointerId
+    ){
       cancelHold();
     }
   });
 
   confirmButton.addEventListener("pointercancel",cancelHold);
 
-  /* ---------- 初始化 ---------- */
-
-  setEnvironment(0,0,0);
+  /* 初始化 */
+  updateEnvironment(0,0,0);
   animateLayers();
 
 })();

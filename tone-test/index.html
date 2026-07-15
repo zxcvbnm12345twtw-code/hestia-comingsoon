@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#08080b">
-<title>HESTIA｜Tone on Tone 首發色投票 V6.1</title>
+<title>HESTIA｜Tone on Tone 首發色投票 V6.2</title>
 <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
 <style>
@@ -319,6 +319,15 @@ body.test-mode .test-badge{
   line-height:1.8;
 }
 
+.motion-hint{
+  margin:10px auto 0;
+  max-width:420px;
+  color:rgba(244,239,233,.34);
+  font-size:10px;
+  line-height:1.55;
+  letter-spacing:.015em;
+}
+
 .email-gate{
   width:min(100%,460px);
   margin:24px auto 0;
@@ -582,23 +591,60 @@ body.test-mode .test-badge{
   line-height:1.8;
 }
 
+.guide-lock-note{
+  margin:20px auto 0;
+  padding:11px 13px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:14px;
+  background:rgba(0,0,0,.12);
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+}
+
+.guide-lock-note strong{
+  display:block;
+  margin-bottom:2px;
+  color:var(--fg);
+  font-weight:700;
+}
+
 .guide-steps{
-  margin:27px auto 0;
+  margin:13px auto 0;
   display:grid;
-  gap:10px;
+  gap:9px;
   text-align:left;
 }
 
 .guide-step{
+  appearance:none;
+  width:100%;
   display:grid;
   grid-template-columns:34px minmax(0,1fr);
   gap:12px;
   align-items:start;
-  padding:14px 15px;
+  padding:13px 14px;
   border:1px solid rgba(255,255,255,.12);
   border-radius:17px;
   background:rgba(255,255,255,.028);
+  color:var(--fg);
+  text-align:left;
   backdrop-filter:blur(12px);
+  cursor:pointer;
+  transition:
+    border-color .35s var(--ease),
+    background .35s var(--ease),
+    transform .25s var(--ease),
+    opacity .35s var(--ease);
+}
+
+.guide-step:active{
+  transform:scale(.985);
+}
+
+.guide-step.is-confirmed{
+  border-color:rgba(255,255,255,.28);
+  background:rgba(255,255,255,.075);
 }
 
 .guide-number{
@@ -610,6 +656,16 @@ body.test-mode .test-badge{
   border-radius:50%;
   color:var(--fg);
   font-size:12px;
+  transition:
+    background .35s var(--ease),
+    border-color .35s var(--ease),
+    box-shadow .35s var(--ease);
+}
+
+.guide-step.is-confirmed .guide-number{
+  border-color:rgba(255,255,255,.42);
+  background:rgba(255,255,255,.13);
+  box-shadow:0 0 22px rgba(255,255,255,.10);
 }
 
 .guide-step strong{
@@ -626,12 +682,30 @@ body.test-mode .test-badge{
   line-height:1.65;
 }
 
+.guide-status{
+  display:inline-block;
+  margin-top:7px;
+  color:rgba(244,239,233,.38);
+  font-size:10px;
+  letter-spacing:.04em;
+  transition:color .3s ease;
+}
+
+.guide-step.is-confirmed .guide-status{
+  color:rgba(244,239,233,.82);
+}
+
 .guide-start{
-  margin-top:21px;
+  margin-top:17px;
   color:var(--fg);
   font-size:12px;
   font-weight:700;
-  letter-spacing:.05em;
+  line-height:1.65;
+  letter-spacing:.035em;
+}
+
+.guide-start.is-unlocked{
+  text-shadow:0 0 22px rgba(255,255,255,.14);
 }
 
 /* Tone */
@@ -662,8 +736,8 @@ body.test-mode .test-badge{
   opacity:0;
   transform:translateY(8px);
   transition:
-    opacity .55s .10s var(--ease),
-    transform .6s .10s var(--ease);
+    opacity 1.55s .10s var(--ease),
+    transform 1.6s .10s var(--ease);
 }
 
 .tone-title{
@@ -677,9 +751,9 @@ body.test-mode .test-badge{
   transform:translateY(24px);
   filter:blur(6px);
   transition:
-    opacity .72s var(--ease),
-    transform .9s var(--ease),
-    filter .82s var(--ease);
+    opacity 1.72s var(--ease),
+    transform 1.9s var(--ease),
+    filter 1.82s var(--ease);
 }
 
 .tone-meta{
@@ -693,8 +767,8 @@ body.test-mode .test-badge{
   transform:translateY(17px);
   pointer-events:none;
   transition:
-    opacity .72s .15s var(--ease),
-    transform .82s .15s var(--ease);
+    opacity 1.72s .15s var(--ease),
+    transform 1.82s .15s var(--ease);
 }
 
 .tone-description{
@@ -732,8 +806,8 @@ body.test-mode .test-badge{
   transform:translateY(10px);
   pointer-events:none;
   transition:
-    opacity .6s .38s var(--ease),
-    transform .7s .38s var(--ease),
+    opacity .7s 1.05s var(--ease),
+    transform .8s 1.05s var(--ease),
     background .2s ease;
 }
 
@@ -1329,6 +1403,45 @@ body.test-mode .test-reset{
    Desktop
    ========================================================= */
 
+
+@media(max-height:720px) and (max-width:819px){
+  .slide{
+    padding-top:calc(var(--safe-top) + 64px);
+    padding-bottom:calc(var(--safe-bottom) + 90px);
+  }
+
+  .guide-title{
+    font-size:34px;
+  }
+
+  .guide-intro{
+    margin-top:11px;
+    font-size:12px;
+    line-height:1.65;
+  }
+
+  .guide-lock-note{
+    margin-top:12px;
+    padding:9px 11px;
+  }
+
+  .guide-steps{
+    gap:7px;
+  }
+
+  .guide-step{
+    padding:10px 12px;
+  }
+
+  .guide-step p{
+    line-height:1.5;
+  }
+
+  .guide-start{
+    margin-top:11px;
+  }
+}
+
 @media(min-width:820px){
   .site-header{
     justify-content:space-between;
@@ -1432,6 +1545,10 @@ body.test-mode .test-reset{
         請先輸入 Email。完成確認後，長按火焰進入色調聖所。<br>
         最高得票色彩世界的參與者，將獲得首波發售折扣碼。
       </p>
+
+      <div class="motion-hint">
+        為獲得最佳瀏覽體驗，建議關閉省電模式與「減少動態效果」。
+      </div>
 
       <div class="email-gate">
         <div class="email-row">
@@ -1727,6 +1844,11 @@ body.test-mode .test-reset{
   let selectedToneIndex = 0;
   let selectionMode = false;
 
+  let guideUnlocked = false;
+  const confirmedGuideSteps = new Set();
+  let guideLockNote = null;
+  let guideStart = null;
+
   let scrollIdleTimer = 0;
   let revealTimer = 0;
   let lastScrollTop = 0;
@@ -1740,7 +1862,7 @@ body.test-mode .test-reset{
   /*
     首屏色彩輪播：
     紅 → 橙 → 綠 → 藍 → 紫 → 咖
-    每色停留 3.5 秒，融色轉場 1.8 秒。
+    每色停留 2 秒，融色轉場 1.3 秒。
     Email 確認後停在當下色調。
   */
   let heroCycleIndex = 0;
@@ -1749,8 +1871,8 @@ body.test-mode .test-reset{
   let heroCycleRunning = false;
   let heroCycleProgress = 0;
 
-  const HERO_HOLD_DURATION = 3500;
-  const HERO_TRANSITION_DURATION = 1800;
+  const HERO_HOLD_DURATION = 2000;
+  const HERO_TRANSITION_DURATION = 1300;
 
   const circumference = 439.82;
 
@@ -1951,40 +2073,74 @@ body.test-mode .test-reset{
           這不是對深淺、明暗或彩度的評分。請感受每一個色相帶給你的直覺，選出最希望 HESTIA 首發的色彩世界。
         </p>
 
-        <div class="guide-steps">
-          <div class="guide-step">
-            <div class="guide-number">1</div>
-            <div>
-              <strong>上下滑動</strong>
-              <p>每一頁是一個色彩世界。停穩後，名稱與色調會從霧裡浮現。</p>
-            </div>
-          </div>
+        <div class="guide-lock-note" id="guideLockNote">
+          <strong>請逐一點擊確認以下三點</strong>
+          三項都確認前，上下滑動暫不開放。已確認 0／3。
+        </div>
 
-          <div class="guide-step">
-            <div class="guide-number">2</div>
+        <div class="guide-steps">
+          <button
+            class="guide-step"
+            type="button"
+            data-guide-confirm="0"
+            aria-pressed="false"
+          >
+            <div class="guide-number">①</div>
+            <div>
+              <strong>感受</strong>
+              <p>每一頁是一個色彩世界。<br>感受顏色，名稱和色調會從霧裡浮現。</p>
+              <span class="guide-status">點擊確認</span>
+            </div>
+          </button>
+
+          <button
+            class="guide-step"
+            type="button"
+            data-guide-confirm="1"
+            aria-pressed="false"
+          >
+            <div class="guide-number">②</div>
             <div>
               <strong>只看色相</strong>
               <p>本次只選紅、橙、綠、藍、紫、咖；深淺、彩度與黑白灰不列入判斷。</p>
+              <span class="guide-status">點擊確認</span>
             </div>
-          </div>
+          </button>
 
-          <div class="guide-step">
-            <div class="guide-number">3</div>
+          <button
+            class="guide-step"
+            type="button"
+            data-guide-confirm="2"
+            aria-pressed="false"
+          >
+            <div class="guide-number">③</div>
             <div>
               <strong>先選擇，再確認</strong>
               <p>點擊「選擇這組色調」後，會進入獨立確認畫面；長按火焰才會正式完成。</p>
+              <span class="guide-status">點擊確認</span>
             </div>
-          </div>
+          </button>
         </div>
 
-        <div class="guide-start">
+        <div class="guide-start" id="guideStart">
           每個 Email 僅能投一次<br>
-          向上滑動，開始感受
+          完成三項確認後，才可開始滑動
         </div>
       </div>
     `;
 
     scroller.appendChild(guide);
+
+    guideLockNote = guide.querySelector("#guideLockNote");
+    guideStart = guide.querySelector("#guideStart");
+
+    guide
+      .querySelectorAll("[data-guide-confirm]")
+      .forEach(button => {
+        button.addEventListener("click",() => {
+          confirmGuideStep(button);
+        });
+      });
 
     TONES.forEach((tone,index) => {
       const dot = document.createElement("span");
@@ -2043,6 +2199,56 @@ body.test-mode .test-reset{
     });
   }
 
+  function confirmGuideStep(button){
+    const stepIndex = Number(button.dataset.guideConfirm);
+
+    if(confirmedGuideSteps.has(stepIndex)){
+      return;
+    }
+
+    confirmedGuideSteps.add(stepIndex);
+    button.classList.add("is-confirmed");
+    button.setAttribute("aria-pressed","true");
+
+    const number = button.querySelector(".guide-number");
+    const status = button.querySelector(".guide-status");
+
+    if(number){
+      number.textContent = "✓";
+    }
+
+    if(status){
+      status.textContent = "已確認";
+    }
+
+    const confirmedCount = confirmedGuideSteps.size;
+
+    if(confirmedCount < 3){
+      guideLockNote.innerHTML = `
+        <strong>請繼續完成其餘確認</strong>
+        三項都確認前，上下滑動暫不開放。已確認 ${confirmedCount}／3。
+      `;
+      return;
+    }
+
+    guideUnlocked = true;
+    scroller.style.overflowY = "auto";
+
+    guideLockNote.innerHTML = `
+      <strong>三項已確認</strong>
+      上下滑動已開放，現在可以開始感受色調。
+    `;
+
+    guideStart.classList.add("is-unlocked");
+    guideStart.innerHTML = `
+      每個 Email 僅能投一次<br>
+      三項已確認｜向上滑動，開始感受
+    `;
+
+    browseGuide.textContent = "向上滑動，開始感受色調";
+    showToast("操作指南已確認，可以開始滑動。");
+  }
+
   function settleCurrentSlide(){
     if(selectionMode){
       return;
@@ -2060,13 +2266,23 @@ body.test-mode .test-reset{
 
     if(activeSlideIndex === 0){
       pageIndex.classList.remove("is-visible");
-      browseGuide.textContent = "向上滑動，開始感受色調";
+      browseGuide.textContent = guideUnlocked
+        ? "向上滑動，開始感受色調"
+        : "請先逐一點擊確認三項操作指南";
     }else{
       activeToneIndex = activeSlideIndex-1;
       updatePageIndex(activeToneIndex);
       pageIndex.classList.add("is-visible");
       browseGuide.textContent = "停留片刻，感受這組色調";
     }
+
+    /*
+      操作指南維持原節奏；
+      色相頁面額外等待 0.5 秒後才開始浮現。
+    */
+    const revealDelay = activeSlideIndex === 0
+      ? 360
+      : 860;
 
     revealTimer = window.setTimeout(() => {
       const slide = document.querySelector(
@@ -2076,7 +2292,7 @@ body.test-mode .test-reset{
       if(slide && !selectionMode){
         slide.classList.add("is-settled");
       }
-    },360);
+    },revealDelay);
   }
 
   function scheduleScrollIdle(){
@@ -2086,6 +2302,13 @@ body.test-mode .test-reset{
 
   function handleScroll(){
     if(selectionMode){
+      return;
+    }
+
+    if(!guideUnlocked){
+      if(scroller.scrollTop !== 0){
+        scroller.scrollTop = 0;
+      }
       return;
     }
 
@@ -2279,6 +2502,14 @@ body.test-mode .test-reset{
     experience.classList.add("is-visible");
 
     scroller.scrollTop = 0;
+    scroller.style.overflowY = guideUnlocked
+      ? "auto"
+      : "hidden";
+
+    browseGuide.textContent = guideUnlocked
+      ? "向上滑動，開始感受色調"
+      : "請先逐一點擊確認三項操作指南";
+
     updateEnvironment(0,0,0);
 
     window.setTimeout(settleCurrentSlide,720);
@@ -2347,6 +2578,11 @@ body.test-mode .test-reset{
   });
 
   function goToSlide(slideIndex){
+    if(!guideUnlocked && slideIndex > 0){
+      showToast("請先完成三項操作指南確認。");
+      return;
+    }
+
     const next = clamp(slideIndex,0,TONES.length);
     const height = scroller.clientHeight || window.innerHeight;
 

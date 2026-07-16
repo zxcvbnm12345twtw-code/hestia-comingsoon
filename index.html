@@ -2232,11 +2232,11 @@ input{
 
     /*
       操作指南維持原節奏；
-      色相頁面停留約 0.56 秒後開始浮現。
+      色相頁面停留約 0.42 秒後開始浮現。
     */
     const revealDelay = activeSlideIndex === 0
       ? 360
-      : 560;
+      : 420;
 
     revealTimer = window.setTimeout(() => {
       const slide = document.querySelector(

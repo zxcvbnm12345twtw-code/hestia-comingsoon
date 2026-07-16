@@ -1341,6 +1341,12 @@ body.test-mode .test-badge{
   line-height:1.7;
 }
 
+.result-note strong{
+  color:rgba(255,255,255,.82);
+  font-weight:700;
+  letter-spacing:.02em;
+}
+
 .result-actions{
   margin-top:20px;
   display:flex;
@@ -1639,14 +1645,15 @@ body.test-mode .test-reset{
 
         <div class="world-progress-title">即時色彩世界進度</div>
         <p class="world-progress-copy">
-          以下比例來自目前公開統計；測試模式會在畫面中模擬加入你選擇的這一票。
+          以下比例直接讀取 Google Sheet 即時統計；測試頁不會新增票數。
         </p>
 
         <div class="heat" id="heat"></div>
 
         <div class="result-note">
-          每個 Email 僅能投票一次。正式版送出資料格式仍為：
-          Email＋原有色彩 key／英文名稱／中文名稱，既有表單欄位與即時統計來源不變。
+          截圖保存你的 Founder Card，並在 Instagram 標記
+          <strong>@hestia.taiwan</strong>。<br>
+          邀請朋友一起進入色調聖所，為 HESTIA 的首發色投下選擇。
         </div>
 
         <div class="result-actions">
@@ -1683,8 +1690,8 @@ body.test-mode .test-reset{
   const UNIQUE_CHECK_ENDPOINT = "";
   const VOTE_ENDPOINT = "";
 
-  const RESULTS_CSV_URL =
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSQsxR8NEnvsi2qf5hxQpxYuMfIlBEHibSQJ7Twdjol9LtGIur6_ZgnRxJ3eLVzOebTC2WuCZTsdZC/pub?gid=1298926627&single=true&output=csv";
+  const RESULTS_ENDPOINT_URL =
+    "https://script.google.com/macros/s/AKfycbz1SalZhJqhCmSe_GR4GAeAO9KtOf4K1oHI2hIGsl-KxfNBcSpl0RuwXWqYhxMkr5Sj/exec";
 
   /*
     顯示名稱與新色票已更新。
@@ -2278,11 +2285,11 @@ body.test-mode .test-reset{
 
     /*
       操作指南維持原節奏；
-      色相頁面額外等待 0.5 秒後才開始浮現。
+      色相頁面停留約 0.42 秒後開始浮現。
     */
     const revealDelay = activeSlideIndex === 0
       ? 360
-      : 860;
+      : 420;
 
     revealTimer = window.setTimeout(() => {
       const slide = document.querySelector(
@@ -2811,7 +2818,7 @@ body.test-mode .test-reset{
 
       window.setTimeout(async () => {
         renderFounderCard(tone);
-        await updateWorldProgress(tone.key);
+        await updateWorldProgress();
 
         selectionOverlay.classList.remove("is-completing");
         selectionOverlay.classList.add("is-confirmed");
@@ -3069,75 +3076,117 @@ body.test-mode .test-reset{
     });
   }
 
-  function parseNumber(value){
-    const number = Number(
-      String(value || "").replace(/[^\d.-]/g,"")
-    );
-
-    return Number.isFinite(number)
-      ? number
-      : 0;
-  }
-
-  function parseCountsCsv(csv){
+  function normalizeCounts(payload){
     const counts = emptyCounts();
-    const text = String(csv || "").replace(/^\uFEFF/,"").trim();
 
-    if(!text){
-      return counts;
+    if(!payload || payload.ok !== true || !payload.counts){
+      return null;
     }
 
-    const lines = text
-      .split(/\r?\n/)
-      .map(line => line.trim())
-      .filter(Boolean);
-
-    lines.forEach(line => {
-      const parts = line
-        .split(",")
-        .map(part => part.trim().replace(/^"|"$/g,""));
-
-      if(parts.length < 2){
-        return;
-      }
-
-      const key = (parts[0] || "").toLowerCase();
-
-      if(
-        key === "key" ||
-        key === "color" ||
-        key === "world"
-      ){
-        return;
-      }
-
-      if(Object.prototype.hasOwnProperty.call(counts,key)){
-        counts[key] = parseNumber(parts[1]);
-      }
+    TONES.forEach(tone => {
+      const value = Number(payload.counts[tone.key]);
+      counts[tone.key] = Number.isFinite(value)
+        ? Math.max(0,value)
+        : 0;
     });
 
     return counts;
   }
 
-  async function fetchCounts(){
-    if(!RESULTS_CSV_URL){
-      return null;
-    }
-
-    try{
-      const response = await fetch(RESULTS_CSV_URL,{
-        cache:"no-store"
-      });
-
-      if(!response.ok){
-        throw new Error(`CSV ${response.status}`);
+  function fetchCountsJsonp(){
+    return new Promise((resolve,reject) => {
+      if(!RESULTS_ENDPOINT_URL){
+        reject(new Error("missing_results_endpoint"));
+        return;
       }
 
-      return parseCountsCsv(await response.text());
-    }catch(error){
-      console.warn(error);
-      return null;
+      const callbackName =
+        `hestiaCounts_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+
+      const script = document.createElement("script");
+      const url = new URL(RESULTS_ENDPOINT_URL);
+
+      url.searchParams.set("callback",callbackName);
+      url.searchParams.set("_",String(Date.now()));
+
+      let settled = false;
+
+      const cleanup = () => {
+        window.clearTimeout(timeoutId);
+        script.remove();
+
+        try{
+          delete window[callbackName];
+        }catch(error){
+          window[callbackName] = undefined;
+        }
+      };
+
+      window[callbackName] = payload => {
+        if(settled){
+          return;
+        }
+
+        settled = true;
+        cleanup();
+
+        const counts = normalizeCounts(payload);
+
+        if(!counts){
+          reject(new Error("invalid_results_payload"));
+          return;
+        }
+
+        resolve(counts);
+      };
+
+      script.onerror = () => {
+        if(settled){
+          return;
+        }
+
+        settled = true;
+        cleanup();
+        reject(new Error("results_endpoint_load_failed"));
+      };
+
+      const timeoutId = window.setTimeout(() => {
+        if(settled){
+          return;
+        }
+
+        settled = true;
+        cleanup();
+        reject(new Error("results_endpoint_timeout"));
+      },8000);
+
+      script.src = url.toString();
+      document.head.appendChild(script);
+    });
+  }
+
+  function wait(milliseconds){
+    return new Promise(resolve => {
+      window.setTimeout(resolve,milliseconds);
+    });
+  }
+
+  async function fetchCountsWithRetry(attempts=4){
+    let lastError = null;
+
+    for(let attempt=0;attempt<attempts;attempt+=1){
+      try{
+        return await fetchCountsJsonp();
+      }catch(error){
+        lastError = error;
+
+        if(attempt < attempts-1){
+          await wait(700*(attempt+1));
+        }
+      }
     }
+
+    throw lastError || new Error("results_endpoint_failed");
   }
 
   function applyCounts(counts){
@@ -3147,7 +3196,7 @@ body.test-mode .test-reset{
 
     TONES.forEach(tone => {
       const percentage = total === 0
-        ? 100/TONES.length
+        ? 0
         : ((counts[tone.key] || 0)/total)*100;
 
       const displayPercentage =
@@ -3162,7 +3211,9 @@ body.test-mode .test-reset{
       );
 
       if(bar){
-        bar.style.width = `${clamp(percentage,5,100)}%`;
+        bar.style.width = percentage === 0
+          ? "0%"
+          : `${clamp(percentage,5,100)}%`;
       }
 
       if(label){
@@ -3171,15 +3222,17 @@ body.test-mode .test-reset{
     });
   }
 
-  async function updateWorldProgress(selectedKey){
-    const fetched = await fetchCounts();
-    const counts = fetched || emptyCounts();
-
-    if(TEST_MODE){
-      counts[selectedKey] = (counts[selectedKey] || 0)+1;
+  async function updateWorldProgress(){
+    try{
+      const counts = await fetchCountsWithRetry();
+      applyCounts(counts);
+      return true;
+    }catch(error){
+      console.warn(error);
+      applyCounts(emptyCounts());
+      showToast("即時統計暫時讀取失敗，請稍後重新整理。");
+      return false;
     }
-
-    applyCounts(counts);
   }
 
   resetTestButton.addEventListener("click",() => {

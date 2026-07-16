@@ -1380,6 +1380,49 @@ input{
    ========================================================= */
 
 
+
+/* =========================================================
+   手機版色相文字節奏｜手機優先
+   桌機維持原有正式版速度
+   ========================================================= */
+@media(max-width:819px){
+  .tone-code{
+    transition:
+      opacity .56s .02s var(--ease),
+      transform .62s .02s var(--ease);
+  }
+
+  .tone-title{
+    transition:
+      opacity .68s var(--ease),
+      transform .76s var(--ease),
+      filter .70s var(--ease);
+  }
+
+  .tone-meta{
+    transition:
+      opacity .68s .03s var(--ease),
+      transform .74s .03s var(--ease);
+  }
+
+  .select-tone{
+    transition:
+      opacity .46s .24s var(--ease),
+      transform .52s .24s var(--ease),
+      background .2s ease;
+  }
+
+  .experience.is-moving .tone-title{
+    transition-duration:.10s;
+  }
+
+  .experience.is-moving .tone-code,
+  .experience.is-moving .tone-meta,
+  .experience.is-moving .select-tone{
+    transition-duration:.09s;
+  }
+}
+
 @media(max-height:720px) and (max-width:819px){
   .slide{
     padding-top:calc(var(--safe-top) + 64px);
@@ -1755,6 +1798,7 @@ input{
 
   const app = document.getElementById("app");
   const rootStyle = document.documentElement.style;
+  const mobileViewQuery = window.matchMedia("(max-width:819px)");
 
   const hero = document.getElementById("hero");
   const emailInput = document.getElementById("emailInput");
@@ -2232,11 +2276,11 @@ input{
 
     /*
       操作指南維持原節奏；
-      色相頁面停留約 0.26 秒後開始浮現。
+      手機色相頁停留約 0.09 秒、桌機約 0.26 秒後開始浮現。
     */
-    const revealDelay = activeSlideIndex === 0
-      ? 360
-      : 260;
+    const revealDelay = mobileViewQuery.matches
+      ? (activeSlideIndex === 0 ? 220 : 90)
+      : (activeSlideIndex === 0 ? 360 : 260);
 
     revealTimer = window.setTimeout(() => {
       const slide = document.querySelector(
@@ -2251,7 +2295,15 @@ input{
 
   function scheduleScrollIdle(){
     window.clearTimeout(scrollIdleTimer);
-    scrollIdleTimer = window.setTimeout(settleCurrentSlide,170);
+
+    const idleDelay = mobileViewQuery.matches
+      ? 80
+      : 170;
+
+    scrollIdleTimer = window.setTimeout(
+      settleCurrentSlide,
+      idleDelay
+    );
   }
 
   function handleScroll(){
@@ -2430,7 +2482,7 @@ input{
   let entryStart = 0;
   let entryFrame = 0;
   let entryPointerId = null;
-  const entryDuration = 1400;
+  const entryDuration = 700;
 
   function resetEntry(){
     entryHolding = false;

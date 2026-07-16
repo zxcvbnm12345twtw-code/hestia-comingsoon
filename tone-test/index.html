@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#08080b">
-<title>HESTIA｜Tone on Tone 首發色投票 V6.2</title>
+<title>HESTIA｜Tone on Tone 首發色投票｜Aurora Mobile Test</title>
 <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
 <style>
@@ -17,6 +17,14 @@
   --base:#18090d;
   --glow-a:rgba(171,72,78,.36);
   --glow-b:rgba(103,26,35,.25);
+
+  --aurora-a:rgba(171,72,78,.72);
+  --aurora-b:rgba(103,26,35,.62);
+  --aurora-c:rgba(212,165,155,.30);
+  --cursor-x:50vw;
+  --cursor-y:50vh;
+  --cursor-bloom-opacity:0;
+  --cursor-bloom-scale:.88;
 
   --mid-y:0px;
   --near-y:0px;
@@ -100,9 +108,241 @@ input{
   transition:background .14s linear;
 }
 
+
+/* =========================================================
+   Aurora 色彩場｜手機優先
+   手機：自動漂移＋低頻率柔和脈衝，不追蹤手指
+   桌機：游標磁吸＋鄰近光團提亮＋Bloom
+   ========================================================= */
+
+.environment{
+  isolation:isolate;
+}
+
+.aurora-field{
+  position:absolute;
+  inset:-18%;
+  z-index:1;
+  overflow:hidden;
+  pointer-events:none;
+  opacity:.78;
+  mix-blend-mode:screen;
+  filter:saturate(1.04) brightness(1);
+  transform:scale(1);
+  transition:
+    opacity 1.1s var(--ease),
+    filter 1.1s var(--ease),
+    transform 1.25s cubic-bezier(.16,1,.3,1);
+  will-change:opacity,filter,transform;
+}
+
+.aurora-orbit{
+  position:absolute;
+  inset:0;
+  will-change:transform;
+  transform:translate3d(0,0,0);
+}
+
+.aurora-blob{
+  --react-x:0px;
+  --react-y:0px;
+  --react-scale:1;
+  --react-boost:0;
+  --react-brightness:0;
+  --pulse-add:0;
+  --pulse-boost:0;
+  --pulse-brightness:0;
+  --state-scale:0;
+  --state-boost:0;
+  --state-brightness:0;
+
+  position:absolute;
+  left:var(--blob-x);
+  top:var(--blob-y);
+  width:var(--blob-size);
+  aspect-ratio:1;
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle at 42% 40%,
+      var(--blob-color) 0 13%,
+      var(--blob-color) 27%,
+      transparent 70%
+    );
+  filter:
+    blur(var(--blob-blur))
+    saturate(1.06)
+    brightness(
+      calc(
+        1
+        + var(--react-brightness)
+        + var(--pulse-brightness)
+        + var(--state-brightness)
+      )
+    );
+  opacity:
+    calc(
+      var(--blob-opacity)
+      + var(--react-boost)
+      + var(--pulse-boost)
+      + var(--state-boost)
+    );
+  transform:
+    translate3d(
+      calc(-50% + var(--react-x)),
+      calc(-50% + var(--react-y)),
+      0
+    )
+    scale(
+      calc(
+        var(--react-scale)
+        + var(--pulse-add)
+        + var(--state-scale)
+      )
+    );
+  transition:
+    transform 1.15s cubic-bezier(.16,1.18,.3,1),
+    opacity .9s var(--ease),
+    filter .9s var(--ease);
+  will-change:transform,opacity,filter;
+}
+
+.aurora-blob::after{
+  content:"";
+  position:absolute;
+  inset:18%;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%);
+  filter:blur(20px);
+  opacity:.28;
+}
+
+.aurora-blob.is-awake{
+  --pulse-add:.095;
+  --pulse-boost:.13;
+  --pulse-brightness:.16;
+}
+
+.aurora-orbit-a{
+  animation:auroraDriftA 21s ease-in-out infinite alternate;
+}
+
+.aurora-orbit-b{
+  animation:auroraDriftB 27s ease-in-out infinite alternate;
+}
+
+.aurora-orbit-c{
+  animation:auroraDriftC 24s ease-in-out infinite alternate;
+}
+
+.aurora-orbit-d{
+  animation:auroraDriftD 30s ease-in-out infinite alternate;
+}
+
+.aurora-orbit-e{
+  animation:auroraDriftE 19s ease-in-out infinite alternate;
+}
+
+@keyframes auroraDriftA{
+  0%{transform:translate3d(-4vw,-2vh,0) rotate(-2deg) scale(1)}
+  52%{transform:translate3d(5vw,4vh,0) rotate(3deg) scale(1.055)}
+  100%{transform:translate3d(-1vw,7vh,0) rotate(-1deg) scale(1.025)}
+}
+
+@keyframes auroraDriftB{
+  0%{transform:translate3d(4vw,2vh,0) rotate(2deg) scale(1.04)}
+  48%{transform:translate3d(-6vw,6vh,0) rotate(-4deg) scale(.98)}
+  100%{transform:translate3d(2vw,-5vh,0) rotate(2deg) scale(1.06)}
+}
+
+@keyframes auroraDriftC{
+  0%{transform:translate3d(-1vw,6vh,0) rotate(0) scale(.98)}
+  50%{transform:translate3d(6vw,-3vh,0) rotate(4deg) scale(1.07)}
+  100%{transform:translate3d(-5vw,-5vh,0) rotate(-3deg) scale(1.02)}
+}
+
+@keyframes auroraDriftD{
+  0%{transform:translate3d(5vw,-5vh,0) rotate(3deg) scale(1.03)}
+  55%{transform:translate3d(-5vw,1vh,0) rotate(-2deg) scale(1.08)}
+  100%{transform:translate3d(1vw,7vh,0) rotate(2deg) scale(.99)}
+}
+
+@keyframes auroraDriftE{
+  0%{transform:translate3d(-4vw,5vh,0) rotate(-2deg) scale(1.06)}
+  45%{transform:translate3d(4vw,-5vh,0) rotate(3deg) scale(1)}
+  100%{transform:translate3d(7vw,3vh,0) rotate(0) scale(1.05)}
+}
+
+.cursor-bloom{
+  display:none;
+  position:absolute;
+  z-index:6;
+  left:var(--cursor-x);
+  top:var(--cursor-y);
+  width:min(36vmax,560px);
+  aspect-ratio:1;
+  border-radius:50%;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle,
+      var(--aurora-c) 0 8%,
+      var(--aurora-a) 24%,
+      transparent 68%
+    );
+  mix-blend-mode:screen;
+  filter:blur(34px) saturate(1.08);
+  opacity:var(--cursor-bloom-opacity);
+  transform:
+    translate(-50%,-50%)
+    scale(var(--cursor-bloom-scale));
+  transition:opacity .45s ease;
+  will-change:left,top,transform,opacity;
+}
+
+.environment::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:8;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 48%,transparent 0 28%,rgba(2,2,4,.08) 72%),
+    linear-gradient(to bottom,rgba(2,2,4,.10),transparent 26%,transparent 68%,rgba(2,2,4,.24));
+}
+
+.app.experience-active .aurora-field{
+  opacity:.60;
+  filter:saturate(1.01) brightness(.94);
+}
+
+.app.selection-active .aurora-field{
+  opacity:.46;
+  filter:saturate(.98) brightness(.90);
+}
+
+.app.is-awakening .aurora-field{
+  opacity:.90;
+  filter:saturate(1.13) brightness(1.07);
+  transform:scale(.955);
+}
+
+.app.is-awakening .aurora-blob{
+  --state-scale:.055;
+  --state-boost:.075;
+  --state-brightness:.08;
+}
+
+.app.experience-active .aurora-blob.is-awake{
+  --pulse-add:.045;
+  --pulse-boost:.065;
+  --pulse-brightness:.07;
+}
+
 .layer{
   position:absolute;
   inset:-12%;
+  z-index:3;
   pointer-events:none;
   will-change:transform,opacity;
 }
@@ -1449,6 +1689,25 @@ body.test-mode .test-reset{
 }
 
 @media(min-width:820px){
+  .aurora-field{
+    inset:-10%;
+    opacity:.84;
+  }
+
+  .aurora-blob{
+    transition:
+      opacity .38s ease,
+      filter .38s ease;
+  }
+
+  .cursor-bloom{
+    display:block;
+  }
+
+  .app.experience-active .aurora-field{
+    opacity:.68;
+  }
+
   .site-header{
     justify-content:space-between;
     padding-left:40px;
@@ -1523,6 +1782,55 @@ body.test-mode .test-reset{
 <main class="app" id="app">
 
   <div class="environment" aria-hidden="true">
+    <div class="aurora-field" id="auroraField">
+      <div class="aurora-orbit aurora-orbit-a">
+        <span
+          class="aurora-blob"
+          data-anchor-x=".18"
+          data-anchor-y=".23"
+          style="--blob-x:18%;--blob-y:23%;--blob-size:76vmax;--blob-color:var(--aurora-a);--blob-opacity:.34;--blob-blur:44px"
+        ></span>
+      </div>
+
+      <div class="aurora-orbit aurora-orbit-b">
+        <span
+          class="aurora-blob"
+          data-anchor-x=".78"
+          data-anchor-y=".28"
+          style="--blob-x:78%;--blob-y:28%;--blob-size:69vmax;--blob-color:var(--aurora-b);--blob-opacity:.31;--blob-blur:48px"
+        ></span>
+      </div>
+
+      <div class="aurora-orbit aurora-orbit-c">
+        <span
+          class="aurora-blob"
+          data-anchor-x=".52"
+          data-anchor-y=".58"
+          style="--blob-x:52%;--blob-y:58%;--blob-size:62vmax;--blob-color:var(--aurora-c);--blob-opacity:.27;--blob-blur:40px"
+        ></span>
+      </div>
+
+      <div class="aurora-orbit aurora-orbit-d">
+        <span
+          class="aurora-blob"
+          data-anchor-x=".24"
+          data-anchor-y=".80"
+          style="--blob-x:24%;--blob-y:80%;--blob-size:66vmax;--blob-color:var(--aurora-b);--blob-opacity:.25;--blob-blur:52px"
+        ></span>
+      </div>
+
+      <div class="aurora-orbit aurora-orbit-e">
+        <span
+          class="aurora-blob"
+          data-anchor-x=".84"
+          data-anchor-y=".76"
+          style="--blob-x:84%;--blob-y:76%;--blob-size:57vmax;--blob-color:var(--aurora-a);--blob-opacity:.24;--blob-blur:42px"
+        ></span>
+      </div>
+    </div>
+
+    <div class="cursor-bloom" id="cursorBloom"></div>
+
     <div class="layer layer-far"></div>
     <div class="layer layer-mid"></div>
     <div class="layer layer-near"></div>
@@ -1538,7 +1846,7 @@ body.test-mode .test-reset{
     <div class="header-section">色調聖所</div>
   </header>
 
-  <div class="test-badge">測試頁｜不會寫入正式票數</div>
+  <div class="test-badge">測試頁｜Aurora 手機優先｜不寫入正式票數</div>
 
   <section class="hero" id="hero">
     <div class="hero-inner">
@@ -1795,6 +2103,11 @@ body.test-mode .test-reset{
 
   const app = document.getElementById("app");
   const rootStyle = document.documentElement.style;
+  const auroraField = document.getElementById("auroraField");
+  const auroraBlobs = [...document.querySelectorAll(".aurora-blob")];
+  const cursorBloom = document.getElementById("cursorBloom");
+  const finePointerQuery = window.matchMedia("(pointer:fine)");
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   const hero = document.getElementById("hero");
   const emailInput = document.getElementById("emailInput");
@@ -1909,6 +2222,66 @@ body.test-mode .test-reset{
     },1700);
   }
 
+
+  /*
+    手機版 Aurora：
+    不追蹤手指，改為低頻率環境脈衝。
+    每次只喚醒一個色團，避免整頁像科技霓虹燈。
+  */
+  let auroraPulseTimer = 0;
+  let auroraPulseReleaseTimer = 0;
+  let lastAuroraPulseIndex = -1;
+
+  function stopAuroraPulse(){
+    window.clearTimeout(auroraPulseTimer);
+    window.clearTimeout(auroraPulseReleaseTimer);
+    auroraPulseTimer = 0;
+    auroraPulseReleaseTimer = 0;
+
+    auroraBlobs.forEach(blob => {
+      blob.classList.remove("is-awake");
+    });
+  }
+
+  function scheduleAuroraPulse(delay=1150){
+    stopAuroraPulse();
+
+    if(
+      finePointerQuery.matches ||
+      reducedMotionQuery.matches ||
+      document.hidden ||
+      !auroraBlobs.length
+    ){
+      return;
+    }
+
+    auroraPulseTimer = window.setTimeout(() => {
+      let nextIndex = Math.floor(Math.random()*auroraBlobs.length);
+
+      if(
+        auroraBlobs.length > 1 &&
+        nextIndex === lastAuroraPulseIndex
+      ){
+        nextIndex = (nextIndex+1)%auroraBlobs.length;
+      }
+
+      lastAuroraPulseIndex = nextIndex;
+
+      const activeBlob = auroraBlobs[nextIndex];
+      activeBlob.classList.add("is-awake");
+
+      auroraPulseReleaseTimer = window.setTimeout(() => {
+        activeBlob.classList.remove("is-awake");
+
+        const quietDelay = app.classList.contains("experience-active")
+          ? 4300+Math.random()*1700
+          : 2400+Math.random()*1400;
+
+        scheduleAuroraPulse(quietDelay);
+      },1350);
+    },delay);
+  }
+
   function hexToRgb(hex){
     const value = parseInt(hex.slice(1),16);
 
@@ -1948,8 +2321,17 @@ body.test-mode .test-reset{
     const glowB = mixColor(visualA.b,visualB.b,progress);
     const base = mixColor(visualA.base,visualB.base,progress);
 
+    const highlight = {
+      r:Math.round(glowA.r+(244-glowA.r)*.38),
+      g:Math.round(glowA.g+(239-glowA.g)*.38),
+      b:Math.round(glowA.b+(233-glowA.b)*.38)
+    };
+
     rootStyle.setProperty("--glow-a",rgbString(glowA,.36));
     rootStyle.setProperty("--glow-b",rgbString(glowB,.25));
+    rootStyle.setProperty("--aurora-a",rgbString(glowA,.72));
+    rootStyle.setProperty("--aurora-b",rgbString(glowB,.62));
+    rootStyle.setProperty("--aurora-c",rgbString(highlight,.30));
     rootStyle.setProperty("--base",rgbHex(base));
   }
 
@@ -2494,6 +2876,7 @@ body.test-mode .test-reset{
     entryPointerId = null;
     cancelAnimationFrame(entryFrame);
     awakenButton.classList.remove("is-holding");
+    app.classList.remove("is-awakening");
     entryRing.style.strokeDashoffset = String(circumference);
 
     awakenInstruction.textContent = emailUnlocked
@@ -2507,6 +2890,7 @@ body.test-mode .test-reset{
 
     hero.classList.add("is-hidden");
     experience.classList.add("is-visible");
+    app.classList.add("experience-active");
 
     scroller.scrollTop = 0;
     scroller.style.overflowY = guideUnlocked
@@ -2557,6 +2941,7 @@ body.test-mode .test-reset{
 
     event.preventDefault();
 
+    app.classList.add("is-awakening");
     entryHolding = true;
     entryStart = performance.now();
     entryPointerId = event.pointerId;
@@ -2623,35 +3008,134 @@ body.test-mode .test-reset{
     }
   });
 
-  if(window.matchMedia("(pointer:fine)").matches){
-    let targetX = 0;
-    let targetY = 0;
+  /*
+    桌機版 Aurora：
+    游標靠近時，鄰近光團以彈簧慣性靠近、放大、提亮；
+    游標 Bloom 是獨立柔光層，不影響手機。
+  */
+  if(finePointerQuery.matches){
+    let targetPointerX = .5;
+    let targetPointerY = .5;
+    let pointerX = .5;
+    let pointerY = .5;
+    let pointerActive = false;
     let desktopX = 0;
     let desktopY = 0;
+    let bloomOpacity = 0;
+    let bloomScale = .88;
+
+    const blobStates = auroraBlobs.map(blob => ({
+      element:blob,
+      anchorX:Number(blob.dataset.anchorX || .5),
+      anchorY:Number(blob.dataset.anchorY || .5),
+      shiftX:0,
+      shiftY:0,
+      scale:1,
+      boost:0,
+      brightness:0
+    }));
 
     app.addEventListener("pointermove",event => {
-      targetX = ((event.clientX/window.innerWidth)-.5)*9;
-      targetY = ((event.clientY/window.innerHeight)-.5)*7;
+      targetPointerX = clamp(event.clientX/window.innerWidth,0,1);
+      targetPointerY = clamp(event.clientY/window.innerHeight,0,1);
+      pointerActive = true;
+    },{
+      passive:true
+    });
+
+    app.addEventListener("pointerleave",() => {
+      pointerActive = false;
     },{
       passive:true
     });
 
     const desktopLoop = () => {
-      desktopX += (targetX-desktopX)*.035;
-      desktopY += (targetY-desktopY)*.035;
+      pointerX += (targetPointerX-pointerX)*.075;
+      pointerY += (targetPointerY-pointerY)*.075;
+
+      const targetDesktopX = (pointerX-.5)*9;
+      const targetDesktopY = (pointerY-.5)*7;
+
+      desktopX += (targetDesktopX-desktopX)*.045;
+      desktopY += (targetDesktopY-desktopY)*.045;
 
       rootStyle.setProperty("--desktop-x",`${desktopX}px`);
       rootStyle.setProperty("--desktop-y",`${desktopY}px`);
+      rootStyle.setProperty("--cursor-x",`${pointerX*window.innerWidth}px`);
+      rootStyle.setProperty("--cursor-y",`${pointerY*window.innerHeight}px`);
+
+      const targetBloomOpacity = pointerActive ? .29 : 0;
+      const targetBloomScale = pointerActive ? 1 : .88;
+
+      bloomOpacity += (targetBloomOpacity-bloomOpacity)*.075;
+      bloomScale += (targetBloomScale-bloomScale)*.065;
+
+      rootStyle.setProperty(
+        "--cursor-bloom-opacity",
+        String(bloomOpacity)
+      );
+      rootStyle.setProperty(
+        "--cursor-bloom-scale",
+        String(bloomScale)
+      );
+
+      blobStates.forEach((state,index) => {
+        const deltaX = pointerX-state.anchorX;
+        const deltaY = pointerY-state.anchorY;
+        const distance = Math.hypot(deltaX,deltaY);
+
+        const proximity = pointerActive
+          ? Math.pow(clamp(1-distance/.58,0,1),2)
+          : 0;
+
+        const depth = 1-(index/blobStates.length)*.22;
+        const targetScale = 1+proximity*.145*depth;
+        const targetBoost = proximity*.17*depth;
+        const targetBrightness = proximity*.16*depth;
+        const targetShiftX = deltaX*46*proximity*depth;
+        const targetShiftY = deltaY*34*proximity*depth;
+
+        state.scale += (targetScale-state.scale)*.075;
+        state.boost += (targetBoost-state.boost)*.065;
+        state.brightness +=
+          (targetBrightness-state.brightness)*.065;
+        state.shiftX += (targetShiftX-state.shiftX)*.055;
+        state.shiftY += (targetShiftY-state.shiftY)*.055;
+
+        state.element.style.setProperty(
+          "--react-scale",
+          String(state.scale)
+        );
+        state.element.style.setProperty(
+          "--react-boost",
+          String(state.boost)
+        );
+        state.element.style.setProperty(
+          "--react-brightness",
+          String(state.brightness)
+        );
+        state.element.style.setProperty(
+          "--react-x",
+          `${state.shiftX}px`
+        );
+        state.element.style.setProperty(
+          "--react-y",
+          `${state.shiftY}px`
+        );
+      });
 
       requestAnimationFrame(desktopLoop);
     };
 
     desktopLoop();
+  }else{
+    scheduleAuroraPulse();
   }
 
   function openSelection(index){
     selectedToneIndex = clamp(index,0,TONES.length-1);
     selectionMode = true;
+    app.classList.add("selection-active");
 
     const tone = TONES[selectedToneIndex];
 
@@ -2681,6 +3165,7 @@ body.test-mode .test-reset{
     cancelHold();
 
     selectionMode = false;
+    app.classList.remove("selection-active");
 
     selectionOverlay.classList.remove(
       "is-open",
@@ -3249,6 +3734,7 @@ body.test-mode .test-reset{
   document.addEventListener("visibilitychange",() => {
     if(document.hidden){
       stopHeroCycle();
+      stopAuroraPulse();
       return;
     }
 
@@ -3257,6 +3743,10 @@ body.test-mode .test-reset{
       !hero.classList.contains("is-hidden")
     ){
       startHeroCycle();
+    }
+
+    if(!finePointerQuery.matches){
+      scheduleAuroraPulse(850);
     }
   });
 

@@ -1388,21 +1388,21 @@ input{
 @media(max-width:819px){
   .tone-code{
     transition:
-      opacity .56s .02s var(--ease),
-      transform .62s .02s var(--ease);
+      opacity .92s .02s var(--ease),
+      transform 1.02s .02s var(--ease);
   }
 
   .tone-title{
     transition:
-      opacity 1.12s var(--ease),
-      transform 1.24s var(--ease),
-      filter 1.18s var(--ease);
+      opacity 1.48s var(--ease),
+      transform 1.66s var(--ease),
+      filter 1.58s var(--ease);
   }
 
   .tone-meta{
     transition:
-      opacity .68s .03s var(--ease),
-      transform .74s .03s var(--ease);
+      opacity 1.08s .03s var(--ease),
+      transform 1.20s .03s var(--ease);
   }
 
   .select-tone{
@@ -2656,10 +2656,12 @@ input{
       return;
     }
 
+    /*
+      單純點擊操作指南或按鈕不應觸發整頁淡出。
+      真正產生 scroll 時，handleScroll 才會進入 is-moving。
+    */
     mobileTouching = true;
     mobilePreviewIndex = -1;
-    experience.classList.add("is-moving");
-    clearSettledSlides();
   },{
     passive:true
   });

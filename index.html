@@ -1613,7 +1613,7 @@ input{
 
         <div class="world-progress-title">即時色彩世界進度</div>
         <p class="world-progress-copy">
-          以下比例來自目前公開統計。
+          以下比例直接讀取 Google Sheet 即時統計。
         </p>
 
         <div class="heat" id="heat"></div>
@@ -1650,8 +1650,8 @@ input{
   const UNIQUE_CHECK_ENDPOINT = "";
   const VOTE_ENDPOINT = "";
 
-  const RESULTS_CSV_URL =
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSSQsxR8NEnvsi2qf5hxQpxYuMfIlBEHibSQJ7Twdjol9LtGIur6_ZgnRxJ3eLVzOebTC2WuCZTsdZC/pub?gid=1298926627&single=true&output=csv";
+  const RESULTS_ENDPOINT_URL =
+    "https://script.google.com/macros/s/AKfycbz1SalZhJqhCmSe_GR4GAeAO9KtOf4K1oHI2hIGsl-KxfNBcSpl0RuwXWqYhxMkr5Sj/exec";
 
   /*
     顯示名稱與新色票已更新。
@@ -2750,15 +2750,27 @@ input{
     const tone = TONES[selectedToneIndex];
 
     try{
+      /*
+        投票前先記錄目前票數。正式送出後，會等待所選色票
+        確實增加，再顯示結果，避免讀到 Google Form 尚未寫入的舊數字。
+      */
+      let baselineCounts = null;
+
+      try{
+        baselineCounts = await fetchCountsWithRetry(2);
+      }catch(error){
+        console.warn("baseline_counts_unavailable",error);
+      }
+
       await submitVote(tone);
 
       window.setTimeout(async () => {
         renderFounderCard(tone);
-        await updateWorldProgress();
+        await updateWorldProgress(tone.key,baselineCounts);
 
         selectionOverlay.classList.remove("is-completing");
         selectionOverlay.classList.add("is-confirmed");
-      },760);
+      },520);
     }catch(error){
       console.warn(error);
 
@@ -3012,85 +3024,182 @@ input{
     });
   }
 
-  function parseNumber(value){
-    const number = Number(
-      String(value || "").replace(/[^\d.-]/g,"")
-    );
-
-    return Number.isFinite(number)
-      ? number
-      : 0;
-  }
-
-  function parseCountsCsv(csv){
+  function normalizeCounts(payload){
     const counts = emptyCounts();
-    const text = String(csv || "").replace(/^\uFEFF/,"").trim();
 
-    if(!text){
-      return counts;
+    if(!payload || payload.ok !== true || !payload.counts){
+      return null;
     }
 
-    const lines = text
-      .split(/\r?\n/)
-      .map(line => line.trim())
-      .filter(Boolean);
-
-    lines.forEach(line => {
-      const parts = line
-        .split(",")
-        .map(part => part.trim().replace(/^"|"$/g,""));
-
-      if(parts.length < 2){
-        return;
-      }
-
-      const key = (parts[0] || "").toLowerCase();
-
-      if(
-        key === "key" ||
-        key === "color" ||
-        key === "world"
-      ){
-        return;
-      }
-
-      if(Object.prototype.hasOwnProperty.call(counts,key)){
-        counts[key] = parseNumber(parts[1]);
-      }
+    TONES.forEach(tone => {
+      const value = Number(payload.counts[tone.key]);
+      counts[tone.key] = Number.isFinite(value)
+        ? Math.max(0,value)
+        : 0;
     });
 
     return counts;
   }
 
-  async function fetchCounts(){
-    if(!RESULTS_CSV_URL){
-      return null;
-    }
-
-    try{
-      const response = await fetch(RESULTS_CSV_URL,{
-        cache:"no-store"
-      });
-
-      if(!response.ok){
-        throw new Error(`CSV ${response.status}`);
+  function fetchCountsJsonp(){
+    return new Promise((resolve,reject) => {
+      if(!RESULTS_ENDPOINT_URL){
+        reject(new Error("missing_results_endpoint"));
+        return;
       }
 
-      return parseCountsCsv(await response.text());
-    }catch(error){
-      console.warn(error);
-      return null;
+      const callbackName =
+        `hestiaCounts_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+
+      const script = document.createElement("script");
+      const url = new URL(RESULTS_ENDPOINT_URL);
+
+      url.searchParams.set("callback",callbackName);
+      url.searchParams.set("_",String(Date.now()));
+
+      let settled = false;
+      let timeoutId = 0;
+
+      const cleanup = () => {
+        window.clearTimeout(timeoutId);
+        script.remove();
+
+        try{
+          delete window[callbackName];
+        }catch(error){
+          window[callbackName] = undefined;
+        }
+      };
+
+      window[callbackName] = payload => {
+        if(settled){
+          return;
+        }
+
+        settled = true;
+        cleanup();
+
+        const counts = normalizeCounts(payload);
+
+        if(!counts){
+          reject(new Error("invalid_results_payload"));
+          return;
+        }
+
+        resolve(counts);
+      };
+
+      script.onerror = () => {
+        if(settled){
+          return;
+        }
+
+        settled = true;
+        cleanup();
+        reject(new Error("results_endpoint_load_failed"));
+      };
+
+      timeoutId = window.setTimeout(() => {
+        if(settled){
+          return;
+        }
+
+        settled = true;
+        cleanup();
+        reject(new Error("results_endpoint_timeout"));
+      },8000);
+
+      script.src = url.toString();
+      document.head.appendChild(script);
+    });
+  }
+
+  function wait(milliseconds){
+    return new Promise(resolve => {
+      window.setTimeout(resolve,milliseconds);
+    });
+  }
+
+  async function fetchCountsWithRetry(attempts=4){
+    let lastError = null;
+
+    for(let attempt=0;attempt<attempts;attempt+=1){
+      try{
+        return await fetchCountsJsonp();
+      }catch(error){
+        lastError = error;
+
+        if(attempt < attempts-1){
+          await wait(650*(attempt+1));
+        }
+      }
     }
+
+    throw lastError || new Error("results_endpoint_failed");
+  }
+
+  function totalCounts(counts){
+    return Object
+      .values(counts || {})
+      .reduce((sum,value) => sum+(Number(value) || 0),0);
+  }
+
+  async function waitForVoteUpdate(selectedKey,baselineCounts){
+    const baselineSelected = baselineCounts
+      ? Number(baselineCounts[selectedKey] || 0)
+      : null;
+
+    const baselineTotal = baselineCounts
+      ? totalCounts(baselineCounts)
+      : null;
+
+    let latestCounts = null;
+
+    /*
+      Google Form 寫入與試算表重算需要短暫時間。
+      最多約 9 秒，每次都使用時間戳避免快取。
+    */
+    for(let attempt=0;attempt<8;attempt+=1){
+      if(attempt > 0){
+        await wait(950);
+      }
+
+      try{
+        latestCounts = await fetchCountsJsonp();
+      }catch(error){
+        console.warn("counts_poll_failed",error);
+        continue;
+      }
+
+      if(!baselineCounts){
+        /* 無法取得基準時，至少等待一次重讀再採用最新值。 */
+        if(attempt >= 1){
+          return latestCounts;
+        }
+        continue;
+      }
+
+      const selectedUpdated =
+        Number(latestCounts[selectedKey] || 0) > baselineSelected;
+
+      const totalUpdated =
+        totalCounts(latestCounts) > baselineTotal;
+
+      if(selectedUpdated && totalUpdated){
+        return latestCounts;
+      }
+    }
+
+    /* 若 Google Sheet 更新較慢，仍顯示最後一次成功讀到的全站資料。 */
+    return latestCounts || baselineCounts || emptyCounts();
   }
 
   function applyCounts(counts){
-    const total = Object
-      .values(counts)
-      .reduce((sum,value) => sum+(Number(value) || 0),0);
+    const total = totalCounts(counts);
 
     TONES.forEach(tone => {
       const percentage = total === 0
-        ? 100/TONES.length
+        ? 0
         : ((counts[tone.key] || 0)/total)*100;
 
       const displayPercentage =
@@ -3105,7 +3214,9 @@ input{
       );
 
       if(bar){
-        bar.style.width = `${clamp(percentage,5,100)}%`;
+        bar.style.width = percentage === 0
+          ? "0%"
+          : `${clamp(percentage,5,100)}%`;
       }
 
       if(label){
@@ -3114,11 +3225,21 @@ input{
     });
   }
 
-  async function updateWorldProgress(){
-    const fetched = await fetchCounts();
-    const counts = fetched || emptyCounts();
+  async function updateWorldProgress(selectedKey,baselineCounts){
+    try{
+      const counts = await waitForVoteUpdate(
+        selectedKey,
+        baselineCounts
+      );
 
-    applyCounts(counts);
+      applyCounts(counts);
+      return true;
+    }catch(error){
+      console.warn(error);
+      applyCounts(emptyCounts());
+      showToast("即時統計暫時讀取失敗，請稍後重新整理。");
+      return false;
+    }
   }
 
   document.addEventListener("visibilitychange",() => {

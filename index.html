@@ -503,7 +503,8 @@ input{
   position:absolute;
   inset:0;
   overflow-y:auto;
-  overscroll-behavior:contain;
+  overscroll-behavior:none;
+  overscroll-behavior-y:none;
   scroll-snap-type:y mandatory;
   scrollbar-width:none;
   touch-action:pan-y;
@@ -1386,6 +1387,17 @@ input{
    桌機維持原有正式版速度
    ========================================================= */
 @media(max-width:819px){
+  /*
+    每一頁固定為一個完整手機視窗。
+    最後一頁不因內容或安全區產生額外可捲動高度。
+  */
+  .slide{
+    height:100%;
+    min-height:100%;
+    max-height:100%;
+    overflow:hidden;
+  }
+
   .tone-code{
     transition:
       opacity .92s .02s var(--ease),
@@ -1846,6 +1858,8 @@ input{
   */
   let mobileTouching = false;
   let mobilePreviewIndex = -1;
+  let mobileTouchLastY = 0;
+  let mobileBoundaryLocked = false;
   let selectedToneIndex = 0;
   let selectionMode = false;
 
@@ -2331,6 +2345,37 @@ input{
     applySettledSlide(nextIndex,revealDelay);
   }
 
+  function getScrollerMaxTop(){
+    return Math.max(
+      0,
+      scroller.scrollHeight-scroller.clientHeight
+    );
+  }
+
+  function keepFinalSlideSettled(){
+    const finalIndex = TONES.length;
+    const finalSlide = document.querySelector(
+      `.slide[data-slide-index="${finalIndex}"]`
+    );
+
+    activeSlideIndex = finalIndex;
+    activeToneIndex = TONES.length-1;
+    mobilePreviewIndex = finalIndex;
+
+    experience.classList.remove("is-moving");
+    pageIndex.classList.add("is-visible");
+    updatePageIndex(TONES.length-1);
+    browseGuide.textContent = "停留片刻，感受這組色調";
+
+    if(
+      finalSlide &&
+      !finalSlide.classList.contains("is-settled")
+    ){
+      clearSettledSlides();
+      finalSlide.classList.add("is-settled");
+    }
+  }
+
   function maybeRevealMobileSlide(raw){
     if(
       !mobileViewQuery.matches ||
@@ -2402,18 +2447,48 @@ input{
 
     const now = performance.now();
     const currentTop = scroller.scrollTop;
+    const maxTop = getScrollerMaxTop();
+    const boundedTop = clamp(currentTop,0,maxTop);
     const elapsed = Math.max(8,now-lastScrollTime);
-    const velocity = (currentTop-lastScrollTop)/elapsed;
+    const velocity = (boundedTop-lastScrollTop)/elapsed;
 
-    lastScrollTop = currentTop;
+    lastScrollTop = boundedTop;
     lastScrollTime = now;
 
     const height = scroller.clientHeight || window.innerHeight;
     const raw = clamp(
-      currentTop/height,
+      boundedTop/height,
       0,
       TONES.length
     );
+
+    /*
+      最後一頁已完成淡入後，Safari 底部回彈不再重新觸發
+      is-moving，也不會清除 is-settled。
+    */
+    const finalSlide = document.querySelector(
+      `.slide[data-slide-index="${TONES.length}"]`
+    );
+
+    const finalSlideIsStable = Boolean(
+      mobileViewQuery.matches &&
+      activeSlideIndex === TONES.length &&
+      finalSlide &&
+      finalSlide.classList.contains("is-settled") &&
+      boundedTop >= maxTop-1
+    );
+
+    if(finalSlideIsStable){
+      keepFinalSlideSettled();
+      updateEnvironment(
+        VISUALS.length-1,
+        VISUALS.length-1,
+        0
+      );
+      targetMidY = 0;
+      targetNearY = 0;
+      return;
+    }
 
     const currentVisualIndex = Math.floor(raw);
     const nextVisualIndex = Math.min(
@@ -2651,7 +2726,7 @@ input{
   awakenButton.addEventListener("pointerup",resetEntry);
   awakenButton.addEventListener("pointercancel",resetEntry);
 
-  scroller.addEventListener("touchstart",() => {
+  scroller.addEventListener("touchstart",event => {
     if(!mobileViewQuery.matches){
       return;
     }
@@ -2662,8 +2737,55 @@ input{
     */
     mobileTouching = true;
     mobilePreviewIndex = -1;
+    mobileBoundaryLocked = false;
+
+    const touch = event.touches[0];
+    mobileTouchLastY = touch
+      ? touch.clientY
+      : 0;
   },{
     passive:true
+  });
+
+  scroller.addEventListener("touchmove",event => {
+    if(!mobileViewQuery.matches || selectionMode){
+      return;
+    }
+
+    const touch = event.touches[0];
+
+    if(!touch){
+      return;
+    }
+
+    const currentY = touch.clientY;
+    const fingerDelta = currentY-mobileTouchLastY;
+    mobileTouchLastY = currentY;
+
+    const maxTop = getScrollerMaxTop();
+    const atTop = scroller.scrollTop <= 1;
+    const atBottom = scroller.scrollTop >= maxTop-1;
+
+    /*
+      手指向下拉且已在頂端，或手指向上推且已在底端，
+      阻止 Safari rubber-band 繼續產生假捲動。
+    */
+    const pullingPastTop = atTop && fingerDelta > 0;
+    const pushingPastBottom = atBottom && fingerDelta < 0;
+
+    if(pullingPastTop || pushingPastBottom){
+      event.preventDefault();
+      mobileBoundaryLocked = true;
+
+      if(pushingPastBottom){
+        scroller.scrollTop = maxTop;
+        keepFinalSlideSettled();
+      }else{
+        scroller.scrollTop = 0;
+      }
+    }
+  },{
+    passive:false
   });
 
   const releaseMobileTouch = () => {
@@ -2672,6 +2794,17 @@ input{
     }
 
     mobileTouching = false;
+
+    if(mobileBoundaryLocked){
+      mobileBoundaryLocked = false;
+
+      if(activeSlideIndex === TONES.length){
+        scroller.scrollTop = getScrollerMaxTop();
+        keepFinalSlideSettled();
+      }
+
+      return;
+    }
 
     const height = scroller.clientHeight || window.innerHeight;
     const raw = clamp(
@@ -2704,9 +2837,19 @@ input{
     不支援 scrollend 的瀏覽器仍使用原本 debounce 後備。
   */
   scroller.addEventListener("scrollend",() => {
-    if(mobileViewQuery.matches){
-      settleCurrentSlide();
+    if(!mobileViewQuery.matches){
+      return;
     }
+
+    const maxTop = getScrollerMaxTop();
+
+    if(scroller.scrollTop >= maxTop-1){
+      scroller.scrollTop = maxTop;
+      keepFinalSlideSettled();
+      return;
+    }
+
+    settleCurrentSlide();
   },{
     passive:true
   });

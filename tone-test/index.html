@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#08080b">
-<title>HESTIA｜Tone on Tone 首發色投票｜Aurora Lite Test</title>
+<title>HESTIA｜Tone on Tone｜提亮測試版 V1</title>
 <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
 <style>
@@ -15,16 +15,8 @@
   --line:rgba(255,255,255,.15);
 
   --base:#18090d;
-  --glow-a:rgba(171,72,78,.36);
-  --glow-b:rgba(103,26,35,.25);
-
-  --aurora-a:rgba(171,72,78,.72);
-  --aurora-b:rgba(103,26,35,.62);
-  --aurora-c:rgba(212,165,155,.30);
-  --cursor-x:50vw;
-  --cursor-y:50vh;
-  --cursor-bloom-opacity:0;
-  --cursor-bloom-scale:.88;
+  --glow-a:rgba(171,72,78,.42);
+  --glow-b:rgba(103,26,35,.30);
 
   --mid-y:0px;
   --near-y:0px;
@@ -47,7 +39,7 @@ body{
   height:100%;
   margin:0;
   overflow:hidden;
-  background:#08080b;
+  background:#0b0b0f;
   color:var(--fg);
   font-family:
     -apple-system,
@@ -89,7 +81,7 @@ input{
   min-height:100vh;
   overflow:hidden;
   isolation:isolate;
-  background:#08080b;
+  background:#0b0b0f;
 }
 
 /* =========================================================
@@ -104,245 +96,13 @@ input{
   background:
     radial-gradient(86vmax 68vmax at 72% 35%,var(--glow-a),transparent 64%),
     radial-gradient(76vmax 62vmax at 20% 76%,var(--glow-b),transparent 66%),
-    linear-gradient(148deg,var(--base),#09090c 61%,#020203);
+    linear-gradient(148deg,var(--base),#101014 68%,#050507);
   transition:background .14s linear;
-}
-
-
-/* =========================================================
-   Aurora 色彩場｜手機優先
-   手機：自動漂移＋低頻率柔和脈衝，不追蹤手指
-   桌機：游標磁吸＋鄰近光團提亮＋Bloom
-   ========================================================= */
-
-.environment{
-  isolation:isolate;
-}
-
-.aurora-field{
-  position:absolute;
-  inset:-18%;
-  z-index:1;
-  overflow:hidden;
-  pointer-events:none;
-  opacity:.78;
-  mix-blend-mode:screen;
-  filter:saturate(1.04) brightness(1);
-  transform:scale(1);
-  transition:
-    opacity 1.1s var(--ease),
-    filter 1.1s var(--ease),
-    transform 1.25s cubic-bezier(.16,1,.3,1);
-  will-change:opacity,filter,transform;
-}
-
-.aurora-orbit{
-  position:absolute;
-  inset:0;
-  will-change:transform;
-  transform:translate3d(0,0,0);
-}
-
-.aurora-blob{
-  --react-x:0px;
-  --react-y:0px;
-  --react-scale:1;
-  --react-boost:0;
-  --react-brightness:0;
-  --pulse-add:0;
-  --pulse-boost:0;
-  --pulse-brightness:0;
-  --state-scale:0;
-  --state-boost:0;
-  --state-brightness:0;
-
-  position:absolute;
-  left:var(--blob-x);
-  top:var(--blob-y);
-  width:var(--blob-size);
-  aspect-ratio:1;
-  border-radius:50%;
-  background:
-    radial-gradient(
-      circle at 42% 40%,
-      var(--blob-color) 0 13%,
-      var(--blob-color) 27%,
-      transparent 70%
-    );
-  filter:
-    blur(var(--blob-blur))
-    saturate(1.06)
-    brightness(
-      calc(
-        1
-        + var(--react-brightness)
-        + var(--pulse-brightness)
-        + var(--state-brightness)
-      )
-    );
-  opacity:
-    calc(
-      var(--blob-opacity)
-      + var(--react-boost)
-      + var(--pulse-boost)
-      + var(--state-boost)
-    );
-  transform:
-    translate3d(
-      calc(-50% + var(--react-x)),
-      calc(-50% + var(--react-y)),
-      0
-    )
-    scale(
-      calc(
-        var(--react-scale)
-        + var(--pulse-add)
-        + var(--state-scale)
-      )
-    );
-  transition:
-    transform 1.15s cubic-bezier(.16,1.18,.3,1),
-    opacity .9s var(--ease),
-    filter .9s var(--ease);
-  will-change:transform,opacity,filter;
-}
-
-.aurora-blob::after{
-  content:"";
-  position:absolute;
-  inset:18%;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%);
-  filter:blur(20px);
-  opacity:.28;
-}
-
-.aurora-blob.is-awake{
-  --pulse-add:.095;
-  --pulse-boost:.13;
-  --pulse-brightness:.16;
-}
-
-.aurora-orbit-a{
-  animation:auroraDriftA 21s ease-in-out infinite alternate;
-}
-
-.aurora-orbit-b{
-  animation:auroraDriftB 27s ease-in-out infinite alternate;
-}
-
-.aurora-orbit-c{
-  animation:auroraDriftC 24s ease-in-out infinite alternate;
-}
-
-.aurora-orbit-d{
-  animation:auroraDriftD 30s ease-in-out infinite alternate;
-}
-
-.aurora-orbit-e{
-  animation:auroraDriftE 19s ease-in-out infinite alternate;
-}
-
-@keyframes auroraDriftA{
-  0%{transform:translate3d(-4vw,-2vh,0) rotate(-2deg) scale(1)}
-  52%{transform:translate3d(5vw,4vh,0) rotate(3deg) scale(1.055)}
-  100%{transform:translate3d(-1vw,7vh,0) rotate(-1deg) scale(1.025)}
-}
-
-@keyframes auroraDriftB{
-  0%{transform:translate3d(4vw,2vh,0) rotate(2deg) scale(1.04)}
-  48%{transform:translate3d(-6vw,6vh,0) rotate(-4deg) scale(.98)}
-  100%{transform:translate3d(2vw,-5vh,0) rotate(2deg) scale(1.06)}
-}
-
-@keyframes auroraDriftC{
-  0%{transform:translate3d(-1vw,6vh,0) rotate(0) scale(.98)}
-  50%{transform:translate3d(6vw,-3vh,0) rotate(4deg) scale(1.07)}
-  100%{transform:translate3d(-5vw,-5vh,0) rotate(-3deg) scale(1.02)}
-}
-
-@keyframes auroraDriftD{
-  0%{transform:translate3d(5vw,-5vh,0) rotate(3deg) scale(1.03)}
-  55%{transform:translate3d(-5vw,1vh,0) rotate(-2deg) scale(1.08)}
-  100%{transform:translate3d(1vw,7vh,0) rotate(2deg) scale(.99)}
-}
-
-@keyframes auroraDriftE{
-  0%{transform:translate3d(-4vw,5vh,0) rotate(-2deg) scale(1.06)}
-  45%{transform:translate3d(4vw,-5vh,0) rotate(3deg) scale(1)}
-  100%{transform:translate3d(7vw,3vh,0) rotate(0) scale(1.05)}
-}
-
-.cursor-bloom{
-  display:none;
-  position:absolute;
-  z-index:6;
-  left:var(--cursor-x);
-  top:var(--cursor-y);
-  width:min(36vmax,560px);
-  aspect-ratio:1;
-  border-radius:50%;
-  pointer-events:none;
-  background:
-    radial-gradient(
-      circle,
-      var(--aurora-c) 0 8%,
-      var(--aurora-a) 24%,
-      transparent 68%
-    );
-  mix-blend-mode:screen;
-  filter:blur(34px) saturate(1.08);
-  opacity:var(--cursor-bloom-opacity);
-  transform:
-    translate(-50%,-50%)
-    scale(var(--cursor-bloom-scale));
-  transition:opacity .45s ease;
-  will-change:left,top,transform,opacity;
-}
-
-.environment::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:8;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 48%,transparent 0 28%,rgba(2,2,4,.08) 72%),
-    linear-gradient(to bottom,rgba(2,2,4,.10),transparent 26%,transparent 68%,rgba(2,2,4,.24));
-}
-
-.app.experience-active .aurora-field{
-  opacity:.60;
-  filter:saturate(1.01) brightness(.94);
-}
-
-.app.selection-active .aurora-field{
-  opacity:.46;
-  filter:saturate(.98) brightness(.90);
-}
-
-.app.is-awakening .aurora-field{
-  opacity:.90;
-  filter:saturate(1.13) brightness(1.07);
-  transform:scale(.955);
-}
-
-.app.is-awakening .aurora-blob{
-  --state-scale:.055;
-  --state-boost:.075;
-  --state-brightness:.08;
-}
-
-.app.experience-active .aurora-blob.is-awake{
-  --pulse-add:.045;
-  --pulse-boost:.065;
-  --pulse-brightness:.07;
 }
 
 .layer{
   position:absolute;
   inset:-12%;
-  z-index:3;
   pointer-events:none;
   will-change:transform,opacity;
 }
@@ -352,7 +112,7 @@ input{
     radial-gradient(52vmax 46vmax at 74% 28%,var(--glow-a),transparent 68%),
     radial-gradient(46vmax 42vmax at 22% 78%,var(--glow-b),transparent 70%);
   filter:blur(50px);
-  opacity:.46;
+  opacity:.52;
   transform:
     translate3d(
       calc(var(--desktop-x) * .20),
@@ -368,13 +128,13 @@ input{
     conic-gradient(
       from 218deg at 58% 46%,
       transparent 0 18%,
-      rgba(255,255,255,.035) 25%,
+      rgba(255,255,255,.046) 25%,
       transparent 35% 61%,
-      rgba(255,255,255,.022) 69%,
+      rgba(255,255,255,.030) 69%,
       transparent 80%
     );
   filter:blur(32px);
-  opacity:.62;
+  opacity:.68;
   mix-blend-mode:soft-light;
   transform:
     translate3d(
@@ -387,10 +147,10 @@ input{
 
 .layer-near{
   background:
-    radial-gradient(34vmax 20vmax at 50% 57%,rgba(255,255,255,.045),transparent 72%),
-    linear-gradient(105deg,transparent 26%,rgba(255,255,255,.024) 47%,transparent 66%);
+    radial-gradient(34vmax 20vmax at 50% 57%,rgba(255,255,255,.058),transparent 72%),
+    linear-gradient(105deg,transparent 26%,rgba(255,255,255,.032) 47%,transparent 66%);
   filter:blur(18px);
-  opacity:.42;
+  opacity:.48;
   mix-blend-mode:screen;
   transform:
     translate3d(
@@ -403,7 +163,7 @@ input{
 
 @keyframes farBreath{
   to{
-    opacity:.58;
+    opacity:.64;
     transform:
       translate3d(
         calc(var(--desktop-x) * .20 - 2vw),
@@ -419,7 +179,7 @@ input{
   inset:-50%;
   z-index:80;
   pointer-events:none;
-  opacity:.07;
+  opacity:.06;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   animation:grain .22s steps(2) infinite;
   mix-blend-mode:soft-light;
@@ -481,10 +241,10 @@ input{
   left:50%;
   transform:translateX(-50%);
   padding:7px 10px;
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.14);
   border-radius:999px;
-  background:rgba(0,0,0,.20);
-  color:rgba(255,255,255,.56);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.66);
   backdrop-filter:blur(12px);
   font-size:10px;
   white-space:nowrap;
@@ -765,7 +525,8 @@ body.test-mode .test-badge{
   position:absolute;
   inset:0;
   overflow-y:auto;
-  overscroll-behavior:contain;
+  overscroll-behavior:none;
+  overscroll-behavior-y:none;
   scroll-snap-type:y mandatory;
   scrollbar-width:none;
   touch-action:pan-y;
@@ -976,8 +737,8 @@ body.test-mode .test-badge{
   opacity:0;
   transform:translateY(8px);
   transition:
-    opacity 1.55s .10s var(--ease),
-    transform 1.6s .10s var(--ease);
+    opacity 1.02s .05s var(--ease),
+    transform 1.10s .05s var(--ease);
 }
 
 .tone-title{
@@ -991,9 +752,9 @@ body.test-mode .test-badge{
   transform:translateY(24px);
   filter:blur(6px);
   transition:
-    opacity 1.72s var(--ease),
-    transform 1.9s var(--ease),
-    filter 1.82s var(--ease);
+    opacity 1.12s var(--ease),
+    transform 1.24s var(--ease),
+    filter 1.18s var(--ease);
 }
 
 .tone-meta{
@@ -1007,8 +768,8 @@ body.test-mode .test-badge{
   transform:translateY(17px);
   pointer-events:none;
   transition:
-    opacity 1.72s .15s var(--ease),
-    transform 1.82s .15s var(--ease);
+    opacity 1.10s .08s var(--ease),
+    transform 1.18s .08s var(--ease);
 }
 
 .tone-description{
@@ -1046,8 +807,8 @@ body.test-mode .test-badge{
   transform:translateY(10px);
   pointer-events:none;
   transition:
-    opacity .7s 1.05s var(--ease),
-    transform .8s 1.05s var(--ease),
+    opacity .58s .62s var(--ease),
+    transform .66s .62s var(--ease),
     background .2s ease;
 }
 
@@ -1165,7 +926,7 @@ body.test-mode .test-badge{
     calc(var(--safe-top) + 28px)
     24px
     calc(var(--safe-bottom) + 24px);
-  background:rgba(4,4,6,.60);
+  background:rgba(4,4,6,.52);
   backdrop-filter:blur(27px);
   opacity:0;
   visibility:hidden;
@@ -1650,6 +1411,60 @@ body.test-mode .test-reset{
    ========================================================= */
 
 
+
+/* =========================================================
+   手機版色相文字節奏｜手機優先
+   桌機維持原有正式版速度
+   ========================================================= */
+@media(max-width:819px){
+  /*
+    每一頁固定為一個完整手機視窗。
+    最後一頁不因內容或安全區產生額外可捲動高度。
+  */
+  .slide{
+    height:100%;
+    min-height:100%;
+    max-height:100%;
+    overflow:hidden;
+  }
+
+  .tone-code{
+    transition:
+      opacity .92s .02s var(--ease),
+      transform 1.02s .02s var(--ease);
+  }
+
+  .tone-title{
+    transition:
+      opacity 1.48s var(--ease),
+      transform 1.66s var(--ease),
+      filter 1.58s var(--ease);
+  }
+
+  .tone-meta{
+    transition:
+      opacity 1.08s .03s var(--ease),
+      transform 1.20s .03s var(--ease);
+  }
+
+  .select-tone{
+    transition:
+      opacity .46s .24s var(--ease),
+      transform .52s .24s var(--ease),
+      background .2s ease;
+  }
+
+  .experience.is-moving .tone-title{
+    transition-duration:.10s;
+  }
+
+  .experience.is-moving .tone-code,
+  .experience.is-moving .tone-meta,
+  .experience.is-moving .select-tone{
+    transition-duration:.09s;
+  }
+}
+
 @media(max-height:720px) and (max-width:819px){
   .slide{
     padding-top:calc(var(--safe-top) + 64px);
@@ -1688,146 +1503,7 @@ body.test-mode .test-reset{
   }
 }
 
-
-/* =========================================================
-   Aurora Lite｜手機效能優先
-   ========================================================= */
-@media(max-width:819px){
-  /*
-    手機只保留三個色團。
-    D/E 色團仍保留在 DOM，桌機可繼續使用。
-  */
-  .aurora-orbit-d,
-  .aurora-orbit-e{
-    display:none;
-  }
-
-  /*
-    避免超大面積 blur、screen blending 與多重 filter。
-    radial-gradient 本身已提供足夠柔邊。
-  */
-  .aurora-field{
-    inset:-10%;
-    opacity:.60;
-    mix-blend-mode:normal;
-    filter:none;
-    transform:translateZ(0);
-    will-change:auto;
-  }
-
-  .aurora-blob{
-    filter:none;
-    will-change:auto;
-    background:
-      radial-gradient(
-        circle at 44% 42%,
-        var(--blob-color) 0 8%,
-        var(--blob-color) 25%,
-        transparent 69%
-      );
-    transition:
-      transform .95s cubic-bezier(.16,1,.3,1),
-      opacity .78s ease;
-  }
-
-  .aurora-blob::after{
-    display:none;
-  }
-
-  /*
-    原始遠中近景在手機減為一層，避免與 Aurora 重複運算。
-  */
-  .layer-mid,
-  .layer-near{
-    display:none;
-  }
-
-  .layer-far{
-    filter:none;
-    opacity:.24;
-    animation-duration:28s;
-    will-change:auto;
-  }
-
-  /*
-    顆粒保留質感但不逐幀跳動。
-  */
-  .grain{
-    animation:none;
-    opacity:.038;
-    transform:none;
-  }
-
-  /*
-    手機不需要昂貴的 backdrop-filter 疊加。
-    保留透明材質，但改由背景色本身支撐層次。
-  */
-  .email-input,
-  .awaken-button,
-  .guide-step,
-  .selection-overlay,
-  .result-panel,
-  .toast{
-    -webkit-backdrop-filter:none;
-    backdrop-filter:none;
-  }
-
-  .selection-overlay{
-    background:rgba(4,4,6,.84);
-  }
-
-  /*
-    手機脈衝只改 transform / opacity，不使用 brightness filter。
-  */
-  .aurora-blob.is-awake{
-    --pulse-add:.075;
-    --pulse-boost:.09;
-    --pulse-brightness:0;
-  }
-
-  .app.is-awakening .aurora-field{
-    opacity:.76;
-    filter:none;
-    transform:scale(.975);
-  }
-
-  .app.is-awakening .aurora-blob{
-    --state-scale:.035;
-    --state-boost:.045;
-    --state-brightness:0;
-  }
-
-  .app.experience-active .aurora-field{
-    opacity:.44;
-    filter:none;
-  }
-
-  .app.selection-active .aurora-field{
-    opacity:.32;
-    filter:none;
-  }
-}
-
 @media(min-width:820px){
-  .aurora-field{
-    inset:-10%;
-    opacity:.84;
-  }
-
-  .aurora-blob{
-    transition:
-      opacity .38s ease,
-      filter .38s ease;
-  }
-
-  .cursor-bloom{
-    display:block;
-  }
-
-  .app.experience-active .aurora-field{
-    opacity:.68;
-  }
-
   .site-header{
     justify-content:space-between;
     padding-left:40px;
@@ -1902,55 +1578,6 @@ body.test-mode .test-reset{
 <main class="app" id="app">
 
   <div class="environment" aria-hidden="true">
-    <div class="aurora-field" id="auroraField">
-      <div class="aurora-orbit aurora-orbit-a">
-        <span
-          class="aurora-blob"
-          data-anchor-x=".18"
-          data-anchor-y=".23"
-          style="--blob-x:18%;--blob-y:23%;--blob-size:54vmax;--blob-color:var(--aurora-a);--blob-opacity:.34;--blob-blur:44px"
-        ></span>
-      </div>
-
-      <div class="aurora-orbit aurora-orbit-b">
-        <span
-          class="aurora-blob"
-          data-anchor-x=".78"
-          data-anchor-y=".28"
-          style="--blob-x:78%;--blob-y:28%;--blob-size:58vmax;--blob-color:var(--aurora-b);--blob-opacity:.31;--blob-blur:48px"
-        ></span>
-      </div>
-
-      <div class="aurora-orbit aurora-orbit-c">
-        <span
-          class="aurora-blob"
-          data-anchor-x=".52"
-          data-anchor-y=".58"
-          style="--blob-x:52%;--blob-y:58%;--blob-size:62vmax;--blob-color:var(--aurora-c);--blob-opacity:.27;--blob-blur:40px"
-        ></span>
-      </div>
-
-      <div class="aurora-orbit aurora-orbit-d">
-        <span
-          class="aurora-blob"
-          data-anchor-x=".24"
-          data-anchor-y=".80"
-          style="--blob-x:24%;--blob-y:80%;--blob-size:66vmax;--blob-color:var(--aurora-b);--blob-opacity:.25;--blob-blur:52px"
-        ></span>
-      </div>
-
-      <div class="aurora-orbit aurora-orbit-e">
-        <span
-          class="aurora-blob"
-          data-anchor-x=".84"
-          data-anchor-y=".76"
-          style="--blob-x:84%;--blob-y:76%;--blob-size:57vmax;--blob-color:var(--aurora-a);--blob-opacity:.24;--blob-blur:42px"
-        ></span>
-      </div>
-    </div>
-
-    <div class="cursor-bloom" id="cursorBloom"></div>
-
     <div class="layer layer-far"></div>
     <div class="layer layer-mid"></div>
     <div class="layer layer-near"></div>
@@ -1966,7 +1593,7 @@ body.test-mode .test-reset{
     <div class="header-section">色調聖所</div>
   </header>
 
-  <div class="test-badge">測試頁｜Aurora Lite 手機效能版｜不寫入正式票數</div>
+  <div class="test-badge">測試頁｜亮度 V1｜不寫入正式票數</div>
 
   <section class="hero" id="hero">
     <div class="hero-inner">
@@ -2106,8 +1733,8 @@ body.test-mode .test-reset{
   const TEST_MODE = true;
 
   /*
-    現行正式後台設定：保持原值。
-    TEST_MODE=true 時不會送出 Google Form，也不會寫入正式票數。
+    現行正式後台設定保持原值。
+    TEST_MODE=true 時不送出 Google Form，也不寫入正式票數。
   */
   const GOOGLE_FORM_ACTION_URL =
     "https://docs.google.com/forms/d/e/1FAIpQLSfhd7xkPSuii1u9faP0mQNmF-6tSbDqZIrupyK1_e4w7ZU0pQ/formResponse";
@@ -2223,11 +1850,7 @@ body.test-mode .test-reset{
 
   const app = document.getElementById("app");
   const rootStyle = document.documentElement.style;
-  const auroraField = document.getElementById("auroraField");
-  const auroraBlobs = [...document.querySelectorAll(".aurora-blob")];
-  const cursorBloom = document.getElementById("cursorBloom");
-  const finePointerQuery = window.matchMedia("(pointer:fine)");
-  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const mobileViewQuery = window.matchMedia("(max-width:819px)");
 
   const hero = document.getElementById("hero");
   const emailInput = document.getElementById("emailInput");
@@ -2266,21 +1889,30 @@ body.test-mode .test-reset{
   }
 
   const STORAGE_EMAIL = TEST_MODE
-    ? "HESTIA_TONE_TEST_V6_EMAIL"
+    ? "HESTIA_TONE_BRIGHT_TEST_EMAIL"
     : "HESTIA_PRISM_EMAIL";
 
   const STORAGE_VOTED = TEST_MODE
-    ? "HESTIA_TONE_TEST_V6_VOTED"
+    ? "HESTIA_TONE_BRIGHT_TEST_VOTED"
     : "HESTIA_PRISM_VOTED";
 
   const STORAGE_SERIAL = TEST_MODE
-    ? "HESTIA_TONE_TEST_V6_SERIAL"
+    ? "HESTIA_TONE_BRIGHT_TEST_SERIAL"
     : "hestia_founder_serial";
 
   let userEmail = "";
   let emailUnlocked = false;
   let activeSlideIndex = 0;
   let activeToneIndex = 0;
+
+  /*
+    手機不再等待慣性捲動完全停止。
+    手指離開且頁面接近 snap 中心時，先行顯示文字。
+  */
+  let mobileTouching = false;
+  let mobilePreviewIndex = -1;
+  let mobileTouchLastY = 0;
+  let mobileBoundaryLocked = false;
   let selectedToneIndex = 0;
   let selectionMode = false;
 
@@ -2342,66 +1974,6 @@ body.test-mode .test-reset{
     },1700);
   }
 
-
-  /*
-    手機版 Aurora：
-    不追蹤手指，改為低頻率環境脈衝。
-    每次只喚醒一個色團，避免整頁像科技霓虹燈。
-  */
-  let auroraPulseTimer = 0;
-  let auroraPulseReleaseTimer = 0;
-  let lastAuroraPulseIndex = -1;
-
-  function stopAuroraPulse(){
-    window.clearTimeout(auroraPulseTimer);
-    window.clearTimeout(auroraPulseReleaseTimer);
-    auroraPulseTimer = 0;
-    auroraPulseReleaseTimer = 0;
-
-    auroraBlobs.forEach(blob => {
-      blob.classList.remove("is-awake");
-    });
-  }
-
-  function scheduleAuroraPulse(delay=1150){
-    stopAuroraPulse();
-
-    if(
-      finePointerQuery.matches ||
-      reducedMotionQuery.matches ||
-      document.hidden ||
-      !auroraBlobs.length
-    ){
-      return;
-    }
-
-    auroraPulseTimer = window.setTimeout(() => {
-      let nextIndex = Math.floor(Math.random()*auroraBlobs.length);
-
-      if(
-        auroraBlobs.length > 1 &&
-        nextIndex === lastAuroraPulseIndex
-      ){
-        nextIndex = (nextIndex+1)%auroraBlobs.length;
-      }
-
-      lastAuroraPulseIndex = nextIndex;
-
-      const activeBlob = auroraBlobs[nextIndex];
-      activeBlob.classList.add("is-awake");
-
-      auroraPulseReleaseTimer = window.setTimeout(() => {
-        activeBlob.classList.remove("is-awake");
-
-        const quietDelay = app.classList.contains("experience-active")
-          ? 5600+Math.random()*1800
-          : 3600+Math.random()*1600;
-
-        scheduleAuroraPulse(quietDelay);
-      },1050);
-    },delay);
-  }
-
   function hexToRgb(hex){
     const value = parseInt(hex.slice(1),16);
 
@@ -2441,17 +2013,8 @@ body.test-mode .test-reset{
     const glowB = mixColor(visualA.b,visualB.b,progress);
     const base = mixColor(visualA.base,visualB.base,progress);
 
-    const highlight = {
-      r:Math.round(glowA.r+(244-glowA.r)*.38),
-      g:Math.round(glowA.g+(239-glowA.g)*.38),
-      b:Math.round(glowA.b+(233-glowA.b)*.38)
-    };
-
-    rootStyle.setProperty("--glow-a",rgbString(glowA,.36));
-    rootStyle.setProperty("--glow-b",rgbString(glowB,.25));
-    rootStyle.setProperty("--aurora-a",rgbString(glowA,.72));
-    rootStyle.setProperty("--aurora-b",rgbString(glowB,.62));
-    rootStyle.setProperty("--aurora-c",rgbString(highlight,.30));
+    rootStyle.setProperty("--glow-a",rgbString(glowA,.42));
+    rootStyle.setProperty("--glow-b",rgbString(glowB,.30));
     rootStyle.setProperty("--base",rgbHex(base));
   }
 
@@ -2758,20 +2321,34 @@ body.test-mode .test-reset{
     showToast("操作指南已確認，可以開始滑動。");
   }
 
-  function settleCurrentSlide(){
+  function applySettledSlide(index,revealDelay){
     if(selectionMode){
       return;
     }
 
-    const height = scroller.clientHeight || window.innerHeight;
-    activeSlideIndex = clamp(
-      Math.round(scroller.scrollTop/height),
-      0,
-      TONES.length
+    const nextIndex = clamp(index,0,TONES.length);
+    const slide = document.querySelector(
+      `.slide[data-slide-index="${nextIndex}"]`
     );
 
+    const alreadyVisible = Boolean(
+      slide &&
+      activeSlideIndex === nextIndex &&
+      slide.classList.contains("is-settled")
+    );
+
+    activeSlideIndex = nextIndex;
     experience.classList.remove("is-moving");
-    clearSettledSlides();
+
+    /*
+      手機提前顯示後，正式停止判定只負責校正，
+      不再清除並重新播放淡入動畫。
+    */
+    if(!alreadyVisible){
+      clearSettledSlides();
+    }else{
+      window.clearTimeout(revealTimer);
+    }
 
     if(activeSlideIndex === 0){
       pageIndex.classList.remove("is-visible");
@@ -2785,28 +2362,128 @@ body.test-mode .test-reset{
       browseGuide.textContent = "停留片刻，感受這組色調";
     }
 
-    /*
-      操作指南維持原節奏；
-      色相頁面停留約 0.42 秒後開始浮現。
-    */
-    const revealDelay = activeSlideIndex === 0
-      ? 360
-      : 420;
+    if(alreadyVisible){
+      return;
+    }
 
     revealTimer = window.setTimeout(() => {
-      const slide = document.querySelector(
-        `.slide[data-slide-index="${activeSlideIndex}"]`
-      );
-
       if(slide && !selectionMode){
         slide.classList.add("is-settled");
       }
     },revealDelay);
   }
 
+  function settleCurrentSlide(){
+    if(selectionMode){
+      return;
+    }
+
+    const height = scroller.clientHeight || window.innerHeight;
+    const nextIndex = clamp(
+      Math.round(scroller.scrollTop/height),
+      0,
+      TONES.length
+    );
+
+    /*
+      操作指南維持原節奏；
+      手機色相正式停止後約 0.09 秒、桌機約 0.26 秒。
+      手機在接近中心時另有提前顯示機制。
+    */
+    const revealDelay = mobileViewQuery.matches
+      ? (nextIndex === 0 ? 220 : 90)
+      : (nextIndex === 0 ? 360 : 260);
+
+    mobilePreviewIndex = nextIndex;
+    applySettledSlide(nextIndex,revealDelay);
+  }
+
+  function getScrollerMaxTop(){
+    return Math.max(
+      0,
+      scroller.scrollHeight-scroller.clientHeight
+    );
+  }
+
+  function keepFinalSlideSettled(){
+    const finalIndex = TONES.length;
+    const finalSlide = document.querySelector(
+      `.slide[data-slide-index="${finalIndex}"]`
+    );
+
+    activeSlideIndex = finalIndex;
+    activeToneIndex = TONES.length-1;
+    mobilePreviewIndex = finalIndex;
+
+    experience.classList.remove("is-moving");
+    pageIndex.classList.add("is-visible");
+    updatePageIndex(TONES.length-1);
+    browseGuide.textContent = "停留片刻，感受這組色調";
+
+    if(
+      finalSlide &&
+      !finalSlide.classList.contains("is-settled")
+    ){
+      clearSettledSlides();
+      finalSlide.classList.add("is-settled");
+    }
+  }
+
+  function maybeRevealMobileSlide(raw){
+    if(
+      !mobileViewQuery.matches ||
+      mobileTouching ||
+      selectionMode
+    ){
+      return false;
+    }
+
+    const candidate = clamp(
+      Math.round(raw),
+      0,
+      TONES.length
+    );
+
+    /*
+      distance 0 = 完全置中。
+      0.18 代表頁面已完成約 82% 定位，即開始淡入。
+    */
+    const distanceToSnap = Math.abs(raw-candidate);
+
+    if(distanceToSnap > .18){
+      mobilePreviewIndex = -1;
+      return false;
+    }
+
+    const slide = document.querySelector(
+      `.slide[data-slide-index="${candidate}"]`
+    );
+
+    if(
+      mobilePreviewIndex !== candidate ||
+      !slide ||
+      !slide.classList.contains("is-settled")
+    ){
+      mobilePreviewIndex = candidate;
+      applySettledSlide(candidate,20);
+    }else{
+      experience.classList.remove("is-moving");
+    }
+
+    return true;
+  }
+
   function scheduleScrollIdle(){
     window.clearTimeout(scrollIdleTimer);
-    scrollIdleTimer = window.setTimeout(settleCurrentSlide,170);
+
+    const idleDelay = mobileViewQuery.matches
+      ? 80
+      : 170;
+
+    scrollIdleTimer = window.setTimeout(
+      settleCurrentSlide,
+      idleDelay
+    );
   }
 
   function handleScroll(){
@@ -2821,23 +2498,50 @@ body.test-mode .test-reset{
       return;
     }
 
-    experience.classList.add("is-moving");
-    clearSettledSlides();
-
     const now = performance.now();
     const currentTop = scroller.scrollTop;
+    const maxTop = getScrollerMaxTop();
+    const boundedTop = clamp(currentTop,0,maxTop);
     const elapsed = Math.max(8,now-lastScrollTime);
-    const velocity = (currentTop-lastScrollTop)/elapsed;
+    const velocity = (boundedTop-lastScrollTop)/elapsed;
 
-    lastScrollTop = currentTop;
+    lastScrollTop = boundedTop;
     lastScrollTime = now;
 
     const height = scroller.clientHeight || window.innerHeight;
     const raw = clamp(
-      currentTop/height,
+      boundedTop/height,
       0,
       TONES.length
     );
+
+    /*
+      最後一頁已完成淡入後，Safari 底部回彈不再重新觸發
+      is-moving，也不會清除 is-settled。
+    */
+    const finalSlide = document.querySelector(
+      `.slide[data-slide-index="${TONES.length}"]`
+    );
+
+    const finalSlideIsStable = Boolean(
+      mobileViewQuery.matches &&
+      activeSlideIndex === TONES.length &&
+      finalSlide &&
+      finalSlide.classList.contains("is-settled") &&
+      boundedTop >= maxTop-1
+    );
+
+    if(finalSlideIsStable){
+      keepFinalSlideSettled();
+      updateEnvironment(
+        VISUALS.length-1,
+        VISUALS.length-1,
+        0
+      );
+      targetMidY = 0;
+      targetNearY = 0;
+      return;
+    }
 
     const currentVisualIndex = Math.floor(raw);
     const nextVisualIndex = Math.min(
@@ -2845,6 +2549,13 @@ body.test-mode .test-reset{
       currentVisualIndex+1
     );
     const progress = raw-currentVisualIndex;
+
+    const mobileRevealedEarly = maybeRevealMobileSlide(raw);
+
+    if(!mobileRevealedEarly){
+      experience.classList.add("is-moving");
+      clearSettledSlides();
+    }
 
     updateEnvironment(
       currentVisualIndex,
@@ -2863,48 +2574,21 @@ body.test-mode .test-reset{
 
     targetMidY = clamp(velocity*165,-18,18);
     targetNearY = clamp(velocity*270,-28,28);
-    animateLayers();
 
     scheduleScrollIdle();
   }
 
-  let layerAnimationFrame = 0;
-
   function animateLayers(){
-    if(layerAnimationFrame){
-      return;
-    }
+    currentMidY += (targetMidY-currentMidY)*.075;
+    currentNearY += (targetNearY-currentNearY)*.10;
 
-    const tick = () => {
-      currentMidY += (targetMidY-currentMidY)*.075;
-      currentNearY += (targetNearY-currentNearY)*.10;
+    targetMidY *= .92;
+    targetNearY *= .89;
 
-      targetMidY *= .92;
-      targetNearY *= .89;
+    rootStyle.setProperty("--mid-y",`${currentMidY}px`);
+    rootStyle.setProperty("--near-y",`${currentNearY}px`);
 
-      rootStyle.setProperty("--mid-y",`${currentMidY}px`);
-      rootStyle.setProperty("--near-y",`${currentNearY}px`);
-
-      const stillMoving =
-        Math.abs(targetMidY) > .04 ||
-        Math.abs(targetNearY) > .04 ||
-        Math.abs(currentMidY) > .04 ||
-        Math.abs(currentNearY) > .04;
-
-      if(stillMoving){
-        layerAnimationFrame = requestAnimationFrame(tick);
-      }else{
-        currentMidY = 0;
-        currentNearY = 0;
-        targetMidY = 0;
-        targetNearY = 0;
-        rootStyle.setProperty("--mid-y","0px");
-        rootStyle.setProperty("--near-y","0px");
-        layerAnimationFrame = 0;
-      }
-    };
-
-    layerAnimationFrame = requestAnimationFrame(tick);
+    requestAnimationFrame(animateLayers);
   }
 
   async function sha256(value){
@@ -2920,7 +2604,7 @@ body.test-mode .test-reset{
   }
 
   async function backendCheckAlreadyVoted(email){
-    if(TEST_MODE || !UNIQUE_CHECK_ENDPOINT){
+    if(!UNIQUE_CHECK_ENDPOINT){
       return false;
     }
 
@@ -3016,14 +2700,13 @@ body.test-mode .test-reset{
   let entryStart = 0;
   let entryFrame = 0;
   let entryPointerId = null;
-  const entryDuration = 1400;
+  const entryDuration = 1000;
 
   function resetEntry(){
     entryHolding = false;
     entryPointerId = null;
     cancelAnimationFrame(entryFrame);
     awakenButton.classList.remove("is-holding");
-    app.classList.remove("is-awakening");
     entryRing.style.strokeDashoffset = String(circumference);
 
     awakenInstruction.textContent = emailUnlocked
@@ -3037,7 +2720,6 @@ body.test-mode .test-reset{
 
     hero.classList.add("is-hidden");
     experience.classList.add("is-visible");
-    app.classList.add("experience-active");
 
     scroller.scrollTop = 0;
     scroller.style.overflowY = guideUnlocked
@@ -3088,7 +2770,6 @@ body.test-mode .test-reset{
 
     event.preventDefault();
 
-    app.classList.add("is-awakening");
     entryHolding = true;
     entryStart = performance.now();
     entryPointerId = event.pointerId;
@@ -3102,7 +2783,131 @@ body.test-mode .test-reset{
   awakenButton.addEventListener("pointerup",resetEntry);
   awakenButton.addEventListener("pointercancel",resetEntry);
 
+  scroller.addEventListener("touchstart",event => {
+    if(!mobileViewQuery.matches){
+      return;
+    }
+
+    /*
+      單純點擊操作指南或按鈕不應觸發整頁淡出。
+      真正產生 scroll 時，handleScroll 才會進入 is-moving。
+    */
+    mobileTouching = true;
+    mobilePreviewIndex = -1;
+    mobileBoundaryLocked = false;
+
+    const touch = event.touches[0];
+    mobileTouchLastY = touch
+      ? touch.clientY
+      : 0;
+  },{
+    passive:true
+  });
+
+  scroller.addEventListener("touchmove",event => {
+    if(!mobileViewQuery.matches || selectionMode){
+      return;
+    }
+
+    const touch = event.touches[0];
+
+    if(!touch){
+      return;
+    }
+
+    const currentY = touch.clientY;
+    const fingerDelta = currentY-mobileTouchLastY;
+    mobileTouchLastY = currentY;
+
+    const maxTop = getScrollerMaxTop();
+    const atTop = scroller.scrollTop <= 1;
+    const atBottom = scroller.scrollTop >= maxTop-1;
+
+    /*
+      手指向下拉且已在頂端，或手指向上推且已在底端，
+      阻止 Safari rubber-band 繼續產生假捲動。
+    */
+    const pullingPastTop = atTop && fingerDelta > 0;
+    const pushingPastBottom = atBottom && fingerDelta < 0;
+
+    if(pullingPastTop || pushingPastBottom){
+      event.preventDefault();
+      mobileBoundaryLocked = true;
+
+      if(pushingPastBottom){
+        scroller.scrollTop = maxTop;
+        keepFinalSlideSettled();
+      }else{
+        scroller.scrollTop = 0;
+      }
+    }
+  },{
+    passive:false
+  });
+
+  const releaseMobileTouch = () => {
+    if(!mobileViewQuery.matches){
+      return;
+    }
+
+    mobileTouching = false;
+
+    if(mobileBoundaryLocked){
+      mobileBoundaryLocked = false;
+
+      if(activeSlideIndex === TONES.length){
+        scroller.scrollTop = getScrollerMaxTop();
+        keepFinalSlideSettled();
+      }
+
+      return;
+    }
+
+    const height = scroller.clientHeight || window.innerHeight;
+    const raw = clamp(
+      scroller.scrollTop/height,
+      0,
+      TONES.length
+    );
+
+    /*
+      若放手當下已接近中心，立即檢查；
+      否則由後續慣性 scroll 事件接手。
+    */
+    maybeRevealMobileSlide(raw);
+  };
+
+  scroller.addEventListener("touchend",releaseMobileTouch,{
+    passive:true
+  });
+
+  scroller.addEventListener("touchcancel",releaseMobileTouch,{
+    passive:true
+  });
+
   scroller.addEventListener("scroll",handleScroll,{
+    passive:true
+  });
+
+  /*
+    新版瀏覽器可在 snap 真正完成時立即校正；
+    不支援 scrollend 的瀏覽器仍使用原本 debounce 後備。
+  */
+  scroller.addEventListener("scrollend",() => {
+    if(!mobileViewQuery.matches){
+      return;
+    }
+
+    const maxTop = getScrollerMaxTop();
+
+    if(scroller.scrollTop >= maxTop-1){
+      scroller.scrollTop = maxTop;
+      keepFinalSlideSettled();
+      return;
+    }
+
+    settleCurrentSlide();
+  },{
     passive:true
   });
 
@@ -3155,134 +2960,35 @@ body.test-mode .test-reset{
     }
   });
 
-  /*
-    桌機版 Aurora：
-    游標靠近時，鄰近光團以彈簧慣性靠近、放大、提亮；
-    游標 Bloom 是獨立柔光層，不影響手機。
-  */
-  if(finePointerQuery.matches){
-    let targetPointerX = .5;
-    let targetPointerY = .5;
-    let pointerX = .5;
-    let pointerY = .5;
-    let pointerActive = false;
+  if(window.matchMedia("(pointer:fine)").matches){
+    let targetX = 0;
+    let targetY = 0;
     let desktopX = 0;
     let desktopY = 0;
-    let bloomOpacity = 0;
-    let bloomScale = .88;
-
-    const blobStates = auroraBlobs.map(blob => ({
-      element:blob,
-      anchorX:Number(blob.dataset.anchorX || .5),
-      anchorY:Number(blob.dataset.anchorY || .5),
-      shiftX:0,
-      shiftY:0,
-      scale:1,
-      boost:0,
-      brightness:0
-    }));
 
     app.addEventListener("pointermove",event => {
-      targetPointerX = clamp(event.clientX/window.innerWidth,0,1);
-      targetPointerY = clamp(event.clientY/window.innerHeight,0,1);
-      pointerActive = true;
-    },{
-      passive:true
-    });
-
-    app.addEventListener("pointerleave",() => {
-      pointerActive = false;
+      targetX = ((event.clientX/window.innerWidth)-.5)*9;
+      targetY = ((event.clientY/window.innerHeight)-.5)*7;
     },{
       passive:true
     });
 
     const desktopLoop = () => {
-      pointerX += (targetPointerX-pointerX)*.075;
-      pointerY += (targetPointerY-pointerY)*.075;
-
-      const targetDesktopX = (pointerX-.5)*9;
-      const targetDesktopY = (pointerY-.5)*7;
-
-      desktopX += (targetDesktopX-desktopX)*.045;
-      desktopY += (targetDesktopY-desktopY)*.045;
+      desktopX += (targetX-desktopX)*.035;
+      desktopY += (targetY-desktopY)*.035;
 
       rootStyle.setProperty("--desktop-x",`${desktopX}px`);
       rootStyle.setProperty("--desktop-y",`${desktopY}px`);
-      rootStyle.setProperty("--cursor-x",`${pointerX*window.innerWidth}px`);
-      rootStyle.setProperty("--cursor-y",`${pointerY*window.innerHeight}px`);
-
-      const targetBloomOpacity = pointerActive ? .29 : 0;
-      const targetBloomScale = pointerActive ? 1 : .88;
-
-      bloomOpacity += (targetBloomOpacity-bloomOpacity)*.075;
-      bloomScale += (targetBloomScale-bloomScale)*.065;
-
-      rootStyle.setProperty(
-        "--cursor-bloom-opacity",
-        String(bloomOpacity)
-      );
-      rootStyle.setProperty(
-        "--cursor-bloom-scale",
-        String(bloomScale)
-      );
-
-      blobStates.forEach((state,index) => {
-        const deltaX = pointerX-state.anchorX;
-        const deltaY = pointerY-state.anchorY;
-        const distance = Math.hypot(deltaX,deltaY);
-
-        const proximity = pointerActive
-          ? Math.pow(clamp(1-distance/.58,0,1),2)
-          : 0;
-
-        const depth = 1-(index/blobStates.length)*.22;
-        const targetScale = 1+proximity*.145*depth;
-        const targetBoost = proximity*.17*depth;
-        const targetBrightness = proximity*.16*depth;
-        const targetShiftX = deltaX*46*proximity*depth;
-        const targetShiftY = deltaY*34*proximity*depth;
-
-        state.scale += (targetScale-state.scale)*.075;
-        state.boost += (targetBoost-state.boost)*.065;
-        state.brightness +=
-          (targetBrightness-state.brightness)*.065;
-        state.shiftX += (targetShiftX-state.shiftX)*.055;
-        state.shiftY += (targetShiftY-state.shiftY)*.055;
-
-        state.element.style.setProperty(
-          "--react-scale",
-          String(state.scale)
-        );
-        state.element.style.setProperty(
-          "--react-boost",
-          String(state.boost)
-        );
-        state.element.style.setProperty(
-          "--react-brightness",
-          String(state.brightness)
-        );
-        state.element.style.setProperty(
-          "--react-x",
-          `${state.shiftX}px`
-        );
-        state.element.style.setProperty(
-          "--react-y",
-          `${state.shiftY}px`
-        );
-      });
 
       requestAnimationFrame(desktopLoop);
     };
 
     desktopLoop();
-  }else{
-    scheduleAuroraPulse();
   }
 
   function openSelection(index){
     selectedToneIndex = clamp(index,0,TONES.length-1);
     selectionMode = true;
-    app.classList.add("selection-active");
 
     const tone = TONES[selectedToneIndex];
 
@@ -3312,7 +3018,6 @@ body.test-mode .test-reset{
     cancelHold();
 
     selectionMode = false;
-    app.classList.remove("selection-active");
 
     selectionOverlay.classList.remove(
       "is-open",
@@ -3364,7 +3069,7 @@ body.test-mode .test-reset{
 
   async function submitVote(tone){
     if(TEST_MODE){
-      await new Promise(resolve => setTimeout(resolve,420));
+      await new Promise(resolve => setTimeout(resolve,260));
       return;
     }
 
@@ -3446,15 +3151,32 @@ body.test-mode .test-reset{
     const tone = TONES[selectedToneIndex];
 
     try{
+      /*
+        投票前先記錄目前票數。正式送出後，會等待所選色票
+        確實增加，再顯示結果，避免讀到 Google Form 尚未寫入的舊數字。
+      */
+      let baselineCounts = null;
+
+      if(!TEST_MODE){
+        try{
+          baselineCounts = await fetchCountsWithRetry(2);
+        }catch(error){
+          console.warn("baseline_counts_unavailable",error);
+        }
+      }
+
       await submitVote(tone);
 
       window.setTimeout(async () => {
         renderFounderCard(tone);
-        await updateWorldProgress();
+        await updateWorldProgress(
+          TEST_MODE ? null : tone.key,
+          TEST_MODE ? null : baselineCounts
+        );
 
         selectionOverlay.classList.remove("is-completing");
         selectionOverlay.classList.add("is-confirmed");
-      },760);
+      },520);
     }catch(error){
       console.warn(error);
 
@@ -3742,6 +3464,7 @@ body.test-mode .test-reset{
       url.searchParams.set("_",String(Date.now()));
 
       let settled = false;
+      let timeoutId = 0;
 
       const cleanup = () => {
         window.clearTimeout(timeoutId);
@@ -3782,7 +3505,7 @@ body.test-mode .test-reset{
         reject(new Error("results_endpoint_load_failed"));
       };
 
-      const timeoutId = window.setTimeout(() => {
+      timeoutId = window.setTimeout(() => {
         if(settled){
           return;
         }
@@ -3813,7 +3536,7 @@ body.test-mode .test-reset{
         lastError = error;
 
         if(attempt < attempts-1){
-          await wait(700*(attempt+1));
+          await wait(650*(attempt+1));
         }
       }
     }
@@ -3821,10 +3544,64 @@ body.test-mode .test-reset{
     throw lastError || new Error("results_endpoint_failed");
   }
 
-  function applyCounts(counts){
-    const total = Object
-      .values(counts)
+  function totalCounts(counts){
+    return Object
+      .values(counts || {})
       .reduce((sum,value) => sum+(Number(value) || 0),0);
+  }
+
+  async function waitForVoteUpdate(selectedKey,baselineCounts){
+    const baselineSelected = baselineCounts
+      ? Number(baselineCounts[selectedKey] || 0)
+      : null;
+
+    const baselineTotal = baselineCounts
+      ? totalCounts(baselineCounts)
+      : null;
+
+    let latestCounts = null;
+
+    /*
+      Google Form 寫入與試算表重算需要短暫時間。
+      最多約 9 秒，每次都使用時間戳避免快取。
+    */
+    for(let attempt=0;attempt<8;attempt+=1){
+      if(attempt > 0){
+        await wait(950);
+      }
+
+      try{
+        latestCounts = await fetchCountsJsonp();
+      }catch(error){
+        console.warn("counts_poll_failed",error);
+        continue;
+      }
+
+      if(!baselineCounts){
+        /* 無法取得基準時，至少等待一次重讀再採用最新值。 */
+        if(attempt >= 1){
+          return latestCounts;
+        }
+        continue;
+      }
+
+      const selectedUpdated =
+        Number(latestCounts[selectedKey] || 0) > baselineSelected;
+
+      const totalUpdated =
+        totalCounts(latestCounts) > baselineTotal;
+
+      if(selectedUpdated && totalUpdated){
+        return latestCounts;
+      }
+    }
+
+    /* 若 Google Sheet 更新較慢，仍顯示最後一次成功讀到的全站資料。 */
+    return latestCounts || baselineCounts || emptyCounts();
+  }
+
+  function applyCounts(counts){
+    const total = totalCounts(counts);
 
     TONES.forEach(tone => {
       const percentage = total === 0
@@ -3854,9 +3631,15 @@ body.test-mode .test-reset{
     });
   }
 
-  async function updateWorldProgress(){
+  async function updateWorldProgress(selectedKey,baselineCounts){
     try{
-      const counts = await fetchCountsWithRetry();
+      const counts = TEST_MODE
+        ? await fetchCountsWithRetry(3)
+        : await waitForVoteUpdate(
+            selectedKey,
+            baselineCounts
+          );
+
       applyCounts(counts);
       return true;
     }catch(error){
@@ -3881,7 +3664,6 @@ body.test-mode .test-reset{
   document.addEventListener("visibilitychange",() => {
     if(document.hidden){
       stopHeroCycle();
-      stopAuroraPulse();
       return;
     }
 
@@ -3891,15 +3673,12 @@ body.test-mode .test-reset{
     ){
       startHeroCycle();
     }
-
-    if(!finePointerQuery.matches){
-      scheduleAuroraPulse(850);
-    }
   });
 
   buildSlides();
   buildHeat();
   startHeroCycle();
+  animateLayers();
 
 })();
 </script>

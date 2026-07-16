@@ -1839,6 +1839,13 @@ input{
   let emailUnlocked = false;
   let activeSlideIndex = 0;
   let activeToneIndex = 0;
+
+  /*
+    手機不再等待慣性捲動完全停止。
+    手指離開且頁面接近 snap 中心時，先行顯示文字。
+  */
+  let mobileTouching = false;
+  let mobilePreviewIndex = -1;
   let selectedToneIndex = 0;
   let selectionMode = false;
 
@@ -2247,20 +2254,34 @@ input{
     showToast("操作指南已確認，可以開始滑動。");
   }
 
-  function settleCurrentSlide(){
+  function applySettledSlide(index,revealDelay){
     if(selectionMode){
       return;
     }
 
-    const height = scroller.clientHeight || window.innerHeight;
-    activeSlideIndex = clamp(
-      Math.round(scroller.scrollTop/height),
-      0,
-      TONES.length
+    const nextIndex = clamp(index,0,TONES.length);
+    const slide = document.querySelector(
+      `.slide[data-slide-index="${nextIndex}"]`
     );
 
+    const alreadyVisible = Boolean(
+      slide &&
+      activeSlideIndex === nextIndex &&
+      slide.classList.contains("is-settled")
+    );
+
+    activeSlideIndex = nextIndex;
     experience.classList.remove("is-moving");
-    clearSettledSlides();
+
+    /*
+      手機提前顯示後，正式停止判定只負責校正，
+      不再清除並重新播放淡入動畫。
+    */
+    if(!alreadyVisible){
+      clearSettledSlides();
+    }else{
+      window.clearTimeout(revealTimer);
+    }
 
     if(activeSlideIndex === 0){
       pageIndex.classList.remove("is-visible");
@@ -2274,23 +2295,84 @@ input{
       browseGuide.textContent = "停留片刻，感受這組色調";
     }
 
-    /*
-      操作指南維持原節奏；
-      手機色相頁停留約 0.09 秒、桌機約 0.26 秒後開始浮現。
-    */
-    const revealDelay = mobileViewQuery.matches
-      ? (activeSlideIndex === 0 ? 220 : 90)
-      : (activeSlideIndex === 0 ? 360 : 260);
+    if(alreadyVisible){
+      return;
+    }
 
     revealTimer = window.setTimeout(() => {
-      const slide = document.querySelector(
-        `.slide[data-slide-index="${activeSlideIndex}"]`
-      );
-
       if(slide && !selectionMode){
         slide.classList.add("is-settled");
       }
     },revealDelay);
+  }
+
+  function settleCurrentSlide(){
+    if(selectionMode){
+      return;
+    }
+
+    const height = scroller.clientHeight || window.innerHeight;
+    const nextIndex = clamp(
+      Math.round(scroller.scrollTop/height),
+      0,
+      TONES.length
+    );
+
+    /*
+      操作指南維持原節奏；
+      手機色相正式停止後約 0.09 秒、桌機約 0.26 秒。
+      手機在接近中心時另有提前顯示機制。
+    */
+    const revealDelay = mobileViewQuery.matches
+      ? (nextIndex === 0 ? 220 : 90)
+      : (nextIndex === 0 ? 360 : 260);
+
+    mobilePreviewIndex = nextIndex;
+    applySettledSlide(nextIndex,revealDelay);
+  }
+
+  function maybeRevealMobileSlide(raw){
+    if(
+      !mobileViewQuery.matches ||
+      mobileTouching ||
+      selectionMode
+    ){
+      return false;
+    }
+
+    const candidate = clamp(
+      Math.round(raw),
+      0,
+      TONES.length
+    );
+
+    /*
+      distance 0 = 完全置中。
+      0.18 代表頁面已完成約 82% 定位，即開始淡入。
+    */
+    const distanceToSnap = Math.abs(raw-candidate);
+
+    if(distanceToSnap > .18){
+      mobilePreviewIndex = -1;
+      return false;
+    }
+
+    const slide = document.querySelector(
+      `.slide[data-slide-index="${candidate}"]`
+    );
+
+    if(
+      mobilePreviewIndex !== candidate ||
+      !slide ||
+      !slide.classList.contains("is-settled")
+    ){
+      mobilePreviewIndex = candidate;
+      applySettledSlide(candidate,20);
+    }else{
+      experience.classList.remove("is-moving");
+    }
+
+    return true;
   }
 
   function scheduleScrollIdle(){
@@ -2318,9 +2400,6 @@ input{
       return;
     }
 
-    experience.classList.add("is-moving");
-    clearSettledSlides();
-
     const now = performance.now();
     const currentTop = scroller.scrollTop;
     const elapsed = Math.max(8,now-lastScrollTime);
@@ -2342,6 +2421,13 @@ input{
       currentVisualIndex+1
     );
     const progress = raw-currentVisualIndex;
+
+    const mobileRevealedEarly = maybeRevealMobileSlide(raw);
+
+    if(!mobileRevealedEarly){
+      experience.classList.add("is-moving");
+      clearSettledSlides();
+    }
 
     updateEnvironment(
       currentVisualIndex,
@@ -2565,7 +2651,61 @@ input{
   awakenButton.addEventListener("pointerup",resetEntry);
   awakenButton.addEventListener("pointercancel",resetEntry);
 
+  scroller.addEventListener("touchstart",() => {
+    if(!mobileViewQuery.matches){
+      return;
+    }
+
+    mobileTouching = true;
+    mobilePreviewIndex = -1;
+    experience.classList.add("is-moving");
+    clearSettledSlides();
+  },{
+    passive:true
+  });
+
+  const releaseMobileTouch = () => {
+    if(!mobileViewQuery.matches){
+      return;
+    }
+
+    mobileTouching = false;
+
+    const height = scroller.clientHeight || window.innerHeight;
+    const raw = clamp(
+      scroller.scrollTop/height,
+      0,
+      TONES.length
+    );
+
+    /*
+      若放手當下已接近中心，立即檢查；
+      否則由後續慣性 scroll 事件接手。
+    */
+    maybeRevealMobileSlide(raw);
+  };
+
+  scroller.addEventListener("touchend",releaseMobileTouch,{
+    passive:true
+  });
+
+  scroller.addEventListener("touchcancel",releaseMobileTouch,{
+    passive:true
+  });
+
   scroller.addEventListener("scroll",handleScroll,{
+    passive:true
+  });
+
+  /*
+    新版瀏覽器可在 snap 真正完成時立即校正；
+    不支援 scrollend 的瀏覽器仍使用原本 debounce 後備。
+  */
+  scroller.addEventListener("scrollend",() => {
+    if(mobileViewQuery.matches){
+      settleCurrentSlide();
+    }
+  },{
     passive:true
   });
 

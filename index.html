@@ -714,8 +714,8 @@ input{
   opacity:0;
   transform:translateY(8px);
   transition:
-    opacity 1.55s .10s var(--ease),
-    transform 1.6s .10s var(--ease);
+    opacity 1.02s .05s var(--ease),
+    transform 1.10s .05s var(--ease);
 }
 
 .tone-title{
@@ -729,9 +729,9 @@ input{
   transform:translateY(24px);
   filter:blur(6px);
   transition:
-    opacity 1.72s var(--ease),
-    transform 1.9s var(--ease),
-    filter 1.82s var(--ease);
+    opacity 1.12s var(--ease),
+    transform 1.24s var(--ease),
+    filter 1.18s var(--ease);
 }
 
 .tone-meta{
@@ -745,8 +745,8 @@ input{
   transform:translateY(17px);
   pointer-events:none;
   transition:
-    opacity 1.72s .15s var(--ease),
-    transform 1.82s .15s var(--ease);
+    opacity 1.10s .08s var(--ease),
+    transform 1.18s .08s var(--ease);
 }
 
 .tone-description{
@@ -784,8 +784,8 @@ input{
   transform:translateY(10px);
   pointer-events:none;
   transition:
-    opacity .7s 1.05s var(--ease),
-    transform .8s 1.05s var(--ease),
+    opacity .58s .62s var(--ease),
+    transform .66s .62s var(--ease),
     background .2s ease;
 }
 
@@ -2232,11 +2232,11 @@ input{
 
     /*
       操作指南維持原節奏；
-      色相頁面停留約 0.42 秒後開始浮現。
+      色相頁面停留約 0.26 秒後開始浮現。
     */
     const revealDelay = activeSlideIndex === 0
       ? 360
-      : 420;
+      : 260;
 
     revealTimer = window.setTimeout(() => {
       const slide = document.querySelector(

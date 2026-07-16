@@ -15,8 +15,8 @@
   --line:rgba(255,255,255,.15);
 
   --base:#18090d;
-  --glow-a:rgba(171,72,78,.36);
-  --glow-b:rgba(103,26,35,.25);
+  --glow-a:rgba(171,72,78,.45);
+  --glow-b:rgba(103,26,35,.33);
 
   --mid-y:0px;
   --near-y:0px;
@@ -39,7 +39,7 @@ body{
   height:100%;
   margin:0;
   overflow:hidden;
-  background:#08080b;
+  background:#0d0d12;
   color:var(--fg);
   font-family:
     -apple-system,
@@ -81,7 +81,7 @@ input{
   min-height:100vh;
   overflow:hidden;
   isolation:isolate;
-  background:#08080b;
+  background:#0d0d12;
 }
 
 /* =========================================================
@@ -96,7 +96,7 @@ input{
   background:
     radial-gradient(86vmax 68vmax at 72% 35%,var(--glow-a),transparent 64%),
     radial-gradient(76vmax 62vmax at 20% 76%,var(--glow-b),transparent 66%),
-    linear-gradient(148deg,var(--base),#09090c 61%,#020203);
+    linear-gradient(148deg,var(--base),#141419 72%,#07070a);
   transition:background .14s linear;
 }
 
@@ -112,7 +112,7 @@ input{
     radial-gradient(52vmax 46vmax at 74% 28%,var(--glow-a),transparent 68%),
     radial-gradient(46vmax 42vmax at 22% 78%,var(--glow-b),transparent 70%);
   filter:blur(50px);
-  opacity:.46;
+  opacity:.55;
   transform:
     translate3d(
       calc(var(--desktop-x) * .20),
@@ -128,13 +128,13 @@ input{
     conic-gradient(
       from 218deg at 58% 46%,
       transparent 0 18%,
-      rgba(255,255,255,.035) 25%,
+      rgba(255,255,255,.052) 25%,
       transparent 35% 61%,
-      rgba(255,255,255,.022) 69%,
+      rgba(255,255,255,.035) 69%,
       transparent 80%
     );
   filter:blur(32px);
-  opacity:.62;
+  opacity:.72;
   mix-blend-mode:soft-light;
   transform:
     translate3d(
@@ -147,10 +147,10 @@ input{
 
 .layer-near{
   background:
-    radial-gradient(34vmax 20vmax at 50% 57%,rgba(255,255,255,.045),transparent 72%),
-    linear-gradient(105deg,transparent 26%,rgba(255,255,255,.024) 47%,transparent 66%);
+    radial-gradient(34vmax 20vmax at 50% 57%,rgba(255,255,255,.065),transparent 72%),
+    linear-gradient(105deg,transparent 26%,rgba(255,255,255,.037) 47%,transparent 66%);
   filter:blur(18px);
-  opacity:.42;
+  opacity:.52;
   mix-blend-mode:screen;
   transform:
     translate3d(
@@ -163,7 +163,7 @@ input{
 
 @keyframes farBreath{
   to{
-    opacity:.58;
+    opacity:.67;
     transform:
       translate3d(
         calc(var(--desktop-x) * .20 - 2vw),
@@ -179,7 +179,7 @@ input{
   inset:-50%;
   z-index:80;
   pointer-events:none;
-  opacity:.07;
+  opacity:.06;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
   animation:grain .22s steps(2) infinite;
   mix-blend-mode:soft-light;
@@ -904,7 +904,7 @@ input{
     calc(var(--safe-top) + 28px)
     24px
     calc(var(--safe-bottom) + 24px);
-  background:rgba(4,4,6,.60);
+  background:rgba(4,4,6,.47);
   backdrop-filter:blur(27px);
   opacity:0;
   visibility:hidden;
@@ -1735,12 +1735,12 @@ input{
       originalZh:"動能橙",
       backendValue:"momentum|MOMENTUM|動能橙",
       description:"溫暖而有方向，像日落前仍在推進的光。",
-      colors:["#3A2114","#6A3F22","#A56D3C","#D2A06E"],
-      a:"#B27443",
-      b:"#75401F",
-      base:"#160D08",
-      cardCore:"#B27443",
-      cardHi:"#D2A06E"
+      colors:["#32130C","#7A2F1D","#C45B36","#E39A78"],
+      a:"#D06A43",
+      b:"#8B341E",
+      base:"#160805",
+      cardCore:"#D06A43",
+      cardHi:"#E39A78"
     },
     {
       key:"ground",
@@ -1960,8 +1960,8 @@ input{
     const glowB = mixColor(visualA.b,visualB.b,progress);
     const base = mixColor(visualA.base,visualB.base,progress);
 
-    rootStyle.setProperty("--glow-a",rgbString(glowA,.36));
-    rootStyle.setProperty("--glow-b",rgbString(glowB,.25));
+    rootStyle.setProperty("--glow-a",rgbString(glowA,.45));
+    rootStyle.setProperty("--glow-b",rgbString(glowB,.33));
     rootStyle.setProperty("--base",rgbHex(base));
   }
 

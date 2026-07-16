@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#08080b">
-<title>HESTIA｜Tone on Tone 首發色投票｜Aurora Mobile Test</title>
+<title>HESTIA｜Tone on Tone 首發色投票｜Aurora Lite Test</title>
 <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
 
 <style>
@@ -1688,6 +1688,126 @@ body.test-mode .test-reset{
   }
 }
 
+
+/* =========================================================
+   Aurora Lite｜手機效能優先
+   ========================================================= */
+@media(max-width:819px){
+  /*
+    手機只保留三個色團。
+    D/E 色團仍保留在 DOM，桌機可繼續使用。
+  */
+  .aurora-orbit-d,
+  .aurora-orbit-e{
+    display:none;
+  }
+
+  /*
+    避免超大面積 blur、screen blending 與多重 filter。
+    radial-gradient 本身已提供足夠柔邊。
+  */
+  .aurora-field{
+    inset:-10%;
+    opacity:.60;
+    mix-blend-mode:normal;
+    filter:none;
+    transform:translateZ(0);
+    will-change:auto;
+  }
+
+  .aurora-blob{
+    filter:none;
+    will-change:auto;
+    background:
+      radial-gradient(
+        circle at 44% 42%,
+        var(--blob-color) 0 8%,
+        var(--blob-color) 25%,
+        transparent 69%
+      );
+    transition:
+      transform .95s cubic-bezier(.16,1,.3,1),
+      opacity .78s ease;
+  }
+
+  .aurora-blob::after{
+    display:none;
+  }
+
+  /*
+    原始遠中近景在手機減為一層，避免與 Aurora 重複運算。
+  */
+  .layer-mid,
+  .layer-near{
+    display:none;
+  }
+
+  .layer-far{
+    filter:none;
+    opacity:.24;
+    animation-duration:28s;
+    will-change:auto;
+  }
+
+  /*
+    顆粒保留質感但不逐幀跳動。
+  */
+  .grain{
+    animation:none;
+    opacity:.038;
+    transform:none;
+  }
+
+  /*
+    手機不需要昂貴的 backdrop-filter 疊加。
+    保留透明材質，但改由背景色本身支撐層次。
+  */
+  .email-input,
+  .awaken-button,
+  .guide-step,
+  .selection-overlay,
+  .result-panel,
+  .toast{
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+
+  .selection-overlay{
+    background:rgba(4,4,6,.84);
+  }
+
+  /*
+    手機脈衝只改 transform / opacity，不使用 brightness filter。
+  */
+  .aurora-blob.is-awake{
+    --pulse-add:.075;
+    --pulse-boost:.09;
+    --pulse-brightness:0;
+  }
+
+  .app.is-awakening .aurora-field{
+    opacity:.76;
+    filter:none;
+    transform:scale(.975);
+  }
+
+  .app.is-awakening .aurora-blob{
+    --state-scale:.035;
+    --state-boost:.045;
+    --state-brightness:0;
+  }
+
+  .app.experience-active .aurora-field{
+    opacity:.44;
+    filter:none;
+  }
+
+  .app.selection-active .aurora-field{
+    opacity:.32;
+    filter:none;
+  }
+}
+
 @media(min-width:820px){
   .aurora-field{
     inset:-10%;
@@ -1788,7 +1908,7 @@ body.test-mode .test-reset{
           class="aurora-blob"
           data-anchor-x=".18"
           data-anchor-y=".23"
-          style="--blob-x:18%;--blob-y:23%;--blob-size:76vmax;--blob-color:var(--aurora-a);--blob-opacity:.34;--blob-blur:44px"
+          style="--blob-x:18%;--blob-y:23%;--blob-size:54vmax;--blob-color:var(--aurora-a);--blob-opacity:.34;--blob-blur:44px"
         ></span>
       </div>
 
@@ -1797,7 +1917,7 @@ body.test-mode .test-reset{
           class="aurora-blob"
           data-anchor-x=".78"
           data-anchor-y=".28"
-          style="--blob-x:78%;--blob-y:28%;--blob-size:69vmax;--blob-color:var(--aurora-b);--blob-opacity:.31;--blob-blur:48px"
+          style="--blob-x:78%;--blob-y:28%;--blob-size:58vmax;--blob-color:var(--aurora-b);--blob-opacity:.31;--blob-blur:48px"
         ></span>
       </div>
 
@@ -1846,7 +1966,7 @@ body.test-mode .test-reset{
     <div class="header-section">色調聖所</div>
   </header>
 
-  <div class="test-badge">測試頁｜Aurora 手機優先｜不寫入正式票數</div>
+  <div class="test-badge">測試頁｜Aurora Lite 手機效能版｜不寫入正式票數</div>
 
   <section class="hero" id="hero">
     <div class="hero-inner">
@@ -2274,11 +2394,11 @@ body.test-mode .test-reset{
         activeBlob.classList.remove("is-awake");
 
         const quietDelay = app.classList.contains("experience-active")
-          ? 4300+Math.random()*1700
-          : 2400+Math.random()*1400;
+          ? 5600+Math.random()*1800
+          : 3600+Math.random()*1600;
 
         scheduleAuroraPulse(quietDelay);
-      },1350);
+      },1050);
     },delay);
   }
 
@@ -2743,21 +2863,48 @@ body.test-mode .test-reset{
 
     targetMidY = clamp(velocity*165,-18,18);
     targetNearY = clamp(velocity*270,-28,28);
+    animateLayers();
 
     scheduleScrollIdle();
   }
 
+  let layerAnimationFrame = 0;
+
   function animateLayers(){
-    currentMidY += (targetMidY-currentMidY)*.075;
-    currentNearY += (targetNearY-currentNearY)*.10;
+    if(layerAnimationFrame){
+      return;
+    }
 
-    targetMidY *= .92;
-    targetNearY *= .89;
+    const tick = () => {
+      currentMidY += (targetMidY-currentMidY)*.075;
+      currentNearY += (targetNearY-currentNearY)*.10;
 
-    rootStyle.setProperty("--mid-y",`${currentMidY}px`);
-    rootStyle.setProperty("--near-y",`${currentNearY}px`);
+      targetMidY *= .92;
+      targetNearY *= .89;
 
-    requestAnimationFrame(animateLayers);
+      rootStyle.setProperty("--mid-y",`${currentMidY}px`);
+      rootStyle.setProperty("--near-y",`${currentNearY}px`);
+
+      const stillMoving =
+        Math.abs(targetMidY) > .04 ||
+        Math.abs(targetNearY) > .04 ||
+        Math.abs(currentMidY) > .04 ||
+        Math.abs(currentNearY) > .04;
+
+      if(stillMoving){
+        layerAnimationFrame = requestAnimationFrame(tick);
+      }else{
+        currentMidY = 0;
+        currentNearY = 0;
+        targetMidY = 0;
+        targetNearY = 0;
+        rootStyle.setProperty("--mid-y","0px");
+        rootStyle.setProperty("--near-y","0px");
+        layerAnimationFrame = 0;
+      }
+    };
+
+    layerAnimationFrame = requestAnimationFrame(tick);
   }
 
   async function sha256(value){
@@ -3753,7 +3900,6 @@ body.test-mode .test-reset{
   buildSlides();
   buildHeat();
   startHeroCycle();
-  animateLayers();
 
 })();
 </script>
